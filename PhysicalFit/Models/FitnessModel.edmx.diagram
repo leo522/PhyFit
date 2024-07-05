@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3b6c3bc47f1947e2b41914fa0bd89621" Name="Diagram1">
+        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PhFitnessModel.Permissions" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PhFitnessModel.UserPermissions" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PhFitnessModel.UserRoles" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="0.75" PointY="6.625" IsExpanded="true" />
+        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__Permi__2E1BDC42" ManuallyRouted="false" />
+        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__RoleI__2D27B809" ManuallyRouted="false" />
+        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
