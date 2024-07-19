@@ -4,7 +4,29 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PhFitnessModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="PhFitnessModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AbilityDetermination">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="varchar" MaxLength="50" />
+          <Property Name="DeterminationMethod" Type="varchar" MaxLength="50" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="CreateUser" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ArcheryTraining">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Poundage" Type="int" />
+          <Property Name="ArrowCount" Type="int" />
+          <Property Name="RPEScore" Type="int" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
         <EntityType Name="Athletes">
           <Key>
             <PropertyRef Name="ID" />
@@ -30,12 +52,157 @@
           <Property Name="TeamName" Type="nvarchar" MaxLength="100" />
           <Property Name="IsActive" Type="bit" />
         </EntityType>
+        <EntityType Name="DetectionSys">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DetectionItem" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime2" Precision="7" />
+          <Property Name="UpdatedAt" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="DetectionTraining">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ItemCapability" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Distance" Type="nvarchar" MaxLength="20" />
+          <Property Name="DetectionResult" Type="nvarchar" MaxLength="50" />
+          <Property Name="TrainingVolume" Type="int" />
+          <Property Name="IntervalRunningPrescription" Type="nvarchar" MaxLength="150" />
+          <Property Name="RPEScore" Type="int" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IntensityClassification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Intensity" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MusclePhysical">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Intensity" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TrainingTime" Type="nvarchar" MaxLength="20" />
+          <Property Name="RPEScore" Type="int" Nullable="false" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
         <EntityType Name="Permissions">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PermissionName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="RPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Score" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="55" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="100" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreatedUser" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShootingTraining">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BulletCount" Type="int" />
+          <Property Name="RPEScore" Type="int" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShottingItems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GunsItem" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime2" Precision="7" />
+          <Property Name="UpdatedAt" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="SpecializedTraining">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Intensity" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TrainingTime" Type="nvarchar" MaxLength="20" />
+          <Property Name="RPEScore" Type="int" Nullable="false" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TechnologyCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="DifficultyClassification" Type="nvarchar" MaxLength="10" />
+          <Property Name="ActionName" Type="nvarchar" MaxLength="50" />
+          <Property Name="TrainingTime" Type="nvarchar" MaxLength="10" />
+          <Property Name="RPEScore" Type="int" Nullable="false" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TrainingItems">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TrainingItemId" Type="int" />
+          <Property Name="TrainingName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TrainingDescription" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="TrainingMonitoringItems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TrainingItem" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime2" Precision="7" />
+          <Property Name="UpdatedAt" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="TrainingPurpose">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="varchar" MaxLength="10" />
+          <Property Name="TrainingObject" Type="varchar" MaxLength="100" />
+          <Property Name="CreateTime" Type="datetime" />
+          <Property Name="CreateUser" Type="varchar" MaxLength="20" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="TrainingTimes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TrainingTime" Type="nvarchar" MaxLength="10" />
+          <Property Name="CreatedTime" Type="datetime" />
+          <Property Name="CreateUser" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="UserPermissions">
           <Key>
@@ -103,9 +270,24 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="PhFitnessModelStoreContainer">
+          <EntitySet Name="AbilityDetermination" EntityType="Self.AbilityDetermination" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ArcheryTraining" EntityType="Self.ArcheryTraining" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Athletes" EntityType="Self.Athletes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Coaches" EntityType="Self.Coaches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DetectionSys" EntityType="Self.DetectionSys" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DetectionTraining" EntityType="Self.DetectionTraining" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IntensityClassification" EntityType="Self.IntensityClassification" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MusclePhysical" EntityType="Self.MusclePhysical" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RPE" EntityType="Self.RPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShootingTraining" EntityType="Self.ShootingTraining" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShottingItems" EntityType="Self.ShottingItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SpecializedTraining" EntityType="Self.SpecializedTraining" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TechnologyCategory" EntityType="Self.TechnologyCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrainingItems" EntityType="Self.TrainingItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrainingMonitoringItems" EntityType="Self.TrainingMonitoringItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrainingPurpose" EntityType="Self.TrainingPurpose" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrainingTimes" EntityType="Self.TrainingTimes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -122,8 +304,7 @@
             <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PhFitnessModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -249,7 +430,189 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
+          <EntitySet Name="TrainingPurpose" EntityType="PhFitnessModel.TrainingPurpose" />
+          <EntitySet Name="AbilityDetermination" EntityType="PhFitnessModel.AbilityDetermination" />
+          <EntitySet Name="ArcheryTraining" EntityType="PhFitnessModel.ArcheryTraining" />
+          <EntitySet Name="IntensityClassification" EntityType="PhFitnessModel.IntensityClassification" />
+          <EntitySet Name="MusclePhysical" EntityType="PhFitnessModel.MusclePhysical" />
+          <EntitySet Name="RPE" EntityType="PhFitnessModel.RPE" />
+          <EntitySet Name="ShootingTraining" EntityType="PhFitnessModel.ShootingTraining" />
+          <EntitySet Name="SpecializedTraining" EntityType="PhFitnessModel.SpecializedTraining" />
+          <EntitySet Name="TechnologyCategory" EntityType="PhFitnessModel.TechnologyCategory" />
+          <EntitySet Name="TrainingTimes" EntityType="PhFitnessModel.TrainingTimes" />
+          <EntitySet Name="TrainingItems" EntityType="PhFitnessModel.TrainingItems" />
+          <EntitySet Name="TrainingMonitoringItems" EntityType="PhFitnessModel.TrainingMonitoringItems" />
+          <EntitySet Name="ShottingItems" EntityType="PhFitnessModel.ShottingItems" />
+          <EntitySet Name="DetectionSys" EntityType="PhFitnessModel.DetectionSys" />
+          <EntitySet Name="DetectionTraining" EntityType="PhFitnessModel.DetectionTraining" />
         </EntityContainer>
+        <EntityType Name="TrainingPurpose">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TrainingObject" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="CreateUser" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="AbilityDetermination">
+          <Key>
+            <PropertyRef Name="pk" />
+          </Key>
+          <Property Name="pk" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DeterminationMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Precision="3" />
+          <Property Name="CreateUser" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ArcheryTraining">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Poundage" Type="Int32" />
+          <Property Name="ArrowCount" Type="Int32" />
+          <Property Name="RPEScore" Type="Int32" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="IntensityClassification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Intensity" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="MusclePhysical">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Intensity" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingTime" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="RPEScore" Type="Int32" Nullable="false" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RPE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Score" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="55" FixedLength="false" Unicode="true" />
+          <Property Name="Explanation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ShootingTraining">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BulletCount" Type="Int32" />
+          <Property Name="RPEScore" Type="Int32" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SpecializedTraining">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Intensity" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingTime" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="RPEScore" Type="Int32" Nullable="false" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TechnologyCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DifficultyClassification" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ActionName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingTime" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="RPEScore" Type="Int32" Nullable="false" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TrainingTimes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingTime" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreateUser" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TrainingItems">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TrainingItemId" Type="Int32" />
+          <Property Name="TrainingName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingDescription" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TrainingMonitoringItems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TrainingItem" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="7" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="7" />
+        </EntityType>
+        <EntityType Name="ShottingItems">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GunsItem" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="7" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="7" />
+        </EntityType>
+        <EntityType Name="DetectionSys">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DetectionItem" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="7" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="7" />
+        </EntityType>
+        <EntityType Name="DetectionTraining">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ItemCapability" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Distance" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DetectionResult" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingVolume" Type="Int32" />
+          <Property Name="IntervalRunningPrescription" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="RPEScore" Type="Int32" />
+          <Property Name="CreatedTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -318,6 +681,188 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrainingPurpose">
+            <EntityTypeMapping TypeName="PhFitnessModel.TrainingPurpose">
+              <MappingFragment StoreEntitySet="TrainingPurpose">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreateUser" ColumnName="CreateUser" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TrainingObject" ColumnName="TrainingObject" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AbilityDetermination">
+            <EntityTypeMapping TypeName="PhFitnessModel.AbilityDetermination">
+              <MappingFragment StoreEntitySet="AbilityDetermination">
+                <ScalarProperty Name="CreateUser" ColumnName="CreateUser" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="DeterminationMethod" ColumnName="DeterminationMethod" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="pk" ColumnName="pk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ArcheryTraining">
+            <EntityTypeMapping TypeName="PhFitnessModel.ArcheryTraining">
+              <MappingFragment StoreEntitySet="ArcheryTraining">
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="RPEScore" ColumnName="RPEScore" />
+                <ScalarProperty Name="ArrowCount" ColumnName="ArrowCount" />
+                <ScalarProperty Name="Poundage" ColumnName="Poundage" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IntensityClassification">
+            <EntityTypeMapping TypeName="PhFitnessModel.IntensityClassification">
+              <MappingFragment StoreEntitySet="IntensityClassification">
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="Intensity" ColumnName="Intensity" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MusclePhysical">
+            <EntityTypeMapping TypeName="PhFitnessModel.MusclePhysical">
+              <MappingFragment StoreEntitySet="MusclePhysical">
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="RPEScore" ColumnName="RPEScore" />
+                <ScalarProperty Name="TrainingTime" ColumnName="TrainingTime" />
+                <ScalarProperty Name="Intensity" ColumnName="Intensity" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RPE">
+            <EntityTypeMapping TypeName="PhFitnessModel.RPE">
+              <MappingFragment StoreEntitySet="RPE">
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShootingTraining">
+            <EntityTypeMapping TypeName="PhFitnessModel.ShootingTraining">
+              <MappingFragment StoreEntitySet="ShootingTraining">
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="RPEScore" ColumnName="RPEScore" />
+                <ScalarProperty Name="BulletCount" ColumnName="BulletCount" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SpecializedTraining">
+            <EntityTypeMapping TypeName="PhFitnessModel.SpecializedTraining">
+              <MappingFragment StoreEntitySet="SpecializedTraining">
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="RPEScore" ColumnName="RPEScore" />
+                <ScalarProperty Name="TrainingTime" ColumnName="TrainingTime" />
+                <ScalarProperty Name="Intensity" ColumnName="Intensity" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TechnologyCategory">
+            <EntityTypeMapping TypeName="PhFitnessModel.TechnologyCategory">
+              <MappingFragment StoreEntitySet="TechnologyCategory">
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="RPEScore" ColumnName="RPEScore" />
+                <ScalarProperty Name="TrainingTime" ColumnName="TrainingTime" />
+                <ScalarProperty Name="ActionName" ColumnName="ActionName" />
+                <ScalarProperty Name="DifficultyClassification" ColumnName="DifficultyClassification" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrainingTimes">
+            <EntityTypeMapping TypeName="PhFitnessModel.TrainingTimes">
+              <MappingFragment StoreEntitySet="TrainingTimes">
+                <ScalarProperty Name="CreateUser" ColumnName="CreateUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="TrainingTime" ColumnName="TrainingTime" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrainingItems">
+            <EntityTypeMapping TypeName="PhFitnessModel.TrainingItems">
+              <MappingFragment StoreEntitySet="TrainingItems">
+                <ScalarProperty Name="TrainingDescription" ColumnName="TrainingDescription" />
+                <ScalarProperty Name="TrainingName" ColumnName="TrainingName" />
+                <ScalarProperty Name="TrainingItemId" ColumnName="TrainingItemId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrainingMonitoringItems">
+            <EntityTypeMapping TypeName="PhFitnessModel.TrainingMonitoringItems">
+              <MappingFragment StoreEntitySet="TrainingMonitoringItems">
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="TrainingItem" ColumnName="TrainingItem" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShottingItems">
+            <EntityTypeMapping TypeName="PhFitnessModel.ShottingItems">
+              <MappingFragment StoreEntitySet="ShottingItems">
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="GunsItem" ColumnName="GunsItem" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DetectionSys">
+            <EntityTypeMapping TypeName="PhFitnessModel.DetectionSys">
+              <MappingFragment StoreEntitySet="DetectionSys">
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="DetectionItem" ColumnName="DetectionItem" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DetectionTraining">
+            <EntityTypeMapping TypeName="PhFitnessModel.DetectionTraining">
+              <MappingFragment StoreEntitySet="DetectionTraining">
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+                <ScalarProperty Name="CreatedTime" ColumnName="CreatedTime" />
+                <ScalarProperty Name="RPEScore" ColumnName="RPEScore" />
+                <ScalarProperty Name="IntervalRunningPrescription" ColumnName="IntervalRunningPrescription" />
+                <ScalarProperty Name="TrainingVolume" ColumnName="TrainingVolume" />
+                <ScalarProperty Name="DetectionResult" ColumnName="DetectionResult" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemCapability" ColumnName="ItemCapability" />
+                <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

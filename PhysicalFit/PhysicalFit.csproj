@@ -133,10 +133,22 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AbilityDetermination.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ArcheryTraining.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Athletes.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Coaches.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DetectionSys.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DetectionTraining.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FitnessModel.Context.cs">
@@ -154,7 +166,41 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FitnessModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\IntensityClassification.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MusclePhysical.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Permissions.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RPE.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ShootingTraining.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ShottingItems.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SpecializedTraining.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TechnologyCategory.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrainingItems.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrainingMonitoringItems.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrainingPurpose.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrainingPurposeModel.cs" />
+    <Compile Include="Models\TrainingTimes.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserPermissions.cs">
@@ -185,12 +231,18 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="css\dashboardStyle.css" />
+    <Content Include="css\HomeStyle.css" />
     <Content Include="css\loginStyle.css" />
+    <Content Include="css\MainBkStyle.css" />
     <Content Include="css\registerStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="img\bg_img.jpg" />
     <Content Include="img\favicon.svg" />
+    <Content Include="img\KiKi.jpg" />
+    <Content Include="img\LOGO.jpg" />
     <Content Include="img\logo.svg" />
     <Content Include="Models\FitnessModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -226,6 +278,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Views\Home\index.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -244,6 +297,7 @@
     <Content Include="Views\PhyFit\Register.cshtml" />
     <Content Include="Views\PhyFit\Login.cshtml" />
     <Content Include="Views\PhyFit\Home.cshtml" />
+    <Content Include="Views\PhyFit\dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

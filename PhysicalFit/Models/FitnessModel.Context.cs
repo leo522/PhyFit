@@ -31,5 +31,20 @@ namespace PhysicalFit.Models
         public virtual DbSet<UserPermissions> UserPermissions { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<TrainingPurpose> TrainingPurpose { get; set; }
+        public virtual DbSet<AbilityDetermination> AbilityDetermination { get; set; }
+        public virtual DbSet<ArcheryTraining> ArcheryTraining { get; set; }
+        public virtual DbSet<IntensityClassification> IntensityClassification { get; set; }
+        public virtual DbSet<MusclePhysical> MusclePhysical { get; set; }
+        public virtual DbSet<RPE> RPE { get; set; }
+        public virtual DbSet<ShootingTraining> ShootingTraining { get; set; }
+        public virtual DbSet<SpecializedTraining> SpecializedTraining { get; set; }
+        public virtual DbSet<TechnologyCategory> TechnologyCategory { get; set; }
+        public virtual DbSet<TrainingTimes> TrainingTimes { get; set; }
+        public virtual DbSet<TrainingItems> TrainingItems { get; set; }
+        public virtual DbSet<TrainingMonitoringItems> TrainingMonitoringItems { get; set; }
+        public virtual DbSet<ShottingItems> ShottingItems { get; set; }
+        public virtual DbSet<DetectionSys> DetectionSys { get; set; }
+        public virtual DbSet<DetectionTraining> DetectionTraining { get; set; }
     }
 }

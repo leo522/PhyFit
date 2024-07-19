@@ -1,0 +1,225 @@
+﻿@{
+    Layout = "~/Views/Shared/_PhyFitness.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/css/HomeStyle.css" rel="stylesheet" />
+    <link href="~/css/dashboardStyle.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <label for="TrainingItem">訓練監控項目</label>
+                <select class="form-control" id="TrainingItem">
+                    <option>請選擇訓練監控項目</option>
+                    @foreach (var tm in ViewBag.MonitoringItems)
+                    {
+                        <option>@tm</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        @*訓練衝量監控*@
+        <div class="row" id="session_RPE">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>訓練項目</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="TrainingItem">訓練項目</label>
+                                <select class="form-control" id="TrainingItem">
+                                    <option>請選擇訓練項目</option>
+                                    @foreach (var tr in ViewBag.Description)
+                                    {
+                                        <option>@tr</option>
+                                    }
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>訓練詳情</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="Intensity">難度分類</label>
+                                <select class="form-control" id="Intensity">
+                                    <option>請選擇難度分類</option>
+                                    @foreach (var Intensity in ViewBag.TrainingPurposes)
+                                    {
+                                        <option>@Intensity</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ActionName">動作名稱</label>
+                                <input type="text" class="form-control" id="ActionName" placeholder="請輸入動作名稱">
+                            </div>
+                            <div class="form-group">
+                                <label for="TrainingTime">訓練時間</label>
+                                <select class="form-control" id="TrainingTime">
+                                    <option>請選擇訓練時間</option>
+                                    @foreach (var Times in ViewBag.TrainingTimes)
+                                    {
+                                        <option>@Times</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="RPE">RPE</label>
+                                <select class="form-control" id="RPE">
+                                    <option>請選擇RPE</option>
+                                    @foreach (var RPE in ViewBag.RPEScore)
+                                    {
+                                        <option>@RPE</option>
+                                    }
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*射箭訓練衝量監控*@
+        <div class="row" id="arrow_Training">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>訓練詳情</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="Pounds">磅數</label>
+                                <input type="text" class="form-control" id="ActionName" placeholder="請輸入磅數">
+                            </div>
+                            <div class="form-group">
+                                <label for="Arrows">箭數</label>
+                                <input type="text" class="form-control" id="ActionName" placeholder="請輸入箭數">
+                            </div>
+                            <div class="form-group">
+                                <label for="RPE">RPE</label>
+                                <select class="form-control" id="RPE">
+                                    <option>請選擇RPE</option>
+                                    @foreach (var RPE in ViewBag.RPEScore)
+                                    {
+                                        <option>@RPE</option>
+                                    }
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*射擊訓練衝量監控*@
+        <div class="row" id="shotting_Training">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>訓練詳情</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="Pounds">項目</label>
+                                <select class="form-control" id="RPE">
+                                    <option>請選擇射擊用具種類</option>
+                                    @foreach (var Gun in ViewBag.GunItem)
+                                    {
+                                        <option>@Gun</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Bullet">子彈數</label>
+                                <input type="text" class="form-control" id="ActionName" placeholder="請輸入子彈數">
+                            </div>
+                            <div class="form-group">
+                                <label for="RPE">RPE</label>
+                                <select class="form-control" id="RPE">
+                                    <option>請選擇RPE</option>
+                                    @foreach (var RPE in ViewBag.RPEScore)
+                                    {
+                                        <option>@RPE</option>
+                                    }
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*檢測系統*@
+        <div class="row" id="Detection_Sys">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>訓練詳情</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="Pounds">項目</label>
+                                <select class="form-control" id="RPE">
+                                    <option>請選擇代謝能力項目</option>
+                                    @foreach (var DI in ViewBag.DetectionItem)
+                                    {
+                                        <option>@DI</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Bullet">運動項目</label>
+                                <select class="form-control" id="RPE">
+                                    <option>請選擇運動項目</option>
+                                    @foreach (var SI in ViewBag.DetectionSport)
+                                    {
+                                        <option>@SI</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="RPE">距離</label>
+                                <select class="form-control" id="RPE">
+                                    <option>請選擇距離</option>
+                                    @foreach (var Dis in ViewBag.SpoetsDistance)
+                                    {
+                                        <option>@Dis</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Result">檢測結果</label>
+                                <input type="text" class="form-control" id="DistanceResult" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="trainingvolume">訓練量</label>
+                                <input type="text" class="form-control" id="TrainingVol" placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="speedprescription">速耐力間歇跑訓練處方</label>
+                                <input type="text" class="form-control" id="SpeedPres" placeholder="">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

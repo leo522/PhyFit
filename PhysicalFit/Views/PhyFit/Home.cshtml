@@ -1,82 +1,151 @@
 ﻿@{
     Layout = "~/Views/Shared/_PhyFitness.cshtml";
 }
+@model IEnumerable<PhysicalFit.Models.RPEModel>
 <!DOCTYPE html>
 <html>
 <head>
+    <link href="~/css/HomeStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="Main">
-        <div class="date">
+    <div class="main-container">
+        <div class="left-section">
+            <div class="image-container">
+                <img src="~/img/KiKi.jpg" alt="Fitness Training">
+            </div>
+            <div>
+                <label>姓名：</label>
+                <span id="nameField"></span>
+                <br>
+                <label>教練：</label>
+                <span id="coachField"></span>
+                <br>
+                <label>項目：</label>
+                <span id="objectField"></span>
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="dateSelect">
+                <form>
+                    <label>日期：</label>
+                    <label for="year">年:</label>
+                    <select id="year" name="year" onchange="updateDays()"></select>
 
-            <form>
-                <label style="font-size:30px">日期</label>
-                <label for="year">年:</label>
-                <select id="year" name="year" onchange="updateDays()"></select>
+                    <label for="month">月:</label>
+                    <select id="month" name="month" onchange="updateDays()"></select>
 
-                <label for="month">月:</label>
-                <select id="month" name="month" onchange="updateDays()"></select>
-
-                <label for="day">日:</label>
-                <select id="day" name="day"></select>
-            </form>
+                    <label for="day">日:</label>
+                    <select id="day" name="day"></select>
+                </form>
+            </div>
+            <div class="training-section">
+                <label>用途：</label>
+                <select id="PurposeSelect">
+                    <option>請選擇訓練用途</option>
+                    @foreach (var purpose in ViewBag.TrainingPurposes)
+                    {
+                        <option>@purpose</option>
+                    }
+                </select>
+            </div>
+            <div class="training-section">
+                <label>能力測定：</label>
+                <select id="AbilitySelect">
+                    <option>請選擇能力測定方法</option>
+                    @foreach (var ability in ViewBag.AbilityDetermination)
+                    {
+                        <option>@ability</option>
+                    }
+                </select>
+            </div>
+            <div class="training-section">
+                <label>訓練處方：</label>
+                <select id="PrescriptionSelect">
+                    <option>請選擇訓練處方</option>
+                </select>
+            </div>
+            <div class="RPEtable">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>RPE分數</th>
+                            <th>描述</th>
+                            <th>說明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var dtos in Model)
+                        {
+                            <tr>
+                                <td>@dtos.Score</td>
+                                <td>@dtos.Description</td>
+                                <td>@dtos.Explanation</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <script>
-        function populateDateFields(data) {
-            const yearSelect = document.getElementById("year");
-            const monthSelect = document.getElementById("month");
-            const daySelect = document.getElementById("day");
+       document.addEventListener("DOMContentLoaded", function () {
+            function populateDateFields(data) {
+                const yearSelect = document.getElementById("year");
+                const monthSelect = document.getElementById("month");
+                const daySelect = document.getElementById("day");
 
-            // 填充年份選項
-            data.Years.forEach(year => {
-                const option = document.createElement("option");
-                option.value = year;
-                option.text = year;
-                if (year === data.CurrentYear) {
-                    option.selected = true;
-                }
-                yearSelect.appendChild(option);
-            });
+                // 填充年份選項
+                data.Years.forEach(year => {
+                    const option = document.createElement("option");
+                    option.value = year;
+                    option.text = year;
+                    if (year === data.CurrentYear) {
+                        option.selected = true;
+                    }
+                    yearSelect.appendChild(option);
+                });
 
-            // 填充月份選項
-            data.Months.forEach(month => {
-                const option = document.createElement("option");
-                option.value = month;
-                option.text = month;
-                if (month === data.CurrentMonth) {
-                    option.selected = true;
-                }
-                monthSelect.appendChild(option);
-            });
+                // 填充月份選項
+                data.Months.forEach(month => {
+                    const option = document.createElement("option");
+                    option.value = month;
+                    option.text = month;
+                    if (month === data.CurrentMonth) {
+                        option.selected = true;
+                    }
+                    monthSelect.appendChild(option);
+                });
 
-            // 填充日期選項
-            populateDays(data.CurrentYear, data.CurrentMonth);
+                // 填充日期選項
+                populateDays(data.CurrentYear, data.CurrentMonth);
 
-            // 設定預設日期
-            daySelect.value = data.CurrentDay;
-        }
-
-        function populateDays(year, month) {
-            const daySelect = document.getElementById("day");
-            daySelect.innerHTML = "";
-
-            const daysInMonth = new Date(year, month, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const option = document.createElement("option");
-                option.value = day;
-                option.text = day;
-                daySelect.appendChild(option);
+                // 設定預設日期
+                daySelect.value = data.CurrentDay;
             }
-        }
 
-        function updateDays() {
-            const year = document.getElementById("year").value;
-            const month = document.getElementById("month").value;
-            populateDays(year, month);
-        }
+            function populateDays(year, month) {
+                const daySelect = document.getElementById("day");
+                daySelect.innerHTML = "";
 
-        document.addEventListener("DOMContentLoaded", () => {
+                // 將月份轉換為JavaScript中的0基索引
+                const daysInMonth = new Date(year, month, 0).getDate();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const option = document.createElement("option");
+                    option.value = day;
+                    option.text = day;
+                    daySelect.appendChild(option);
+                }
+            }
+
+            function updateDays() {
+                const year = document.getElementById("year").value;
+                const month = document.getElementById("month").value;
+                populateDays(year, parseInt(month));
+            }
+
+            document.getElementById("year").addEventListener("change", updateDays);
+            document.getElementById("month").addEventListener("change", updateDays);
+
             fetch('@Url.Action("GetDateData")')
                 .then(response => response.json())
                 .then(data => populateDateFields(data));

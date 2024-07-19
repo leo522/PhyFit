@@ -131,11 +131,38 @@ namespace PhysicalFit.Controllers
 
         #endregion
 
-        #region 首頁
+        #region 首頁-測試
         public ActionResult Home()
         {
             Session["ReturnUrl"] = Request.Url.ToString();
 
+            ViewBag.TrainingPurposes = GetTrainingPurposes(); //訓練用途
+            ViewBag.AbilityDetermination = GetAbilityDetermination(); //能力測定
+
+            var dto = _db.RPE.Select(r => new RPEModel
+            {
+                Score = r.Score,
+                Description = r.Description,
+                Explanation = r.Explanation,
+
+            }).ToList();
+
+            return View(dto);
+        }
+        #endregion
+
+        #region 訓練監控主視圖
+        public ActionResult dashboard()
+        {
+            ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
+            ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
+            ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
+            ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
+            ViewBag.RPEScore = GetRPE();//RPE量表
+            ViewBag.GunItem = GetGunsItems(); //射擊用具項目
+            ViewBag.DetectionItem = GetDetectionItem(); //檢測系統_有無氧項目
+            ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
+            ViewBag.SpoetsDistance = GetSpoetsDistance();
             return View();
         }
         #endregion
@@ -159,6 +186,113 @@ namespace PhysicalFit.Controllers
             };
 
             return Json(dateData, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region 訓練監控項目選擇
+        public List<string> GetTrainingMonitoringItems()
+        {
+            // 讀取 TrainingPurpose 資料
+            var dto = (from ti in _db.TrainingMonitoringItems
+                       select ti.TrainingItem).ToList();
+            return dto;
+        }
+
+        #endregion
+
+        #region 訓練用途
+        public List<string> GetTrainingPurposes()
+        {
+            // 讀取 TrainingPurpose 資料
+            var dto = (from tp in _db.TrainingPurpose
+                                select tp.TrainingObject).ToList();
+            return dto;
+        }
+
+        #endregion
+
+        #region 能力測定
+        public List<string> GetAbilityDetermination()
+        {
+            var dto = (from ad in _db.AbilityDetermination
+                       select ad.DeterminationMethod).ToList();
+
+            return dto;            
+        }
+        #endregion
+
+        #region 訓練衝量監控(session-RPE)
+        public List<string> GetTrainingItem()
+        {
+            var dto = (from tp in _db.TrainingItems
+                       select tp.TrainingName).ToList();
+
+            return dto;
+        }
+        #endregion
+
+        #region 難度分類
+        public List<string> GetIntensityClassification()
+        {
+            var dto = (from tp in _db.IntensityClassification
+                       select tp.Intensity).ToList();
+            
+            return dto;
+        }
+        #endregion
+
+        #region 訓練時間
+        public List<string> GetTrainingTimes()
+        {
+            var dto = (from tp in _db.TrainingTimes
+                       select tp.TrainingTime.ToString()).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region RPE
+        public List<string> GetRPE()
+        {
+            var dto = (from tp in _db.RPE
+                       select tp.Score.ToString()).ToList();
+
+            return dto;
+        }
+        #endregion
+
+        #region 射擊用具項目
+        public List<string> GetGunsItems()
+        {
+            var dto = (from gu in _db.ShottingItems
+                       select gu.GunsItem).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 檢測系統_有無氧代謝能力項目
+        public List<string> GetDetectionItem()
+        {
+            var dto = (from di in _db.DetectionSys
+                       select di.DetectionItem).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 檢測系統_運動項目
+        public List<string> GetSpoetsItem()
+        {
+            var dto = (from Si in _db.DetectionTraining
+                       select Si.ItemName).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 檢測系統_運動距離
+        public List<string> GetSpoetsDistance()
+        {
+            var dto = (from Si in _db.DetectionTraining
+                       select Si.Distance).ToList();
+            return dto;
         }
         #endregion
     }

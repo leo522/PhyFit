@@ -14,6 +14,21 @@
         <AssociationConnector Association="PhFitnessModel.FK__UserPermi__Permi__2E1BDC42" ManuallyRouted="false" />
         <AssociationConnector Association="PhFitnessModel.FK__UserPermi__RoleI__2D27B809" ManuallyRouted="false" />
         <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingPurpose" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.AbilityDetermination" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.ArcheryTraining" Width="1.5" PointX="7.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.IntensityClassification" Width="1.5" PointX="3.75" PointY="8.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.MusclePhysical" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.RPE" Width="1.5" PointX="9.75" PointY="4.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.ShootingTraining" Width="1.5" PointX="9.75" PointY="8.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.SpecializedTraining" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TechnologyCategory" Width="1.5" PointX="11.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingTimes" Width="1.5" PointX="3.375" PointY="11.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingItems" Width="1.5" PointX="5.375" PointY="11.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingMonitoringItems" Width="1.5" PointX="12.375" PointY="4.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.ShottingItems" Width="1.5" PointX="12.375" PointY="7.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.DetectionSys" Width="1.5" PointX="7.375" PointY="12.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.DetectionTraining" Width="1.5" PointX="6.625" PointY="8.25" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
