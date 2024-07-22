@@ -16,11 +16,6 @@
     max-width: 400px;
 }
 
-/*.dateSelect {
-    margin-top: 20px;
-    text-align: center;
-}*/
-
 .right-section {
     flex: 1;
     display: flex;
@@ -38,3 +33,36 @@ label {
 select {
     font-size: 20px;
 }
+
+.resultTable {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .form-group > label {
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+
+.form-group-inline {
+    display: flex;
+    align-items: center;
+}
+
+    .form-group-inline > label {
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+
+    .form-group-inline .form-control {
+        width: auto;
+        flex-grow: 1; /* 使輸入框填滿剩餘空間 */
+        max-width: 200px; /* 設定最大寬度以防止過長 */
+    }

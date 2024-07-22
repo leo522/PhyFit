@@ -236,6 +236,7 @@
     <Content Include="css\loginStyle.css" />
     <Content Include="css\MainBkStyle.css" />
     <Content Include="css\registerStyle.css" />
+    <Content Include="css\RPE_Modal.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -268,6 +269,7 @@
       <DependentUpon>FitnessModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\dashDate.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
@@ -278,7 +280,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Views\Home\index.html" />
+    <Content Include="Scripts\TLcalculate.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

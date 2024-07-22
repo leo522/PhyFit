@@ -154,6 +154,8 @@ namespace PhysicalFit.Controllers
         #region 訓練監控主視圖
         public ActionResult dashboard()
         {
+            //Session["ReturnUrl"] = Request.Url.ToString();
+
             ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
             ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
             ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
@@ -162,7 +164,7 @@ namespace PhysicalFit.Controllers
             ViewBag.GunItem = GetGunsItems(); //射擊用具項目
             ViewBag.DetectionItem = GetDetectionItem(); //檢測系統_有無氧項目
             ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-            ViewBag.SpoetsDistance = GetSpoetsDistance();
+            ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
             return View();
         }
         #endregion
@@ -251,11 +253,15 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region RPE
-        public List<string> GetRPE()
+        public List<RPEModel> GetRPE()
         {
-            var dto = (from tp in _db.RPE
-                       select tp.Score.ToString()).ToList();
-
+            var dto = (from tp in _db.RPE 
+                       select new RPEModel
+                       {
+                            Score = tp.Score,
+                            Description = tp.Description,
+                            Explanation = tp.Explanation,
+                       }).ToList();
             return dto;
         }
         #endregion
@@ -292,7 +298,17 @@ namespace PhysicalFit.Controllers
         {
             var dto = (from Si in _db.DetectionTraining
                        select Si.Distance).ToList();
-            return dto;
+
+            //切割距離欄位的符號
+            var SplitDist = dto.SelectMany(d => d.Split('/')).Distinct().OrderBy(d =>d).ToList();
+            return SplitDist;
+        }
+        #endregion
+
+        #region sessionRPE指標計算結果
+        public ActionResult sessionIndicative()
+        { 
+            return View();
         }
         #endregion
     }
