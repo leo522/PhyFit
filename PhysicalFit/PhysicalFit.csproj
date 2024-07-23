@@ -178,6 +178,9 @@
     <Compile Include="Models\RPE.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SessionRPETrainingRecords.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShootingTraining.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -269,6 +272,7 @@
       <DependentUpon>FitnessModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\DashBoardmodal.js" />
     <Content Include="Scripts\dashDate.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -280,7 +284,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\TLcalculate.js" />
+    <Content Include="Scripts\SessionTraining.js" />
+    <Content Include="Scripts\TL.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -300,6 +305,7 @@
     <Content Include="Views\PhyFit\Login.cshtml" />
     <Content Include="Views\PhyFit\Home.cshtml" />
     <Content Include="Views\PhyFit\dashboard.cshtml" />
+    <Content Include="Views\PhyFit\_WeeklyTrainingRecords.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

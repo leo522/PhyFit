@@ -165,6 +165,24 @@ namespace PhysicalFit.Controllers
             ViewBag.DetectionItem = GetDetectionItem(); //檢測系統_有無氧項目
             ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
             ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
+
+            var records = _db.SessionRPETrainingRecords.ToList();
+
+            var model = records.Select(r => new SessionRPETrainingRecordsModel
+            {
+                TrainingItem = r.TrainingItem, //訓練名稱
+                RPEscore = r.RPEscore, //RPE分數
+                TrainingTime = r.TrainingTime, //訓練時間
+                TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
+                DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
+                WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
+                TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
+                TrainingTension = r.TrainingTension ?? 0, //張力值
+                ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
+            }).ToList();
+
+            ViewBag.SessionTrainingRecords = model;
+
             return View();
         }
         #endregion
@@ -207,7 +225,7 @@ namespace PhysicalFit.Controllers
         {
             // 讀取 TrainingPurpose 資料
             var dto = (from tp in _db.TrainingPurpose
-                                select tp.TrainingObject).ToList();
+                       select tp.TrainingObject).ToList();
             return dto;
         }
 
@@ -219,7 +237,7 @@ namespace PhysicalFit.Controllers
             var dto = (from ad in _db.AbilityDetermination
                        select ad.DeterminationMethod).ToList();
 
-            return dto;            
+            return dto;
         }
         #endregion
 
@@ -238,7 +256,7 @@ namespace PhysicalFit.Controllers
         {
             var dto = (from tp in _db.IntensityClassification
                        select tp.Intensity).ToList();
-            
+
             return dto;
         }
         #endregion
@@ -255,12 +273,12 @@ namespace PhysicalFit.Controllers
         #region RPE
         public List<RPEModel> GetRPE()
         {
-            var dto = (from tp in _db.RPE 
+            var dto = (from tp in _db.RPE
                        select new RPEModel
                        {
-                            Score = tp.Score,
-                            Description = tp.Description,
-                            Explanation = tp.Explanation,
+                           Score = tp.Score,
+                           Description = tp.Description,
+                           Explanation = tp.Explanation,
                        }).ToList();
             return dto;
         }
@@ -300,16 +318,106 @@ namespace PhysicalFit.Controllers
                        select Si.Distance).ToList();
 
             //切割距離欄位的符號
-            var SplitDist = dto.SelectMany(d => d.Split('/')).Distinct().OrderBy(d =>d).ToList();
+            var SplitDist = dto.SelectMany(d => d.Split('/')).Distinct().OrderBy(d => d).ToList();
             return SplitDist;
         }
         #endregion
 
-        #region sessionRPE指標計算結果
-        public ActionResult sessionIndicative()
-        { 
-            return View();
+        #region sessionRPE指標計算TL結果
+        [HttpPost]
+        public JsonResult CalculateRPE(double trainingTime, double rpeScore)
+        {
+            double calculationResult = trainingTime * rpeScore;
+            double dailyResult = calculationResult; // 根據需要添加其他邏輯計算每日運動量
+
+            return Json(new { calculationResult = calculationResult, dailyResult = dailyResult });
         }
+        #endregion
+
+        #region sessionRPE指標計算每日訓練量結果
+        public static class InMemoryData
+        {
+            // 存儲運動數據的靜態列表
+            public static List<TrainingData> TrainingDataList = new List<TrainingData>();
+        }
+
+        [HttpPost]
+        public JsonResult CalculateDailyResult(double trainingTime, double rpeScore, DateTime date)
+        {
+            DateTime today = DateTime.Today;
+
+            // 確保接收的日期是當天日期
+            if (date.Date != today.Date)
+            {
+                return Json(new { dailyResult = "錯誤: 日期不符" });
+            }
+
+            // 獲取當天所有的單次運動時間和RPE分數
+            var dailyTrainingData = GetDailyTrainingData(today);
+
+            double totalDailyResult = 0;
+
+            // 計算當天的總運動量
+            foreach (var item in dailyTrainingData)
+            {
+                double time = item.TrainingTime;
+                double score = item.RPEScore;
+                totalDailyResult += time * score;
+            }
+
+            // 計算當前的單次運動時間與RPE分數
+            double currentResult = trainingTime * rpeScore;
+
+            // 更新每日運動訓練量
+            totalDailyResult += currentResult;
+
+            return Json(new { dailyResult = totalDailyResult });
+        }
+
+        private List<TrainingData> GetDailyTrainingData(DateTime date)
+        {
+            // 根據日期過濾內存中的數據
+            return InMemoryData.TrainingDataList
+                      .Where(td => td.Date.Date == date.Date)
+                      .ToList();
+        }
+        #endregion
+
+        #region 儲存sessionRPE訓練量結果
+        public JsonResult SaveTrainingRecord(string TrainingItem, string Intensity, string ActionName, DateTime TrainingTime, int RPE, int TrainingLoad, int DailyTrainingLoad, int WeeklyTrainingChange, int Homogeneity, int Tension, int TrainingLoadRatio, int Year, int Month, int Day)
+        {
+            try
+            {
+                var trainingDate = new DateTime(Year, Month, Day);
+
+                var newRecord = new SessionRPETrainingRecords
+                {
+                    TrainingDate = trainingDate,
+                    TrainingItem = TrainingItem,
+                    DifficultyCategory = Intensity,
+                    TrainingActionName = ActionName,
+                    TrainingTime = TrainingTime,
+                    RPEscore = RPE,
+                    TrainingLoad = TrainingLoad,
+                    DailyTrainingLoad = DailyTrainingLoad,
+                    WeeklyTrainingChange = WeeklyTrainingChange,
+                    TrainingHomogeneity = Homogeneity,
+                    TrainingTension = Tension,
+                    ShortToLongTermTrainingLoadRatio = TrainingLoadRatio,
+                    CreatedDate = DateTime.Now
+                };
+
+                _db.SessionRPETrainingRecords.Add(newRecord);
+                _db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         #endregion
     }
 }

@@ -118,6 +118,27 @@
           <Property Name="CreatedTime" Type="datetime" />
           <Property Name="CreatedUser" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <EntityType Name="SessionRPETrainingRecords">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserAccount" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="DifficultyCategory" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="TrainingItem" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="TrainingTime" Type="datetime" Nullable="false" />
+          <Property Name="RPEscore" Type="int" Nullable="false" />
+          <Property Name="TrainingLoad" Type="int" />
+          <Property Name="DailyTrainingLoad" Type="int" />
+          <Property Name="WeeklyTrainingLoad" Type="int" />
+          <Property Name="TrainingHomogeneity" Type="int" />
+          <Property Name="TrainingTension" Type="int" />
+          <Property Name="WeeklyTrainingChange" Type="int" />
+          <Property Name="ShortToLongTermTrainingLoadRatio" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="TrainingActionName" Type="nvarchar" MaxLength="20" />
+          <Property Name="TrainingDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="ShootingTraining">
           <Key>
             <PropertyRef Name="Id" />
@@ -280,6 +301,7 @@
           <EntitySet Name="MusclePhysical" EntityType="Self.MusclePhysical" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RPE" EntityType="Self.RPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SessionRPETrainingRecords" EntityType="Self.SessionRPETrainingRecords" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShootingTraining" EntityType="Self.ShootingTraining" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShottingItems" EntityType="Self.ShottingItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpecializedTraining" EntityType="Self.SpecializedTraining" Schema="dbo" store:Type="Tables" />
@@ -445,6 +467,7 @@
           <EntitySet Name="ShottingItems" EntityType="PhFitnessModel.ShottingItems" />
           <EntitySet Name="DetectionSys" EntityType="PhFitnessModel.DetectionSys" />
           <EntitySet Name="DetectionTraining" EntityType="PhFitnessModel.DetectionTraining" />
+          <EntitySet Name="SessionRPETrainingRecords" EntityType="PhFitnessModel.SessionRPETrainingRecords" />
         </EntityContainer>
         <EntityType Name="TrainingPurpose">
           <Key>
@@ -612,6 +635,27 @@
           <Property Name="RPEScore" Type="Int32" />
           <Property Name="CreatedTime" Type="DateTime" Precision="3" />
           <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SessionRPETrainingRecords">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserAccount" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DifficultyCategory" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingItem" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RPEscore" Type="Int32" Nullable="false" />
+          <Property Name="TrainingLoad" Type="Int32" />
+          <Property Name="DailyTrainingLoad" Type="Int32" />
+          <Property Name="WeeklyTrainingLoad" Type="Int32" />
+          <Property Name="TrainingHomogeneity" Type="Int32" />
+          <Property Name="TrainingTension" Type="Int32" />
+          <Property Name="WeeklyTrainingChange" Type="Int32" />
+          <Property Name="ShortToLongTermTrainingLoadRatio" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TrainingActionName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingDate" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -862,6 +906,28 @@
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemCapability" ColumnName="ItemCapability" />
                 <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SessionRPETrainingRecords">
+            <EntityTypeMapping TypeName="PhFitnessModel.SessionRPETrainingRecords">
+              <MappingFragment StoreEntitySet="SessionRPETrainingRecords">
+                <ScalarProperty Name="TrainingDate" ColumnName="TrainingDate" />
+                <ScalarProperty Name="TrainingActionName" ColumnName="TrainingActionName" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ShortToLongTermTrainingLoadRatio" ColumnName="ShortToLongTermTrainingLoadRatio" />
+                <ScalarProperty Name="WeeklyTrainingChange" ColumnName="WeeklyTrainingChange" />
+                <ScalarProperty Name="TrainingTension" ColumnName="TrainingTension" />
+                <ScalarProperty Name="TrainingHomogeneity" ColumnName="TrainingHomogeneity" />
+                <ScalarProperty Name="WeeklyTrainingLoad" ColumnName="WeeklyTrainingLoad" />
+                <ScalarProperty Name="DailyTrainingLoad" ColumnName="DailyTrainingLoad" />
+                <ScalarProperty Name="TrainingLoad" ColumnName="TrainingLoad" />
+                <ScalarProperty Name="RPEscore" ColumnName="RPEscore" />
+                <ScalarProperty Name="TrainingTime" ColumnName="TrainingTime" />
+                <ScalarProperty Name="TrainingItem" ColumnName="TrainingItem" />
+                <ScalarProperty Name="DifficultyCategory" ColumnName="DifficultyCategory" />
+                <ScalarProperty Name="UserAccount" ColumnName="UserAccount" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

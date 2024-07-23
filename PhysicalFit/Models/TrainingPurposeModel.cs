@@ -49,4 +49,38 @@ namespace PhysicalFit.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
+
+    public class TrainingData //訓練量
+    {
+        public double TrainingTime { get; set; }
+        public double RPEScore { get; set; }
+        public DateTime Date { get; set; } //日期屬性
+    }
+
+    public class TrainingRecord
+    {
+        public double TrainingTime { get; set; }
+        public double RPEScore { get; set; }
+        public DateTime Date { get; set; } //日期屬性
+    }
+
+    public class SessionRPETrainingRecordsModel
+    {
+        public int Id { get; set; }
+        public string UserAccount { get; set; }
+        public string DifficultyCategory { get; set; }
+        public string TrainingItem { get; set; }
+        public DateTime TrainingTime { get; set; }
+        public int RPEscore { get; set; }
+        public int TrainingLoad { get; set; }
+        public int DailyTrainingLoad { get; set; }
+        public int WeeklyTrainingLoad { get; set; }
+        public int TrainingHomogeneity { get; set; }
+        public int TrainingTension { get; set; }
+        public int WeeklyTrainingChange { get; set; }
+        public int ShortToLongTermTrainingLoadRatio { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string TrainingActionName { get; set; }
+        public DateTime TrainingDate { get; set; }
+    }
 }

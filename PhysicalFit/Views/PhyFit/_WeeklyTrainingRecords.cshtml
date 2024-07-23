@@ -1,0 +1,40 @@
+﻿@model IEnumerable<PhysicalFit.Models.SessionRPETrainingRecordsModel>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Difficulty Category</th>
+                <th>Training Item</th>
+                <th>Training Time</th>
+                <th>RPEscore</th>
+                <th>Training Load</th>
+                <th>Daily Training Load</th>
+                <th>Weekly Training Load</th>
+                <th>Training Homogeneity</th>
+                <th>Training Tension</th>
+                <th>Weekly Training Change</th>
+                <th>Short to Long Term Training Load Ratio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.DifficultyCategory</td>
+                    <td>@record.TrainingItem</td>
+                    <td>@record.TrainingTime</td>
+                    <td>@record.RPEscore</td>
+                    <td>@record.TrainingLoad</td>
+                    <td>@record.DailyTrainingLoad</td>
+                    <td>@record.WeeklyTrainingLoad</td>
+                    <td>@record.TrainingHomogeneity</td>
+                    <td>@record.TrainingTension</td>
+                    <td>@record.WeeklyTrainingChange</td>
+                    <td>@record.ShortToLongTermTrainingLoadRatio</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

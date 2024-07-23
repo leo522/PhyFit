@@ -5,14 +5,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="~/Scripts/TL.js"></script>
     <script src="~/Scripts/dashDate.js"></script>
-    <script src="~/Scripts/TLcalculate.js"></script>
+    <script src="~/Scripts/DashBoardmodal.js"></script>
+    <script src="~/Scripts/SessionTraining.js"></script>
     <script>var getDateDataUrl = '@Url.Action("GetDateData")';</script>
     <link href="~/css/RPE_Modal.css" rel="stylesheet" />
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
-    @*<link href="~/css/dashboardStyle.css" rel="stylesheet" />*@
 </head>
 <body>
+    @*標題*@
     <div class="main-container">
         <div class=" left-section">
             <div style="margin-bottom:20px;">
@@ -49,7 +51,7 @@
     <div class="content">
         @*訓練衝量監控*@
         <div class="training-section" id="session_RPE">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
                         <h2>訓練項目</h2>
@@ -288,80 +290,67 @@
 
     @*計算結果*@
     <div class="resultTable">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h3>session RPE指標計算結果</h3>
-            </div>
-            <div class="card-body">
-                <form>
-                    <div class="form-group d-flex align-items-center justify-content-between">
-                        <label>運動訓練量</label>
-                        <div class="form-group-inline d-flex align-items-center">
-                            @*<label>計算結果</label>*@
-                            <input type="text" class="form-control" id="calculationResult" placeholder="計算結果將顯示在這裡" readonly>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>session RPE指標計算結果</h3>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label>運動訓練量</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="calculationResult" placeholder="計算結果將顯示在這裡" readonly>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group d-flex align-items-center justify-content-between">
-                        <label>每日運動訓練量</label>
-                        <div class="form-group-inline d-flex align-items-center">
-                            @*<label>計算結果</label>*@
-                            <input type="text" class="form-control" id="DailyResult" placeholder="計算結果將顯示在這裡" readonly>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label>每日運動訓練量</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="DailyResult" placeholder="計算結果將顯示在這裡" readonly>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group d-flex align-items-center justify-content-between">
-                        <label>每週運動訓練量</label>
-                        <div class="form-group-inline d-flex align-items-center">
-                            @*<label>計算結果</label>*@
-                            <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label>每週運動訓練量</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group d-flex align-items-center justify-content-between">
-                        <label>訓練同質性</label>
-                        <div class="form-group-inline d-flex align-items-center">
-                            @*<label>計算結果</label>*@
-                            <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label>訓練同質性</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group d-flex align-items-center justify-content-between">
-                        <label>訓練張力值</label>
-                        <div class="form-group-inline d-flex align-items-center">
-                            @*<label>計算結果</label>*@
-                            <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label>訓練張力值</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group d-flex align-items-center justify-content-between">
-                        <label>週間訓練變化</label>
-                        <div class="form-group-inline d-flex align-items-center">
-                            @*<label>計算結果</label>*@
-                            <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label>週間訓練變化</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group d-flex align-items-center justify-content-between">
-                        <label>短期：長期訓練量比值</label>
-                        <div class="form-group-inline d-flex align-items-center">
-                            @*<label>計算結果</label>*@
-                            <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label>短期：長期訓練量比值</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-
-
+    @*RPE分數說明按鈕*@
     <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block;">
-        <button id="btnModal" onclick="showModal()" class="btn btn-info">查看RPE說明</button>
+        <button id="btnModal" class="btn btn-warning">查看RPE說明</button>
     </div>
 
-    @*計算檢測結果*@
-    <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
-        <button id="btn_result" class="btn btn-success">計算檢測</button>
-    </div>
-
-    <!-- RPE分數彈跳視窗 -->
+    @*RPE分數彈跳視窗*@
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -389,47 +378,53 @@
         </div>
     </div>
 
+    @*查看訓練量紀錄按鈕*@
+    <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block;">
+        <button id="btnRecord" class="btn btn-primary">查看訓練量紀錄</button>
+    </div>
+
+    @*訓練練紀錄彈跳視窗*@
+    <div id="RecordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-body">
+                @Html.Partial("_WeeklyTrainingRecords", ViewBag.SessionTrainingRecords as IEnumerable<PhysicalFit.Models.SessionRPETrainingRecords>)
+            </div>
+        </div>
+    </div>
+
+    @*計算檢測結果按鈕*@
+    <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
+        <button id="btn_result" class="btn btn-info">計算檢測</button>
+    </div>
+
+    <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
+        <button id="btn_save" class="btn btn-success">儲存結果</button>
+    </div>
+
     <script>
         $(document).ready(function () {
             // 初始化時隱藏所有監控項目
-            $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result').hide();
+            $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').hide();
 
             // 當選擇監控項目時
             $('#Item').change(function () {
                 const selectItem = $(this).val();
 
                 // 隱藏所有項目
-                $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result').hide();
+                $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').hide();
 
                 // 根據選擇的項目顯示對應的內容
                 if (selectItem === '訓練衝量監控 (session-RPE)') {
-                    $('#session_RPE, #RPEtable, #btnModal, #btn_result').show();
+                    $('#session_RPE, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
                 } else if (selectItem === '射箭訓練衝量') {
-                    $('#arrow_Training, #RPEtable, #btnModal, #btn_result').show();
+                    $('#arrow_Training, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
                 } else if (selectItem === '射擊訓練衝量') {
-                    $('#shotting_Training, #RPEtable, #btnModal, #btn_result').show();
+                    $('#shotting_Training, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
                 } else if (selectItem === '檢測系統') {
-                    $('#Detection_Sys, #RPEtable, #btnModal, #btn_result').show();
+                    $('#Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
                 }
             });
-
-            // 定義顯示彈跳視窗的函數
-            window.showModal = function () {
-                document.getElementById("myModal").style.display = "block";
-            }
-
-            // 定義關閉彈跳視窗的函數
-            window.closeModal = function () {
-                document.getElementById("myModal").style.display = "none";
-            }
-
-            // 點擊彈跳視窗外部關閉
-            window.onclick = function (event) {
-                var modal = document.getElementById("myModal");
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
         });
     </script>
 </body>
