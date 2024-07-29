@@ -123,10 +123,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserAccount" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="UserAccount" Type="nvarchar" MaxLength="10" />
           <Property Name="DifficultyCategory" Type="nvarchar" MaxLength="5" Nullable="false" />
           <Property Name="TrainingItem" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="TrainingTime" Type="datetime" Nullable="false" />
+          <Property Name="TrainingTime" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="RPEscore" Type="int" Nullable="false" />
           <Property Name="TrainingLoad" Type="int" />
           <Property Name="DailyTrainingLoad" Type="int" />
@@ -641,10 +641,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserAccount" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="UserAccount" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="DifficultyCategory" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Name="TrainingItem" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="TrainingTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TrainingTime" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="RPEscore" Type="Int32" Nullable="false" />
           <Property Name="TrainingLoad" Type="Int32" />
           <Property Name="DailyTrainingLoad" Type="Int32" />

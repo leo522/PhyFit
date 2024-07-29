@@ -172,7 +172,7 @@ namespace PhysicalFit.Controllers
             {
                 TrainingItem = r.TrainingItem, //訓練名稱
                 RPEscore = r.RPEscore, //RPE分數
-                TrainingTime = r.TrainingTime, //訓練時間
+                //TrainingTime = r.TrainingTime, //訓練時間
                 TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
                 DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
                 WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
@@ -384,40 +384,159 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 儲存sessionRPE訓練量結果
-        public JsonResult SaveTrainingRecord(string TrainingItem, string Intensity, string ActionName, DateTime TrainingTime, int RPE, int TrainingLoad, int DailyTrainingLoad, int WeeklyTrainingChange, int Homogeneity, int Tension, int TrainingLoadRatio, int Year, int Month, int Day)
+        [HttpPost]
+        public JsonResult SaveTrainingRecord(SessionRPETrainingRecordsModel model)
         {
             try
             {
-                var trainingDate = new DateTime(Year, Month, Day);
+                // 將 TrainingTime 轉換為分鐘
+                int trainingTimeInMinutes = ConvertTrainingTimeToMinutes(model.TrainingTime);
 
                 var newRecord = new SessionRPETrainingRecords
                 {
-                    TrainingDate = trainingDate,
-                    TrainingItem = TrainingItem,
-                    DifficultyCategory = Intensity,
-                    TrainingActionName = ActionName,
-                    TrainingTime = TrainingTime,
-                    RPEscore = RPE,
-                    TrainingLoad = TrainingLoad,
-                    DailyTrainingLoad = DailyTrainingLoad,
-                    WeeklyTrainingChange = WeeklyTrainingChange,
-                    TrainingHomogeneity = Homogeneity,
-                    TrainingTension = Tension,
-                    ShortToLongTermTrainingLoadRatio = TrainingLoadRatio,
-                    CreatedDate = DateTime.Now
+                    TrainingDate = model.TrainingDate, //日期
+                    TrainingItem = model.TrainingItem, //訓練衝量監控項目
+                    DifficultyCategory = model.DifficultyCategory, //難度分類
+                    TrainingActionName = model.TrainingActionName, //動作名稱
+                    TrainingTime = trainingTimeInMinutes.ToString(), // 訓練時間轉換為分鐘
+                    RPEscore = model.RPEscore, //RPE分數
+                    TrainingLoad = model.TrainingLoad, //運動訓練量
+                    DailyTrainingLoad = model.DailyTrainingLoad, //每日運動訓練量
+                    WeeklyTrainingLoad = model.WeeklyTrainingLoad, //每週運動訓練量
+                    TrainingHomogeneity = model.TrainingHomogeneity, //訓練同質性
+                    TrainingTension = model.TrainingTension, //訓練張力值
+                    WeeklyTrainingChange = model.WeeklyTrainingChange, //週間訓練變化
+                    ShortToLongTermTrainingLoadRatio = model.ShortToLongTermTrainingLoadRatio, //短期：長期訓練量比值
+                    CreatedDate = DateTime.Now //建立時間
                 };
 
                 _db.SessionRPETrainingRecords.Add(newRecord);
-                _db.SaveChanges();
+                //_db.SaveChanges();
 
                 return Json(new { success = true });
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 return Json(new { success = false, message = ex.Message });
             }
         }
+        #endregion
 
+        #region 小時轉換為分鐘
+        // 將訓練時間轉換為分鐘的函式
+        private int ConvertTrainingTimeToMinutes(string trainingTime)
+        {
+            if (string.IsNullOrEmpty(trainingTime))
+                return 0;
+
+            // 解析小時數
+            if (trainingTime.EndsWith("小時"))
+            {
+                if (int.TryParse(trainingTime.Replace("小時", "").Trim(), out int hours))
+                {
+                    return hours * 60; // 轉換為分鐘
+                }
+            }
+
+            // 解析分鐘數
+            if (trainingTime.EndsWith("分鐘"))
+            {
+                if (int.TryParse(trainingTime.Replace("分鐘", "").Trim(), out int minutes))
+                {
+                    return minutes; // 直接返回分鐘
+                }
+            }
+
+            return 0; // 如果無法解析，返回 0
+        }
+
+        #endregion
+
+        #region 讀取sessionRPE訓練量結果
+        [HttpGet]
+        public ActionResult LoadSessionRPETrainingRecords()
+        {
+            // 從數據庫中讀取最新的數據
+            var records = _db.SessionRPETrainingRecords
+                             .Select(record => new SessionRPETrainingRecordsModel
+                             {
+                                 TrainingDate = record.TrainingDate.HasValue ? record.TrainingDate.Value : DateTime.MinValue, //日期
+                                 TrainingItem = record.TrainingItem, //訓練名稱
+                                 DifficultyCategory = record.DifficultyCategory, //難度分類
+                                 TrainingActionName = record.TrainingActionName, //動作名稱
+                                 TrainingTime = record.TrainingTime, //訓練時間
+                                 RPEscore = record.RPEscore, //RPE分數
+                                 TrainingLoad = record.TrainingLoad ?? 0, //運動訓練量
+                                 DailyTrainingLoad = record.DailyTrainingLoad ?? 0, //每日運動訓練量
+                                 WeeklyTrainingChange = record.WeeklyTrainingChange ?? 0, //每週運動訓練量
+                                 TrainingHomogeneity = record.TrainingHomogeneity ?? 0, //同質性
+                                 TrainingTension = record.TrainingTension ?? 0, //張力值
+                                 WeeklyTrainingLoad = record.WeeklyTrainingLoad ?? 0, //週間訓練變化
+                                 ShortToLongTermTrainingLoadRatio = record.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
+                             }).ToList();
+            // 返回部分視圖
+            return PartialView("_WeeklyTrainingRecords", records);
+        }
+        #endregion
+
+        #region 計算檢測結果
+        [HttpGet]
+        public JsonResult CalculateTrainingLoad(DateTime date)
+        {
+            try
+            {
+                // 從資料庫讀取指定日期的訓練記錄
+                var records = _db.SessionRPETrainingRecords
+                    .Where(record => record.TrainingDate == date)
+                    .ToList();
+
+                // 計算總訓練量
+                var totalTrainingLoad = 0;
+                var dailyTrainingLoadSum = 0;
+                var weeklyTrainingLoadSum = 0;
+
+                //計算運動訓練量
+                foreach (var record in records)
+                {
+                    var trainingLoad = TrainingRecordHelper.CalculateTrainingLoad(record.TrainingTime, record.RPEscore);
+                    totalTrainingLoad = trainingLoad;
+                }
+
+                //計算每日運動訓練量
+                dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, date);
+
+                //計算每週運動訓練量
+                weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, date);
+
+                //計算訓練同質性(TM)
+                double trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, date);
+
+                //計算訓練張力值(TS)
+                double trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, date);
+
+                //計算週間訓練變化
+                double weekToweekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, date);
+
+                //計算短長期訓練量比值
+                double acwr = TrainingRecordHelper.CalculateACWR(_db, date);
+
+                return Json(new
+                {
+                    TrainingLoad = totalTrainingLoad, //訓練量
+                    DailyTrainingLoadSum = dailyTrainingLoadSum, //每日訓練量
+                    WeeklyTrainingLoadSum = weeklyTrainingLoadSum, //週訓練量
+                    TrainingMonotony = trainingMonotony, //TM同質性
+                    TrainingStrain = trainingStrain, //TS張力值
+                    WeekToWeekChange = weekToweekChange, //週間訓練變化
+                    ACWR = acwr, //短長期訓練量比值
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
     }
 }

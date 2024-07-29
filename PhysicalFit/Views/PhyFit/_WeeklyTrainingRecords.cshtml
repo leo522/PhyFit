@@ -5,25 +5,29 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Difficulty Category</th>
-                <th>Training Item</th>
-                <th>Training Time</th>
-                <th>RPEscore</th>
-                <th>Training Load</th>
-                <th>Daily Training Load</th>
-                <th>Weekly Training Load</th>
-                <th>Training Homogeneity</th>
-                <th>Training Tension</th>
-                <th>Weekly Training Change</th>
-                <th>Short to Long Term Training Load Ratio</th>
+                <th>日期</th>
+                <th>訓練衝量監控項目</th>
+                <th>難度分類</th>
+                <th>動作名稱</th>
+                <th>訓練時間</th>
+                <th>RPE分數</th>
+                <th>運動訓練量</th>
+                <th>每日運動訓練量</th>
+                <th>每週運動訓練量</th>
+                <th>訓練同質性</th>
+                <th>訓練張力值</th>
+                <th>週間訓練變化</th>
+                <th>短期：長期訓練量比值</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var record in Model)
             {
                 <tr>
-                    <td>@record.DifficultyCategory</td>
+                    <td>@record.TrainingDate.ToString("yyyy/MM/dd")</td>
                     <td>@record.TrainingItem</td>
+                    <td>@record.DifficultyCategory</td>
+                    <td>@record.TrainingActionName</td>
                     <td>@record.TrainingTime</td>
                     <td>@record.RPEscore</td>
                     <td>@record.TrainingLoad</td>

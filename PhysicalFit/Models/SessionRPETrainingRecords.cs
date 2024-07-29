@@ -18,7 +18,7 @@ namespace PhysicalFit.Models
         public string UserAccount { get; set; }
         public string DifficultyCategory { get; set; }
         public string TrainingItem { get; set; }
-        public System.DateTime TrainingTime { get; set; }
+        public string TrainingTime { get; set; }
         public int RPEscore { get; set; }
         public Nullable<int> TrainingLoad { get; set; }
         public Nullable<int> DailyTrainingLoad { get; set; }

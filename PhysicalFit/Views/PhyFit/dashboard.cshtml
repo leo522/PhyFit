@@ -54,12 +54,12 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2>訓練項目</h2>
+                        <h2>訓練衝量項目</h2>
                     </div>
                     <div class="card-body">
                         <form>
                             <div class="form-group">
-                                <label>訓練衝量監控項目</label>
+                                <label>監控項目</label>
                                 <select class="form-control" id="TrainingItemSession_RPE">
                                     <option>請選擇訓練項目</option>
                                     @foreach (var tr in ViewBag.Description)
@@ -91,7 +91,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="ActionName">動作名稱</label>
-                                <input type="text" class="form-control" id="ActionName" placeholder="請輸入動作名稱">
+                                <input type="text" class="form-control" id="ActionName" value="馬克操" placeholder="請輸入動作名稱">
                             </div>
                             <div class="form-group">
                                 <label for="TrainingTime">訓練時間</label>
@@ -124,7 +124,7 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2>訓練詳情</h2>
+                        <h2>射箭訓練衝量詳情</h2>
                     </div>
                     <div class="card-body">
                         <form>
@@ -157,46 +157,7 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2>訓練詳情</h2>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label>項目</label>
-                                <select class="form-control" id="Guns">
-                                    <option>請選擇射擊用具種類</option>
-                                    @foreach (var Gun in ViewBag.GunItem)
-                                    {
-                                        <option>@Gun</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="Bullet">子彈數</label>
-                                <input type="text" class="form-control" id="BulletName" placeholder="請輸入子彈數">
-                            </div>
-                            <div class="form-group">
-                                <label for="RPE">RPE分數</label>
-                                <select class="form-control" id="RPE_3">
-                                    <option>請選擇RPE分數</option>
-                                    @foreach (var RPE in ViewBag.RPEScore)
-                                    {
-                                        <option value="@RPE.Score">@RPE.Score</option>
-                                    }
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @*射擊訓練衝量監控*@
-        <div class="training-section" id="shotting_Training">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>訓練詳情</h2>
+                        <h2>射擊訓練衝量詳情</h2>
                     </div>
                     <div class="card-body">
                         <form>
@@ -235,7 +196,7 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2>訓練詳情</h2>
+                        <h2>檢測系統訓練詳情</h2>
                     </div>
                     <div class="card-body">
                         <form>
@@ -288,8 +249,8 @@
         </div>
     </div>
 
-    @*計算結果*@
-    <div class="resultTable">
+    @*session RPE指標計算結果*@
+    <div class="resultTable" id="sessionRPEresult">
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
@@ -383,12 +344,12 @@
         <button id="btnRecord" class="btn btn-primary">查看訓練量紀錄</button>
     </div>
 
-    @*訓練練紀錄彈跳視窗*@
+    @*訓練量紀錄彈跳視窗*@
     <div id="RecordModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <div class="modal-body">
-                @Html.Partial("_WeeklyTrainingRecords", ViewBag.SessionTrainingRecords as IEnumerable<PhysicalFit.Models.SessionRPETrainingRecords>)
+                @Html.Partial("_WeeklyTrainingRecords", ViewBag.SessionTrainingRecords as IEnumerable<PhysicalFit.Models.SessionRPETrainingRecordsModel>)
             </div>
         </div>
     </div>
@@ -398,14 +359,15 @@
         <button id="btn_result" class="btn btn-info">計算檢測</button>
     </div>
 
+    @*儲存運動訓練量按鈕*@
     <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
-        <button id="btn_save" class="btn btn-success">儲存結果</button>
+        <button id="btn_save" class="btn btn-success">儲存運動訓練量結果</button>
     </div>
 
     <script>
         $(document).ready(function () {
             // 初始化時隱藏所有監控項目
-            $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').hide();
+            $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord, #sessionRPEresult').hide();
 
             // 當選擇監控項目時
             $('#Item').change(function () {
@@ -416,7 +378,7 @@
 
                 // 根據選擇的項目顯示對應的內容
                 if (selectItem === '訓練衝量監控 (session-RPE)') {
-                    $('#session_RPE, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
+                    $('#session_RPE, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord, #sessionRPEresult').show();
                 } else if (selectItem === '射箭訓練衝量') {
                     $('#arrow_Training, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
                 } else if (selectItem === '射擊訓練衝量') {
