@@ -22,32 +22,40 @@ namespace PhysicalFit.Controllers
         [HttpPost]
         public ActionResult Register(string UserName, string pwd, string Email)
         {
-            if (pwd.Length < 6)
+            try
             {
-                ViewBag.ErrorMessage = "密碼長度至少要6位數";
-                return View();
+                if (pwd.Length < 6)
+                {
+                    ViewBag.ErrorMessage = "密碼長度至少要6位數";
+                    return View();
+                }
+
+                if (_db.Users.Any(u => u.Name == UserName))
+                {
+                    ViewBag.ErrorMessage = "該帳號已存在";
+                    return View();
+                }
+
+                var Pwd = Sha256Hash(pwd);
+                var newUser = new Users
+                {
+                    Name = UserName,
+                    Password = Pwd,
+                    Email = Email,
+                    RegistrationDate = DateTime.Now,
+                    IsActive = true
+                };
+
+                _db.Users.Add(newUser);
+                _db.SaveChanges();
+
+                return RedirectToAction("Login");
             }
-
-            if (_db.Users.Any(u => u.Name == UserName))
+            catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "該帳號已存在";
-                return View();
+                Console.WriteLine("其他錯誤: " + ex.Message);
+                return View("Error");
             }
-
-            var Pwd = Sha256Hash(pwd);
-            var newUser = new Users
-            {
-                Name = UserName,
-                Password = Pwd,
-                Email = Email,
-                RegistrationDate = DateTime.Now,
-                IsActive = true
-            };
-
-            _db.Users.Add(newUser);
-            _db.SaveChanges();
-
-            return RedirectToAction("Login");
         }
         #endregion
 
@@ -162,9 +170,8 @@ namespace PhysicalFit.Controllers
             ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
             ViewBag.RPEScore = GetRPE();//RPE量表
             ViewBag.GunItem = GetGunsItems(); //射擊用具項目
-            ViewBag.DetectionItem = GetDetectionItem(); //檢測系統_有無氧項目
             ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-            ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
+            //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
 
             var records = _db.SessionRPETrainingRecords.ToList();
 
@@ -190,22 +197,30 @@ namespace PhysicalFit.Controllers
         #region 日期
         public ActionResult GetDateData()
         {
-            var today = DateTime.Today;
-            var years = Enumerable.Range(today.Year - 100, 101).Reverse().ToList();
-            var months = Enumerable.Range(1, 12).ToList();
-            var days = Enumerable.Range(1, DateTime.DaysInMonth(today.Year, today.Month)).ToList();
-
-            var dateData = new
+            try
             {
-                CurrentYear = today.Year,
-                CurrentMonth = today.Month,
-                CurrentDay = today.Day,
-                Years = years,
-                Months = months,
-                Days = days
-            };
+                var today = DateTime.Today;
+                var years = Enumerable.Range(today.Year - 100, 101).Reverse().ToList();
+                var months = Enumerable.Range(1, 12).ToList();
+                var days = Enumerable.Range(1, DateTime.DaysInMonth(today.Year, today.Month)).ToList();
 
-            return Json(dateData, JsonRequestBehavior.AllowGet);
+                var dateData = new
+                {
+                    CurrentYear = today.Year,
+                    CurrentMonth = today.Month,
+                    CurrentDay = today.Day,
+                    Years = years,
+                    Months = months,
+                    Days = days
+                };
+
+                return Json(dateData, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("其他錯誤: " + ex.Message);
+                return View("Error");
+            }
         }
         #endregion
 
@@ -293,15 +308,6 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 檢測系統_有無氧代謝能力項目
-        public List<string> GetDetectionItem()
-        {
-            var dto = (from di in _db.DetectionSys
-                       select di.DetectionItem).ToList();
-            return dto;
-        }
-        #endregion
-
         #region 檢測系統_運動項目
         public List<string> GetSpoetsItem()
         {
@@ -312,14 +318,49 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 檢測系統_運動距離
-        public List<string> GetSpoetsDistance()
-        {
-            var dto = (from Si in _db.DetectionTraining
-                       select Si.Distance).ToList();
+        //[HttpGet]
+        //public JsonResult GetSpoetsDistance(string itemName)
+        //{
+        //    try
+        //    {
+        //        var distances = (from Si in _db.DetectionTraining
+        //                         where Si.ItemName == itemName
+        //                         select Si.Distance).FirstOrDefault();
 
-            //切割距離欄位的符號
-            var SplitDist = dto.SelectMany(d => d.Split('/')).Distinct().OrderBy(d => d).ToList();
-            return SplitDist;
+        //        if (!string.IsNullOrEmpty(distances))
+        //        {
+        //            // 分割距離字串為列表
+        //            var distanceList = distances.Split('/').ToList();
+        //            return Json(distanceList, JsonRequestBehavior.AllowGet);
+        //        }
+
+        //        return Json(new List<string>(), JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+        public ActionResult LoadDistanceDetails(string itemName)
+        {
+            try
+            {
+                var distances = (from Si in _db.DetectionTraining
+                                 where Si.ItemName == itemName
+                                 select Si.Distance).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(distances))
+                {
+                    var distanceList = distances.Split('/').ToList();
+                    return PartialView("_DistanceDetails", distanceList);
+                }
+
+                return PartialView("_DistanceDetails", new List<string>());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
 
@@ -392,6 +433,9 @@ namespace PhysicalFit.Controllers
                 // 將 TrainingTime 轉換為分鐘
                 int trainingTimeInMinutes = ConvertTrainingTimeToMinutes(model.TrainingTime);
 
+                //計算每日運動訓練量
+                int dailyTrainingLoad = trainingTimeInMinutes * model.RPEscore;
+
                 var newRecord = new SessionRPETrainingRecords
                 {
                     TrainingDate = model.TrainingDate, //日期
@@ -401,7 +445,7 @@ namespace PhysicalFit.Controllers
                     TrainingTime = trainingTimeInMinutes.ToString(), // 訓練時間轉換為分鐘
                     RPEscore = model.RPEscore, //RPE分數
                     TrainingLoad = model.TrainingLoad, //運動訓練量
-                    DailyTrainingLoad = model.DailyTrainingLoad, //每日運動訓練量
+                    DailyTrainingLoad = dailyTrainingLoad, //每日運動訓練量(計算後)
                     WeeklyTrainingLoad = model.WeeklyTrainingLoad, //每週運動訓練量
                     TrainingHomogeneity = model.TrainingHomogeneity, //訓練同質性
                     TrainingTension = model.TrainingTension, //訓練張力值
@@ -411,7 +455,7 @@ namespace PhysicalFit.Controllers
                 };
 
                 _db.SessionRPETrainingRecords.Add(newRecord);
-                //_db.SaveChanges();
+                _db.SaveChanges();
 
                 return Json(new { success = true });
             }
@@ -435,7 +479,7 @@ namespace PhysicalFit.Controllers
             {
                 if (int.TryParse(trainingTime.Replace("小時", "").Trim(), out int hours))
                 {
-                    return hours * 60; // 轉換為分鐘
+                    return hours * 60; //轉換為分鐘
                 }
             }
 
@@ -444,11 +488,11 @@ namespace PhysicalFit.Controllers
             {
                 if (int.TryParse(trainingTime.Replace("分鐘", "").Trim(), out int minutes))
                 {
-                    return minutes; // 直接返回分鐘
+                    return minutes; //直接返回分鐘
                 }
             }
 
-            return 0; // 如果無法解析，返回 0
+            return 0; //如果無法解析，返回 0
         }
 
         #endregion

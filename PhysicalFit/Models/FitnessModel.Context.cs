@@ -45,7 +45,7 @@ namespace PhysicalFit.Models
         public virtual DbSet<TrainingMonitoringItems> TrainingMonitoringItems { get; set; }
         public virtual DbSet<ShottingItems> ShottingItems { get; set; }
         public virtual DbSet<DetectionSys> DetectionSys { get; set; }
-        public virtual DbSet<DetectionTraining> DetectionTraining { get; set; }
         public virtual DbSet<SessionRPETrainingRecords> SessionRPETrainingRecords { get; set; }
+        public virtual DbSet<DetectionTraining> DetectionTraining { get; set; }
     }
 }

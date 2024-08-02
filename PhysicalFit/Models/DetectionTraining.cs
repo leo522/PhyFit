@@ -16,13 +16,8 @@ namespace PhysicalFit.Models
     {
         public int Id { get; set; }
         public string ItemNumber { get; set; }
-        public string ItemCapability { get; set; }
         public string ItemName { get; set; }
         public string Distance { get; set; }
-        public string DetectionResult { get; set; }
-        public Nullable<int> TrainingVolume { get; set; }
-        public string IntervalRunningPrescription { get; set; }
-        public Nullable<int> RPEScore { get; set; }
         public Nullable<System.DateTime> CreatedTime { get; set; }
         public string CreatedUser { get; set; }
     }

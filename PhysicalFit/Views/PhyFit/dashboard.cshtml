@@ -9,6 +9,7 @@
     <script src="~/Scripts/dashDate.js"></script>
     <script src="~/Scripts/DashBoardmodal.js"></script>
     <script src="~/Scripts/SessionTraining.js"></script>
+    <script src="~/Scripts/SessionMonitoring.js"></script>
     <script>var getDateDataUrl = '@Url.Action("GetDateData")';</script>
     <link href="~/css/RPE_Modal.css" rel="stylesheet" />
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
@@ -54,7 +55,7 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2>訓練衝量項目</h2>
+                        <h2>一般訓練衝量項目</h2>
                     </div>
                     <div class="card-body">
                         <form>
@@ -124,7 +125,7 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2>射箭訓練衝量詳情</h2>
+                        <h2>專項訓練-射箭訓練衝量詳情</h2>
                     </div>
                     <div class="card-body">
                         <form>
@@ -157,7 +158,7 @@
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2>射擊訓練衝量詳情</h2>
+                        <h2>專項訓練-射擊訓練衝量詳情</h2>
                     </div>
                     <div class="card-body">
                         <form>
@@ -203,11 +204,7 @@
                             <div class="form-group">
                                 <label>項目</label>
                                 <select class="form-control" id="Dete">
-                                    <option>請選擇代謝能力項目</option>
-                                    @foreach (var DI in ViewBag.DetectionItem)
-                                    {
-                                        <option>@DI</option>
-                                    }
+                                    <option>有/無氧代謝能力測定</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -220,16 +217,16 @@
                                     }
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label>距離</label>
-                                <select class="form-control" id="Distance">
-                                    <option>請選擇距離</option>
-                                    @foreach (var Dis in ViewBag.SpoetsDistance)
-                                    {
-                                        <option>@Dis</option>
-                                    }
-                                </select>
-                            </div>
+                            @*<div class="form-group">
+                                    <label>距離</label>
+                                    <select class="form-control" id="Distance">
+                                        <option>請選擇距離</option>
+                                        @foreach (var Dis in ViewBag.SpoetsDistance)
+                                        {
+                                            <option>@Dis</option>
+                                        }
+                                    </select>
+                                </div>*@
                             <div class="form-group">
                                 <label for="Result">檢測結果</label>
                                 <input type="text" class="form-control" id="DistanceResult" placeholder="">
@@ -249,6 +246,11 @@
         </div>
     </div>
 
+    @*檢測系統-訓練內容-Partial view*@
+    @*<div id="distanceDetails" style="display:none;">
+        @Html.Partial("_DistanceDetails")
+    </div>*@
+    <div id="distanceDetails"></div>
     @*session RPE指標計算結果*@
     <div class="resultTable" id="sessionRPEresult">
         <div class="col-md-4">
@@ -354,9 +356,9 @@
         </div>
     </div>
 
-    @*計算檢測結果按鈕*@
+    @*計算session RPE指標計算結果按鈕*@
     <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
-        <button id="btn_result" class="btn btn-info">計算檢測</button>
+        <button id="btn_result" class="btn btn-info">計算session RPE指標結果</button>
     </div>
 
     @*儲存運動訓練量按鈕*@
@@ -365,29 +367,37 @@
     </div>
 
     <script>
-        $(document).ready(function () {
-            // 初始化時隱藏所有監控項目
-            $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord, #sessionRPEresult').hide();
+    $(document).ready(function() {
+       $('#DeteItem').change(function () {
+           var selectedItem = $(this).val();
+           $('#selectedSportItem').text(selectedItem); //更新選擇的運動項目名稱
 
-            // 當選擇監控項目時
-            $('#Item').change(function () {
-                const selectItem = $(this).val();
-
-                // 隱藏所有項目
-                $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').hide();
-
-                // 根據選擇的項目顯示對應的內容
-                if (selectItem === '訓練衝量監控 (session-RPE)') {
-                    $('#session_RPE, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord, #sessionRPEresult').show();
-                } else if (selectItem === '射箭訓練衝量') {
-                    $('#arrow_Training, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
-                } else if (selectItem === '射擊訓練衝量') {
-                    $('#shotting_Training, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
-                } else if (selectItem === '檢測系統') {
-                    $('#Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
+            if (selectedItem !== "請選擇運動項目") {
+            $.ajax({
+                url: '@Url.Action("LoadDistanceDetails", "PhyFit")',
+                data: { itemName: selectedItem },
+                success: function (data) {
+                    $('#distanceDetails').html(data);
+                    $('#distanceDetails').find('#selectedSportItem').text(selectedItem); // 更新 partial view 中的選項
+                },
+                error: function() {
+                    alert("資料錯誤.");
                 }
             });
+        } else {
+            $('#distanceDetails').html('');
+        }
+    });
+        //當 #Item 下拉選單改變時觸發
+        $('#Item').change(function () {
+            var selectedValue = $(this).val();
+            if (selectedValue === '檢測系統') {
+                $('#distanceDetails').show();
+            } else {
+                $('#distanceDetails').hide();
+            }
         });
+    });
     </script>
 </body>
 </html>

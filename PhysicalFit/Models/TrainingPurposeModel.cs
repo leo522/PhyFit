@@ -83,4 +83,11 @@ namespace PhysicalFit.Models
         public string TrainingActionName { get; set; }
         public DateTime TrainingDate { get; set; }
     }
+
+    public class DistanceDetailModel //partialView檢測系統
+    {
+        public string Distance { get; set; }
+        public string ExhaustionTime { get; set; }
+        public string Speed { get; set; }
+    }
 }

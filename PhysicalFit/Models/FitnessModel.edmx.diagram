@@ -28,8 +28,8 @@
         <EntityTypeShape EntityType="PhFitnessModel.TrainingMonitoringItems" Width="1.5" PointX="12.375" PointY="4.75" />
         <EntityTypeShape EntityType="PhFitnessModel.ShottingItems" Width="1.5" PointX="12.375" PointY="7.75" />
         <EntityTypeShape EntityType="PhFitnessModel.DetectionSys" Width="1.5" PointX="7.375" PointY="12.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.DetectionTraining" Width="1.5" PointX="6.625" PointY="8.25" />
         <EntityTypeShape EntityType="PhFitnessModel.SessionRPETrainingRecords" Width="1.5" PointX="9.375" PointY="12.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.DetectionTraining" Width="1.5" PointX="6.375" PointY="8.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
