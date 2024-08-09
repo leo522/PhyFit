@@ -352,10 +352,29 @@ namespace PhysicalFit.Controllers
                 if (!string.IsNullOrEmpty(distances))
                 {
                     var distanceList = distances.Split('/').ToList();
-                    return PartialView("_DistanceDetails", distanceList);
+                    if (itemName == "田徑場")
+                    {
+                        return PartialView("_Athletic", distanceList);
+                    }
+                    else if (itemName == "跑步機")
+                    {
+                        return PartialView("_Treadmill", distanceList);
+                    }
+                    else if (itemName == "游泳")
+                    {
+                        return PartialView("_Swimming", distanceList);
+                    }
+                    else if (itemName == "自由車")
+                    {
+                        return PartialView("_RoadBicycle", distanceList);
+                    }
+                    else if (itemName == "滑輪溜冰") 
+                    {
+                        return PartialView("_RollerSkating", distanceList);
+                    }
                 }
 
-                return PartialView("_DistanceDetails", new List<string>());
+                return PartialView("_Athletic", new List<string>());
             }
             catch (Exception ex)
             {

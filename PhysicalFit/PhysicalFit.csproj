@@ -259,6 +259,8 @@
       <DependentUpon>FitnessModel.edmx</DependentUpon>
       <LastGenOutput>FitnessModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\AthleticCaculate.js" />
+    <Content Include="Scripts\BikeCalculate.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -284,11 +286,12 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\LinearRegression.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\SessionMonitoring.js" />
     <Content Include="Scripts\SessionTraining.js" />
+    <Content Include="Scripts\SwimmingPoolCaculate.js" />
     <Content Include="Scripts\TL.js" />
+    <Content Include="Scripts\TreadmillCaculate.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -309,7 +312,11 @@
     <Content Include="Views\PhyFit\Home.cshtml" />
     <Content Include="Views\PhyFit\dashboard.cshtml" />
     <Content Include="Views\PhyFit\_WeeklyTrainingRecords.cshtml" />
-    <Content Include="Views\PhyFit\_DistanceDetails.cshtml" />
+    <Content Include="Views\PhyFit\_Athletic.cshtml" />
+    <Content Include="Views\PhyFit\_Treadmill.cshtml" />
+    <Content Include="Views\PhyFit\_Swimming.cshtml" />
+    <Content Include="Views\PhyFit\_RoadBicycle.cshtml" />
+    <Content Include="Views\PhyFit\_RollerSkating.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
