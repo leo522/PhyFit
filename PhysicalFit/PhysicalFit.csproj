@@ -317,6 +317,8 @@
     <Content Include="Views\PhyFit\_Swimming.cshtml" />
     <Content Include="Views\PhyFit\_RoadBicycle.cshtml" />
     <Content Include="Views\PhyFit\_RollerSkating.cshtml" />
+    <Content Include="Views\PhyFit\_Athletes.cshtml" />
+    <Content Include="Views\PhyFit\_Coach.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

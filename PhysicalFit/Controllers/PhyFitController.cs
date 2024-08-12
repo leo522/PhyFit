@@ -172,6 +172,7 @@ namespace PhysicalFit.Controllers
             ViewBag.GunItem = GetGunsItems(); //射擊用具項目
             ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
             //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
+            ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
 
             var records = _db.SessionRPETrainingRecords.ToList();
 
@@ -600,6 +601,22 @@ namespace PhysicalFit.Controllers
                 throw ex;
             }
         }
+        #endregion
+
+        #region 教練資訊
+
+        #endregion
+
+        #region 運動員資訊
+        public ActionResult athletes(int coachId)
+        {
+            var athletes = _db.Athletes
+                              .Where(a => a.CoachID == coachId)
+                              .Select(a => a.AthleteName)
+                              .ToList();
+            return PartialView("_Athletes", athletes);
+        }
+
         #endregion
     }
 }

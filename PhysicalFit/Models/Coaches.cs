@@ -14,13 +14,23 @@ namespace PhysicalFit.Models
     
     public partial class Coaches
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Coaches()
+        {
+            this.Athletes = new HashSet<Athletes>();
+        }
+    
         public int ID { get; set; }
-        public string Name { get; set; }
+        public string CoachName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string SchoolName { get; set; }
         public string Title { get; set; }
         public string TeamName { get; set; }
-        public Nullable<bool> IsActive { get; set; }
+        public string SportsSpecific { get; set; }
+        public bool IsActive { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Athletes> Athletes { get; set; }
     }
 }

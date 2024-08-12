@@ -15,11 +15,14 @@ namespace PhysicalFit.Models
     public partial class Athletes
     {
         public int ID { get; set; }
-        public string Name { get; set; }
+        public string AthleteName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string SchoolName { get; set; }
         public string TeamName { get; set; }
+        public Nullable<int> CoachID { get; set; }
         public Nullable<bool> IsActive { get; set; }
+    
+        public virtual Coaches Coaches { get; set; }
     }
 }

@@ -5,8 +5,6 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="3b6c3bc47f1947e2b41914fa0bd89621" Name="Diagram1">
-        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PhFitnessModel.Permissions" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="PhFitnessModel.UserPermissions" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="PhFitnessModel.UserRoles" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
@@ -30,6 +28,9 @@
         <EntityTypeShape EntityType="PhFitnessModel.DetectionSys" Width="1.5" PointX="7.375" PointY="12.75" />
         <EntityTypeShape EntityType="PhFitnessModel.SessionRPETrainingRecords" Width="1.5" PointX="9.375" PointY="12.75" />
         <EntityTypeShape EntityType="PhFitnessModel.DetectionTraining" Width="1.5" PointX="6.375" PointY="8.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="14.625" PointY="11" />
+        <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="12.375" PointY="11" />
+        <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

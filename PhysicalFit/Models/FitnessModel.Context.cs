@@ -25,8 +25,6 @@ namespace PhysicalFit.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Athletes> Athletes { get; set; }
-        public virtual DbSet<Coaches> Coaches { get; set; }
         public virtual DbSet<Permissions> Permissions { get; set; }
         public virtual DbSet<UserPermissions> UserPermissions { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
@@ -47,5 +45,7 @@ namespace PhysicalFit.Models
         public virtual DbSet<DetectionSys> DetectionSys { get; set; }
         public virtual DbSet<SessionRPETrainingRecords> SessionRPETrainingRecords { get; set; }
         public virtual DbSet<DetectionTraining> DetectionTraining { get; set; }
+        public virtual DbSet<Athletes> Athletes { get; set; }
+        public virtual DbSet<Coaches> Coaches { get; set; }
     }
 }

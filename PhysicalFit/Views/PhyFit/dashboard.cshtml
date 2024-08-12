@@ -17,7 +17,7 @@
 <body>
     @*標題*@
     <div class="main-container">
-        <div class=" left-section">
+        <div class=" left-section" style="margin-left: -300px;">
             <div style="margin-bottom:20px;">
                 <label for="TrainingItem">訓練監控項目</label>
                 <select class="form-control" id="Item" style="border:2px solid #000;">
@@ -31,25 +31,39 @@
         </div>
 
         @*日期*@
-        <div class="right-section">
-            <div class="dateSelect">
-                <form>
-                    <label>日期：</label>
-                    <select id="year" name="year" onchange="updateDays()"></select>
-                    <label for="year">年</label>
+    <div class="right-section">
+        <div class="dateSelect">
+            <form>
+                <label>日期：</label>
+                <select id="year" name="year" onchange="updateDays()"></select>
+                <label for="year">年</label>
 
-                    <select id="month" name="month" onchange="updateDays()"></select>
-                    <label for="month">月</label>
+                <select id="month" name="month" onchange="updateDays()"></select>
+                <label for="month">月</label>
 
-                    <select id="day" name="day"></select>
-                    <label for="day">日</label>
-                </form>
-            </div>
+                <select id="day" name="day"></select>
+                <label for="day">日</label>
+            </form>
+        </div>
+        <div class="coachItem" style="margin-top: 20px;">
+            <label for="Coaches">選擇教練</label>
+            <select class="form-control" id="Coaches" style="border:2px solid #000; width:200px;">
+                <option>請選擇教練</option>
+                @foreach (var coach in ViewBag.Coaches)
+                {
+                    <option value="@coach.ID">@coach.CoachName</option>
+                }
+            </select>
+        </div>
+        <div id="athletesContainer" style="margin-top: 20px;">
+            @* 預設會顯示為空的運動員部分視圖 *@
+            @Html.Partial("_Athletes", new List<string>())
         </div>
     </div>
-
+    </div>
+    
     @*表單內容*@
-    <div class="content">
+    <div class="content" style="margin-left: 120px;">
         @*訓練衝量監控*@
         <div class="training-section" id="session_RPE">
             <div class="col-md-3">
@@ -250,7 +264,7 @@
     <div id="distanceDetails"></div>
 
     @*session RPE指標計算結果*@
-    <div class="resultTable" id="sessionRPEresult">
+    <div class="resultTable" id="sessionRPEresult" style="margin-left: 110px;">
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
@@ -393,6 +407,24 @@
                 $('#distanceDetails').show();
             } else {
                 $('#distanceDetails').hide();
+            }
+        });
+
+        $('#Coaches').change(function () {
+            var selectedCoachId = $(this).val();
+            if (selectedCoachId) {
+                $.ajax({
+                    url: '@Url.Action("athletes", "PhyFit")',
+                    data: { coachId: selectedCoachId },
+                    success: function (data) {
+                        $('#athletesContainer').html(data);
+                    },
+                    error: function () {
+                        alert("無法加載運動員資料.");
+                    }
+                });
+            } else {
+                $('#athletesContainer').html('');
             }
         });
     });

@@ -32,11 +32,12 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
-          <Property Name="Email" Type="nvarchar" MaxLength="100" />
+          <Property Name="AthleteName" Type="nvarchar" MaxLength="10" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="15" />
-          <Property Name="SchoolName" Type="nvarchar" MaxLength="100" />
-          <Property Name="TeamName" Type="nvarchar" MaxLength="100" />
+          <Property Name="SchoolName" Type="nvarchar" MaxLength="10" />
+          <Property Name="TeamName" Type="nvarchar" MaxLength="10" />
+          <Property Name="CoachID" Type="int" />
           <Property Name="IsActive" Type="bit" />
         </EntityType>
         <EntityType Name="Coaches">
@@ -44,13 +45,14 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
-          <Property Name="Email" Type="nvarchar" MaxLength="100" />
-          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="15" />
-          <Property Name="SchoolName" Type="nvarchar" MaxLength="100" />
-          <Property Name="Title" Type="nvarchar" MaxLength="50" />
-          <Property Name="TeamName" Type="nvarchar" MaxLength="100" />
-          <Property Name="IsActive" Type="bit" />
+          <Property Name="CoachName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="20" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="SchoolName" Type="nvarchar" MaxLength="20" />
+          <Property Name="Title" Type="nvarchar" MaxLength="20" />
+          <Property Name="TeamName" Type="nvarchar" MaxLength="20" />
+          <Property Name="SportsSpecific" Type="nvarchar" MaxLength="20" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="DetectionSys">
           <Key>
@@ -285,6 +287,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Athletes_Coaches">
+          <End Role="Coaches" Type="Self.Coaches" Multiplicity="0..1" />
+          <End Role="Athletes" Type="Self.Athletes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coaches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Athletes">
+              <PropertyRef Name="CoachID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="PhFitnessModelStoreContainer">
           <EntitySet Name="AbilityDetermination" EntityType="Self.AbilityDetermination" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ArcheryTraining" EntityType="Self.ArcheryTraining" Schema="dbo" store:Type="Tables" />
@@ -320,36 +334,15 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
+          <AssociationSet Name="FK_Athletes_Coaches" Association="Self.FK_Athletes_Coaches">
+            <End Role="Coaches" EntitySet="Coaches" />
+            <End Role="Athletes" EntitySet="Athletes" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PhFitnessModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Athletes">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="SchoolName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="TeamName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="Coaches">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="SchoolName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TeamName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" />
-        </EntityType>
         <EntityType Name="Permissions">
           <Key>
             <PropertyRef Name="ID" />
@@ -429,8 +422,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="PhFitnessEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Athletes" EntityType="Self.Athletes" />
-          <EntitySet Name="Coaches" EntityType="Self.Coaches" />
           <EntitySet Name="Permissions" EntityType="Self.Permissions" />
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" />
@@ -463,6 +454,12 @@
           <EntitySet Name="DetectionSys" EntityType="PhFitnessModel.DetectionSys" />
           <EntitySet Name="SessionRPETrainingRecords" EntityType="PhFitnessModel.SessionRPETrainingRecords" />
           <EntitySet Name="DetectionTraining" EntityType="PhFitnessModel.DetectionTraining" />
+          <EntitySet Name="Athletes" EntityType="PhFitnessModel.Athletes" />
+          <EntitySet Name="Coaches" EntityType="PhFitnessModel.Coaches" />
+          <AssociationSet Name="FK_Athletes_Coaches" Association="PhFitnessModel.FK_Athletes_Coaches">
+            <End Role="Coaches" EntitySet="Coaches" />
+            <End Role="Athletes" EntitySet="Athletes" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="TrainingPurpose">
           <Key>
@@ -647,39 +644,53 @@
           <Property Name="CreatedTime" Type="DateTime" Precision="3" />
           <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Athletes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AthleteName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TeamName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CoachID" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Athletes" ToRole="Coaches" />
+        </EntityType>
+        <EntityType Name="Coaches">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CoachName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TeamName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SportsSpecific" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Coaches" ToRole="Athletes" />
+        </EntityType>
+        <Association Name="FK_Athletes_Coaches">
+          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coaches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Athletes">
+              <PropertyRef Name="CoachID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="PhFitnessModelStoreContainer" CdmEntityContainer="PhFitnessEntities">
-          <EntitySetMapping Name="Athletes">
-            <EntityTypeMapping TypeName="PhFitnessModel.Athletes">
-              <MappingFragment StoreEntitySet="Athletes">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
-                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Coaches">
-            <EntityTypeMapping TypeName="PhFitnessModel.Coaches">
-              <MappingFragment StoreEntitySet="Coaches">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Permissions">
             <EntityTypeMapping TypeName="PhFitnessModel.Permissions">
               <MappingFragment StoreEntitySet="Permissions">
@@ -914,6 +925,35 @@
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Athletes">
+            <EntityTypeMapping TypeName="PhFitnessModel.Athletes">
+              <MappingFragment StoreEntitySet="Athletes">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CoachID" ColumnName="CoachID" />
+                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="AthleteName" ColumnName="AthleteName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Coaches">
+            <EntityTypeMapping TypeName="PhFitnessModel.Coaches">
+              <MappingFragment StoreEntitySet="Coaches">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="SportsSpecific" ColumnName="SportsSpecific" />
+                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CoachName" ColumnName="CoachName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
