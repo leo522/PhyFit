@@ -127,6 +127,13 @@ function PoolCaculateLinearRegression() {
     }
 
     PoolMaxR_a = MaxR_a;
-    PoolMaxR_b = PoolMaxR_b;
+    PoolMaxR_b = MaxR_b;
+
+    PoolLimitSpeed = PoolMaxR_b.toFixed(1); //臨界速度
+    document.getElementById("CriticalSpeed").value = PoolLimitSpeed; //臨界速度
+
+    PoolMaxWork = PoolMaxR_a.toFixed(2); //臨界速度
+    document.getElementById("AnaerobicPower").value = PoolMaxWork; //最大無氧做功
+
     document.getElementById("calculationResult").value = (Math.floor(MaxR * 100) / 100).toFixed(2);
 }

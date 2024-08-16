@@ -12,27 +12,19 @@ namespace PhysicalFit.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Coaches
+    public partial class SpecialTechnical
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Coaches()
+        public SpecialTechnical()
         {
-            this.Athletes = new HashSet<Athletes>();
+            this.SpecialTechnicalAction = new HashSet<SpecialTechnicalAction>();
         }
     
         public int ID { get; set; }
-        public string CoachName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string SchoolName { get; set; }
-        public string Title { get; set; }
-        public string TeamName { get; set; }
-        public string SportsSpecific { get; set; }
-        public bool IsActive { get; set; }
-        public Nullable<int> UserID { get; set; }
+        public Nullable<int> ItemIndex { get; set; }
+        public string TechnicalItem { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Athletes> Athletes { get; set; }
-        public virtual Users Users { get; set; }
+        public virtual ICollection<SpecialTechnicalAction> SpecialTechnicalAction { get; set; }
     }
 }

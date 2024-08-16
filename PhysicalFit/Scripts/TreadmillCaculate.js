@@ -1,4 +1,6 @@
 ﻿var MaxSpeed = 0;
+var TreadmillLimitSpeed = 0; //臨界速度
+var TreadmillMaxWork = 0 //最大無氧做功
 var FailureTime95 = 0, FailureTime90 = 0, FailureTime85 = 0, FailureTime80 = 0;
 var TreadMillMaxR_a;
 var TreadMillMaxR_b;
@@ -133,5 +135,12 @@ function calculateSpeed(input) {
 
     TreadMillMaxR_a = MaxR_a;
     TreadMillMaxR_b = MaxR_b;
+
+    TreadmillLimitSpeed = ((TreadMillMaxR_b * 3600) / 1000).toFixed(1); //臨界速度
+    document.getElementById("CriticalSpeed").value = TreadmillLimitSpeed; //臨界速度
+
+    TreadmillMaxWork = TreadMillMaxR_a.toFixed(2); //最大無氧做功
+    document.getElementById("AnaerobicPower").value = TreadmillMaxWork; //最大無氧做功
+
     document.getElementById("calculationResult").value = TreadMillMaxR = (Math.floor(MaxR * 100) / 100).toFixed(2);
 }

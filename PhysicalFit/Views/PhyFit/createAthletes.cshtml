@@ -1,0 +1,48 @@
+﻿@{
+    Layout = null;
+}
+@model PhysicalFit.Models.Athletes
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>建立運動員資訊</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/MainBkStyle.css" rel="stylesheet" />
+    <link rel="icon" href="~/img/favicon.svg" />
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div>
+            @Html.LabelFor(m => m.AthleteName, "運動員姓名")
+            @Html.TextBoxFor(m => m.AthleteName)
+            @Html.ValidationMessageFor(m => m.AthleteName)
+        </div>
+
+        <div>
+            @Html.LabelFor(m => m.SchoolName, "學校名稱")
+            @Html.TextBoxFor(m => m.SchoolName)
+            @Html.ValidationMessageFor(m => m.SchoolName)
+        </div>
+
+        <div>
+            @Html.LabelFor(m => m.TeamName, "隊伍名稱")
+            @Html.TextBoxFor(m => m.TeamName)
+            @Html.ValidationMessageFor(m => m.TeamName)
+        </div>
+
+        <div>
+            @Html.LabelFor(m => m.Birthday, "生日")
+            @Html.TextBoxFor(m => m.Birthday, "{0:yyyy-MM-dd}", new { @type = "date" })
+            @Html.ValidationMessageFor(m => m.Birthday)
+        </div>
+        <br />
+        <div>
+            <button type="submit" class="btn btn-success">新增運動員</button>
+        </div>
+    }
+</body>
+</html>

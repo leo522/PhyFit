@@ -169,10 +169,22 @@
     <Compile Include="Models\IntensityClassification.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MixedStrength.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MusclePhysical.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MuscleStrength.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PasswordResetRequests.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Permissions.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PhysicalFitness.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RPE.cs">
@@ -188,6 +200,12 @@
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SpecializedTraining.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SpecialTechnical.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SpecialTechnicalAction.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TechnologyCategory.cs">
@@ -277,6 +295,7 @@
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\DashBoardmodal.js" />
     <Content Include="Scripts\dashDate.js" />
+    <Content Include="Scripts\DistanceSys.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
@@ -287,11 +306,18 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\RegisterSet.js" />
+    <Content Include="Scripts\RollerSkatingCaculate.js" />
+    <Content Include="Scripts\RPE_Modal.js" />
     <Content Include="Scripts\SessionMonitoring.js" />
     <Content Include="Scripts\SessionTraining.js" />
     <Content Include="Scripts\SwimmingPoolCaculate.js" />
     <Content Include="Scripts\TL.js" />
+    <Content Include="Scripts\TLCaculate.js" />
     <Content Include="Scripts\TreadmillCaculate.js" />
+    <Content Include="SweetAlert2\sweetalert.min.js" />
+    <Content Include="SweetAlert2\sweetalert2%4011.js" />
+    <Content Include="SweetAlert2\sweetalert2.all.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -319,6 +345,11 @@
     <Content Include="Views\PhyFit\_RollerSkating.cshtml" />
     <Content Include="Views\PhyFit\_Athletes.cshtml" />
     <Content Include="Views\PhyFit\_Coach.cshtml" />
+    <Content Include="Views\Home\Sweet.cshtml" />
+    <Content Include="Views\PhyFit\ForgotPassword.cshtml" />
+    <Content Include="Views\PhyFit\createAthletes.cshtml" />
+    <Content Include="Views\PhyFit\_TrainingReport.cshtml" />
+    <Content Include="Views\PhyFit\_RPESurvey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

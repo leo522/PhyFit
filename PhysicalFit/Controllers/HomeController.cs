@@ -26,5 +26,10 @@ namespace PhysicalFit.Controllers
 
             return View();
         }
+
+        public ActionResult Sweet() 
+        { 
+        return View();
+        }
     }
 }

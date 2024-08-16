@@ -28,7 +28,6 @@ namespace PhysicalFit.Models
         public virtual DbSet<Permissions> Permissions { get; set; }
         public virtual DbSet<UserPermissions> UserPermissions { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<TrainingPurpose> TrainingPurpose { get; set; }
         public virtual DbSet<AbilityDetermination> AbilityDetermination { get; set; }
         public virtual DbSet<ArcheryTraining> ArcheryTraining { get; set; }
@@ -47,5 +46,12 @@ namespace PhysicalFit.Models
         public virtual DbSet<DetectionTraining> DetectionTraining { get; set; }
         public virtual DbSet<Athletes> Athletes { get; set; }
         public virtual DbSet<Coaches> Coaches { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<PasswordResetRequests> PasswordResetRequests { get; set; }
+        public virtual DbSet<MixedStrength> MixedStrength { get; set; }
+        public virtual DbSet<MuscleStrength> MuscleStrength { get; set; }
+        public virtual DbSet<PhysicalFitness> PhysicalFitness { get; set; }
+        public virtual DbSet<SpecialTechnical> SpecialTechnical { get; set; }
+        public virtual DbSet<SpecialTechnicalAction> SpecialTechnicalAction { get; set; }
     }
 }

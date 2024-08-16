@@ -90,4 +90,10 @@ namespace PhysicalFit.Models
         public string ExhaustionTime { get; set; }
         public string Speed { get; set; }
     }
+
+    public class ResetPasswordViewModel //重置密碼
+    {
+        public string Token { get; set; }
+        public string NewPassword { get; set; }
+    }
 }

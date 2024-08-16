@@ -33,12 +33,13 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AthleteName" Type="nvarchar" MaxLength="10" />
-          <Property Name="Email" Type="nvarchar" MaxLength="50" />
-          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="15" />
           <Property Name="SchoolName" Type="nvarchar" MaxLength="10" />
           <Property Name="TeamName" Type="nvarchar" MaxLength="10" />
           <Property Name="CoachID" Type="int" />
           <Property Name="IsActive" Type="bit" />
+          <Property Name="Birthday" Type="date" Nullable="false" />
+          <Property Name="IdentityNumber" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="UserID" Type="int" />
         </EntityType>
         <EntityType Name="Coaches">
           <Key>
@@ -53,6 +54,7 @@
           <Property Name="TeamName" Type="nvarchar" MaxLength="20" />
           <Property Name="SportsSpecific" Type="nvarchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="UserID" Type="int" />
         </EntityType>
         <EntityType Name="DetectionSys">
           <Key>
@@ -84,6 +86,14 @@
           <Property Name="CreatedTime" Type="datetime" />
           <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <EntityType Name="MixedStrength">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TimeIndex" Type="int" />
+          <Property Name="Duration" Type="varchar" MaxLength="10" />
+        </EntityType>
         <EntityType Name="MusclePhysical">
           <Key>
             <PropertyRef Name="Id" />
@@ -96,12 +106,39 @@
           <Property Name="CreatedTime" Type="datetime" />
           <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <EntityType Name="MuscleStrength">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TrainingPartIndex" Type="int" />
+          <Property Name="TrainingPart" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="PasswordResetRequests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Token" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ExpiryDate" Type="datetime" Nullable="false" />
+          <Property Name="UserAccount" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="changeDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Permissions">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PermissionName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PhysicalFitness">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemIndex" Type="int" />
+          <Property Name="FitnessItem" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="RPE">
           <Key>
@@ -168,6 +205,22 @@
           <Property Name="RPEScore" Type="int" Nullable="false" />
           <Property Name="CreatedTime" Type="datetime" />
           <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SpecialTechnical">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemIndex" Type="int" />
+          <Property Name="TechnicalItem" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="SpecialTechnicalAction">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TechnicalName" Type="varchar" MaxLength="20" />
+          <Property Name="SpecialTechnicalID" Type="int" />
         </EntityType>
         <EntityType Name="TechnologyCategory">
           <Key>
@@ -250,7 +303,21 @@
           <Property Name="Email" Type="nvarchar" MaxLength="100" />
           <Property Name="RegistrationDate" Type="datetime" />
           <Property Name="IsActive" Type="bit" />
+          <Property Name="LastLoginDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <Association Name="FK__SpecialTe__Speci__4865BE2A">
+          <End Role="SpecialTechnical" Type="Self.SpecialTechnical" Multiplicity="0..1" />
+          <End Role="SpecialTechnicalAction" Type="Self.SpecialTechnicalAction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpecialTechnical">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SpecialTechnicalAction">
+              <PropertyRef Name="SpecialTechnicalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__UserPermi__Permi__2E1BDC42">
           <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
           <End Role="UserPermissions" Type="Self.UserPermissions" Multiplicity="*" />
@@ -299,6 +366,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Athletes_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Athletes" Type="Self.Athletes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Athletes">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Coaches_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Coaches" Type="Self.Coaches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Coaches">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="PhFitnessModelStoreContainer">
           <EntitySet Name="AbilityDetermination" EntityType="Self.AbilityDetermination" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ArcheryTraining" EntityType="Self.ArcheryTraining" Schema="dbo" store:Type="Tables" />
@@ -307,13 +398,19 @@
           <EntitySet Name="DetectionSys" EntityType="Self.DetectionSys" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DetectionTraining" EntityType="Self.DetectionTraining" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IntensityClassification" EntityType="Self.IntensityClassification" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MixedStrength" EntityType="Self.MixedStrength" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MusclePhysical" EntityType="Self.MusclePhysical" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MuscleStrength" EntityType="Self.MuscleStrength" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PasswordResetRequests" EntityType="Self.PasswordResetRequests" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PhysicalFitness" EntityType="Self.PhysicalFitness" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RPE" EntityType="Self.RPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SessionRPETrainingRecords" EntityType="Self.SessionRPETrainingRecords" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShootingTraining" EntityType="Self.ShootingTraining" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShottingItems" EntityType="Self.ShottingItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpecializedTraining" EntityType="Self.SpecializedTraining" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SpecialTechnical" EntityType="Self.SpecialTechnical" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SpecialTechnicalAction" EntityType="Self.SpecialTechnicalAction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TechnologyCategory" EntityType="Self.TechnologyCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrainingItems" EntityType="Self.TrainingItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrainingMonitoringItems" EntityType="Self.TrainingMonitoringItems" Schema="dbo" store:Type="Tables" />
@@ -322,6 +419,10 @@
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__SpecialTe__Speci__4865BE2A" Association="Self.FK__SpecialTe__Speci__4865BE2A">
+            <End Role="SpecialTechnical" EntitySet="SpecialTechnical" />
+            <End Role="SpecialTechnicalAction" EntitySet="SpecialTechnicalAction" />
+          </AssociationSet>
           <AssociationSet Name="FK__UserPermi__Permi__2E1BDC42" Association="Self.FK__UserPermi__Permi__2E1BDC42">
             <End Role="Permissions" EntitySet="Permissions" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
@@ -337,6 +438,14 @@
           <AssociationSet Name="FK_Athletes_Coaches" Association="Self.FK_Athletes_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="Athletes" EntitySet="Athletes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Athletes_Users" Association="Self.FK_Athletes_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Athletes" EntitySet="Athletes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Coaches_Users" Association="Self.FK_Coaches_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Coaches" EntitySet="Coaches" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -362,7 +471,7 @@
           <Property Name="PermissionID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Permissions" Relationship="Self.FK__UserPermi__Permi__2E1BDC42" FromRole="UserPermissions" ToRole="Permissions" />
           <NavigationProperty Name="UserRoles" Relationship="Self.FK__UserPermi__RoleI__2D27B809" FromRole="UserPermissions" ToRole="UserRoles" />
-          <NavigationProperty Name="Users" Relationship="Self.FK__UserPermi__UserI__2C3393D0" FromRole="UserPermissions" ToRole="Users" />
+          <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" FromRole="UserPermissions" ToRole="Users" />
         </EntityType>
         <EntityType Name="UserRoles">
           <Key>
@@ -371,19 +480,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="UserPermissions" Relationship="Self.FK__UserPermi__RoleI__2D27B809" FromRole="UserRoles" ToRole="UserPermissions" />
-        </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="UID" />
-          </Key>
-          <Property Name="UID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="UserPermissions" Relationship="Self.FK__UserPermi__UserI__2C3393D0" FromRole="Users" ToRole="UserPermissions" />
         </EntityType>
         <Association Name="FK__UserPermi__Permi__2E1BDC42">
           <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
@@ -409,33 +505,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__UserPermi__UserI__2C3393D0">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="UserPermissions" Type="Self.UserPermissions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UID" />
-            </Principal>
-            <Dependent Role="UserPermissions">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="PhFitnessEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Permissions" EntityType="Self.Permissions" />
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" />
-          <EntitySet Name="Users" EntityType="Self.Users" />
           <AssociationSet Name="FK__UserPermi__Permi__2E1BDC42" Association="Self.FK__UserPermi__Permi__2E1BDC42">
             <End Role="Permissions" EntitySet="Permissions" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
           <AssociationSet Name="FK__UserPermi__RoleI__2D27B809" Association="Self.FK__UserPermi__RoleI__2D27B809">
             <End Role="UserRoles" EntitySet="UserRoles" />
-            <End Role="UserPermissions" EntitySet="UserPermissions" />
-          </AssociationSet>
-          <AssociationSet Name="FK__UserPermi__UserI__2C3393D0" Association="Self.FK__UserPermi__UserI__2C3393D0">
-            <End Role="Users" EntitySet="Users" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
           <EntitySet Name="TrainingPurpose" EntityType="PhFitnessModel.TrainingPurpose" />
@@ -456,9 +535,32 @@
           <EntitySet Name="DetectionTraining" EntityType="PhFitnessModel.DetectionTraining" />
           <EntitySet Name="Athletes" EntityType="PhFitnessModel.Athletes" />
           <EntitySet Name="Coaches" EntityType="PhFitnessModel.Coaches" />
+          <EntitySet Name="Users" EntityType="PhFitnessModel.Users" />
           <AssociationSet Name="FK_Athletes_Coaches" Association="PhFitnessModel.FK_Athletes_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="Athletes" EntitySet="Athletes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Athletes_Users" Association="PhFitnessModel.FK_Athletes_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Athletes" EntitySet="Athletes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Coaches_Users" Association="PhFitnessModel.FK_Coaches_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Coaches" EntitySet="Coaches" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserPermi__UserI__2C3393D0" Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserPermissions" EntitySet="UserPermissions" />
+          </AssociationSet>
+          <EntitySet Name="PasswordResetRequests" EntityType="PhFitnessModel.PasswordResetRequests" />
+          <EntitySet Name="MixedStrength" EntityType="PhFitnessModel.MixedStrength" />
+          <EntitySet Name="MuscleStrength" EntityType="PhFitnessModel.MuscleStrength" />
+          <EntitySet Name="PhysicalFitness" EntityType="PhFitnessModel.PhysicalFitness" />
+          <EntitySet Name="SpecialTechnical" EntityType="PhFitnessModel.SpecialTechnical" />
+          <EntitySet Name="SpecialTechnicalAction" EntityType="PhFitnessModel.SpecialTechnicalAction" />
+          <AssociationSet Name="FK__SpecialTe__Speci__4865BE2A" Association="PhFitnessModel.FK__SpecialTe__Speci__4865BE2A">
+            <End Role="SpecialTechnical" EntitySet="SpecialTechnical" />
+            <End Role="SpecialTechnicalAction" EntitySet="SpecialTechnicalAction" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="TrainingPurpose">
@@ -650,13 +752,15 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="AthleteName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="SchoolName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="TeamName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="CoachID" Type="Int32" />
           <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Birthday" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="IdentityNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="Int32" />
           <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Athletes" ToRole="Coaches" />
+          <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK_Athletes_Users" FromRole="Athletes" ToRole="Users" />
         </EntityType>
         <EntityType Name="Coaches">
           <Key>
@@ -671,7 +775,26 @@
           <Property Name="TeamName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="SportsSpecific" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="UserID" Type="Int32" />
           <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Coaches" ToRole="Athletes" />
+          <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK_Coaches_Users" FromRole="Coaches" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Athletes_Users" FromRole="Users" ToRole="Athletes" />
+          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Coaches_Users" FromRole="Users" ToRole="Coaches" />
+          <NavigationProperty Name="UserPermissions" Relationship="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" FromRole="Users" ToRole="UserPermissions" />
         </EntityType>
         <Association Name="FK_Athletes_Coaches">
           <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
@@ -682,6 +805,107 @@
             </Principal>
             <Dependent Role="Athletes">
               <PropertyRef Name="CoachID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Athletes_Users">
+          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Athletes">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Coaches_Users">
+          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Coaches">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserPermi__UserI__2C3393D0">
+          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="PhFitnessModel.UserPermissions" Role="UserPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="UserPermissions">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PasswordResetRequests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Token" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ExpiryDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserAccount" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="changeDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="MixedStrength">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TimeIndex" Type="Int32" />
+          <Property Name="Duration" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="MuscleStrength">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TrainingPartIndex" Type="Int32" />
+          <Property Name="TrainingPart" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PhysicalFitness">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemIndex" Type="Int32" />
+          <Property Name="FitnessItem" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="SpecialTechnical">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemIndex" Type="Int32" />
+          <Property Name="TechnicalItem" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SpecialTechnicalAction" Relationship="PhFitnessModel.FK__SpecialTe__Speci__4865BE2A" FromRole="SpecialTechnical" ToRole="SpecialTechnicalAction" />
+        </EntityType>
+        <EntityType Name="SpecialTechnicalAction">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TechnicalName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SpecialTechnicalID" Type="Int32" />
+          <NavigationProperty Name="SpecialTechnical" Relationship="PhFitnessModel.FK__SpecialTe__Speci__4865BE2A" FromRole="SpecialTechnicalAction" ToRole="SpecialTechnical" />
+        </EntityType>
+        <Association Name="FK__SpecialTe__Speci__4865BE2A">
+          <End Type="PhFitnessModel.SpecialTechnical" Role="SpecialTechnical" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.SpecialTechnicalAction" Role="SpecialTechnicalAction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpecialTechnical">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SpecialTechnicalAction">
+              <PropertyRef Name="SpecialTechnicalID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -713,19 +937,6 @@
               <MappingFragment StoreEntitySet="UserRoles">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="PhFitnessModel.Users">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="UID" ColumnName="UID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -931,12 +1142,13 @@
           <EntitySetMapping Name="Athletes">
             <EntityTypeMapping TypeName="PhFitnessModel.Athletes">
               <MappingFragment StoreEntitySet="Athletes">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="IdentityNumber" ColumnName="IdentityNumber" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CoachID" ColumnName="CoachID" />
                 <ScalarProperty Name="TeamName" ColumnName="TeamName" />
                 <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="AthleteName" ColumnName="AthleteName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
@@ -945,6 +1157,7 @@
           <EntitySetMapping Name="Coaches">
             <EntityTypeMapping TypeName="PhFitnessModel.Coaches">
               <MappingFragment StoreEntitySet="Coaches">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="SportsSpecific" ColumnName="SportsSpecific" />
                 <ScalarProperty Name="TeamName" ColumnName="TeamName" />
@@ -953,6 +1166,78 @@
                 <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="CoachName" ColumnName="CoachName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="PhFitnessModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PasswordResetRequests">
+            <EntityTypeMapping TypeName="PhFitnessModel.PasswordResetRequests">
+              <MappingFragment StoreEntitySet="PasswordResetRequests">
+                <ScalarProperty Name="changeDate" ColumnName="changeDate" />
+                <ScalarProperty Name="UserAccount" ColumnName="UserAccount" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MixedStrength">
+            <EntityTypeMapping TypeName="PhFitnessModel.MixedStrength">
+              <MappingFragment StoreEntitySet="MixedStrength">
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="TimeIndex" ColumnName="TimeIndex" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MuscleStrength">
+            <EntityTypeMapping TypeName="PhFitnessModel.MuscleStrength">
+              <MappingFragment StoreEntitySet="MuscleStrength">
+                <ScalarProperty Name="TrainingPart" ColumnName="TrainingPart" />
+                <ScalarProperty Name="TrainingPartIndex" ColumnName="TrainingPartIndex" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PhysicalFitness">
+            <EntityTypeMapping TypeName="PhFitnessModel.PhysicalFitness">
+              <MappingFragment StoreEntitySet="PhysicalFitness">
+                <ScalarProperty Name="FitnessItem" ColumnName="FitnessItem" />
+                <ScalarProperty Name="ItemIndex" ColumnName="ItemIndex" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SpecialTechnical">
+            <EntityTypeMapping TypeName="PhFitnessModel.SpecialTechnical">
+              <MappingFragment StoreEntitySet="SpecialTechnical">
+                <ScalarProperty Name="TechnicalItem" ColumnName="TechnicalItem" />
+                <ScalarProperty Name="ItemIndex" ColumnName="ItemIndex" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SpecialTechnicalAction">
+            <EntityTypeMapping TypeName="PhFitnessModel.SpecialTechnicalAction">
+              <MappingFragment StoreEntitySet="SpecialTechnicalAction">
+                <ScalarProperty Name="SpecialTechnicalID" ColumnName="SpecialTechnicalID" />
+                <ScalarProperty Name="TechnicalName" ColumnName="TechnicalName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -5,314 +5,272 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="~/Scripts/TL.js"></script>
-    <script src="~/Scripts/dashDate.js"></script>
-    <script src="~/Scripts/DashBoardmodal.js"></script>
-    <script src="~/Scripts/SessionTraining.js"></script>
     <script src="~/Scripts/SessionMonitoring.js"></script>
-    <script>var getDateDataUrl = '@Url.Action("GetDateData")';</script>
-    <link href="~/css/RPE_Modal.css" rel="stylesheet" />
+    <script src="~/Scripts/RPE_Modal.js"></script> @*自覺量表彈跳視窗*@
+    <script src="~/Scripts/TLCaculate.js"></script> @*運動訓練量計算*@
+    <script src="~/Scripts/DistanceSys.js"></script> @*檢測系統*@
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
+    <link href="~/css/dashboardStyle.css" rel="stylesheet" />
 </head>
 <body>
-    @*標題*@
     <div class="main-container">
-        <div class=" left-section" style="margin-left: -300px;">
+        <div class="left-section">
             <div style="margin-bottom:20px;">
-                <label for="TrainingItem">訓練監控項目</label>
+                <label for="Item">訓練監控項目</label>
                 <select class="form-control" id="Item" style="border:2px solid #000;">
-                    <option>請選擇訓練監控項目</option>
-                    @foreach (var tm in ViewBag.MonitoringItems)
+                    <option>請選擇訓練項目</option>
+                    @foreach (var item in ViewBag.MonitoringItems)
                     {
-                        <option>@tm</option>
+                        <option>@item</option>
                     }
                 </select>
             </div>
         </div>
-
-        @*日期*@
-    <div class="right-section">
-        <div class="dateSelect">
-            <form>
-                <label>日期：</label>
-                <select id="year" name="year" onchange="updateDays()"></select>
-                <label for="year">年</label>
-
-                <select id="month" name="month" onchange="updateDays()"></select>
-                <label for="month">月</label>
-
-                <select id="day" name="day"></select>
-                <label for="day">日</label>
-            </form>
-        </div>
-        <div class="coachItem" style="margin-top: 20px;">
-            <label for="Coaches">選擇教練</label>
-            <select class="form-control" id="Coaches" style="border:2px solid #000; width:200px;">
-                <option>請選擇教練</option>
-                @foreach (var coach in ViewBag.Coaches)
-                {
-                    <option value="@coach.ID">@coach.CoachName</option>
-                }
-            </select>
-        </div>
-        <div id="athletesContainer" style="margin-top: 20px;">
-            @* 預設會顯示為空的運動員部分視圖 *@
-            @Html.Partial("_Athletes", new List<string>())
-        </div>
-    </div>
-    </div>
-    
-    @*表單內容*@
-    <div class="content" style="margin-left: 120px;">
-        @*訓練衝量監控*@
-        <div class="training-section" id="session_RPE">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>一般訓練衝量項目</h2>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label>監控項目</label>
-                                <select class="form-control" id="TrainingItemSession_RPE">
-                                    <option>請選擇訓練項目</option>
-                                    @foreach (var tr in ViewBag.Description)
-                                    {
-                                        <option>@tr</option>
-                                    }
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>訓練詳情</h2>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label>難度分類</label>
-                                <select class="form-control" id="Intensity">
-                                    <option>請選擇難度分類</option>
-                                    @foreach (var Intensity in ViewBag.TrainingPurposes)
-                                    {
-                                        <option>@Intensity</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="ActionName">動作名稱</label>
-                                <input type="text" class="form-control" id="ActionName" value="馬克操" placeholder="請輸入動作名稱">
-                            </div>
-                            <div class="form-group">
-                                <label for="TrainingTime">訓練時間</label>
-                                <select class="form-control" id="TrainingTime">
-                                    <option>請選擇訓練時間</option>
-                                    @foreach (var Times in ViewBag.TrainingTimes)
-                                    {
-                                        <option>@Times</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>RPE分數</label>
-                                <select class="form-control" id="RPE_1">
-                                    <option>請選擇RPE分數</option>
-                                    @foreach (var RPE in ViewBag.RPEScore)
-                                    {
-                                        <option value="@RPE.Score">@RPE.Score</option>
-                                    }
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @*射箭訓練衝量監控*@
-        <div class="training-section" id="arrow_Training">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>專項訓練-射箭訓練衝量詳情</h2>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label>磅數</label>
-                                <input type="text" class="form-control" id="PoundsName" placeholder="請輸入磅數">
-                            </div>
-                            <div class="form-group">
-                                <label>箭數</label>
-                                <input type="text" class="form-control" id="ArrowsName" placeholder="請輸入箭數">
-                            </div>
-                            <div class="form-group">
-                                <label for="RPE">RPE分數</label>
-                                <select class="form-control" id="RPE_2">
-                                    <option>請選擇RPE分數</option>
-                                    @foreach (var RPE in ViewBag.RPEScore)
-                                    {
-                                        <option value="@RPE.Score">@RPE.Score</option>
-                                    }
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @*射擊訓練衝量監控*@
-        <div class="training-section" id="shotting_Training">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>專項訓練-射擊訓練衝量詳情</h2>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label>項目</label>
-                                <select class="form-control" id="Guns">
-                                    <option>請選擇射擊用具種類</option>
-                                    @foreach (var Gun in ViewBag.GunItem)
-                                    {
-                                        <option>@Gun</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="Bullet">子彈數</label>
-                                <input type="text" class="form-control" id="BulletName" placeholder="請輸入子彈數">
-                            </div>
-                            <div class="form-group">
-                                <label for="RPE">RPE分數</label>
-                                <select class="form-control" id="RPE_3">
-                                    <option>請選擇RPE分數</option>
-                                    @foreach (var RPE in ViewBag.RPEScore)
-                                    {
-                                        <option value="@RPE.Score">@RPE.Score</option>
-                                    }
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @*檢測系統*@
-        <div class="training-section" id="Detection_Sys">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>檢測系統訓練詳情</h2>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label>項目</label>
-                                <select class="form-control" id="Dete">
-                                    <option>有/無氧代謝能力測定</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>運動項目</label>
-                                <select class="form-control" id="DeteItem">
-                                    <option>請選擇運動項目</option>
-                                    @foreach (var SI in ViewBag.DetectionSport)
-                                    {
-                                        <option>@SI</option>
-                                    }
-                                </select>
-                            </div>
-                            @*<div class="form-group">
-                                    <label>距離</label>
-                                    <select class="form-control" id="Distance">
-                                        <option>請選擇距離</option>
-                                        @foreach (var Dis in ViewBag.SpoetsDistance)
-                                        {
-                                            <option>@Dis</option>
-                                        }
-                                    </select>
-                                </div>*@
-                            <div class="form-group">
-                                <label for="Result">檢測結果</label>
-                                <input type="text" class="form-control" id="DistanceResult" placeholder="">
-                            </div>
-                            <div class="form-group">
-                                <label for="trainingvolume">訓練量</label>
-                                <input type="text" class="form-control" id="TrainingVol" placeholder="">
-                            </div>
-                            <div class="form-group">
-                                <label for="speedprescription">速耐力間歇跑訓練處方</label>
-                                <input type="text" class="form-control" id="SpeedPres" placeholder="">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    @*檢測系統-訓練內容-Partial view*@
-    <div id="distanceDetails"></div>
+    <!-- 訓練衝量監控區塊 -->
+    <div class="content" id="trainingMonitoring">
+        <h2>一般訓練衝量監控</h2>
+        <form>
+            <table id="trainingMonitoringTable">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>課程名稱</th>
+                        <th>RPE分數</th>
+                        <th>訓練時間</th>
+                        <th>每次運動訓練量(TL)</th>
+                        <th>增減欄位</th>
+                    </tr>
+                </thead>
+                <tbody id="trainingRows">
+                    <tr class="training-group">
+                        <td>
+                            <input type="date" class="form-control" name="TrainingDate" />
+                        </td>
+                        <td>
+                            <select class="form-control" name="TrainingItem">
+                                <option>請選擇課程名稱</option>
+                                @foreach (var item in ViewBag.Description)
+                                {
+                                    <option>@item</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
+                            <input type="hidden" name="RPE" />
+                            <button type="button" class="btn btn-info openRPEModal">運動自覺量表</button>
+                        </td>
+                        <td>
+                            <select class="form-control" name="TrainingTime">
+                                <option>請選擇訓練時間</option>
+                                @foreach (var time in ViewBag.TrainingTimes)
+                                {
+                                    <option>@time</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="SessionTL" placeholder="每次運動訓練量(TL)" readonly>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary add-row">+</button>
+                            <button type="button" class="btn btn-danger remove-row">-</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-group" style="width:450px;">
+                <label for="dailyTL">每日運動訓練量(TL):</label>
+                <input type="text" align="left" id="dailyTL" class="form-control" name="DailyTL" placeholder="每日運動訓練量TL" readonly>
+            </div>
+            <div style="margin-top: 20px;">
+                <button id="btn_calculate" class="btn btn-info">計算</button>
+                <div id="RPEModalTraining" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <div id="RPEsurveyContent">
+                            @Html.Partial("_RPESurvey")
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-success" id="btn-rainingMonitoring">存檔</button>
+            </div>
+        </form>
+    </div>
 
-    @*session RPE指標計算結果*@
-    <div class="resultTable" id="sessionRPEresult" style="margin-left: 110px;">
+    <!-- 射箭訓練衝量監控區塊 -->
+    <div class="content" id="archeryMonitoring">
+        <h2>射箭訓練衝量監控</h2>
+        <form>
+            <table id="archeryMonitoringTable">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>磅數</th>
+                        <th>箭數</th>
+                        <th>RPE分數</th>
+                        <th>每次運動訓練量(TL)</th>
+                        <th>增減欄位</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="date" class="form-control" name="archeryDate" /></td>
+                        <td>
+                            <input type="text" class="form-control" name="Pounds" placeholder="磅數">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="Arrows" placeholder="箭數">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
+                            <input type="hidden" name="RPE" />
+                            <button type="button" class="btn btn-info openRPEModalArchery">運動自覺量表</button>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="SessionTL" placeholder="每次運動訓練量(TL)" readonly>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary add-row">+</button>
+                            <button type="button" class="btn btn-danger remove-row">-</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-group" style="width:450px;">
+                <label for="dailyTL">每日運動訓練量(TL):</label>
+                <input type="text" align="left" id="dailyTLArchery" class="form-control" name="DailyTL" placeholder="每日運動訓練量TL" readonly>
+            </div>
+            <div style="margin-top: 20px;">
+                <button id="btn_calculate_archery" class="btn btn-info">計算</button>
+                <div id="RPEModalArchery" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <div id="RPEsurveyContent">
+                            @Html.Partial("_RPESurvey")
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-success" id="btn-archeryMonitoring">存檔</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 射擊訓練衝量監控區塊 -->
+    <div class="content" id="shootingMonitoring">
+        <h2>射擊訓練衝量監控</h2>
+        <form>
+            <table id="shootingMonitoringTable">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>項目</th>
+                        <th>子彈數</th>
+                        <th>RPE分數</th>
+                        <th>每次運動訓練量(TL)</th>
+                        <th>增減欄位</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="date" class="form-control" name="shootingDate" /></td>
+                        <td>
+                            <select class="form-control" name="GunItem">
+                                <option>請選擇項目</option>
+                                @foreach (var gun in ViewBag.GunItem)
+                                {
+                                    <option>@gun</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="Bullet" placeholder="子彈數">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
+                            <input type="hidden" name="RPE" />
+                            <button type="button" class="btn btn-info openRPEModalShooting">運動自覺量表</button>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="SessionTL" placeholder="每次運動訓練量(TL)" readonly>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary add-row">+</button>
+                            <button type="button" class="btn btn-danger remove-row">-</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-group" style="width:450px;">
+                <label for="dailyTL">每日運動訓練量(TL):</label>
+                <input type="text" align="left" id="dailyTLShooting" class="form-control" name="DailyTL" placeholder="每日運動訓練量TL" readonly>
+            </div>
+            <div style="margin-top: 20px;">
+                <button id="btn_calculate_shooting" class="btn btn-info">計算</button>
+                    <div id="RPEModalShooting" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <div id="RPEsurveyContent">
+                                @Html.Partial("_RPESurvey")
+                            </div>
+                        </div>
+                    </div>
+                <button class="btn btn-success" id="btn-shootingMonitoring">存檔</button>
+            </div>
+        </form>
+    </div>
+
+    @*檢測系統*@
+    <div class="training-section" id="Detection_Sys">
         <div class="col-md-4">
+            <!-- 或使用 col-md-3 -->
             <div class="card">
                 <div class="card-header">
-                    <h3>session RPE指標計算結果</h3>
+                    <h2>檢測系統訓練詳情</h2>
                 </div>
                 <div class="card-body">
                     <form>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>運動訓練量</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="calculationResult" placeholder="計算結果將顯示在這裡" readonly>
+                        <div class="form-group">
+                            <label for="Dete">項目</label>
+                            <select class="form-control" id="Dete">
+                                <option>有/無氧代謝能力測定</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="DeteItem">運動項目</label>
+                            <select class="form-control" id="DeteItem">
+                                <option>請選擇運動項目</option>
+                                @foreach (var SI in ViewBag.DetectionSport)
+                                {
+                                    <option>@SI</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="result-section">
+                            <label for="Result">檢測結果</label>
+                            <div class="mb-3">
+                                <label for="CriticalSpeed" style="font-size: 20px; display: block;">臨界速度 (km/h)</label>
+                                <input type="text" class="form-control form-control-sm" id="CriticalSpeed">
+                            </div>
+                            <div class="mb-3">
+                                <label for="AnaerobicPower" style="font-size: 20px; display: block;">最大無氧做功 (m)</label>
+                                <input type="text" class="form-control form-control-sm" id="AnaerobicPower">
                             </div>
                         </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>每日運動訓練量</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="DailyResult" placeholder="計算結果將顯示在這裡" readonly>
-                            </div>
+
+                        <!-- 訓練量區域 -->
+                        <div class="training-volume-section">
+                            <label for="TrainingVol">訓練量</label>
+                            <input type="text" class="form-control" id="TrainingVol" placeholder="">
                         </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>每週運動訓練量</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>訓練同質性</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>訓練張力值</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>週間訓練變化</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>短期：長期訓練量比值</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
-                            </div>
+
+                        <!-- 速耐力間歇跑訓練處方區域 -->
+                        <div class="speed-prescription-section">
+                            <label for="SpeedPres">速耐力間歇跑訓練處方</label>
+                            <input type="text" class="form-control" id="SpeedPres" placeholder="">
                         </div>
                     </form>
                 </div>
@@ -320,114 +278,12 @@
         </div>
     </div>
 
-    @*RPE分數說明按鈕*@
-    <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block;">
-        <button id="btnModal" class="btn btn-warning">查看RPE說明</button>
-    </div>
 
-    @*RPE分數彈跳視窗*@
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div id="RPEtable">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>RPE分數</th>
-                            <th>描述</th>
-                            <th>說明</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var rpe in rpeList)
-                        {
-                            <tr>
-                                <td>@rpe.Score</td>
-                                <td>@rpe.Description</td>
-                                <td>@rpe.Explanation</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    @*檢測系統-訓練內容-Partial view呈現*@
+    <div id="distanceDetails"></div>
+    @*檢測系統-訓練內容-Partial view呈現*@
 
-    @*查看訓練量紀錄按鈕*@
-    <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block;">
-        <button id="btnRecord" class="btn btn-primary">查看訓練量紀錄</button>
-    </div>
-
-    @*訓練量紀錄彈跳視窗*@
-    <div id="RecordModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-body">
-                @Html.Partial("_WeeklyTrainingRecords", ViewBag.SessionTrainingRecords as IEnumerable<PhysicalFit.Models.SessionRPETrainingRecordsModel>)
-            </div>
-        </div>
-    </div>
-
-    @*計算session RPE指標計算結果按鈕*@
-    <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
-        <button id="btn_result" class="btn btn-info">計算session RPE指標結果</button>
-    </div>
-
-    @*儲存運動訓練量按鈕*@
-    <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
-        <button id="btn_save" class="btn btn-success">儲存運動訓練量結果</button>
-    </div>
-
-    <script>
-    $(document).ready(function() {
-       $('#DeteItem').change(function () {
-           var selectedItem = $(this).val();
-           $('#selectedSportItem').text(selectedItem); //更新選擇的運動項目名稱
-
-            if (selectedItem !== "請選擇運動項目") {
-            $.ajax({
-                url: '@Url.Action("LoadDistanceDetails", "PhyFit")',
-                data: { itemName: selectedItem },
-                success: function (data) {
-                    $('#distanceDetails').html(data);
-                    $('#distanceDetails').find('#selectedSportItem').text(selectedItem); // 更新 partial view 中的選項
-                },
-                error: function() {
-                    alert("資料錯誤.");
-                }
-            });
-        } else {
-            $('#distanceDetails').html('');
-        }
-    });
-        //當 #Item 下拉選單改變時觸發
-        $('#Item').change(function () {
-            var selectedValue = $(this).val();
-            if (selectedValue === '檢測系統') {
-                $('#distanceDetails').show();
-            } else {
-                $('#distanceDetails').hide();
-            }
-        });
-
-        $('#Coaches').change(function () {
-            var selectedCoachId = $(this).val();
-            if (selectedCoachId) {
-                $.ajax({
-                    url: '@Url.Action("athletes", "PhyFit")',
-                    data: { coachId: selectedCoachId },
-                    success: function (data) {
-                        $('#athletesContainer').html(data);
-                    },
-                    error: function () {
-                        alert("無法加載運動員資料.");
-                    }
-                });
-            } else {
-                $('#athletesContainer').html('');
-            }
-        });
-    });
-    </script>
+<script>
+</script>
 </body>
 </html>

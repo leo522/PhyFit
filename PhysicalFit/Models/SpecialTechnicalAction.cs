@@ -12,19 +12,12 @@ namespace PhysicalFit.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Athletes
+    public partial class SpecialTechnicalAction
     {
         public int ID { get; set; }
-        public string AthleteName { get; set; }
-        public string SchoolName { get; set; }
-        public string TeamName { get; set; }
-        public Nullable<int> CoachID { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-        public System.DateTime Birthday { get; set; }
-        public string IdentityNumber { get; set; }
-        public Nullable<int> UserID { get; set; }
+        public string TechnicalName { get; set; }
+        public Nullable<int> SpecialTechnicalID { get; set; }
     
-        public virtual Coaches Coaches { get; set; }
-        public virtual Users Users { get; set; }
+        public virtual SpecialTechnical SpecialTechnical { get; set; }
     }
 }

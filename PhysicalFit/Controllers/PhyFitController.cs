@@ -1,7 +1,10 @@
 ﻿using PhysicalFit.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -85,33 +88,59 @@ namespace PhysicalFit.Controllers
         [HttpPost]
         public ActionResult Login(string UserName, string pwd)
         {
-            // 將使用者輸入的密碼進行SHA256加密
-            string hashedPwd = Sha256Hash(pwd);
-
-            var dto = _db.Users.FirstOrDefault(u => u.Name == UserName && u.Password == hashedPwd);
-
-            if (dto != null)
+            try
             {
-                _db.SaveChanges();
+                // 將使用者輸入的密碼進行SHA256加密
+                string hashedPwd = ComputeSha256Hash(pwd);
+                var dto = _db.Users.FirstOrDefault(u => u.Name == UserName && u.Password == hashedPwd);
 
-                // 設定 Session 狀態為已登入
-                Session["LoggedIn"] = true;
-                Session["UserName"] = dto.Name;
+                if (dto != null)
+                {
+                    // 驗證成功，更新最後登入時間
+                    dto.LastLoginDate = DateTime.Now;
+                    _db.SaveChanges();
 
-                // 檢查是否有記錄的返回頁面
-                string returnUrl = Session["ReturnUrl"] != null ? Session["ReturnUrl"].ToString() : Url.Action("Home", "PhyFit");
+                    // 設定 Session 狀態為已登入
+                    Session["LoggedIn"] = true;
+                    Session["UserName"] = dto.Name;
 
-                // 清除返回頁面的 Session 記錄
-                Session.Remove("ReturnUrl");
+                    // 檢查是否有記錄的返回頁面
+                    string returnUrl = Session["ReturnUrl"] != null ? Session["ReturnUrl"].ToString() : Url.Action("Home", "Tiss");
 
-                // 重定向到記錄的返回頁面
-                return Redirect(returnUrl);
+                    // 清除返回頁面的 Session 記錄
+                    Session.Remove("ReturnUrl");
+
+                    // 重定向到記錄的返回頁面
+                    return Redirect(returnUrl);
+                }
+                else
+                {
+                    // 驗證失敗
+                    ViewBag.ErrorMessage = "帳號或密碼錯誤";
+                    return View();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // 驗證失敗
-                ViewBag.ErrorMessage = "帳號或密碼錯誤";
-                return View();
+                Console.WriteLine("其他錯誤: " + ex.Message);
+                return View("Error");
+            }
+        }
+        #endregion
+
+        #region 密碼加密
+        private static string ComputeSha256Hash(string rawData)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
         #endregion
@@ -120,23 +149,222 @@ namespace PhysicalFit.Controllers
         public ActionResult Logout()
         {
             // 清除所有的 Session 資訊
-            Session.Clear();
-            Session.Abandon();
+            Session.Remove("LoggedIn");
 
             // 清除所有的 Forms 認證 Cookies
             FormsAuthentication.SignOut();
 
             // 取得登出前的頁面路徑，如果沒有則預設為首頁
-            string returnUrl = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : Url.Action("Home", "PhyFit");
+            string returnUrl = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : Url.Action("Login", "PhyFit");
 
             // 重定向到記錄的返回頁面
             return Redirect(returnUrl);
-            // 重定向到 Home 頁面
         }
         #endregion
 
-        #region 修改密碼
+        #region 忘記密碼
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
 
+        // 發送重置密碼鏈接
+        [HttpPost]
+        public ActionResult SendResetLink(string Email)
+        {
+            try
+            {
+                var user = _db.Users.FirstOrDefault(u => u.Email == Email);
+
+                if (user == null)
+                {
+                    ViewBag.ErrorMessage = "此Email尚未註冊";
+                    return View("ForgotPassword");
+                }
+
+                // 生成重置密碼令牌（這裡使用 Guid 作為示例）
+                var resetToken = Guid.NewGuid().ToString();
+
+                // 保存重置令牌和過期時間
+                var resetPW = new PasswordResetRequests
+                {
+                    Email = Email,
+                    Token = resetToken,
+                    ExpiryDate = DateTime.Now.AddMinutes(5), // 設定有效時間為5分鐘
+                    UserAccount = user.Name,
+                    changeDate = DateTime.Now
+                };
+                _db.PasswordResetRequests.Add(resetPW);
+                _db.SaveChanges();
+
+                // 發送重置密碼郵件
+                var resetLink = Url.Action("ResetPassword", "Tiss", new { token = resetToken }, Request.Url.Scheme);
+
+                var emailBody = $"請點擊以下連結重置您的密碼：{resetLink}，連結有效時間為5分鐘";
+
+                SendEmail(Email, "重置密碼", emailBody);
+
+                ViewBag.Message = "重置密碼連結已發送至您的郵箱";
+                return View("ForgotPassword");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("其他錯誤: " + ex.Message);
+                return View("Error");
+            }
+        }
+
+        //郵件發送方法
+        private void SendEmail(string toEmail, string subject, string body, string attachmentPath = null)
+        {
+            var fromEmail = "00048@tiss.org.tw";
+            var fromPassword = "lctm hhfh bubx lwda"; //應用程式密碼
+            var displayName = "運科中心資訊組"; //顯示的發件人名稱
+
+
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential(fromEmail, fromPassword),
+                EnableSsl = true,
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(fromEmail, displayName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true,
+            };
+
+            // 分割以逗號分隔的收件人地址並添加到郵件中
+            foreach (var email in toEmail.Split(','))
+            {
+                mailMessage.To.Add(email.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(attachmentPath))
+            {
+                Attachment attachment = new Attachment(attachmentPath);
+                mailMessage.Attachments.Add(attachment);
+            }
+
+            try
+            {
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                // 處理發送郵件的錯誤
+                Console.WriteLine("郵件發送失敗: " + ex.Message);
+            }
+        }
+
+        //重置密碼頁面
+        public ActionResult ResetPassword(string token)
+        {
+            try
+            {
+                // 查找重置請求
+                var resetRequest = _db.PasswordResetRequests.SingleOrDefault(r => r.Token == token && r.ExpiryDate > DateTime.Now);
+
+                if (resetRequest == null)
+                {
+                    ViewBag.ErrorMessage = "無效或過期的要求";
+                    return View("Error");
+                }
+
+                // 初始化 ResetPasswordViewModel 並傳遞到視圖
+                var model = new ResetPasswordViewModel
+                {
+                    Token = token
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("其他錯誤: " + ex.Message);
+                return View("Error");
+            }
+
+        }
+
+        // 處理重置密碼
+        [HttpPost]
+        public ActionResult ResetPassword(ResetPasswordViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    // 顯示驗證錯誤
+                    var errors = ModelState.Values.SelectMany(v => v.Errors);
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                    return View(model);
+                }
+
+                // 根據 Token 查找重置請求
+                var resetRequest = _db.PasswordResetRequests
+                    .FirstOrDefault(r => r.Token == model.Token && r.ExpiryDate > DateTime.Now);
+
+                if (resetRequest == null)
+                {
+                    ViewBag.ErrorMessage = "無效或過期的要求";
+                    return View("Error");
+                }
+
+                // 根據 Email 查找用戶
+                var user = _db.Users
+                    .FirstOrDefault(u => u.Email == resetRequest.Email);
+
+                if (user == null)
+                {
+                    ViewBag.ErrorMessage = "無效的帳號";
+                    return View("Error");
+                }
+
+                // 更新用戶的密碼
+                user.Password = ComputeSha256Hash(model.NewPassword);
+                //user.changeDate = DateTime.Now;
+
+                // 更新 PasswordResetRequest 表中的 UserAccount 和 ChangeDate
+                resetRequest.UserAccount = user.Name;
+                resetRequest.changeDate = DateTime.Now;
+
+                // 刪除重置請求
+                _db.PasswordResetRequests.Remove(resetRequest);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("其他錯誤: " + ex.Message);
+                return View("Error");
+            }
+
+            try
+            {
+                // 儲存變更到資料庫
+                _db.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        // 記錄錯誤信息
+                        Console.WriteLine($"Property: {validationError.PropertyName}, Error: {validationError.ErrorMessage}");
+                    }
+                }
+                throw;
+            }
+
+            ViewBag.Message = "您的密碼已成功重置";
+            return RedirectToAction("Login");
+        }
         #endregion
 
         #region 首頁-測試
@@ -144,18 +372,34 @@ namespace PhysicalFit.Controllers
         {
             Session["ReturnUrl"] = Request.Url.ToString();
 
-            ViewBag.TrainingPurposes = GetTrainingPurposes(); //訓練用途
-            ViewBag.AbilityDetermination = GetAbilityDetermination(); //能力測定
+            ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
+            ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
+            ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
+            ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
+            ViewBag.RPEScore = GetRPE();//RPE量表
+            ViewBag.GunItem = GetGunsItems(); //射擊用具項目
+            ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
+            //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
+            ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
 
-            var dto = _db.RPE.Select(r => new RPEModel
+            var records = _db.SessionRPETrainingRecords.ToList();
+
+            var model = records.Select(r => new SessionRPETrainingRecordsModel
             {
-                Score = r.Score,
-                Description = r.Description,
-                Explanation = r.Explanation,
-
+                TrainingItem = r.TrainingItem, //訓練名稱
+                RPEscore = r.RPEscore, //RPE分數
+                //TrainingTime = r.TrainingTime, //訓練時間
+                TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
+                DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
+                WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
+                TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
+                TrainingTension = r.TrainingTension ?? 0, //張力值
+                ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
             }).ToList();
 
-            return View(dto);
+            ViewBag.SessionTrainingRecords = model;
+
+            return View();
         }
         #endregion
 
@@ -298,6 +542,14 @@ namespace PhysicalFit.Controllers
                        }).ToList();
             return dto;
         }
+
+        public ActionResult RPEsurvey()
+        {
+            var rpeList = GetRPE(); // 調用 GetRPE 方法來獲取 RPE 資料
+            ViewBag.RPEScores = rpeList; // 將資料傳遞到 ViewBag
+
+            return PartialView("_RPESurvey");
+        }
         #endregion
 
         #region 射擊用具項目
@@ -307,6 +559,17 @@ namespace PhysicalFit.Controllers
                        select gu.GunsItem).ToList();
             return dto;
         }
+        #endregion
+
+        #region 射箭訓練衝量
+        public ActionResult arrowCaculate()
+        {
+            return View();
+        }
+        #endregion
+
+        #region 射擊訓練衝量
+
         #endregion
 
         #region 檢測系統_運動項目
@@ -319,29 +582,6 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 檢測系統_運動距離
-        //[HttpGet]
-        //public JsonResult GetSpoetsDistance(string itemName)
-        //{
-        //    try
-        //    {
-        //        var distances = (from Si in _db.DetectionTraining
-        //                         where Si.ItemName == itemName
-        //                         select Si.Distance).FirstOrDefault();
-
-        //        if (!string.IsNullOrEmpty(distances))
-        //        {
-        //            // 分割距離字串為列表
-        //            var distanceList = distances.Split('/').ToList();
-        //            return Json(distanceList, JsonRequestBehavior.AllowGet);
-        //        }
-
-        //        return Json(new List<string>(), JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
         public ActionResult LoadDistanceDetails(string itemName)
         {
             try
@@ -544,7 +784,7 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 計算檢測結果
+        #region 計算衝量檢測結果
         [HttpGet]
         public JsonResult CalculateTrainingLoad(DateTime date)
         {
@@ -603,10 +843,6 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 教練資訊
-
-        #endregion
-
         #region 運動員資訊
         public ActionResult athletes(int coachId)
         {
@@ -617,6 +853,31 @@ namespace PhysicalFit.Controllers
             return PartialView("_Athletes", athletes);
         }
 
+        #endregion
+
+        #region 建立運動員資訊
+        //[Authorize(Roles = "Coach")] // 確保用戶是教練角色
+        public ActionResult createAthletes()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        //[Authorize(Roles = "Coach")] // 確保用戶是教練角色
+        public ActionResult CreateAthletes(Athletes model)
+        {
+            if (ModelState.IsValid)
+            {
+                // 將運動員資訊存儲到資料庫
+                // 例如：
+                // db.Athletes.Add(model);
+                // db.SaveChanges();
+
+                return RedirectToAction("CreateAthletes"); // 重定向到運動員列表頁面
+            }
+
+            return View(model);
+        }
         #endregion
     }
 }
