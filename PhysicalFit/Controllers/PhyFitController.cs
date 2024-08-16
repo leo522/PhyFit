@@ -417,6 +417,10 @@ namespace PhysicalFit.Controllers
             ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
             //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
             ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
+            ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
+            ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
+
+
 
             var records = _db.SessionRPETrainingRecords.ToList();
 
@@ -552,6 +556,34 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
+        #region 專項技術類-項目
+        public List<string> GetSpecialTechnical()
+        { 
+            var dto = (from st in _db.SpecialTechnical
+                       select st.TechnicalItem).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 專項技術類-動作名稱
+        public List<string> GetSpecialTechnicalAction()
+        { 
+            var dto = (from sta in _db.SpecialTechnicalAction
+                       select sta.TechnicalName).ToList();
+            return dto;
+        }
+
+        public JsonResult GetSpecialTechnicalActions(string technicalItem)
+        {
+            var actions = _db.SpecialTechnicalAction
+                            .Where(sta => sta.SpecialTechnical.TechnicalItem == technicalItem)
+                            .Select(sta => sta.TechnicalName)
+                            .ToList();
+
+            return Json(actions, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
         #region 射擊用具項目
         public List<string> GetGunsItems()
         {
@@ -560,6 +592,7 @@ namespace PhysicalFit.Controllers
             return dto;
         }
         #endregion
+
 
         #region 射箭訓練衝量
         public ActionResult arrowCaculate()
@@ -879,5 +912,6 @@ namespace PhysicalFit.Controllers
             return View(model);
         }
         #endregion
+
     }
 }
