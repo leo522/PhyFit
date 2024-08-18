@@ -348,9 +348,8 @@
     <Content Include="Views\Home\Sweet.cshtml" />
     <Content Include="Views\PhyFit\ForgotPassword.cshtml" />
     <Content Include="Views\PhyFit\createAthletes.cshtml" />
-    <Content Include="Views\PhyFit\_TrainingReport.cshtml" />
     <Content Include="Views\PhyFit\_RPESurvey.cshtml" />
-    <Content Include="Views\PhyFit\_TrainingImpulse.cshtml" />
+    <Content Include="Views\PhyFit\_SpecialTechnical.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
