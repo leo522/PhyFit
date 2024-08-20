@@ -101,14 +101,14 @@ $(document).ready(function () {
         var newRow = $(this).closest('tr').clone();
         newRow.find('input').val('');
         newRow.find('select').prop('selectedIndex', 0);
-        $(this).closest('tbody').append(newRow);
+        $(this).closest('tbody').prepend(newRow); // 新增行到最上方
     });
 
     $(document).on('click', '.add-row', function () {
         var newRow = $(this).closest('tr').clone();
         newRow.find('input').val('');
         newRow.find('select').prop('selectedIndex', 0);
-        $(this).closest('tbody').append(newRow);
+        $(this).closest('tbody').prepend(newRow); // 新增行到最上方
     });
 
     // 刪除訓練項目
@@ -131,23 +131,17 @@ $(document).ready(function () {
     });
 
     // 新增射箭訓練
-    //$(document).on('click', '.add-row-archery', function () {
-    //    var newRow = $(this).closest('.Archerytraining-group').clone();
-    //    newRow.find('input').val('');
-    //    newRow.find('select').prop('selectedIndex', 0);
-    //    $('#ArcherytrainingRows').append(newRow);
-    //});
     var maxArcheryRows = 10; //欄位增加上限10筆
 
-    $(document).on('click', '.add-row-shooting', function () {
-        var rowCount = $('#ShootingtrainingRows .Shootingtraining-group').length;
+    $(document).on('click', '.add-row-archery', function () {
+        var rowCount = $('#ArcherytrainingRows .Archerytraining-group').length;
 
         // 檢查行數是否超過上限
         if (rowCount < maxArcheryRows) {
-            var newRow = $(this).closest('.Shootingtraining-group').clone();
+            var newRow = $(this).closest('.Archerytraining-group').clone();
             newRow.find('input').val('');
             newRow.find('select').prop('selectedIndex', 0);
-            $('#ShootingtrainingRows').append(newRow);
+            $('#ArcherytrainingRows').prepend(newRow); // 新增行到最上方
         } else {
             alert("已達到最大行數，無法新增更多。");
         }
@@ -164,22 +158,15 @@ $(document).ready(function () {
     });
 
     // 新增射擊訓練
-    //$(document).on('click', '.add-row-shooting', function () {
-    //    var newRow = $(this).closest('.Shootingtraining-group').clone();
-    //    newRow.find('input').val('');
-    //    newRow.find('select').prop('selectedIndex', 0);
-    //    $('#ShootingtrainingRows').append(newRow);
-    //});
-
     $(document).on('click', '.add-row-shooting', function () {
-        var rowCount = $('#ArcherytrainingRows .Archerytraining-group').length;
+        var rowCount = $('#ShootingtrainingRows .Shootingtraining-group').length;
 
         // 檢查行數是否超過上限
         if (rowCount < maxArcheryRows) {
-            var newRow = $(this).closest('.Archerytraining-group').clone();
+            var newRow = $(this).closest('.Shootingtraining-group').clone();
             newRow.find('input').val('');
             newRow.find('select').prop('selectedIndex', 0);
-            $('#ShootingtrainingRows').append(newRow);
+            $('#ShootingtrainingRows').prepend(newRow); // 新增行到最上方
         } else {
             alert("已達到最大行數，無法新增更多。");
         }
