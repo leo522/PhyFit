@@ -1,46 +1,80 @@
 ﻿@model string
 
-<thead>
-    <tr>
-        @if (Model == "專項技術類")
-        {
+<table id="trainingMonitoringTable" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>課程名稱</th>
             <th>日期</th>
-            <th>項目</th>
-            <th>動作名稱</th>
-            <th>訓練動作名稱</th>
-            <th>欄位增減</th>
-        }
-        else if (Model == "混合肌力體能類")
-        {
-            <th>日期</th>
+            <th id="dynamicHeader1">其他欄位</th>
+            <th id="dynamicHeader2">動作名稱</th>
+            <th id="dynamicHeader3">其他</th>
             <th>時間</th>
             <th>自覺費力程度</th>
             <th>欄位增減</th>
-        }
-        else if (Model == "肌力類")
-        {
-            <th>日期</th>
-            <th>訓練部位</th>
-            <th>時間</th>
-            <th>自覺費力程度</th>
-            <th>欄位增減</th>
-        }
-        else if (Model == "體能類")
-        {
-            <th>日期</th>
-            <th>訓練類型</th>
-            <th>時間</th>
-            <th>自覺費力程度</th>
-            <th>欄位增減</th>
-        }
-    </tr>
-</thead>
-<tbody>
-    @if (Model == "專項技術類")
-    {
+        </tr>
+    </thead>
+    <tbody>
         <tr class="training-group">
-            <td><input type="date" class="form-control" name="TrainingDate" title="日期" /></td>
             <td>
+                <div class="form-group" style="display: inline-block; max-width: 100%;">
+                    <select class="form-control" id="TrainingItem" name="TrainingItem" onchange="updateTableContent()" style="width: auto; min-width: 200px; display: inline-block;">
+                        <option value="">請選擇課程名稱</option>
+                        @foreach (var item in ViewBag.Description)
+                        {
+                            <option value="@item" style="width: 50px;">@item</option>
+                        }
+                    </select>
+                </div>
+            </td>
+            <td><input type="datetime-local" class="form-control" name="TrainingDate" title="日期" /></td>
+            <td id="dynamicContent1">
+                <!-- 動態內容將會插入到這裡 -->
+            </td>
+            <td id="dynamicContent2">
+                <!-- 動態內容將會插入到這裡 -->
+            </td>
+            <td id="dynamicContent3">
+                <!-- 動態內容將會插入到這裡 -->
+            </td>
+            <td>
+                <select class="form-control" name="TrainingTime" style="width:150px;">
+                    <option>請選擇訓練時間</option>
+                    @foreach (var time in ViewBag.TrainingTimes)
+                    {
+                        <option>@time</option>
+                    }
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
+                <input type="hidden" name="RPE" />
+                <button type="button" class="btn btn-info openRPEModal">運動自覺量表</button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary add-row">+</button>
+                <button type="button" class="btn btn-danger remove-row">-</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    function updateTableContent() {
+        var selectedItem = document.getElementById('TrainingItem').value;
+
+        // 清除現有的動態內容
+        document.getElementById('dynamicContent1').innerHTML = '';
+        document.getElementById('dynamicContent2').innerHTML = '';
+        document.getElementById('dynamicContent3').innerHTML = '';
+
+        if (selectedItem === "專項技術類") {
+            // 更新欄位
+            document.getElementById('dynamicHeader1').textContent = '項目';
+            document.getElementById('dynamicHeader2').textContent = '動作名稱';
+            document.getElementById('dynamicHeader3').textContent = '其他';
+
+            // 更新內容
+            document.getElementById('dynamicContent1').innerHTML = `
                 <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)">
                     <option>請選擇項目</option>
                     @foreach (var ST in ViewBag.SpecialTechnical)
@@ -48,109 +82,66 @@
                         <option value="@ST">@ST</option>
                     }
                 </select>
-            </td>
-            <td>
+            `;
+            document.getElementById('dynamicContent2').innerHTML = `
                 <select class="form-control" name="SpecialTechName">
                     <option>請選擇項目</option>
                 </select>
-            </td>
-            <td>
-                <input class="SpecialTechOther" placeholder="請自行填選其他動作名稱" />
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary add-row-special">+</button>
-                <button type="button" class="btn btn-danger remove-row-special">-</button>
-            </td>
-        </tr>
-    }
-    else if (Model == "混合肌力體能類")
-    {
-        <tr class="training-group">
-            <td><input type="date" class="form-control" name="TrainingDate" title="日期" /></td>
-            <td>
-                <select class="form-control" name="TrainingTime">
-                    <option>請選擇訓練時間</option>
-                    @foreach (var time in ViewBag.TrainingTimes)
-                    {
-                        <option>@time</option>
-                    }
-                </select>
-            </td>
-            <td>
-                <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
-                <input type="hidden" name="RPE" />
-                <button type="button" class="btn btn-info openRPEModal">運動自覺量表</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary add-row">+</button>
-                <button type="button" class="btn btn-danger remove-row">-</button>
-            </td>
-        </tr>
-    }
-    else if (Model == "肌力類")
-    {
-        <tr class="training-group">
-            <td><input type="date" class="form-control" name="TrainingDate" title="日期" /></td>
-            <td>
-                <select class="form-control" name="TrainingMuscle">
+            `;
+            document.getElementById('dynamicContent3').innerHTML = `
+                <input type="text" class="form-control" name="Other" placeholder="其他" />
+            `;
+        } else if (selectedItem === "混合肌力體能類") {
+            // 更新欄位
+            document.getElementById('dynamicHeader1').textContent = '項目';
+            document.getElementById('dynamicHeader2').textContent = '動作名稱';
+            document.getElementById('dynamicHeader3').textContent = '其他';
+
+            // 更新內容
+            //document.getElementById('dynamicContent1').innerHTML = `
+            //    <input type="text" class="form-control" name="StrengthLevel" placeholder="請輸入強度">
+            //`;
+        } else if (selectedItem === "肌力類") {
+            // 更新欄位
+            document.getElementById('dynamicHeader1').textContent = '訓練部位';
+            document.getElementById('dynamicHeader2').textContent = '動作名稱';
+            document.getElementById('dynamicHeader3').textContent = '其他';
+
+            // 更新內容
+            document.getElementById('dynamicContent1').innerHTML = `
+                <select class="form-control" name="TrainingMuscle" style="width:150px;">
                     <option>請選擇訓練部位</option>
                     @foreach (var MS in ViewBag.MuscleStrength)
                     {
-                        <option>@MS</option>
+                        <option value="@MS">@MS</option>
                     }
                 </select>
-            </td>
-            <td>
-                <select class="form-control" name="TrainingTime">
-                    <option>請選擇訓練時間</option>
-                    @foreach (var time in ViewBag.TrainingTimes)
-                    {
-                        <option>@time</option>
-                    }
-                </select>
-            </td>
-            <td>
-                <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
-                <input type="hidden" name="RPE" />
-                <button type="button" class="btn btn-info openRPEModal">運動自覺量表</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary add-row">+</button>
-                <button type="button" class="btn btn-danger remove-row">-</button>
-            </td>
-        </tr>
-    }
-    else if (Model == "體能類")
-    {
-        <tr class="training-group">
-            <td><input type="date" class="form-control" name="TrainingDate" title="日期" /></td>
-            <td>
-                <select class="form-control" name="TrainingMuscle">
+            `;
+        } else if (selectedItem === "體能類") {
+            // 更新欄位
+            document.getElementById('dynamicHeader1').textContent = '訓練類型';
+            document.getElementById('dynamicHeader2').textContent = '動作名稱';
+            document.getElementById('dynamicHeader3').textContent = '其他';
+
+            // 更新內容
+            document.getElementById('dynamicContent1').innerHTML = `
+                <select class="form-control" name="TrainingType" style="width:250px;">
                     <option>請選擇訓練類型</option>
                     @foreach (var PF in ViewBag.PhysicalFitness)
                     {
-                        <option>@PF</option>
+                        <option value="@PF">@PF</option>
                     }
                 </select>
-            </td>
-            <td>
-                <select class="form-control" name="TrainingTime">
-                    <option>請選擇訓練時間</option>
-                    @foreach (var time in ViewBag.TrainingTimes)
-                    {
-                        <option>@time</option>
-                    }
-                </select>
-            </td>
-            <td>
-                <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
-                <input type="hidden" name="RPE" />
-                <button type="button" class="btn btn-info openRPEModal">運動自覺量表</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary add-row">+</button>
-                <button type="button" class="btn btn-danger remove-row">-</button>
-            </td>
-        </tr>
+            `;
+        } else {
+            // 重置欄位名稱和內容
+            document.getElementById('dynamicHeader1').textContent = '其他欄位';
+            document.getElementById('dynamicHeader2').textContent = '動作名稱';
+            document.getElementById('dynamicHeader3').textContent = '其他';
+
+            //document.getElementById('dynamicContent1').innerHTML = `
+            //    <input type="text" class="form-control" name="OtherInput" placeholder="其他輸入">
+            //`;
+        }
     }
-</tbody>
+</script>

@@ -1,34 +1,164 @@
-﻿$(document).ready(function () {
-    // 確保按鈕存在後再添加事件監聽器
-    $('#btn_result').click(function () {
-        // 取得選擇的日期
-        var year = $('#year').val();
-        var month = $('#month').val();
-        var day = $('#day').val();
+﻿// TLCalculation.js
 
-        // 構造日期字串
-        var formattedDate = `${year}-${month}-${day}`;
+$(document).ready(function () {
+    // 一般訓練TL計算
+    $('#btn_calculate').click(function (event) {
+        event.preventDefault();
 
+        var totalDailyTL = 0;  // 用來存儲每日TL的總和
 
-        // 發送 AJAX 請求到控制器
-        $.ajax({
-            url: '/PhyFit/CalculateTrainingLoad',
-            type: 'GET',
-            data: { date: formattedDate },
-            dataType: 'json',
-            success: function (data) {
-                // 更新前端顯示
-                $('#calculationResult').val(data.TrainingLoad || 'NA'); //運動訓練量
-                $('#DailyResult').val(data.DailyTrainingLoadSum || 'NA'); //每日訓練量
-                $('#WeeklyResult').val(data.WeeklyTrainingLoadSum || 'NA'); //每週訓練量
-                $('#TrainingHomogeneity').val(data.TrainingMonotony || 'NA'); //訓練同質性
-                $('#TensionValue').val(data.TrainingStrain || 'NA'); //訓練張力值
-                $('#WeeklyTrainingChanges').val(data.WeekToWeekChange || 'NA'); //週間訓練變化
-                $('#ShortLongRatio').val(data.ACWR || 'NA'); //短長期訓練量比值
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', error);
+        $('#trainingMonitoring table tbody tr').each(function () {
+            var rpeValue = $(this).find('input[name="RPE"]').val();  // 從隱藏的 input 取得分數
+            var trainingTimeValue = $(this).find('select[name="TrainingTime"]').val();
+
+            if (rpeValue && trainingTimeValue) {
+                var rpe = parseFloat(rpeValue);
+                var trainingTime = parseFloat(trainingTimeValue);
+
+                var sessionTL = rpe * trainingTime;
+
+                $(this).find('input[name="SessionTL"]').val(sessionTL);
+
+                totalDailyTL += sessionTL;  // 累加到每日TL的總和
+            } else {
+                $(this).find('input[name="SessionTL"]').val('');
             }
         });
+
+        // 更新每日TL欄位的值
+        $('input[name="DailyTL"]').val(totalDailyTL);
+    });
+
+    //射箭訓練TL計算
+    $('#btn_calculate_archery').click(function (event) {
+        event.preventDefault();
+
+        var totalDailyTL = 0;  // 用來存儲每日TL的總和
+
+        $('#archeryMonitoring table tbody tr').each(function () {
+            var ArcheryrpeValue = $(this).find('input[name="RPEArchery"]').val();  // 從隱藏的 input 取得分數
+            var PoundsValue = $(this).find('input[name="Pounds"]').val();
+            var ArrowsValue = $(this).find('input[name="Arrows"]').val();
+
+            if (ArcheryrpeValue && PoundsValue && ArrowsValue) {
+                var Archeryrpe = parseFloat(ArcheryrpeValue);
+                var trainingPounds = parseFloat(PoundsValue);
+                var trainingArrows = parseFloat(ArrowsValue);
+
+                var ArcherysessionTL = Archeryrpe * trainingPounds * trainingArrows;
+
+                $(this).find('input[name="SessionArcheryTL"]').val(ArcherysessionTL);
+
+                totalDailyTL += ArcherysessionTL;  // 累加到每日TL的總和
+            } else {
+                $(this).find('input[name="SessionArcheryTL"]').val('');
+            }
+        });
+        // 更新每日TL欄位的值
+        $('input[name="ArcheryDailyTL"]').val(totalDailyTL);
+    });
+
+    //射擊訓練TL計算
+    $('#btn_calculate_shooting').click(function (event) {
+        event.preventDefault();
+
+        var totalDailyTL = 0;  // 用來存儲每日TL的總和
+
+        $('#shootingMonitoring table tbody tr').each(function () {
+            var ShootingValue = $(this).find('input[name="RPEshooting"]').val();  // 從隱藏的 input 取得分數
+            var BulletValue = $(this).find('input[name="Bullet"]').val();
+
+            if (ShootingValue && BulletValue) {
+                var Shootingrpe = parseFloat(ShootingValue);
+                var trainingBullet = parseFloat(BulletValue);
+
+                var ShootingsessionTL = Shootingrpe * trainingBullet;
+
+                $(this).find('input[name="SessionShootingTL"]').val(ShootingsessionTL);
+
+                totalDailyTL += ShootingsessionTL;  // 累加到每日TL的總和
+            } else {
+                $(this).find('input[name="SessionShootingTL"]').val('');
+            }
+        });
+        // 更新每日TL欄位的值
+        $('input[name="ShootingDailyTL"]').val(totalDailyTL);
+    });
+
+    //切換項目就清空每日TL
+    $('#Item').change(function () {
+        $('input[name="DailyTL"]').val('') && $('input[name="ArcheryDailyTL"]').val('') && $('input[name="ShootingDailyTL"]').val('');
+    });
+    $('#TrainingItem').change(function () {
+        $('input[name="DailyTL"]').val('');
+    });
+    // 新增訓練項目
+    $(document).on('click', '.add-row-special', function () {
+        var newRow = $(this).closest('tr').clone();
+        newRow.find('input').val('');
+        newRow.find('select').prop('selectedIndex', 0);
+        $(this).closest('tbody').append(newRow);
+    });
+
+    $(document).on('click', '.add-row', function () {
+        var newRow = $(this).closest('tr').clone();
+        newRow.find('input').val('');
+        newRow.find('select').prop('selectedIndex', 0);
+        $(this).closest('tbody').append(newRow);
+    });
+
+    // 刪除訓練項目
+    $(document).on('click', '.remove-row-special', function () {
+        var rowCount = $(this).closest('tbody').find('tr').length;
+        if (rowCount > 1) {
+            $(this).closest('tr').remove();
+        } else {
+            alert("至少需要一個訓練項目。");
+        }
+    });
+
+    $(document).on('click', '.remove-row', function () {
+        var rowCount = $(this).closest('tbody').find('tr').length;
+        if (rowCount > 1) {
+            $(this).closest('tr').remove();
+        } else {
+            alert("至少需要一個訓練項目。");
+        }
+    });
+
+    // 新增射箭訓練
+    $(document).on('click', '.add-row-archery', function () {
+        var newRow = $(this).closest('.Archerytraining-group').clone();
+        newRow.find('input').val('');
+        newRow.find('select').prop('selectedIndex', 0);
+        $('#ArcherytrainingRows').append(newRow);
+    });
+
+    // 刪除射箭訓練
+    $(document).on('click', '.remove-row-archery', function () {
+        var rowCount = $('#ArcherytrainingRows .Archerytraining-group').length;
+        if (rowCount > 1) {
+            $(this).closest('.Archerytraining-group').remove();
+        } else {
+            alert("至少需要一個訓練項目。");
+        }
+    });
+
+    // 新增射擊訓練
+    $(document).on('click', '.add-row-shooting', function () {
+        var newRow = $(this).closest('.Shootingtraining-group').clone();
+        newRow.find('input').val('');
+        newRow.find('select').prop('selectedIndex', 0);
+        $('#ShootingtrainingRows').append(newRow);
+    });
+
+    // 刪除射擊訓練
+    $(document).on('click', '.remove-row-shooting', function () {
+        var rowCount = $('#ShootingtrainingRows .Shootingtraining-group').length;
+        if (rowCount > 1) {
+            $(this).closest('.Shootingtraining-group').remove();
+        } else {
+            alert("至少需要一個訓練項目。");
+        }
     });
 });

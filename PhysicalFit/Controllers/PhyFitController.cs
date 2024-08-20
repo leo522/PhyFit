@@ -433,7 +433,8 @@ namespace PhysicalFit.Controllers
             ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
             ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
             ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
-
+            ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
+            ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
             var records = _db.SessionRPETrainingRecords.ToList();
 
             var model = records.Select(r => new SessionRPETrainingRecordsModel
@@ -474,6 +475,7 @@ namespace PhysicalFit.Controllers
                 ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
                 ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
                 ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
+
                 return PartialView("_SpecialTechnical", trainingItem);
 
             }

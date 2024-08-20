@@ -32,17 +32,17 @@
     <div class="content" id="trainingMonitoring">
         <h2>一般訓練衝量監控</h2>
         <form>
-            <div class="form-group" style="display: inline-block; max-width: 100%;">
-                <label for="TrainingItem" style="font-size: 24px;" title="請選擇課程名稱">請選擇課程名稱</label>
-                <select class="form-control" id="TrainingItem" name="TrainingItem" onchange="updateTableHeaders()" style="width: auto; min-width: 200px; display: inline-block;">
-                    <option value="">請選擇課程名稱</option>
-                    @foreach (var item in ViewBag.Description)
-                    {
-                        <option value="@item" style="width: 50px;">@item</option>
-                    }
-                </select>
-            </div>
-            <hr />
+            @*<div class="form-group" style="display: inline-block; max-width: 100%;">
+                    <label for="TrainingItem" style="font-size: 24px;" title="請選擇課程名稱">請選擇課程名稱</label>
+                    <select class="form-control" id="TrainingItem" name="TrainingItem" onchange="updateTableHeaders()" style="width: auto; min-width: 200px; display: inline-block;">
+                        <option value="">請選擇課程名稱</option>
+                        @foreach (var item in ViewBag.Description)
+                        {
+                            <option value="@item" style="width: 50px;">@item</option>
+                        }
+                    </select>
+                </div>*@
+            @Html.Partial("_SpecialTechnical")
             <table id="trainingMonitoringTable">
                 <thead id="tableHeaders">
                 </thead>
@@ -82,8 +82,8 @@
                         <th>增減欄位</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody id="ArcherytrainingRows">
+                    <tr class="Archerytraining-group">
                         <td><input type="date" class="form-control" name="archeryDate" /></td>
                         <td>
                             <input type="text" class="form-control" name="Pounds" placeholder="磅數">
@@ -92,26 +92,26 @@
                             <input type="text" class="form-control" name="Arrows" placeholder="箭數">
                         </td>
                         <td>
-                            <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
-                            <input type="hidden" name="RPE" />
+                            <input type="text" class="form-control rpeInput" name="RPE_ArcheryDescription" style="width:200px;" placeholder="請選擇訓練感受" readonly />
+                            <input type="hidden" name="RPEArchery" />
                             <button type="button" class="btn btn-info openRPEModalArchery">運動自覺量表</button>
                         </td>
                         <td>
-                            <input type="text" class="form-control" name="SessionTL" placeholder="每次運動訓練量(TL)" readonly>
+                            <input type="text" class="form-control" name="SessionArcheryTL" placeholder="每次運動訓練量(TL)" readonly>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary add-row">+</button>
-                            <button type="button" class="btn btn-danger remove-row">-</button>
+                            <button type="button" class="btn btn-primary add-row-archery">+</button>
+                            <button type="button" class="btn btn-danger remove-row-archery">-</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
             <div class="form-group" style="width:450px;">
                 <label for="dailyTL">每日運動訓練量(TL):</label>
-                <input type="text" align="left" id="dailyTLArchery" class="form-control" name="DailyTL" placeholder="每日運動訓練量TL" readonly>
+                <input type="text" align="left" id="dailyTLArchery" class="form-control" name="ArcheryDailyTL" placeholder="每日運動訓練量TL" readonly>
             </div>
             <div style="margin-top: 20px;">
-                <button id="btn_calculate_archery" class="btn btn-info">計算</button>
+                <button id="btn_calculate_archery" class="btn btn-info" title="計算">計算</button>
                 <div id="RPEModalArchery" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
@@ -120,10 +120,11 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-success" id="btn-archeryMonitoring">存檔</button>
+                <button class="btn btn-success" id="btn-archeryMonitoring" title="存檔">存檔</button>
             </div>
         </form>
     </div>
+
 
     <!-- 射擊訓練衝量監控區塊 -->
     <div class="content" id="shootingMonitoring">
@@ -140,8 +141,8 @@
                         <th>增減欄位</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody id="ShootingtrainingRows">
+                    <tr class="Shootingtraining-group">
                         <td><input type="date" class="form-control" name="shootingDate" /></td>
                         <td>
                             <select class="form-control" name="GunItem">
@@ -156,26 +157,26 @@
                             <input type="text" class="form-control" name="Bullet" placeholder="子彈數">
                         </td>
                         <td>
-                            <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" placeholder="請選擇訓練感受" readonly />
-                            <input type="hidden" name="RPE" />
+                            <input type="text" class="form-control rpeInput" name="RPE_shootingDescription" style="width:200px;" placeholder="請選擇訓練感受" readonly />
+                            <input type="hidden" name="RPEshooting" />
                             <button type="button" class="btn btn-info openRPEModalShooting">運動自覺量表</button>
                         </td>
                         <td>
-                            <input type="text" class="form-control" name="SessionTL" placeholder="每次運動訓練量(TL)" readonly>
+                            <input type="text" class="form-control" name="SessionShootingTL" placeholder="每次運動訓練量(TL)" readonly>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary add-row">+</button>
-                            <button type="button" class="btn btn-danger remove-row">-</button>
+                            <button type="button" class="btn btn-primary add-row-shooting">+</button>
+                            <button type="button" class="btn btn-danger remove-row-shooting">-</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
             <div class="form-group" style="width:450px;">
                 <label for="dailyTL">每日運動訓練量(TL):</label>
-                <input type="text" align="left" id="dailyTLShooting" class="form-control" name="DailyTL" placeholder="每日運動訓練量TL" readonly>
+                <input type="text" align="left" id="dailyTLShooting" class="form-control" name="ShootingDailyTL" placeholder="每日運動訓練量TL" readonly>
             </div>
             <div style="margin-top: 20px;">
-                <button id="btn_calculate_shooting" class="btn btn-info">計算</button>
+                <button id="btn_calculate_shooting" class="btn btn-info" title="計算">計算</button>
                 <div id="RPEModalShooting" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
@@ -184,7 +185,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-success" id="btn-shootingMonitoring">存檔</button>
+                <button class="btn btn-success" id="btn-shootingMonitoring" title="存檔">存檔</button>
             </div>
         </form>
     </div>
@@ -250,7 +251,7 @@
     <div id="distanceDetails"></div>
     @*檢測系統-訓練內容-Partial view呈現*@
 
-<script>
+    <script>
     function updateTechnicalActions(selectElement) {
     var selectedTechnical = selectElement.value;
     var actionDropdown = selectElement.closest('tr').querySelector('[name="SpecialTechName"]');
@@ -277,7 +278,7 @@
         }
     });
 }
-function updateTableHeaders() {
+@*function updateTableHeaders() {
     var selectedItem = document.getElementById('TrainingItem').value;
     $.ajax({
         url: '@Url.Action("UpdateTableHeaders", "PhyFit")',
@@ -291,7 +292,7 @@ function updateTableHeaders() {
             console.error('錯誤: ', status, error);
         }
     });
-}
-</script>
+}*@
+    </script>
 </body>
 </html>
