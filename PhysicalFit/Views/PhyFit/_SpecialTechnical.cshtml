@@ -5,9 +5,11 @@
         <tr>
             <th>課程名稱</th>
             <th>日期</th>
-            <th id="dynamicHeader1">其他欄位</th>
-            <th id="dynamicHeader2">動作名稱</th>
-            <th id="dynamicHeader3">其他</th>
+            <th>項目</th>
+            <th>動作名稱</th>
+            <th>訓練部位</th>
+            <th>訓練類型</th>
+            <th>其他</th>
             <th>時間</th>
             <th>自覺費力程度</th>
             <th>欄位增減</th>
@@ -17,7 +19,7 @@
         <tr class="training-group">
             <td>
                 <div class="form-group" style="display: inline-block; max-width: 100%;">
-                    <select class="form-control" id="TrainingItem" name="TrainingItem" onchange="updateTableContent()" style="width: auto; min-width: 200px; display: inline-block;">
+                    <select class="form-control" id="TrainingItem" name="TrainingItem" onchange="updateTableContent(this)" style="width: auto; min-width: 200px; display: inline-block;">
                         <option value="">請選擇課程名稱</option>
                         @foreach (var item in ViewBag.Description)
                         {
@@ -26,15 +28,43 @@
                     </select>
                 </div>
             </td>
-            <td><input type="datetime-local" class="form-control" name="TrainingDate" title="日期" /></td>
-            <td id="dynamicContent1">
-                <!-- 動態內容將會插入到這裡 -->
+            <td>
+                <input type="datetime-local" class="form-control" name="TrainingDate" title="日期"/>
             </td>
-            <td id="dynamicContent2">
-                <!-- 動態內容將會插入到這裡 -->
+            <td>
+                <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)" disabled>
+                    <option>請選擇項目</option>
+                    @foreach (var ST in ViewBag.SpecialTechnical)
+                    {
+                        <option value="@ST">@ST</option>
+                    }
+                </select>
             </td>
-            <td id="dynamicContent3">
-                <!-- 動態內容將會插入到這裡 -->
+            <td>
+                <select class="form-control" name="SpecialTechName" disabled>
+                    <option>請選擇項目</option>
+                </select>
+            </td>
+            <td>
+                <select class="form-control" name="TrainingMuscle" disabled>
+                    <option>請選擇訓練部位</option>
+                    @foreach (var MS in ViewBag.MuscleStrength)
+                    {
+                        <option>@MS</option>
+                    }
+                </select>
+            </td>
+            <td>
+                <select class="form-control" name="TrainingType" style="width:150px;" disabled>
+                    <option>請選擇訓練類型</option>
+                    @foreach (var PF in ViewBag.PhysicalFitness)
+                    {
+                        <option>@PF</option>
+                    }
+                </select>
+            </td>
+            <td>
+                <input class="SpecialTechOther" name="SpecialTechOther" placeholder="請自行填選其他動作名稱" disabled />
             </td>
             <td>
                 <select class="form-control" name="TrainingTime" style="width:150px;">
@@ -52,96 +82,52 @@
             </td>
             <td>
                 <button type="button" class="btn btn-primary add-row">+</button>
-                <button type="button" class="btn btn-danger remove-row">-</button>
+                <button type="button" class="btn btn-danger remove-row" >-</button>
             </td>
         </tr>
     </tbody>
 </table>
 
 <script>
-    function updateTableContent() {
-        var selectedItem = document.getElementById('TrainingItem').value;
+    function updateTableContent(selectElement) {
+        
+        var selectedItem = selectElement.value; // 取得選擇的課程名稱
+        
+        var row = selectElement.closest('tr'); // 使用 closest('tr') 限定只影響當前行的欄位
 
-        // 清除現有的動態內容
-        document.getElementById('dynamicContent1').innerHTML = '';
-        document.getElementById('dynamicContent2').innerHTML = '';
-        document.getElementById('dynamicContent3').innerHTML = '';
+        var specialTechField = document.querySelector('select[name="SpecialTech"]'); //項目
+        var specialTechNameField = document.querySelector('select[name="SpecialTechName"]'); //動作名稱
+        var trainingMuscleField = document.querySelector('select[name="TrainingMuscle"]'); //訓練部位
+        var trainingTypeField = document.querySelector('select[name="TrainingType"]'); //訓練類型
+        var otherField = document.querySelector('input[name="SpecialTechOther"]'); //其他
 
-        if (selectedItem === "專項技術類") {
-            // 更新欄位
-            document.getElementById('dynamicHeader1').textContent = '項目';
-            document.getElementById('dynamicHeader2').textContent = '動作名稱';
-            document.getElementById('dynamicHeader3').textContent = '其他';
+        // 先禁用所有欄位
+        [specialTechField, specialTechNameField, otherField, trainingMuscleField, trainingTypeField].forEach(function (field) {
+            if (field) field.disabled = true;
+        });
 
-            // 更新內容
-            document.getElementById('dynamicContent1').innerHTML = `
-                <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)">
-                    <option>請選擇項目</option>
-                    @foreach (var ST in ViewBag.SpecialTechnical)
-                    {
-                        <option value="@ST">@ST</option>
-                    }
-                </select>
-            `;
-            document.getElementById('dynamicContent2').innerHTML = `
-                <select class="form-control" name="SpecialTechName">
-                    <option>請選擇項目</option>
-                </select>
-            `;
-            document.getElementById('dynamicContent3').innerHTML = `
-                <input type="text" class="form-control" name="Other" placeholder="其他" />
-            `;
-        } else if (selectedItem === "混合肌力體能類") {
-            // 更新欄位
-            document.getElementById('dynamicHeader1').textContent = '項目';
-            document.getElementById('dynamicHeader2').textContent = '動作名稱';
-            document.getElementById('dynamicHeader3').textContent = '其他';
+        // 根據選項來控制欄位啟用與否
+        switch (selectedItem) {
+            case "專項技術類":
+                specialTechField.disabled = false;
+                specialTechNameField.disabled = false;
+                otherField.disabled = false;
+                break;
 
-            // 更新內容
-            //document.getElementById('dynamicContent1').innerHTML = `
-            //    <input type="text" class="form-control" name="StrengthLevel" placeholder="請輸入強度">
-            //`;
-        } else if (selectedItem === "肌力類") {
-            // 更新欄位
-            document.getElementById('dynamicHeader1').textContent = '訓練部位';
-            document.getElementById('dynamicHeader2').textContent = '動作名稱';
-            document.getElementById('dynamicHeader3').textContent = '其他';
+            case "肌力類":
+                trainingMuscleField.disabled = false;
+                break;
 
-            // 更新內容
-            document.getElementById('dynamicContent1').innerHTML = `
-                <select class="form-control" name="TrainingMuscle" style="width:150px;">
-                    <option>請選擇訓練部位</option>
-                    @foreach (var MS in ViewBag.MuscleStrength)
-                    {
-                        <option value="@MS">@MS</option>
-                    }
-                </select>
-            `;
-        } else if (selectedItem === "體能類") {
-            // 更新欄位
-            document.getElementById('dynamicHeader1').textContent = '訓練類型';
-            document.getElementById('dynamicHeader2').textContent = '動作名稱';
-            document.getElementById('dynamicHeader3').textContent = '其他';
+            case "體能類":
+                trainingTypeField.disabled = false;
+                break;
 
-            // 更新內容
-            document.getElementById('dynamicContent1').innerHTML = `
-                <select class="form-control" name="TrainingType" style="width:250px;">
-                    <option>請選擇訓練類型</option>
-                    @foreach (var PF in ViewBag.PhysicalFitness)
-                    {
-                        <option value="@PF">@PF</option>
-                    }
-                </select>
-            `;
-        } else {
-            // 重置欄位名稱和內容
-            document.getElementById('dynamicHeader1').textContent = '其他欄位';
-            document.getElementById('dynamicHeader2').textContent = '動作名稱';
-            document.getElementById('dynamicHeader3').textContent = '其他';
+            // 可以根據需要新增更多選項
+            case "混合肌力體能類":
+            default:
 
-            //document.getElementById('dynamicContent1').innerHTML = `
-            //    <input type="text" class="form-control" name="OtherInput" placeholder="其他輸入">
-            //`;
+                // 其他情況下不啟用任何欄位
+                break;
         }
     }
 </script>

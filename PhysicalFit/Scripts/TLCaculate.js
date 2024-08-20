@@ -97,12 +97,12 @@ $(document).ready(function () {
         $('input[name="DailyTL"]').val('');
     });
     // 新增訓練項目
-    $(document).on('click', '.add-row-special', function () {
-        var newRow = $(this).closest('tr').clone();
-        newRow.find('input').val('');
-        newRow.find('select').prop('selectedIndex', 0);
-        $(this).closest('tbody').prepend(newRow); // 新增行到最上方
-    });
+    //$(document).on('click', '.add-row-special', function () {
+    //    var newRow = $(this).closest('tr').clone();
+    //    newRow.find('input').val('');
+    //    newRow.find('select').prop('selectedIndex', 0);
+    //    $(this).closest('tbody').prepend(newRow); // 新增行到最上方
+    //});
 
     $(document).on('click', '.add-row', function () {
         var newRow = $(this).closest('tr').clone();
@@ -171,7 +171,6 @@ $(document).ready(function () {
             alert("已達到最大行數，無法新增更多。");
         }
     });
-
 
     // 刪除射擊訓練
     $(document).on('click', '.remove-row-shooting', function () {
