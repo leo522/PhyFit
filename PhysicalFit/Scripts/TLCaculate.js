@@ -96,31 +96,24 @@ $(document).ready(function () {
     $('#TrainingItem').change(function () {
         $('input[name="DailyTL"]').val('');
     });
-    // 新增訓練項目
-    //$(document).on('click', '.add-row-special', function () {
-    //    var newRow = $(this).closest('tr').clone();
-    //    newRow.find('input').val('');
-    //    newRow.find('select').prop('selectedIndex', 0);
-    //    $(this).closest('tbody').prepend(newRow); // 新增行到最上方
-    //});
+
+    // 新增一般訓練衝量監控
+    var maxArcheryRows = 7; //欄位增加上限7筆
 
     $(document).on('click', '.add-row', function () {
-        var newRow = $(this).closest('tr').clone();
-        newRow.find('input').val('');
-        newRow.find('select').prop('selectedIndex', 0);
-        $(this).closest('tbody').prepend(newRow); // 新增行到最上方
-    });
-
-    // 刪除訓練項目
-    $(document).on('click', '.remove-row-special', function () {
-        var rowCount = $(this).closest('tbody').find('tr').length;
-        if (rowCount > 1) {
-            $(this).closest('tr').remove();
-        } else {
-            alert("至少需要一個訓練項目。");
+        var rowCount = $('#trainingMonitoringRows .training-group').length;
+        if (rowCount < maxArcheryRows) {
+            var newRow = $(this).closest('tr').clone();
+            newRow.find('input').val('');
+            newRow.find('select').prop('selectedIndex', 0);
+            $(this).closest('tbody').prepend(newRow); // 新增行到最上方
+        } else
+        {
+            alert("已達到最大行數，無法新增更多。");
         }
     });
 
+    // 刪除一般訓練衝量監控
     $(document).on('click', '.remove-row', function () {
         var rowCount = $(this).closest('tbody').find('tr').length;
         if (rowCount > 1) {
@@ -131,7 +124,6 @@ $(document).ready(function () {
     });
 
     // 新增射箭訓練
-    var maxArcheryRows = 10; //欄位增加上限10筆
 
     $(document).on('click', '.add-row-archery', function () {
         var rowCount = $('#ArcherytrainingRows .Archerytraining-group').length;

@@ -142,6 +142,45 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
+        #region 學校代碼登入
+        public ActionResult SchoolLogin()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SchoolLogin(string SchoolCode)
+        {
+            try
+            {
+                // 不再檢查密碼，只檢查學校代碼是否存在
+                var dto = _db.PrimarySchoolList
+                              .FirstOrDefault(s => s.SchoolCode.ToString() == SchoolCode);
+
+              
+                if (dto != null)
+                {
+                    // 設定 Session 狀態為已登入
+                    Session["LoggedIn"] = true;
+                    Session["schoolName"] = dto.SchoolName;
+
+                    return RedirectToAction("Login", "PhyFit");
+                }
+                else
+                {
+                    // 驗證失敗
+                    ViewBag.ErrorMessage = "學校代碼錯誤";
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("其他錯誤: " + ex.Message);
+                return View("Error");
+            }
+        }
+        #endregion
+
         #region 密碼加密
         private static string ComputeSha256Hash(string rawData)
         {

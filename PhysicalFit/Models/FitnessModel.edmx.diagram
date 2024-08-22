@@ -39,7 +39,8 @@
         <EntityTypeShape EntityType="PhFitnessModel.PhysicalFitness" Width="1.5" PointX="14.375" PointY="0.75" />
         <EntityTypeShape EntityType="PhFitnessModel.SpecialTechnical" Width="1.5" PointX="12.375" PointY="10.875" />
         <EntityTypeShape EntityType="PhFitnessModel.SpecialTechnicalAction" Width="1.5" PointX="14.625" PointY="10.875" />
-        <AssociationConnector Association="PhFitnessModel.FK__SpecialTe__Speci__4865BE2A" />
+        <AssociationConnector Association="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" />
+        <EntityTypeShape EntityType="PhFitnessModel.PrimarySchoolList" Width="1.5" PointX="0.75" PointY="14.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

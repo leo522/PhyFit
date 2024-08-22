@@ -187,6 +187,9 @@
     <Compile Include="Models\PhysicalFitness.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PrimarySchoolList.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RPE.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -350,6 +353,7 @@
     <Content Include="Views\PhyFit\createAthletes.cshtml" />
     <Content Include="Views\PhyFit\_RPESurvey.cshtml" />
     <Content Include="Views\PhyFit\_SpecialTechnical.cshtml" />
+    <Content Include="Views\PhyFit\SchoolLogin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -140,6 +140,19 @@
           <Property Name="ItemIndex" Type="int" />
           <Property Name="FitnessItem" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="PrimarySchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AcademicYear" Type="int" />
+          <Property Name="CityCode" Type="int" />
+          <Property Name="CityName" Type="nvarchar" MaxLength="10" />
+          <Property Name="District" Type="nvarchar" MaxLength="10" />
+          <Property Name="SchoolCode" Type="int" />
+          <Property Name="SchoolName" Type="nvarchar" MaxLength="20" />
+          <Property Name="IsRecruiting" Type="bit" />
+        </EntityType>
         <EntityType Name="RPE">
           <Key>
             <PropertyRef Name="Id" />
@@ -212,14 +225,14 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ItemIndex" Type="int" />
-          <Property Name="TechnicalItem" Type="varchar" MaxLength="20" />
+          <Property Name="TechnicalItem" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="SpecialTechnicalAction">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TechnicalName" Type="varchar" MaxLength="20" />
+          <Property Name="TechnicalName" Type="nvarchar" MaxLength="50" />
           <Property Name="SpecialTechnicalID" Type="int" />
         </EntityType>
         <EntityType Name="TechnologyCategory">
@@ -306,7 +319,7 @@
           <Property Name="LastLoginDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
-        <Association Name="FK__SpecialTe__Speci__4865BE2A">
+        <Association Name="FK__SpecialTe__Speci__57A801BA">
           <End Role="SpecialTechnical" Type="Self.SpecialTechnical" Multiplicity="0..1" />
           <End Role="SpecialTechnicalAction" Type="Self.SpecialTechnicalAction" Multiplicity="*" />
           <ReferentialConstraint>
@@ -404,6 +417,7 @@
           <EntitySet Name="PasswordResetRequests" EntityType="Self.PasswordResetRequests" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PhysicalFitness" EntityType="Self.PhysicalFitness" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PrimarySchoolList" EntityType="Self.PrimarySchoolList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RPE" EntityType="Self.RPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SessionRPETrainingRecords" EntityType="Self.SessionRPETrainingRecords" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShootingTraining" EntityType="Self.ShootingTraining" Schema="dbo" store:Type="Tables" />
@@ -419,7 +433,7 @@
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__SpecialTe__Speci__4865BE2A" Association="Self.FK__SpecialTe__Speci__4865BE2A">
+          <AssociationSet Name="FK__SpecialTe__Speci__57A801BA" Association="Self.FK__SpecialTe__Speci__57A801BA">
             <End Role="SpecialTechnical" EntitySet="SpecialTechnical" />
             <End Role="SpecialTechnicalAction" EntitySet="SpecialTechnicalAction" />
           </AssociationSet>
@@ -558,10 +572,11 @@
           <EntitySet Name="PhysicalFitness" EntityType="PhFitnessModel.PhysicalFitness" />
           <EntitySet Name="SpecialTechnical" EntityType="PhFitnessModel.SpecialTechnical" />
           <EntitySet Name="SpecialTechnicalAction" EntityType="PhFitnessModel.SpecialTechnicalAction" />
-          <AssociationSet Name="FK__SpecialTe__Speci__4865BE2A" Association="PhFitnessModel.FK__SpecialTe__Speci__4865BE2A">
+          <AssociationSet Name="FK__SpecialTe__Speci__57A801BA" Association="PhFitnessModel.FK__SpecialTe__Speci__57A801BA">
             <End Role="SpecialTechnical" EntitySet="SpecialTechnical" />
             <End Role="SpecialTechnicalAction" EntitySet="SpecialTechnicalAction" />
           </AssociationSet>
+          <EntitySet Name="PrimarySchoolList" EntityType="PhFitnessModel.PrimarySchoolList" />
         </EntityContainer>
         <EntityType Name="TrainingPurpose">
           <Key>
@@ -885,19 +900,19 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ItemIndex" Type="Int32" />
-          <Property Name="TechnicalItem" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="SpecialTechnicalAction" Relationship="PhFitnessModel.FK__SpecialTe__Speci__4865BE2A" FromRole="SpecialTechnical" ToRole="SpecialTechnicalAction" />
+          <Property Name="TechnicalItem" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SpecialTechnicalAction" Relationship="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" FromRole="SpecialTechnical" ToRole="SpecialTechnicalAction" />
         </EntityType>
         <EntityType Name="SpecialTechnicalAction">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TechnicalName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TechnicalName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SpecialTechnicalID" Type="Int32" />
-          <NavigationProperty Name="SpecialTechnical" Relationship="PhFitnessModel.FK__SpecialTe__Speci__4865BE2A" FromRole="SpecialTechnicalAction" ToRole="SpecialTechnical" />
+          <NavigationProperty Name="SpecialTechnical" Relationship="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" FromRole="SpecialTechnicalAction" ToRole="SpecialTechnical" />
         </EntityType>
-        <Association Name="FK__SpecialTe__Speci__4865BE2A">
+        <Association Name="FK__SpecialTe__Speci__57A801BA">
           <End Type="PhFitnessModel.SpecialTechnical" Role="SpecialTechnical" Multiplicity="0..1" />
           <End Type="PhFitnessModel.SpecialTechnicalAction" Role="SpecialTechnicalAction" Multiplicity="*" />
           <ReferentialConstraint>
@@ -909,6 +924,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="PrimarySchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AcademicYear" Type="Int32" />
+          <Property Name="CityCode" Type="Int32" />
+          <Property Name="CityName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="District" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolCode" Type="Int32" />
+          <Property Name="SchoolName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IsRecruiting" Type="Boolean" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1238,6 +1266,20 @@
               <MappingFragment StoreEntitySet="SpecialTechnicalAction">
                 <ScalarProperty Name="SpecialTechnicalID" ColumnName="SpecialTechnicalID" />
                 <ScalarProperty Name="TechnicalName" ColumnName="TechnicalName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PrimarySchoolList">
+            <EntityTypeMapping TypeName="PhFitnessModel.PrimarySchoolList">
+              <MappingFragment StoreEntitySet="PrimarySchoolList">
+                <ScalarProperty Name="IsRecruiting" ColumnName="IsRecruiting" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="SchoolCode" ColumnName="SchoolCode" />
+                <ScalarProperty Name="District" ColumnName="District" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="CityCode" ColumnName="CityCode" />
+                <ScalarProperty Name="AcademicYear" ColumnName="AcademicYear" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -53,5 +53,6 @@ namespace PhysicalFit.Models
         public virtual DbSet<PhysicalFitness> PhysicalFitness { get; set; }
         public virtual DbSet<SpecialTechnical> SpecialTechnical { get; set; }
         public virtual DbSet<SpecialTechnicalAction> SpecialTechnicalAction { get; set; }
+        public virtual DbSet<PrimarySchoolList> PrimarySchoolList { get; set; }
     }
 }

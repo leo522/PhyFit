@@ -9,46 +9,54 @@
 
 </head>
 <body>
-    <div class="col-md-3" style="margin-left: 120px;">
-        <div class="card">
-            <div class="card-header">
-                <h4>有/無氧代謝能力測定：<span id="selectedSportItem"></span></h4>
-                <a>先測遞增負荷最大功率，再測4種次最大功率騎之力竭時間。</a>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mb-4"">
+                    <div class="card-header">
+                        <h4>有/無氧代謝能力測定：<span id="selectedSportItem"></span></h4>
+                        <a>先測遞增負荷最大功率，再測4種次最大功率騎之力竭時間。</a>
+                    </div>
+                    <div>
+                        <a>最大功率(W)：</a>
+                        <input id="MaxSpeed" type="text" placeholder="請輸入最大功率瓦數" oninput="CaculatePowerSpeed()" />
+                    </div>
+                </div>
             </div>
-            <div>
-                <a>最大功率(W)：</a>
-                <input id="MaxSpeed" type="text" placeholder="請輸入最大功率瓦數" oninput="CaculatePowerSpeed()" />
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>強度百分比</th>
+                                        <th>力竭時間(s)</th>
+                                        <th>速度(km/h)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dataTable">
+                                    @foreach (var distance in Model)
+                                    {
+                                        <tr>
+                                            <td>@distance</td>
+                                            <td><input type="text" class="exhaustion-time" data-distance="@distance" oninput="calculateBikeSpeed(this)" /></td>
+                                            <td class="speed"></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tr>
+                                    <td><i>r</i> <sup>2</sup></td>
+                                    <td><input type="text" id="calculationResult" class="form-control" readonly /></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3" style="margin-left: 120px;">
-        <div class="card">
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>強度百分比</th>
-                            <th>力竭時間(s)</th>
-                            <th>速度(km/h)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTable">
-                        @foreach (var distance in Model)
-                        {
-                            <tr>
-                                <td>@distance</td>
-                                <td><input type="text" class="exhaustion-time" data-distance="@distance" oninput="calculateBikeSpeed(this)" /></td>
-                                <td class="speed"></td>
-                            </tr>
-                        }
-                    </tbody>
-                    <tr>
-                        <td><i>r</i> <sup>2</sup></td>
-                        <td><input type="text" id="calculationResult" class="form-control" readonly /></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
+    
 </body>
 </html>

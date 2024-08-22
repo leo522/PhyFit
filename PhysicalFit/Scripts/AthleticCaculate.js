@@ -10,6 +10,10 @@ var TrackMaxR_a;
 var TrackMaxR_b;
 var TrackLimitSpeed = 0; //臨界速度
 var TrackMaxWork = 0; //最大無氧做功
+var TreadmillTotT = 0; //訓練量
+var TreadmillCurrentSets = 1; //訓練量預設值
+//var TreadmillCurrentMode = "SingleSet"; //處方訓練模式，單組模式
+var TreadmillCurrentSets = 1; //設定組數
 
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');
@@ -132,3 +136,41 @@ function trackCalculateLinearRegression() {
 
     $('#calculationResult').val(Math.floor(maxR * 100) / 100);
 }
+
+//計算運動量
+function TreadmillPrescriptionTable(Mode, SetNum) {
+    TreadmillCurrentMode = Mode;
+    TreadmillCurrentSets = SetNum;
+    var xmlhttp;
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+    }
+    else {// code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            document.getElementById("div_PrescriptionInfo").innerHTML = xmlhttp.responseText;
+            TreadmillFactor = document.getElementById("select_TM_Factor").value;
+            TreadmillPrescriptionAttribute();
+            TreadmillInitialPrescription();
+        }
+    }
+    xmlhttp.open("GET", "Treadmill/Prescription.php?Mode=" + TreadmillCurrentMode + "&SetNum=" + TreadmillCurrentSets, true);
+    xmlhttp.send();
+}
+
+function TreadmillTotalT() {
+    var TotalTraining = 0;
+
+    for (var i = 1; i <= TreadmillCurrentSets; i++)
+    {
+        TotalTraining = TotalTraining + 1 ;
+        //TotT += parseFloat(document.getElementById("input_TM_PartT_S" + i).value);
+    }
+    
+    document.getElementById("TrainingVol").value = TotT.toFixed(2);
+    console.log(TotT);
+    debugger;
+}
+//input_TM_PartT_S 訓練量小計

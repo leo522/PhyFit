@@ -8,40 +8,47 @@
     <script src="~/Scripts/SwimmingPoolCaculate.js"></script> @*游泳計算公式*@
 </head>
 <body>
-    <div class="col-md-3" style="margin-left: 120px;">
-        <div class="card">
-            <div class="card-header">
-                <h4>有/無氧代謝能力測定：<span id="selectedSportItem"></span></h4>
-                <a>測3-4種距離的力竭時間。</a>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>有/無氧代謝能力測定：<span id="selectedSportItem"></span></h4>
+                        <a>測3-4種距離的力竭時間。</a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-3" style="margin-left: 120px;">
-        <div class="card">
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>距離(m)</th>
-                            <th>力竭時間(s)</th>
-                            <th>速度(km/h)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTable">
-                        @foreach (var distance in Model)
-                        {
-                            <tr>
-                                <td>@distance</td>
-                                <td><input type="text" class="exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" /></td>
-                                <td class="speed"></td>
-                            </tr>
-                        }
-                    </tbody>
-                    <tr>
-                        <td><i>r</i> <sup>2</sup></td>
-                        <td colspan="2"><input type="text" id="calculationResult" class="form-control" readonly /></td>
-                    </tr>
-                </table>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>距離(m)</th>
+                                        <th>力竭時間(s)</th>
+                                        <th>速度(km/h)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dataTable">
+                                    @foreach (var distance in Model)
+                                    {
+                                        <tr>
+                                            <td>@distance</td>
+                                            <td><input type="text" class="exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" /></td>
+                                            <td class="speed"></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tr>
+                                    <td><i>r</i> <sup>2</sup></td>
+                                    <td colspan="2"><input type="text" id="calculationResult" class="form-control" readonly /></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
