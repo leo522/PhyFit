@@ -257,10 +257,10 @@
     @*檢測系統-訓練內容-Partial view呈現*@
 
     <div class="resultTable" id="sessionRPEresult">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <div class="card">
                 <div class="card-header">
-                    <h3>session RPE指標計算結果</h3>
+                    <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;"></span></h3>
                 </div>
                 <div class="card-body">
                     <form>
@@ -353,6 +353,15 @@
         }
     });
 }*@
+        document.addEventListener('DOMContentLoaded', function () {
+            var itemSelect = document.getElementById('Item');
+            var selectedItemSpan = document.getElementById('selectedItem');
+
+            itemSelect.addEventListener('change', function () {
+                var selectedItem = itemSelect.options[itemSelect.selectedIndex].text;
+                selectedItemSpan.textContent = selectedItem;
+            });
+        });
     </script>
 </body>
 </html>

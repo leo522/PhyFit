@@ -190,6 +190,11 @@ namespace PhysicalFit.Controllers
         #region 登入
         public ActionResult Login()
         {
+            // 如果用戶已經登入，直接重定向到主頁
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("dashboard", "PhyFit");
+            }
             return View();
         }
 
@@ -315,11 +320,17 @@ namespace PhysicalFit.Controllers
             // 清除所有的 Forms 認證 Cookies
             FormsAuthentication.SignOut();
 
+            // 清除快取
+            Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+
             // 取得登出前的頁面路徑，如果沒有則預設為首頁
-            string returnUrl = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : Url.Action("Login", "PhyFit");
+            //string returnUrl = Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : Url.Action("Login", "PhyFit");
 
             // 重定向到記錄的返回頁面
-            return Redirect(returnUrl);
+            //return Redirect(returnUrl);
+            return RedirectToAction("Login", "PhyFit");
         }
         #endregion
 

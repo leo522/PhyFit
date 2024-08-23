@@ -40,10 +40,6 @@ $(document).ready(function () {
             var PoundsValue = $(this).find('input[name="Pounds"]').val();
             var ArrowsValue = $(this).find('input[name="Arrows"]').val();
 
-            console.log(ArcheryrpeValue);
-            console.log(PoundsValue);
-            console.log(ArrowsValue);
-            debugger;
             if (ArcheryrpeValue && PoundsValue && ArrowsValue) {
                 var Archeryrpe = parseFloat(ArcheryrpeValue);
                 var trainingPounds = parseFloat(PoundsValue);

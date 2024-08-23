@@ -35,8 +35,12 @@
 </head>
 <body>
     <div>
-        @*<button>登出</button>*@
-        <div class="countdown-timer" id="countdownTimer"></div>
+        <div class="position-relative">
+            <form action="/PhyFit/Logout" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-warning position-absolute top-0 end-0 m-3">登出</button>
+            </form>
+        </div>
+        @*<div class="countdown-timer" id="countdownTimer"></div>*@
         @RenderBody()
     </div>
 

@@ -1,4 +1,7 @@
-﻿$(function () {
+﻿$(document).ready(function () {
+    initializeModal("RPEModalTraining", "openRPEModal");
+    initializeModal("RPEModalArchery", "openRPEModalArchery");
+    initializeModal("RPEModalShooting", "openRPEModalShooting");
     // 監控項目選擇
     $('#Item').change(function () {
         var selectedItem = $(this).val();
@@ -15,6 +18,11 @@
         else if (selectedItem === '檢測系統') {
             $('#distanceDetails').show();
         }
+    });
+
+    $('#Item').on('change', function () {
+        $('.modal').hide(); // 隱藏所有模態窗口
+        $('.modal').removeData('currentRow'); // 清理舊的數據
     });
 
     $('#DeteItem').change(function () {
