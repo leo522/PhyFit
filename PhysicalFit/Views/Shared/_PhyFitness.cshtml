@@ -22,10 +22,89 @@
     <link rel="icon" href="~/img/favicon.svg" />
 
     <title>體能與肌力訓練處方系統</title>
+    <style>
+        .swal2-container {
+            z-index: 10000 !important;
+        }
+
+        .countdown-timer {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div>
+        @*<button>登出</button>*@
+        <div class="countdown-timer" id="countdownTimer"></div>
         @RenderBody()
     </div>
+
+    @*<script>
+        $(document).ready(function () {
+            var sessionExpirationTime = new Date();
+            sessionExpirationTime.setMinutes(sessionExpirationTime.getMinutes() + 2); // 假設 session 2 分鐘後到期
+
+            var warningTime = 1 * 60 * 1000; // 提醒時間，1 分鐘（以毫秒計）
+            var intervalTime = 1000; // 更新時間間隔（以毫秒計）
+
+            var hasWarned = false; // 標記是否已經顯示了警告
+
+            function updateCountdownTimer() {
+                var now = new Date();
+                var timeLeft = sessionExpirationTime - now;
+
+                if (timeLeft <= 0) {
+                    $('#countdownTimer').text('會話已過期');
+                    Swal.fire({
+                        title: '會話已過期',
+                        text: '您的會話已經過期，請重新登入。',
+                        icon: 'warning',
+                        confirmButtonText: '重新登入',
+                        preConfirm: () => {
+                            window.location.href = '/PhyFit/Login';
+                        }
+                    });
+                    clearInterval(countdownInterval); // 停止倒數計時
+                } else {
+                    var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                    $('#countdownTimer').text(
+                        ('0' + hours).slice(-2) + ':' +
+                        ('0' + minutes).slice(-2) + ':' +
+                        ('0' + seconds).slice(-2)
+                    );
+
+                    if (timeLeft <= warningTime && !hasWarned) {
+                        hasWarned = true; // 設置標記為已顯示警告
+                        Swal.fire({
+                            title: '會話即將過期',
+                            text: '您的會話即將過期，是否要繼續使用？',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: '繼續使用',
+                            cancelButtonText: '登出',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // 繼續使用，不做任何事情
+                            } else {
+                                window.location.href = '/PhyFit/Login';
+                            }
+                        });
+                    }
+                }
+            }
+
+            // 定期更新倒數計時器
+            var countdownInterval = setInterval(updateCountdownTimer, intervalTime);
+
+            // 監聽登出按鈕
+            $('#logoutBtn').click(function () {
+                window.location.href = '/PhyFit/Login';
+            });
+        });
+    </script>*@
 </body>
 </html>

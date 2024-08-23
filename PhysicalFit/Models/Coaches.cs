@@ -23,16 +23,16 @@ namespace PhysicalFit.Models
         public int ID { get; set; }
         public string CoachName { get; set; }
         public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public string CoachPwd { get; set; }
         public string SchoolName { get; set; }
+        public string SchoolID { get; set; }
+        public string PhoneNumber { get; set; }
         public string Title { get; set; }
         public string TeamName { get; set; }
         public string SportsSpecific { get; set; }
         public bool IsActive { get; set; }
-        public Nullable<int> UserID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Athletes> Athletes { get; set; }
-        public virtual Users Users { get; set; }
     }
 }

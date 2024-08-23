@@ -44,8 +44,6 @@ namespace PhysicalFit.Models
         public virtual DbSet<DetectionSys> DetectionSys { get; set; }
         public virtual DbSet<SessionRPETrainingRecords> SessionRPETrainingRecords { get; set; }
         public virtual DbSet<DetectionTraining> DetectionTraining { get; set; }
-        public virtual DbSet<Athletes> Athletes { get; set; }
-        public virtual DbSet<Coaches> Coaches { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<PasswordResetRequests> PasswordResetRequests { get; set; }
         public virtual DbSet<MixedStrength> MixedStrength { get; set; }
@@ -54,5 +52,11 @@ namespace PhysicalFit.Models
         public virtual DbSet<SpecialTechnical> SpecialTechnical { get; set; }
         public virtual DbSet<SpecialTechnicalAction> SpecialTechnicalAction { get; set; }
         public virtual DbSet<PrimarySchoolList> PrimarySchoolList { get; set; }
+        public virtual DbSet<ComprehensiveHighSchoolList> ComprehensiveHighSchoolList { get; set; }
+        public virtual DbSet<GeneralHighSchoolList> GeneralHighSchoolList { get; set; }
+        public virtual DbSet<JuniorHighSchoolList> JuniorHighSchoolList { get; set; }
+        public virtual DbSet<UniversitySchoolList> UniversitySchoolList { get; set; }
+        public virtual DbSet<Athletes> Athletes { get; set; }
+        public virtual DbSet<Coaches> Coaches { get; set; }
     }
 }

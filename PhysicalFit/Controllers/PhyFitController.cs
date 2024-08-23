@@ -17,48 +17,156 @@ namespace PhysicalFit.Controllers
     {
         private PhFitnessEntities _db = new PhFitnessEntities();
 
-        #region 註冊帳號
+        #region 註冊角色選擇
         public ActionResult Register()
         {
             return View();
         }
-        [HttpPost]
-        public ActionResult Register(string UserName, string pwd, string Email)
+
+        //public ActionResult Register(string Role, string CoachName, string CoachEmail, string Coachpwd, string CoachPhone, int SchoolID, string CoachSchool, string CoachTeam, string CoachSpecialty, string AthleteName, DateTime? AthleteBirthday, string AthleteID,string Athletepwd, string AthleteSchool, string AthleteTeam, string AthleteCoach)
+        //{
+        //    try
+        //    {
+        //        if (Role == "Coach")
+        //        {
+        //            if (Coachpwd.Length < 6)
+        //            {
+        //                ViewBag.ErrorMessage = "密碼長度至少要6位數";
+        //                return View();
+        //            }
+        //            var newCoach = new Coaches
+        //            {
+        //                CoachName = CoachName,
+        //                Email = CoachEmail,
+        //                CoachPwd = Coachpwd,
+        //                PhoneNumber = CoachPhone,
+        //                SchoolID = SchoolID,
+        //                SchoolName = CoachSchool,
+        //                Title = Role,
+        //                TeamName = CoachTeam,
+        //                SportsSpecific = CoachSpecialty,
+        //                IsActive = true
+        //            };
+
+        //            _db.Coaches.Add(newCoach);
+        //            //_db.SaveChanges();
+
+        //            //var Pwd = Sha256Hash(Coachpwd);
+
+        //            var newUser = new Users
+        //            {
+        //                Name = CoachName,
+        //                Password = Coachpwd,
+        //                Email = CoachEmail,
+        //                RegistrationDate = DateTime.Now,
+        //                IsActive = true,
+        //            };
+
+        //            _db.Users.Add(newUser);
+        //        }
+        //        else if (Role == "Athlete") 
+        //        {
+        //            // 處理運動員註冊
+        //            var newAthlete = new Athletes
+        //            {
+        //                AthleteName = AthleteName,
+        //                Birthday = AthleteBirthday.Value,
+        //                IdentityNumber = AthleteID,
+        //                AthleteSchool = AthleteSchool,
+        //                TeamName = AthleteTeam,
+        //                CoachID = _db.Coaches.FirstOrDefault(c => c.CoachName == AthleteCoach)?.ID,
+        //                IsActive = true
+        //            };
+
+        //            _db.Athletes.Add(newAthlete);
+        //            _db.SaveChanges();
+
+        //            var newUser = new Users
+        //            {
+        //                Name = AthleteName,
+        //                Password = Athletepwd,
+        //                RegistrationDate = DateTime.Now,
+        //                IsActive = true,
+
+        //            };
+
+        //            _db.Users.Add(newUser);
+        //        }
+        //        else
+        //        {
+        //            ViewBag.ErrorMessage = "無效的角色";
+        //            return View();
+        //        }
+
+        //        _db.SaveChanges();
+        //        return RedirectToAction("Login", "PhyFit");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("其他錯誤: " + ex.Message);
+        //        return View("Error");
+        //    }
+        //}
+        #endregion
+
+        #region 教練註冊帳號
+
+        public ActionResult RegisterCoach()
         {
-            try
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult RegisterCoach(string CoachName, string CoachEmail, string Coachpwd, string CoachPhone, string SchoolID, string CoachSchool, string CoachTeam, string CoachSpecialty)
+        {
+            // 處理教練註冊
+            var newCoach = new Coaches
             {
-                if (pwd.Length < 6)
-                {
-                    ViewBag.ErrorMessage = "密碼長度至少要6位數";
-                    return View();
-                }
+                CoachName = CoachName,
+                Email = CoachEmail,
+                CoachPwd = Coachpwd,
+                PhoneNumber = CoachPhone,
+                SchoolID = SchoolID,
+                SchoolName = CoachSchool,
+                Title = "教練",
+                TeamName = CoachTeam,
+                SportsSpecific = CoachSpecialty,
+                IsActive = true
+            };
+            _db.Coaches.Add(newCoach);
+            _db.SaveChanges();
 
-                if (_db.Users.Any(u => u.Name == UserName))
-                {
-                    ViewBag.ErrorMessage = "該帳號已存在";
-                    return View();
-                }
+            return RedirectToAction("Login", "PhyFit");
+        }
+        #endregion
 
-                var Pwd = Sha256Hash(pwd);
-                var newUser = new Users
-                {
-                    Name = UserName,
-                    Password = Pwd,
-                    Email = Email,
-                    RegistrationDate = DateTime.Now,
-                    IsActive = true
-                };
+        #region 學生運動員註冊
+        public ActionResult RegisterAthlete()
+        {
+            return View();
+        }
 
-                _db.Users.Add(newUser);
-                _db.SaveChanges();
-
-                return RedirectToAction("Login");
-            }
-            catch (Exception ex)
+        [HttpPost]
+        public ActionResult RegisterAthlete(string AthleteName, DateTime? AthleteBirthday, string AthleteID, string Athletepwd, string AthleteSchool, string AthleteTeam, string AthleteCoach)
+        {
+            // 去除時間部分，只保留日期部分
+            DateTime birthdayDate = AthleteBirthday.Value.Date;
+            // 處理運動員註冊
+            var newAthlete = new Athletes
             {
-                Console.WriteLine("其他錯誤: " + ex.Message);
-                return View("Error");
-            }
+                AthleteName = AthleteName,
+                Birthday = birthdayDate,
+                IdentityNumber = AthleteID,
+                AthleteSchool = AthleteSchool,
+                TeamName = AthleteTeam,
+                CoachID = _db.Coaches.FirstOrDefault(c => c.CoachName == AthleteCoach)?.ID,
+                IsActive = true
+            };
+            _db.Athletes.Add(newAthlete);
+            //_db.Users.Add(new Users { /* 設定屬性 */ });
+            _db.SaveChanges();
+
+            return RedirectToAction("Login", "PhyFit");
         }
         #endregion
 
@@ -1014,6 +1122,13 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        
+        #region 訓練處方計算
+        public ActionResult RedirectToPrescription()
+        {
+            // 重定向到 TrainingPrescriptionController 的 Prescription 方法
+            return RedirectToAction("Prescription", "TrainingPrescription");
+        }
+
+        #endregion
     }
 }

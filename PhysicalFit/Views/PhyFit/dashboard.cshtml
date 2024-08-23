@@ -197,7 +197,7 @@
         <!-- 或使用 col-md-3 -->
         <div class="card">
             <div class="card-header">
-                <h2>檢測系統訓練詳情</h2>
+                <h2>檢測系統訓練詳情:<span id="selectedSportItem" style="font-size:1.5rem;"></span></h2>
             </div>
             <div class="card-body">
                 <form>
@@ -246,6 +246,10 @@
         </div>
     </div>
     <div id="distanceDetails" style="margin-top: -500px;"></div>
+    @using (Html.BeginForm("RedirectToPrescription", "PhyFit", FormMethod.Post))
+    {
+        <button type="submit" class="btn btn-primary" style="margin-top: 100px;" id="btn_Prescription">訓練處方系統</button>
+    }
 </div>
 
     @*檢測系統-訓練內容-Partial view呈現*@

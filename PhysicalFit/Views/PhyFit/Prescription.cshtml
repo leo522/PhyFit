@@ -1,0 +1,120 @@
+﻿@model List<string>
+@{
+    ViewBag.Title = "Prescription";
+    Layout = "~/Views/Shared/_PhyFitness.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- 卡片：檢測系統詳情 -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>有/無氧代謝能力測定：<span id="selectedSportItem"></span></h4>
+                        <p>測3-4種距離的力竭時間。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- 卡片：數據表格 -->
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>距離(m)</th>
+                                    <th>力竭時間(s)</th>
+                                    <th>速度(km/h)</th>
+                                    <th>%臨界速度</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataTable">
+                                @*@foreach (var distance in Model)
+                                    {
+                                        <tr>
+                                            <td>@distance</td>
+                                            <td><input type="text" class="form-control exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" /></td>
+                                            <td><span class="speed-result"></span></td>
+                                        </tr>
+                                    }*@
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><i>r</i><sup>2</sup></td>
+                                    <td colspan="2"><input type="text" id="calculationResult" class="form-control" readonly /></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <div class="mb-3">
+                <label for="CriticalSpeed" style="font-size: 20px; display: block;">臨界速度 (km/h)</label>
+                <input type="text" class="form-control form-control-sm" id="CriticalSpeed">
+            </div>
+            <div class="mb-3">
+                <label for="AnaerobicPower" style="font-size: 20px; display: block;">最大無氧做功 (m)</label>
+                <input type="text" class="form-control form-control-sm" id="AnaerobicPower">
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- 卡片：檢測系統詳情 -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>速耐力間歇訓練處方：<span id="selectedSportItem"></span></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <span>訓練模式：</span>
+            <select>
+                <option>單組模式</option>
+                <option>遞增模式</option>
+                <option>遞減模式</option>
+                <option>波浪模式</option>
+            </select>
+        </div>
+        <div>
+            <span>訓練組數：</span>
+            <select id="trainingGroups"></select>
+        </div>
+    </div>
+<div>
+    <div>第一組</div>
+    <table></table>
+</div>
+
+
+
+
+
+
+
+
+    <script>
+        const selectElement = document.getElementById('trainingGroups');
+
+        for (let i = 1; i <= 20; i++) {
+            const option = document.createElement('option');
+            option.value = i; // 設定值
+            option.textContent = `第 ${i} 組`; // 顯示文本
+            selectElement.appendChild(option);
+        }
+    </script>
+</body>
+</html>

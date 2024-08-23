@@ -5,10 +5,11 @@
 <html>
 <head>
     <title>帳號註冊</title>
+    <script src="~/Scripts/jquery-3.7.0.js"></script>
     <link href="~/css/registerStyle.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/css/MainBkStyle.css" rel="stylesheet" />
-    <script src="~/Scripts/RegisterSet.js"></script>
+    @*<script src="~/Scripts/RegisterSet.js"></script>*@
     <link rel="icon" href="~/img/favicon.svg" />
 </head>
 <body>
@@ -16,74 +17,18 @@
         <div class="text-center">
             <img src="~/img/logo.svg" alt="Logo" style="height: 45px; width: 100%;">
         </div>
-        <form action="/PhyFit/Register" method="post">
+        <form id="roleForm">
             <div class="form-group">
                 <label for="Role">身分角色</label>
-                <select class="form-control" id="Role" name="Role" onchange="showFields()" required>
+                <select class="form-control" id="Role" name="Role" required>
                     <option value="" disabled selected>請選擇角色</option>
                     <option value="Coach">教練</option>
                     <option value="Athlete">運動員</option>
                 </select>
             </div>
-
-            <!-- 教練專用欄位 -->
-            <div id="CoachFields" style="display:none;">
-                <div class="form-group">
-                    <label for="CoachName">姓名</label>
-                    <input type="text" class="form-control" id="CoachName" name="CoachName" placeholder="請輸入姓名" required>
-                </div>
-                <div class="form-group">
-                    <label for="CoachEmail">電子郵件</label>
-                    <input type="email" class="form-control" id="CoachEmail" name="CoachEmail" placeholder="請輸入電子郵件" required>
-                </div>
-                <div class="form-group">
-                    <label for="CoachPhone">連絡電話</label>
-                    <input type="tel" class="form-control" id="CoachPhone" name="CoachPhone" placeholder="請輸入連絡電話" required>
-                </div>
-                <div class="form-group">
-                    <label for="CoachSchool">學校名稱</label>
-                    <input type="text" class="form-control" id="CoachSchool" name="CoachSchool" placeholder="請輸入學校名稱" required>
-                </div>
-                <div class="form-group">
-                    <label for="CoachTeam">隊伍名稱</label>
-                    <input type="text" class="form-control" id="CoachTeam" name="CoachTeam" placeholder="請輸入隊伍名稱" required>
-                </div>
-                <div class="form-group">
-                    <label for="CoachSpecialty">專業項目</label>
-                    <input type="text" class="form-control" id="CoachSpecialty" name="CoachSpecialty" placeholder="請輸入專業項目" required>
-                </div>
-            </div>
-
-            <!-- 運動員專用欄位 -->
-            <div id="AthleteFields" style="display:none;">
-                <div class="form-group">
-                    <label for="AthleteName">姓名</label>
-                    <input type="text" class="form-control" id="AthleteName" name="AthleteName" placeholder="請輸入姓名" required>
-                </div>
-                <div class="form-group">
-                    <label for="AthleteBirthday">生日</label>
-                    <input type="date" class="form-control" id="AthleteBirthday" name="AthleteBirthday" required>
-                </div>
-                <div class="form-group">
-                    <label for="AthleteID">身分證字號</label>
-                    <input type="text" class="form-control" id="AthleteID" name="AthleteID" placeholder="請輸入身分證字號" required>
-                </div>
-                <div class="form-group">
-                    <label for="AthleteSchool">學校名稱</label>
-                    <input type="text" class="form-control" id="AthleteSchool" name="AthleteSchool" placeholder="請輸入學校名稱" required>
-                </div>
-                <div class="form-group">
-                    <label for="AthleteTeam">隊伍名稱</label>
-                    <input type="text" class="form-control" id="AthleteTeam" name="AthleteTeam" placeholder="請輸入隊伍名稱" required>
-                </div>
-                <div class="form-group">
-                    <label for="AthleteCoach">所屬教練</label>
-                    <input type="text" class="form-control" id="AthleteCoach" name="AthleteCoach" placeholder="請輸入所屬教練" required>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-block">註冊</button>
+            <button type="submit" class="btn btn-primary btn-block">下一步</button>
         </form>
+
         @if (ViewBag.ErrorMessage != null)
         {
             <div class="alert alert-danger" role="alert">
@@ -91,5 +36,18 @@
             </div>
         }
     </div>
+<script>
+    $(document).ready(function () {
+        $('#roleForm').submit(function (event) {
+            event.preventDefault();  // 防止表單提交
+            var role = $('#Role').val();
+            if (role === 'Coach') {
+                window.location.href = '/PhyFit/RegisterCoach';
+            } else if (role === 'Athlete') {
+                window.location.href = '/PhyFit/RegisterAthlete';
+            }
+        });
+    });
+</script>
 </body>
 </html>

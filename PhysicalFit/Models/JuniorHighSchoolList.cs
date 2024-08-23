@@ -12,17 +12,14 @@ namespace PhysicalFit.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Athletes
+    public partial class JuniorHighSchoolList
     {
         public int ID { get; set; }
-        public string AthleteName { get; set; }
-        public string AthleteSchool { get; set; }
-        public string TeamName { get; set; }
-        public Nullable<int> CoachID { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-        public System.DateTime Birthday { get; set; }
-        public string IdentityNumber { get; set; }
-    
-        public virtual Coaches Coaches { get; set; }
+        public Nullable<int> AcademicYear { get; set; }
+        public Nullable<int> CityCode { get; set; }
+        public string CityName { get; set; }
+        public Nullable<int> SchoolCode { get; set; }
+        public string SchoolName { get; set; }
+        public Nullable<bool> IsRecruiting { get; set; }
     }
 }

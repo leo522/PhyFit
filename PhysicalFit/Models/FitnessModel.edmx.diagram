@@ -26,12 +26,7 @@
         <EntityTypeShape EntityType="PhFitnessModel.DetectionSys" Width="1.5" PointX="7.375" PointY="12.75" />
         <EntityTypeShape EntityType="PhFitnessModel.SessionRPETrainingRecords" Width="1.5" PointX="9.375" PointY="12.75" />
         <EntityTypeShape EntityType="PhFitnessModel.DetectionTraining" Width="1.5" PointX="6.375" PointY="8.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="5.125" PointY="5" />
-        <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="2.625" PointY="5.625" />
         <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="0.75" PointY="0.75" />
-        <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
-        <AssociationConnector Association="PhFitnessModel.FK_Athletes_Users" />
-        <AssociationConnector Association="PhFitnessModel.FK_Coaches_Users" />
         <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" />
         <EntityTypeShape EntityType="PhFitnessModel.PasswordResetRequests" Width="1.5" PointX="0.875" PointY="7.875" />
         <EntityTypeShape EntityType="PhFitnessModel.MixedStrength" Width="1.5" PointX="11.375" PointY="13.75" />
@@ -41,6 +36,13 @@
         <EntityTypeShape EntityType="PhFitnessModel.SpecialTechnicalAction" Width="1.5" PointX="14.625" PointY="10.875" />
         <AssociationConnector Association="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" />
         <EntityTypeShape EntityType="PhFitnessModel.PrimarySchoolList" Width="1.5" PointX="0.75" PointY="14.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.ComprehensiveHighSchoolList" Width="1.5" PointX="3.375" PointY="14.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.GeneralHighSchoolList" Width="1.5" PointX="14.375" PointY="4" />
+        <EntityTypeShape EntityType="PhFitnessModel.JuniorHighSchoolList" Width="1.5" PointX="5.375" PointY="15.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.UniversitySchoolList" Width="1.5" PointX="15.375" PointY="13.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="18.625" PointY="1.25" />
+        <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="16.375" PointY="1.125" />
+        <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

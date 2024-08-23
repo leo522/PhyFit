@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>學生帳號註冊</title>
+    <script src="~/Scripts/jquery-3.7.0.js"></script>
+    <link href="~/css/registerStyle.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/MainBkStyle.css" rel="stylesheet" />
+    @*<script src="~/Scripts/RegisterSet.js"></script>*@
+    <link rel="icon" href="~/img/favicon.svg" />
+</head>
+<body>
+    <div class="register-container">
+        <div class="text-center">
+            <img src="~/img/logo.svg" alt="Logo" style="height: 45px; width: 100%;">
+        </div>
+        <form action="/PhyFit/RegisterAthlete" method="post">
+            <!-- 運動員專用欄位 -->
+            <div>
+                <div class="form-group">
+                    <label for="AthleteName">姓名</label>
+                    <input type="text" class="form-control" id="AthleteName" name="AthleteName" placeholder="請輸入姓名" required>
+                </div>
+                <div class="form-group">
+                    <label for="AthleteBirthday">生日</label>
+                    <input type="date" class="form-control" id="AthleteBirthday" name="AthleteBirthday" required>
+                </div>
+                <div class="form-group">
+                    <label for="AthleteID">身分證字號</label>
+                    <input type="text" class="form-control" id="AthleteID" name="AthleteID" placeholder="請輸入身分證字號" required>
+                </div>
+                <div class="form-group">
+                    <label for="Athletepwd">密碼</label>
+                    <input type="password" class="form-control" id="Athletepwd" name="Athletepwd" placeholder="請輸入密碼" required>
+                </div>
+                <div class="form-group">
+                    <label for="AthleteSchool">學校名稱</label>
+                    <input type="text" class="form-control" id="AthleteSchool" name="AthleteSchool" placeholder="請輸入學校名稱" required>
+                </div>
+                <div class="form-group">
+                    <label for="AthleteTeam">隊伍名稱</label>
+                    <input type="text" class="form-control" id="AthleteTeam" name="AthleteTeam" placeholder="請輸入隊伍名稱" required>
+                </div>
+                <div class="form-group">
+                    <label for="AthleteCoach">所屬教練</label>
+                    <input type="text" class="form-control" id="AthleteCoach" name="AthleteCoach" placeholder="請輸入所屬教練" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">註冊</button>
+        </form>
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+    </div>
+</body>
+</html>

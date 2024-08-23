@@ -1,0 +1,56 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>教練註冊</title>
+    <script src="~/Scripts/jquery-3.7.0.js"></script>
+    <link href="~/css/registerStyle.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/MainBkStyle.css" rel="stylesheet" />
+    @*<script src="~/Scripts/RegisterSet.js"></script>*@
+    <link rel="icon" href="~/img/favicon.svg" />
+</head>
+<body>
+    <div class="register-container">
+        <form action="/PhyFit/RegisterCoach" method="post">
+            <div>
+                <div class="form-group">
+                    <label for="CoachName">姓名</label>
+                    <input type="text" class="form-control" id="CoachName" name="CoachName" placeholder="請輸入姓名" required>
+                </div>
+                <div class="form-group">
+                    <label for="CoachEmail">電子郵件</label>
+                    <input type="email" class="form-control" id="CoachEmail" name="CoachEmail" placeholder="請輸入電子郵件" required>
+                </div>
+                <div class="form-group">
+                    <label for="Coachpwd">密碼</label>
+                    <input type="password" class="form-control" id="Coachpwd" name="Coachpwd" placeholder="請輸入密碼" required>
+                </div>
+                <div class="form-group">
+                    <label for="CoachPhone">連絡電話</label>
+                    <input type="tel" class="form-control" id="CoachPhone" name="CoachPhone" placeholder="請輸入連絡電話">
+                </div>
+                <div class="form-group">
+                    <label for="SchoolID">學校代碼</label>
+                    <input type="text" class="form-control" id="SchoolID" name="SchoolID" placeholder="請輸入學校代碼" required>
+                </div>
+                <div class="form-group">
+                    <label for="CoachSchool">學校名稱</label>
+                    <input type="text" class="form-control" id="CoachSchool" name="CoachSchool" placeholder="請輸入學校名稱" required>
+                </div>
+                <div class="form-group">
+                    <label for="CoachTeam">隊伍名稱</label>
+                    <input type="text" class="form-control" id="CoachTeam" name="CoachTeam" placeholder="請輸入隊伍名稱" required>
+                </div>
+                <div class="form-group">
+                    <label for="CoachSpecialty">專業項目</label>
+                    <input type="text" class="form-control" id="CoachSpecialty" name="CoachSpecialty" placeholder="請輸入專業項目" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">註冊</button>
+        </form>
+    </div>
+</body>
+</html>

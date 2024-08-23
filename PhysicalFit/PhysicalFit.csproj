@@ -130,6 +130,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PhyFitController.cs" />
+    <Compile Include="Controllers\TrainingPrescriptionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -143,6 +144,9 @@
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Coaches.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ComprehensiveHighSchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DetectionSys.cs">
@@ -166,7 +170,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FitnessModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\GeneralHighSchoolList.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IntensityClassification.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\JuniorHighSchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MixedStrength.cs">
@@ -225,6 +235,9 @@
     </Compile>
     <Compile Include="Models\TrainingPurposeModel.cs" />
     <Compile Include="Models\TrainingTimes.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UniversitySchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserPermissions.cs">
@@ -354,6 +367,15 @@
     <Content Include="Views\PhyFit\_RPESurvey.cshtml" />
     <Content Include="Views\PhyFit\_SpecialTechnical.cshtml" />
     <Content Include="Views\PhyFit\SchoolLogin.cshtml" />
+    <Content Include="Views\PhyFit\Prescription.cshtml" />
+    <Content Include="Views\TrainingPrescription\Prescription.cshtml" />
+    <Content Include="Views\TrainingPrescription\_TreadmillPrescription.cshtml" />
+    <Content Include="Views\TrainingPrescription\_AthleticPrescription.cshtml" />
+    <Content Include="Views\TrainingPrescription\_RollerSkatingPrescription.cshtml" />
+    <Content Include="Views\TrainingPrescription\_SwimmingPrescription.cshtml" />
+    <Content Include="Views\TrainingPrescription\_BicyclePrescription.cshtml" />
+    <Content Include="Views\PhyFit\RegisterAthlete.cshtml" />
+    <Content Include="Views\PhyFit\RegisterCoach.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

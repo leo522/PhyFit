@@ -33,13 +33,12 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AthleteName" Type="nvarchar" MaxLength="10" />
-          <Property Name="SchoolName" Type="nvarchar" MaxLength="10" />
+          <Property Name="AthleteSchool" Type="nvarchar" MaxLength="30" />
           <Property Name="TeamName" Type="nvarchar" MaxLength="10" />
           <Property Name="CoachID" Type="int" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="Birthday" Type="date" Nullable="false" />
           <Property Name="IdentityNumber" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="UserID" Type="int" />
         </EntityType>
         <EntityType Name="Coaches">
           <Key>
@@ -48,13 +47,26 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CoachName" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="20" />
+          <Property Name="CoachPwd" Type="nvarchar" MaxLength="30" />
+          <Property Name="SchoolName" Type="nvarchar" MaxLength="30" />
+          <Property Name="SchoolID" Type="nvarchar" MaxLength="10" />
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="20" />
-          <Property Name="SchoolName" Type="nvarchar" MaxLength="20" />
           <Property Name="Title" Type="nvarchar" MaxLength="20" />
           <Property Name="TeamName" Type="nvarchar" MaxLength="20" />
           <Property Name="SportsSpecific" Type="nvarchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
-          <Property Name="UserID" Type="int" />
+        </EntityType>
+        <EntityType Name="ComprehensiveHighSchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AcademicYear" Type="int" />
+          <Property Name="CityCode" Type="int" />
+          <Property Name="CityName" Type="nvarchar" MaxLength="10" />
+          <Property Name="SchoolCode" Type="int" />
+          <Property Name="SchoolName" Type="nvarchar" MaxLength="40" />
+          <Property Name="IsRecruiting" Type="bit" />
         </EntityType>
         <EntityType Name="DetectionSys">
           <Key>
@@ -76,6 +88,22 @@
           <Property Name="CreatedTime" Type="datetime" />
           <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <EntityType Name="GeneralHighSchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AcademicYear" Type="int" />
+          <Property Name="CityName" Type="nvarchar" MaxLength="10" />
+          <Property Name="SchoolCode" Type="int" />
+          <Property Name="SchoolName" Type="nvarchar" MaxLength="40" />
+          <Property Name="SchoolType" Type="nvarchar" MaxLength="10" />
+          <Property Name="SchoolAddress" Type="nvarchar" MaxLength="150" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="SchoolURL" Type="nvarchar" MaxLength="150" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="150" />
+          <Property Name="IsRecruiting" Type="bit" />
+        </EntityType>
         <EntityType Name="IntensityClassification">
           <Key>
             <PropertyRef Name="Id" />
@@ -85,6 +113,18 @@
           <Property Name="Intensity" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="CreatedTime" Type="datetime" />
           <Property Name="CreatedUser" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JuniorHighSchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AcademicYear" Type="int" />
+          <Property Name="CityCode" Type="int" />
+          <Property Name="CityName" Type="nvarchar" MaxLength="10" />
+          <Property Name="SchoolCode" Type="int" />
+          <Property Name="SchoolName" Type="nvarchar" MaxLength="40" />
+          <Property Name="IsRecruiting" Type="bit" />
         </EntityType>
         <EntityType Name="MixedStrength">
           <Key>
@@ -288,6 +328,18 @@
           <Property Name="CreatedTime" Type="datetime" />
           <Property Name="CreateUser" Type="nvarchar" MaxLength="10" />
         </EntityType>
+        <EntityType Name="UniversitySchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AcademicYear" Type="int" />
+          <Property Name="CityCode" Type="int" />
+          <Property Name="CityName" Type="nvarchar" MaxLength="10" />
+          <Property Name="SchoolCode" Type="int" />
+          <Property Name="SchoolName" Type="nvarchar" MaxLength="40" />
+          <Property Name="IsRecruiting" Type="bit" />
+        </EntityType>
         <EntityType Name="UserPermissions">
           <Key>
             <PropertyRef Name="UserID" />
@@ -379,38 +431,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Athletes_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Athletes" Type="Self.Athletes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UID" />
-            </Principal>
-            <Dependent Role="Athletes">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Coaches_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Coaches" Type="Self.Coaches" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UID" />
-            </Principal>
-            <Dependent Role="Coaches">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="PhFitnessModelStoreContainer">
           <EntitySet Name="AbilityDetermination" EntityType="Self.AbilityDetermination" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ArcheryTraining" EntityType="Self.ArcheryTraining" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Athletes" EntityType="Self.Athletes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Coaches" EntityType="Self.Coaches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ComprehensiveHighSchoolList" EntityType="Self.ComprehensiveHighSchoolList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DetectionSys" EntityType="Self.DetectionSys" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DetectionTraining" EntityType="Self.DetectionTraining" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GeneralHighSchoolList" EntityType="Self.GeneralHighSchoolList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IntensityClassification" EntityType="Self.IntensityClassification" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JuniorHighSchoolList" EntityType="Self.JuniorHighSchoolList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MixedStrength" EntityType="Self.MixedStrength" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MusclePhysical" EntityType="Self.MusclePhysical" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MuscleStrength" EntityType="Self.MuscleStrength" Schema="dbo" store:Type="Tables" />
@@ -430,6 +461,7 @@
           <EntitySet Name="TrainingMonitoringItems" EntityType="Self.TrainingMonitoringItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrainingPurpose" EntityType="Self.TrainingPurpose" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrainingTimes" EntityType="Self.TrainingTimes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UniversitySchoolList" EntityType="Self.UniversitySchoolList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -452,14 +484,6 @@
           <AssociationSet Name="FK_Athletes_Coaches" Association="Self.FK_Athletes_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="Athletes" EntitySet="Athletes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Athletes_Users" Association="Self.FK_Athletes_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Athletes" EntitySet="Athletes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Coaches_Users" Association="Self.FK_Coaches_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Coaches" EntitySet="Coaches" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -547,21 +571,7 @@
           <EntitySet Name="DetectionSys" EntityType="PhFitnessModel.DetectionSys" />
           <EntitySet Name="SessionRPETrainingRecords" EntityType="PhFitnessModel.SessionRPETrainingRecords" />
           <EntitySet Name="DetectionTraining" EntityType="PhFitnessModel.DetectionTraining" />
-          <EntitySet Name="Athletes" EntityType="PhFitnessModel.Athletes" />
-          <EntitySet Name="Coaches" EntityType="PhFitnessModel.Coaches" />
           <EntitySet Name="Users" EntityType="PhFitnessModel.Users" />
-          <AssociationSet Name="FK_Athletes_Coaches" Association="PhFitnessModel.FK_Athletes_Coaches">
-            <End Role="Coaches" EntitySet="Coaches" />
-            <End Role="Athletes" EntitySet="Athletes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Athletes_Users" Association="PhFitnessModel.FK_Athletes_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Athletes" EntitySet="Athletes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Coaches_Users" Association="PhFitnessModel.FK_Coaches_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Coaches" EntitySet="Coaches" />
-          </AssociationSet>
           <AssociationSet Name="FK__UserPermi__UserI__2C3393D0" Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
@@ -577,6 +587,16 @@
             <End Role="SpecialTechnicalAction" EntitySet="SpecialTechnicalAction" />
           </AssociationSet>
           <EntitySet Name="PrimarySchoolList" EntityType="PhFitnessModel.PrimarySchoolList" />
+          <EntitySet Name="ComprehensiveHighSchoolList" EntityType="PhFitnessModel.ComprehensiveHighSchoolList" />
+          <EntitySet Name="GeneralHighSchoolList" EntityType="PhFitnessModel.GeneralHighSchoolList" />
+          <EntitySet Name="JuniorHighSchoolList" EntityType="PhFitnessModel.JuniorHighSchoolList" />
+          <EntitySet Name="UniversitySchoolList" EntityType="PhFitnessModel.UniversitySchoolList" />
+          <EntitySet Name="Athletes" EntityType="PhFitnessModel.Athletes" />
+          <EntitySet Name="Coaches" EntityType="PhFitnessModel.Coaches" />
+          <AssociationSet Name="FK_Athletes_Coaches" Association="PhFitnessModel.FK_Athletes_Coaches">
+            <End Role="Coaches" EntitySet="Coaches" />
+            <End Role="Athletes" EntitySet="Athletes" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="TrainingPurpose">
           <Key>
@@ -761,39 +781,6 @@
           <Property Name="CreatedTime" Type="DateTime" Precision="3" />
           <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="Athletes">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AthleteName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="SchoolName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="TeamName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="CoachID" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="Birthday" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="IdentityNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="UserID" Type="Int32" />
-          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Athletes" ToRole="Coaches" />
-          <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK_Athletes_Users" FromRole="Athletes" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="Coaches">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CoachName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="SchoolName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="Title" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="TeamName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="SportsSpecific" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="UserID" Type="Int32" />
-          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Coaches" ToRole="Athletes" />
-          <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK_Coaches_Users" FromRole="Coaches" ToRole="Users" />
-        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UID" />
@@ -807,46 +794,8 @@
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Athletes_Users" FromRole="Users" ToRole="Athletes" />
-          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Coaches_Users" FromRole="Users" ToRole="Coaches" />
           <NavigationProperty Name="UserPermissions" Relationship="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" FromRole="Users" ToRole="UserPermissions" />
         </EntityType>
-        <Association Name="FK_Athletes_Coaches">
-          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Coaches">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Athletes">
-              <PropertyRef Name="CoachID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Athletes_Users">
-          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UID" />
-            </Principal>
-            <Dependent Role="Athletes">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Coaches_Users">
-          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UID" />
-            </Principal>
-            <Dependent Role="Coaches">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__UserPermi__UserI__2C3393D0">
           <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="1" />
           <End Type="PhFitnessModel.UserPermissions" Role="UserPermissions" Multiplicity="*" />
@@ -937,6 +886,101 @@
           <Property Name="SchoolName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsRecruiting" Type="Boolean" />
         </EntityType>
+        <EntityType Name="ComprehensiveHighSchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AcademicYear" Type="Int32" />
+          <Property Name="CityCode" Type="Int32" />
+          <Property Name="CityName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolCode" Type="Int32" />
+          <Property Name="SchoolName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="IsRecruiting" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="GeneralHighSchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AcademicYear" Type="Int32" />
+          <Property Name="CityName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolCode" Type="Int32" />
+          <Property Name="SchoolName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolType" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolAddress" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolURL" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="IsRecruiting" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="JuniorHighSchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AcademicYear" Type="Int32" />
+          <Property Name="CityCode" Type="Int32" />
+          <Property Name="CityName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolCode" Type="Int32" />
+          <Property Name="SchoolName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="IsRecruiting" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="UniversitySchoolList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AcademicYear" Type="Int32" />
+          <Property Name="CityCode" Type="Int32" />
+          <Property Name="CityName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolCode" Type="Int32" />
+          <Property Name="SchoolName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="IsRecruiting" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Athletes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AthleteName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="AthleteSchool" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="TeamName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CoachID" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Birthday" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="IdentityNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Athletes" ToRole="Coaches" />
+        </EntityType>
+        <EntityType Name="Coaches">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CoachName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CoachPwd" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TeamName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SportsSpecific" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Coaches" ToRole="Athletes" />
+        </EntityType>
+        <Association Name="FK_Athletes_Coaches">
+          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coaches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Athletes">
+              <PropertyRef Name="CoachID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1167,37 +1211,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Athletes">
-            <EntityTypeMapping TypeName="PhFitnessModel.Athletes">
-              <MappingFragment StoreEntitySet="Athletes">
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="IdentityNumber" ColumnName="IdentityNumber" />
-                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CoachID" ColumnName="CoachID" />
-                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
-                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
-                <ScalarProperty Name="AthleteName" ColumnName="AthleteName" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Coaches">
-            <EntityTypeMapping TypeName="PhFitnessModel.Coaches">
-              <MappingFragment StoreEntitySet="Coaches">
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="SportsSpecific" ColumnName="SportsSpecific" />
-                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="CoachName" ColumnName="CoachName" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="PhFitnessModel.Users">
               <MappingFragment StoreEntitySet="Users">
@@ -1280,6 +1293,93 @@
                 <ScalarProperty Name="CityName" ColumnName="CityName" />
                 <ScalarProperty Name="CityCode" ColumnName="CityCode" />
                 <ScalarProperty Name="AcademicYear" ColumnName="AcademicYear" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ComprehensiveHighSchoolList">
+            <EntityTypeMapping TypeName="PhFitnessModel.ComprehensiveHighSchoolList">
+              <MappingFragment StoreEntitySet="ComprehensiveHighSchoolList">
+                <ScalarProperty Name="IsRecruiting" ColumnName="IsRecruiting" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="SchoolCode" ColumnName="SchoolCode" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="CityCode" ColumnName="CityCode" />
+                <ScalarProperty Name="AcademicYear" ColumnName="AcademicYear" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GeneralHighSchoolList">
+            <EntityTypeMapping TypeName="PhFitnessModel.GeneralHighSchoolList">
+              <MappingFragment StoreEntitySet="GeneralHighSchoolList">
+                <ScalarProperty Name="IsRecruiting" ColumnName="IsRecruiting" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="SchoolURL" ColumnName="SchoolURL" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="SchoolAddress" ColumnName="SchoolAddress" />
+                <ScalarProperty Name="SchoolType" ColumnName="SchoolType" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="SchoolCode" ColumnName="SchoolCode" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="AcademicYear" ColumnName="AcademicYear" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JuniorHighSchoolList">
+            <EntityTypeMapping TypeName="PhFitnessModel.JuniorHighSchoolList">
+              <MappingFragment StoreEntitySet="JuniorHighSchoolList">
+                <ScalarProperty Name="IsRecruiting" ColumnName="IsRecruiting" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="SchoolCode" ColumnName="SchoolCode" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="CityCode" ColumnName="CityCode" />
+                <ScalarProperty Name="AcademicYear" ColumnName="AcademicYear" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UniversitySchoolList">
+            <EntityTypeMapping TypeName="PhFitnessModel.UniversitySchoolList">
+              <MappingFragment StoreEntitySet="UniversitySchoolList">
+                <ScalarProperty Name="IsRecruiting" ColumnName="IsRecruiting" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="SchoolCode" ColumnName="SchoolCode" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="CityCode" ColumnName="CityCode" />
+                <ScalarProperty Name="AcademicYear" ColumnName="AcademicYear" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Athletes">
+            <EntityTypeMapping TypeName="PhFitnessModel.Athletes">
+              <MappingFragment StoreEntitySet="Athletes">
+                <ScalarProperty Name="IdentityNumber" ColumnName="IdentityNumber" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CoachID" ColumnName="CoachID" />
+                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
+                <ScalarProperty Name="AthleteSchool" ColumnName="AthleteSchool" />
+                <ScalarProperty Name="AthleteName" ColumnName="AthleteName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Coaches">
+            <EntityTypeMapping TypeName="PhFitnessModel.Coaches">
+              <MappingFragment StoreEntitySet="Coaches">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="SportsSpecific" ColumnName="SportsSpecific" />
+                <ScalarProperty Name="TeamName" ColumnName="TeamName" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SchoolID" ColumnName="SchoolID" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="CoachPwd" ColumnName="CoachPwd" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CoachName" ColumnName="CoachName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
