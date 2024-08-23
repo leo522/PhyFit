@@ -18,6 +18,7 @@ namespace PhysicalFit.Models
         public Coaches()
         {
             this.Athletes = new HashSet<Athletes>();
+            this.Users = new HashSet<Users>();
         }
     
         public int ID { get; set; }
@@ -31,8 +32,11 @@ namespace PhysicalFit.Models
         public string TeamName { get; set; }
         public string SportsSpecific { get; set; }
         public bool IsActive { get; set; }
+        public string CoachAccount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Athletes> Athletes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users> Users { get; set; }
     }
 }

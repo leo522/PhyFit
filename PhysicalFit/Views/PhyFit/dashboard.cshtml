@@ -51,8 +51,8 @@
                 </tbody>
             </table>
             <div class="form-group" style="width:450px;">
-                <label for="dailyTL" title="每日運動訓練量(TL)">每日運動訓練量(TL):</label>
-                <input type="text" align="left" id="dailyTL" class="form-control" name="DailyTL" placeholder="每日運動訓練量TL" readonly>
+                <label for="dailyTL" title="每日運動訓練量(TL)">每日運動負荷(TL):</label>
+                <input type="text" align="left" id="dailyTL" class="form-control" name="DailyTL" placeholder="每日運動負荷" readonly>
             </div>
             <div style="margin-top: 20px;">
                 <button id="btn_calculate" class="btn btn-info" title="計算">計算</button>
@@ -94,7 +94,7 @@
                             <input type="text" class="form-control" name="Arrows" placeholder="箭數">
                         </td>
                         <td>
-                            <input type="text" class="form-control rpeInput" name="RPE_ArcheryDescription" style="width:200px;" placeholder="請選擇訓練感受" readonly />
+                            <input type="text" class="form-control rpeInput" name="RPE_ArcheryDescription" style="width:200px;" readonly />
                             <input type="hidden" name="RPEArchery" />
                             <button type="button" class="btn btn-info openRPEModalArchery">運動自覺量表</button>
                         </td>
@@ -109,8 +109,8 @@
                 </tbody>
             </table>
             <div class="form-group" style="width:450px;">
-                <label for="dailyTL">每日運動訓練量(TL):</label>
-                <input type="text" align="left" id="dailyTLArchery" class="form-control" name="ArcheryDailyTL" placeholder="每日運動訓練量TL" readonly>
+                <label for="dailyTL">每日運動負荷(TL):</label>
+                <input type="text" align="left" id="dailyTLArchery" class="form-control" name="ArcheryDailyTL" placeholder="每日運動負荷" readonly>
             </div>
             <div style="margin-top: 20px;">
                 <button id="btn_calculate_archery" class="btn btn-info" title="計算">計算</button>
@@ -158,7 +158,7 @@
                             <input type="text" class="form-control" name="Bullet" placeholder="子彈數">
                         </td>
                         <td>
-                            <input type="text" class="form-control rpeInput" name="RPE_shootingDescription" style="width:200px;" placeholder="請選擇訓練感受" readonly />
+                            <input type="text" class="form-control rpeInput" name="RPE_shootingDescription" style="width:200px;"  readonly />
                             <input type="hidden" name="RPEshooting" />
                             <button type="button" class="btn btn-info openRPEModalShooting">運動自覺量表</button>
                         </td>
@@ -173,8 +173,8 @@
                 </tbody>
             </table>
             <div class="form-group" style="width:450px;">
-                <label for="dailyTL">每日運動訓練量(TL):</label>
-                <input type="text" align="left" id="dailyTLShooting" class="form-control" name="ShootingDailyTL" placeholder="每日運動訓練量TL" readonly>
+                <label for="dailyTL">每日運動負荷(TL):</label>
+                <input type="text" align="left" id="dailyTLShooting" class="form-control" name="ShootingDailyTL" placeholder="每日運動負荷" readonly>
             </div>
             <div style="margin-top: 20px;">
                 <button id="btn_calculate_shooting" class="btn btn-info" title="計算">計算</button>
@@ -194,7 +194,6 @@
     @*檢測系統*@
 <div class="training-section" id="Detection_Sys">
     <div class="col-md-4">
-        <!-- 或使用 col-md-3 -->
         <div class="card">
             <div class="card-header">
                 <h2>檢測系統訓練詳情:<span id="selectedSportItem" style="font-size:1.5rem;"></span></h2>
@@ -277,31 +276,31 @@
                             </div>
                         </div>*@
                         <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>每週運動訓練量</label>
+                            <label title="每週運動訓練量為每週(通常是7 天)所有的運動訓練量之加總">每週運動訓練量</label>
                             <div class="form-group-inline d-flex align-items-center">
                                 <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
                         </div>
                         <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>訓練同質性</label>
+                            <label title="一週內每日訓練的一致性，其計算方式為當週運動訓練量的日平均(mean load)除以當週TL的標準差(standard deviation)">訓練同質性</label>
                             <div class="form-group-inline d-flex align-items-center">
                                 <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
                         </div>
                         <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>訓練張力值</label>
+                            <label title="整週訓練的整體壓力，計算方式為當週TL乘上當週TM">訓練張力值</label>
                             <div class="form-group-inline d-flex align-items-center">
                                 <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
                         </div>
                         <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>週間訓練變化</label>
+                            <label title="當週與上一週之運動訓練量的絕對差異值">週間訓練變化</label>
                             <div class="form-group-inline d-flex align-items-center">
                                 <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
                         </div>
                         <div class="form-group d-flex align-items-center justify-content-between">
-                            <label>短期：長期訓練量比值</label>
+                            <label title="ACWR，當週TL(acuteworkload) 除以過往連續四週TL平均值(chroni cworkload)所得之數值">短期：長期訓練量比值</label>
                             <div class="form-group-inline d-flex align-items-center">
                                 <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
                             </div>

@@ -200,6 +200,7 @@
     <Compile Include="Models\PrimarySchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RegisterCoachViewModel.cs" />
     <Compile Include="Models\RPE.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -376,6 +377,7 @@
     <Content Include="Views\TrainingPrescription\_BicyclePrescription.cshtml" />
     <Content Include="Views\PhyFit\RegisterAthlete.cshtml" />
     <Content Include="Views\PhyFit\RegisterCoach.cshtml" />
+    <Content Include="Views\PhyFit\_TrainingCalendar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

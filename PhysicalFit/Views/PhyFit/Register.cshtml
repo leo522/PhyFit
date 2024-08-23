@@ -9,7 +9,6 @@
     <link href="~/css/registerStyle.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/css/MainBkStyle.css" rel="stylesheet" />
-    @*<script src="~/Scripts/RegisterSet.js"></script>*@
     <link rel="icon" href="~/img/favicon.svg" />
 </head>
 <body>
@@ -26,6 +25,10 @@
                     <option value="Athlete">運動員</option>
                 </select>
             </div>
+            <div class="form-group" id="schoolCodeGroup" style="display:none;">
+                <label for="SchoolID">學校代碼</label>
+                <input type="text" class="form-control" id="SchoolID" name="SchoolID" placeholder="請輸入學校代碼">
+            </div>
             <button type="submit" class="btn btn-primary btn-block">下一步</button>
         </form>
 
@@ -38,11 +41,21 @@
     </div>
 <script>
     $(document).ready(function () {
+        $('#Role').change(function () {
+            var role = $(this).val();
+            if (role === 'Coach') {
+                $('#schoolCodeGroup').show();
+            } else {
+                $('#schoolCodeGroup').hide();
+            }
+        });
+
         $('#roleForm').submit(function (event) {
             event.preventDefault();  // 防止表單提交
             var role = $('#Role').val();
+            var schoolID = $('#SchoolID').val();
             if (role === 'Coach') {
-                window.location.href = '/PhyFit/RegisterCoach';
+                window.location.href = '/PhyFit/RegisterCoach?schoolID=' + encodeURIComponent(schoolID);
             } else if (role === 'Athlete') {
                 window.location.href = '/PhyFit/RegisterAthlete';
             }

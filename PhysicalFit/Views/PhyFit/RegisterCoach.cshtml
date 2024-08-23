@@ -9,7 +9,6 @@
     <link href="~/css/registerStyle.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/css/MainBkStyle.css" rel="stylesheet" />
-    @*<script src="~/Scripts/RegisterSet.js"></script>*@
     <link rel="icon" href="~/img/favicon.svg" />
 </head>
 <body>
@@ -25,6 +24,10 @@
                     <input type="email" class="form-control" id="CoachEmail" name="CoachEmail" placeholder="請輸入電子郵件" required>
                 </div>
                 <div class="form-group">
+                    <label for="CoachAccount">登入帳號</label>
+                    <input type="text" class="form-control" id="CoachAccount" name="CoachAccount" placeholder="請輸入帳號" required>
+                </div>
+                <div class="form-group">
                     <label for="Coachpwd">密碼</label>
                     <input type="password" class="form-control" id="Coachpwd" name="Coachpwd" placeholder="請輸入密碼" required>
                 </div>
@@ -32,25 +35,42 @@
                     <label for="CoachPhone">連絡電話</label>
                     <input type="tel" class="form-control" id="CoachPhone" name="CoachPhone" placeholder="請輸入連絡電話">
                 </div>
+                <input type="hidden" id="SchoolID" name="SchoolID" value="@Request.QueryString["schoolID"]" />
                 <div class="form-group">
-                    <label for="SchoolID">學校代碼</label>
-                    <input type="text" class="form-control" id="SchoolID" name="SchoolID" placeholder="請輸入學校代碼" required>
+                    <div class="form-group">
+                        <label for="CoachSchool">學校名稱</label>
+                        <input type="text" class="form-control" id="CoachSchool" name="CoachSchool" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="CoachTeam">隊伍名稱</label>
+                        <input type="text" class="form-control" id="CoachTeam" name="CoachTeam" placeholder="請輸入隊伍名稱" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="CoachSpecialty">專長</label>
+                        <input type="text" class="form-control" id="CoachSpecialty" name="CoachSpecialty" placeholder="請輸入專業項目" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="CoachSchool">學校名稱</label>
-                    <input type="text" class="form-control" id="CoachSchool" name="CoachSchool" placeholder="請輸入學校名稱" required>
-                </div>
-                <div class="form-group">
-                    <label for="CoachTeam">隊伍名稱</label>
-                    <input type="text" class="form-control" id="CoachTeam" name="CoachTeam" placeholder="請輸入隊伍名稱" required>
-                </div>
-                <div class="form-group">
-                    <label for="CoachSpecialty">專業項目</label>
-                    <input type="text" class="form-control" id="CoachSpecialty" name="CoachSpecialty" placeholder="請輸入專業項目" required>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">註冊</button>
-        </form>
+                <button type="submit" class="btn btn-primary btn-block">註冊</button>
+</form>
     </div>
+    <script>
+        $(document).ready(function () {
+            // 取得 URL 查詢字串中的 SchoolID
+            var schoolID = $('#SchoolID').val();
+            if (schoolID) {
+                $.ajax({
+                    url: '/PhyFit/GetSchoolByCode',
+                    type: 'GET',
+                    data: { code: schoolID },
+                    success: function (data) {
+                        $('#CoachSchool').val(data);
+                    },
+                    error: function () {
+                        alert('查詢學校名稱失敗，請檢查學校代碼。');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

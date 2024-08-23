@@ -29,8 +29,13 @@ namespace PhysicalFit.Models
         public Nullable<bool> IsActive { get; set; }
         public System.DateTime LastLoginDate { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public string Account { get; set; }
+        public Nullable<int> CoachID { get; set; }
+        public Nullable<int> AthleteID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPermissions> UserPermissions { get; set; }
+        public virtual Athletes Athletes { get; set; }
+        public virtual Coaches Coaches { get; set; }
     }
 }

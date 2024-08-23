@@ -43,6 +43,8 @@
         <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="18.625" PointY="1.25" />
         <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="16.375" PointY="1.125" />
         <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
+        <AssociationConnector Association="PhFitnessModel.FK_Users_Athletes" />
+        <AssociationConnector Association="PhFitnessModel.FK_Users_Coaches" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
