@@ -96,4 +96,22 @@ namespace PhysicalFit.Models
         public string Token { get; set; }
         public string NewPassword { get; set; }
     }
+
+    public class GeneralRecord
+    {
+        public int CoachID { get; set; }
+        public int AthleteID { get; set; }
+        public string Coach { get; set; }
+        public string Athlete { get; set; }
+        public string TariningClassName { get; set; }
+        public DateTime TrainingDate { get; set; }
+        public string TrainingItem { get; set; }
+        public string ActionName { get; set; }
+        public string TrainingParts { get; set; }
+        public string TrainingType { get; set; }
+        public string TrainingOther { get; set; }
+        public string TrainingTime { get; set; }
+        public int RPEscore { get; set; }
+        public int DailyTrainingLoad { get; set; }
+    }
 }

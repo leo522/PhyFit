@@ -19,6 +19,8 @@ namespace PhysicalFit.Models
         {
             this.Athletes = new HashSet<Athletes>();
             this.Users = new HashSet<Users>();
+            this.ShootingRecord = new HashSet<ShootingRecord>();
+            this.GeneralTrainingRecord = new HashSet<GeneralTrainingRecord>();
         }
     
         public int ID { get; set; }
@@ -38,5 +40,9 @@ namespace PhysicalFit.Models
         public virtual ICollection<Athletes> Athletes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GeneralTrainingRecord> GeneralTrainingRecord { get; set; }
     }
 }

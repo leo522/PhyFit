@@ -41,6 +41,21 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
+        #region 國中學校代碼查詢
+        [HttpGet]
+        public JsonResult GetJuinorSchoolByCode(string code)
+        {
+            var dto = _db.JuniorHighSchoolList.FirstOrDefault(j => j.SchoolCode.ToString().StartsWith(code));
+
+            if (dto != null)
+            {
+                return Json(dto.SchoolName, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
         #region 教練註冊帳號
 
         public ActionResult RegisterCoach(string schoolID)
@@ -61,10 +76,7 @@ namespace PhysicalFit.Controllers
 
         [HttpPost]
         public ActionResult RegisterCoach(RegisterCoachViewModel model)
-        {
-
-
-            
+        {            
             // 處理教練註冊
             var newCoach = new Coaches
             {
@@ -212,8 +224,19 @@ namespace PhysicalFit.Controllers
                     Session["LoggedIn"] = true;
                     Session["UserName"] = dto.Name;
 
-                    // 檢查是否有記錄的返回頁面
-                    string returnUrl = Session["ReturnUrl"] != null ? Session["ReturnUrl"].ToString() : Url.Action("Home", "Tiss");
+                    // 查詢教練資料並保存到 Session 中
+                    var coach = _db.Coaches.FirstOrDefault(c => c.ID == dto.CoachID);
+                    if (coach != null)
+                    {
+                        Session["CoachName"] = coach.CoachName;
+                        Session["CoachId"] = coach.ID; // 保存教練的 ID 用於查詢運動員
+                    }
+                    else
+                    {
+                        Session["CoachName"] = "未設定";
+                    }
+
+                    string returnUrl = Session["ReturnUrl"] != null ? Session["ReturnUrl"].ToString() : Url.Action("Login", "PhyFit");
 
                     // 清除返回頁面的 Session 記錄
                     Session.Remove("ReturnUrl");
@@ -560,8 +583,16 @@ namespace PhysicalFit.Controllers
         public ActionResult dashboard()
         {
             //Session["ReturnUrl"] = Request.Url.ToString();
+            if (Session["LoggedIn"] != null && (bool)Session["LoggedIn"])
+            {
+                string userName = Session["UserName"].ToString();
+                // 查詢對應的教練資料
+                var coach = _db.Coaches.FirstOrDefault(c => c.CoachName == userName);
 
-            ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
+                // 將教練名稱傳遞到 ViewBag
+                ViewBag.CoachName = coach != null ? coach.CoachName : "未設定";
+
+                ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
             ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
             ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
             ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
@@ -592,6 +623,11 @@ namespace PhysicalFit.Controllers
             ViewBag.SessionTrainingRecords = model;
 
             return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
         #endregion
 
@@ -1121,6 +1157,65 @@ namespace PhysicalFit.Controllers
             return RedirectToAction("Prescription", "TrainingPrescription");
         }
 
+        #endregion
+
+        #region 儲存一般訓練紀錄
+        public ActionResult SaveGeneralTrainingRecord(GeneralTrainingRecord record)
+        {
+            try
+            {
+                _db.GeneralTrainingRecord.Add(record);
+                _db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("儲存失敗: " + ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+        #region 儲存射擊訓練紀錄
+        public ActionResult SaveShottingRecord()
+        {
+            return View();
+        }
+        #endregion
+
+        #region 測試讀取訓練資料
+        public ActionResult LoadGeneralRecordPartial()
+        {
+            try
+            {
+                var records = _db.GeneralTrainingRecord
+                 .Select(gr => new GeneralRecord
+                 {
+                     CoachID = gr.CoachID ?? 0,
+                     AthleteID = gr.AthleteID ?? 0,
+                     Coach = gr.Coach,
+                     Athlete = gr.Athlete,
+                     TariningClassName = gr.TrainingClassName,
+                     TrainingDate = gr.TrainingDate ?? DateTime.MinValue,
+                     TrainingItem = gr.TrainingItem,
+                     ActionName = gr.ActionName,
+                     TrainingParts = gr.TrainingParts,
+                     TrainingType = gr.TrainingType,
+                     TrainingOther = gr.TrainingOther,
+                     TrainingTime = gr.TrainingTime,
+                     RPEscore = gr.RPEscore ?? 0,
+                     DailyTrainingLoad = gr.DailyTrainingLoad ?? 0
+                 }).ToList();
+
+                return PartialView("_GeneralRecord", records); // 返回部分視圖
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("加載紀錄失敗: " + ex.Message);
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "無法加載紀錄");
+            }
+        }
         #endregion
     }
 }

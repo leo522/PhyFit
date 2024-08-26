@@ -12,6 +12,7 @@
             <th>其他</th>
             <th>時間</th>
             <th>自覺費力程度</th>
+            <th>每日運動負荷(TL)</th>
             <th>欄位增減</th>
         </tr>
     </thead>
@@ -29,7 +30,7 @@
                 </div>
             </td>
             <td>
-                <input type="datetime-local" class="form-control" name="TrainingDate" title="日期"/>
+                <input type="datetime-local" class="form-control" name="TrainingDate" title="日期" />
             </td>
             <td>
                 <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)" disabled>
@@ -81,8 +82,11 @@
                 <button type="button" class="btn btn-info openRPEModal">運動自覺量表</button>
             </td>
             <td>
+                <input type="text" align="left" style="width:200px;" id="dailyTL" class="form-control" name="DailyTL" placeholder="每日運動負荷(TL)" readonly>
+            </td>
+            <td>
                 <button type="button" class="btn btn-primary add-row">+</button>
-                <button type="button" class="btn btn-danger remove-row" >-</button>
+                <button type="button" class="btn btn-danger remove-row">-</button>
             </td>
         </tr>
     </tbody>
@@ -90,9 +94,9 @@
 
 <script>
     function updateTableContent(selectElement) {
-        
+
         var selectedItem = selectElement.value; // 取得選擇的課程名稱
-        
+
         var row = selectElement.closest('tr'); // 使用 closest('tr') 限定只影響當前行的欄位
 
         var specialTechField = document.querySelector('select[name="SpecialTech"]'); //項目

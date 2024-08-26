@@ -51,22 +51,36 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">註冊</button>
-</form>
+        </form>
     </div>
     <script>
         $(document).ready(function () {
             // 取得 URL 查詢字串中的 SchoolID
             var schoolID = $('#SchoolID').val();
             if (schoolID) {
+                // 查詢小學名稱
                 $.ajax({
                     url: '/PhyFit/GetSchoolByCode',
                     type: 'GET',
                     data: { code: schoolID },
                     success: function (data) {
-                        $('#CoachSchool').val(data);
+                        $('#CoachSchool').val(data);  // 設置學校名稱
                     },
                     error: function () {
-                        alert('查詢學校名稱失敗，請檢查學校代碼。');
+                        alert('查詢小學名稱失敗，請檢查學校代碼。');
+                    }
+                });
+
+                // 查詢中學名稱
+                $.ajax({
+                    url: '/PhyFit/GetJuinorSchoolByCode',
+                    type: 'GET',
+                    data: { code: schoolID },
+                    success: function (data) {
+                        $('#CoachSchool').val(data);  // 設置學校名稱
+                    },
+                    error: function () {
+                        alert('查詢中學名稱失敗，請檢查學校代碼。');
                     }
                 });
             }

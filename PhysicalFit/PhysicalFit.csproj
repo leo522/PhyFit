@@ -173,6 +173,9 @@
     <Compile Include="Models\GeneralHighSchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GeneralTrainingRecord.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IntensityClassification.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -205,6 +208,9 @@
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SessionRPETrainingRecords.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ShootingRecord.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ShootingTraining.cs">
