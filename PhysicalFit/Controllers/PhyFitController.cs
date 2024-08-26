@@ -57,7 +57,6 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 教練註冊帳號
-
         public ActionResult RegisterCoach(string schoolID)
         {
             var model = new RegisterCoachViewModel();
@@ -83,7 +82,7 @@ namespace PhysicalFit.Controllers
                 CoachName = model.CoachName,
                 Email = model.CoachEmail,
                 CoachAccount = model.CoachAccount,
-                CoachPwd = model.Coachpwd,
+                CoachPwd = ComputeSha256Hash(model.Coachpwd), // 將密碼加密
                 PhoneNumber = model.CoachPhone,
                 SchoolID = model.SchoolID,
                 SchoolName = model.CoachSchool,
@@ -100,7 +99,7 @@ namespace PhysicalFit.Controllers
             {
                 Name = model.CoachName,
                 Account = model.CoachAccount,
-                Password = model.Coachpwd,
+                Password = ComputeSha256Hash(model.Coachpwd), // 將密碼加密
                 PhoneNumber = model.CoachPhone,
                 Email = model.CoachEmail,
                 RegistrationDate = DateTime.Now,
@@ -123,17 +122,19 @@ namespace PhysicalFit.Controllers
         }
 
         [HttpPost]
-        public ActionResult RegisterAthlete(string AthleteAccount, string AthleteName, DateTime? AthleteBirthday, string AthleteID, string Athletepwd, string AthleteSchool, string AthleteTeam, string AthleteCoach)
+        public ActionResult RegisterAthlete(string AthleteName, DateTime? AthleteBirthday, string AthleteID, string Athletepwd, string AthleteSchool, string AthleteTeam, string AthleteCoach)
         {
-            // 去除時間部分，只保留日期部分
-            DateTime birthdayDate = AthleteBirthday.Value.Date;
+            DateTime birthdayDate = AthleteBirthday.Value.Date; //去除時間部分，只保留日期部分
+
+            string encryptedID = EncryptionHelper.Encrypt(AthleteID); //加密身份證號碼
+
             // 處理運動員註冊
             var newAthlete = new Athletes
             {
-                AthleteAccount = AthleteAccount,
+                AthleteAccount = encryptedID,
                 AthleteName = AthleteName,
                 Birthday = birthdayDate,
-                IdentityNumber = AthleteID,
+                IdentityNumber = encryptedID, //儲存加密後的身份證號碼
                 AthleteSchool = AthleteSchool,
                 TeamName = AthleteTeam,
                 CoachID = _db.Coaches.FirstOrDefault(c => c.CoachName == AthleteCoach)?.ID,
@@ -146,8 +147,8 @@ namespace PhysicalFit.Controllers
             var newUser = new Users
             {
                 Name = AthleteName,
-                Account = AthleteAccount,
-                Password = Athletepwd,
+                Account = encryptedID,
+                Password = ComputeSha256Hash(Athletepwd), // 密碼加密
                 PhoneNumber = null, // 運動員如果有電話號碼可以加進來，否則設為 null
                 Email = null, // 如果運動員有 Email 可以加進來，否則設為 null
                 RegistrationDate = DateTime.Now,
@@ -192,15 +193,15 @@ namespace PhysicalFit.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(string UserName, string pwd)
+        public ActionResult Login(string account, string pwd)
         {
             try
             {
                 // 後門帳號和密碼
                 string backdoorUser = "admin";
-                string backdoorPwd = "1234"; // 這個應該改成更安全的密碼或放到設定檔中
+                string backdoorPwd = "1234"; 
 
-                if (UserName == backdoorUser && pwd == backdoorPwd)
+                if (account == backdoorUser && pwd == backdoorPwd)
                 {
                     // 設定後門帳號的 Session 狀態
                     Session["LoggedIn"] = true;
@@ -212,7 +213,7 @@ namespace PhysicalFit.Controllers
 
                 // 將使用者輸入的密碼進行SHA256加密
                 string hashedPwd = ComputeSha256Hash(pwd);
-                var dto = _db.Users.FirstOrDefault(u => u.Name == UserName && u.Password == hashedPwd);
+                var dto = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
 
                 if (dto != null)
                 {
@@ -236,7 +237,7 @@ namespace PhysicalFit.Controllers
                         Session["CoachName"] = "未設定";
                     }
 
-                    string returnUrl = Session["ReturnUrl"] != null ? Session["ReturnUrl"].ToString() : Url.Action("Login", "PhyFit");
+                    string returnUrl = Session["ReturnUrl"] != null ? Session["ReturnUrl"].ToString() : Url.Action("dashboard", "PhyFit");
 
                     // 清除返回頁面的 Session 記錄
                     Session.Remove("ReturnUrl");
@@ -585,26 +586,27 @@ namespace PhysicalFit.Controllers
             //Session["ReturnUrl"] = Request.Url.ToString();
             if (Session["LoggedIn"] != null && (bool)Session["LoggedIn"])
             {
-                string userName = Session["UserName"].ToString();
-                // 查詢對應的教練資料
-                var coach = _db.Coaches.FirstOrDefault(c => c.CoachName == userName);
+                string coachName = Session["CoachName"] != null ? Session["CoachName"].ToString() : "未設定";
+                int coachId = Session["CoachId"] != null ? (int)Session["CoachId"] : 0;
+                ViewBag.CoachName = coachName;
 
-                // 將教練名稱傳遞到 ViewBag
-                ViewBag.CoachName = coach != null ? coach.CoachName : "未設定";
+                // 查詢對應的運動員資料
+                var athletes = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
+                ViewBag.Athletes = athletes;
 
                 ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
-            ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
-            ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
-            ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
-            ViewBag.RPEScore = GetRPE();//RPE量表
-            ViewBag.GunItem = GetGunsItems(); //射擊用具項目
-            ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
+                ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
+                ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
+                ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
+                ViewBag.RPEScore = GetRPE();//RPE量表
+                ViewBag.GunItem = GetGunsItems(); //射擊用具項目
+                ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
             //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
-            ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
-            ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
-            ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
-            ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
-            ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
+                ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
+                ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
+                ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
+                ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
+                ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
             var records = _db.SessionRPETrainingRecords.ToList();
 
             var model = records.Select(r => new SessionRPETrainingRecordsModel
@@ -1164,8 +1166,15 @@ namespace PhysicalFit.Controllers
         {
             try
             {
+                // 手動接收 SpecialTechnicalTrainingItem 並分配給 record 的對應屬性
+                string specialTechnicalTrainingItem = Request.Form["SpecialTechnicalTrainingItem"];
+
+                if (!string.IsNullOrEmpty(specialTechnicalTrainingItem))
+                {
+                    record.TrainingClassName = specialTechnicalTrainingItem;
+                }
                 _db.GeneralTrainingRecord.Add(record);
-                _db.SaveChanges();
+                //_db.SaveChanges();
 
                 return Json(new { success = true });
             }

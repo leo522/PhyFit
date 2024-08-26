@@ -131,6 +131,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PhyFitController.cs" />
     <Compile Include="Controllers\TrainingPrescriptionController.cs" />
+    <Compile Include="EncryptionHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

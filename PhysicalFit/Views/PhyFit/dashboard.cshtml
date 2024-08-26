@@ -460,15 +460,27 @@
             });
         });
 
-            $(document).ready(function () {
+    $(document).ready(function () {
     $('#btn-rainingMonitoring').click(function (event) {
         event.preventDefault(); // 防止表單的默認提交行為
 
+        var specialTechnicalTrainingItem = $('#SpecialTechnicalTrainingItem').val(); 
+        // 檢查是否有選擇運動員
+        var selectedAthlete = $('#AthletesName').find('option:selected').val();
+        if (!selectedAthlete || selectedAthlete === "請選擇") {
+            Swal.fire({
+                icon: 'warning',
+                title: '未選擇運動員',
+                text: '請先選擇一位運動員才能存檔。',
+            });
+            return; // 終止後續動作
+        }
         // 構建一個用於發送的數據對象
         var formData = {
             Coach: $('input[name="CoachName"]').val(),
             Athlete: $('#AthletesName').find('option:selected').text(),
-            TariningClassName: $('select[name="TariningClassName"]').val(),
+            TrainingClassName: specialTechnicalTrainingItem,
+            //TariningClassName: $('select[name="TariningClassName"]').val(),
             TrainingDate: $('input[name="TrainingDate"]').val(),
             TrainingItme: $('select[name="TrainingItme"]').val(),
             ActionName: $('select[name="ActionName"]').val(), // 根據實際表單項目進行調整

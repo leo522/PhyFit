@@ -49,7 +49,7 @@
           <Property Name="CoachName" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="20" />
           <Property Name="CoachAccount" Type="nvarchar" MaxLength="20" />
-          <Property Name="CoachPwd" Type="nvarchar" MaxLength="30" />
+          <Property Name="CoachPwd" Type="nvarchar" MaxLength="100" />
           <Property Name="SchoolName" Type="nvarchar" MaxLength="30" />
           <Property Name="SchoolID" Type="nvarchar" MaxLength="10" />
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="20" />
@@ -1132,7 +1132,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CoachName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="CoachPwd" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CoachPwd" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="SchoolName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="SchoolID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
