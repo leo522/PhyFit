@@ -1186,10 +1186,38 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 儲存射擊訓練紀錄
-        public ActionResult SaveShottingRecord()
+        #region 儲存射箭訓練紀錄
+        public ActionResult SaveArcheryRecord(ArcheryRecord record)
         {
-            return View();
+            try
+            {
+                _db.ArcheryRecord.Add(record);
+                //_db.SaveChanges();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("儲存失敗: " + ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+        #region 儲存射擊訓練紀錄
+        public ActionResult SaveShootingRecord(ShootingRecord record)
+        {
+            try
+            {
+                _db.ShootingRecord.Add(record);
+                //_db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("儲存失敗: " + ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
         }
         #endregion
 

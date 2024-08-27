@@ -45,12 +45,15 @@
         <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK_Users_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_Users_Coaches" />
-        <EntityTypeShape EntityType="PhFitnessModel.ShootingRecord" Width="1.5" PointX="23.875" PointY="1.625" />
-        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Athletes" />
-        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Coaches" />
         <EntityTypeShape EntityType="PhFitnessModel.GeneralTrainingRecord" Width="1.5" PointX="20.875" PointY="1" />
         <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Coaches" />
+        <EntityTypeShape EntityType="PhFitnessModel.ShootingRecord" Width="1.5" PointX="23.875" PointY="1.375" />
+        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Athletes" />
+        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Coaches" />
+        <EntityTypeShape EntityType="PhFitnessModel.ArcheryRecord" Width="1.5" PointX="23.875" PointY="5.5" />
+        <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" />
+        <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Coach__5A4F643B" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -9,9 +9,11 @@
     <script src="~/Scripts/RPE_Modal.js"></script> @*自覺量表彈跳視窗*@
     <script src="~/Scripts/TLCaculate.js"></script> @*運動訓練量計算*@
     <script src="~/Scripts/DistanceSys.js"></script> @*檢測系統*@
+    <script src="~/Scripts/SaveGeneralRecord.js"></script> @*一般訓練記錄存檔*@
+    <script src="~/Scripts/SaveArcheryRecord.js"></script> @*射箭訓練記錄存檔*@
+    <script src="~/Scripts/SaveShootingRecord.js"></script> @*射擊訓練記錄存檔*@
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
     <link href="~/css/dashboardStyle.css" rel="stylesheet" />
-
 </head>
 <body>
     @*<div class="main-container">
@@ -181,7 +183,7 @@
     <!-- 射擊訓練衝量監控區塊 -->
     <div class="content" id="shootingMonitoring">
         <h2>射擊訓練衝量監控</h2>
-        <form>
+        <form id="shootingForm">
             <table id="shootingMonitoringTable">
                 <thead>
                     <tr>
@@ -189,7 +191,6 @@
                         <th>項目</th>
                         <th>子彈數</th>
                         <th>自覺費力程度</th>
-                        <th>每次運動負荷</th>
                         <th>每次運動負荷(TL)</th>
                         <th>增減欄位</th>
                     </tr>
@@ -459,88 +460,6 @@
                 selectedItemSpan.textContent = selectedItem;
             });
         });
-
-    $(document).ready(function () {
-    $('#btn-rainingMonitoring').click(function (event) {
-        event.preventDefault(); // 防止表單的默認提交行為
-
-        var specialTechnicalTrainingItem = $('#SpecialTechnicalTrainingItem').val(); 
-        // 檢查是否有選擇運動員
-        var selectedAthlete = $('#AthletesName').find('option:selected').val();
-        if (!selectedAthlete || selectedAthlete === "請選擇") {
-            Swal.fire({
-                icon: 'warning',
-                title: '未選擇運動員',
-                text: '請先選擇一位運動員才能存檔。',
-            });
-            return; // 終止後續動作
-        }
-        // 構建一個用於發送的數據對象
-        var formData = {
-            Coach: $('input[name="CoachName"]').val(),
-            Athlete: $('#AthletesName').find('option:selected').text(),
-            TrainingClassName: specialTechnicalTrainingItem,
-            //TariningClassName: $('select[name="TariningClassName"]').val(),
-            TrainingDate: $('input[name="TrainingDate"]').val(),
-            TrainingItme: $('select[name="TrainingItme"]').val(),
-            ActionName: $('select[name="ActionName"]').val(), // 根據實際表單項目進行調整
-            TrainingParts: $('select[name="TrainingParts"]').val(), // 根據實際表單項目進行調整
-            TrainingType: $('select[name="TrainingType"]').val(), // 根據實際表單項目進行調整
-            TrainingOther: $('input[name="TrainingOther"]').val(), // 根據實際表單項目進行調整
-            TrainingTime: $('select[name="TrainingTime"]').val(),
-            RPEscore: $('input[name="RPEscore"]').val(), // 根據實際表單項目進行調整
-            EachTrainingLoad: $('input[name="EachTrainingLoad"]').val(), // 根據實際表單項目進行調整
-            DailyTrainingLoad: $('input[name="DailyTrainingLoad"]').val() // 根據實際表單項目進行調整
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("SaveGeneralTrainingRecord", "PhyFit")',
-            data: JSON.stringify(formData),
-            contentType: 'application/json; charset=utf-8', // 設置請求內容類型為 JSON
-            success: function (response) {
-                if (response.success) {
-                    alert('存檔成功');
-                    // 如果需要可以在這裡做更多的處理，比如刷新頁面或重定向
-                } else {
-                    alert('存檔失敗: ' + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                alert('存檔失敗: ' + error);
-            }
-        });
-    });
-    });
-$(document).ready(function () {
-    // 顯示 Modal 並載入內容
-    $('.openRecordModalGeneral').click(function () {
-        $('#recordModalGeneral').fadeIn(); // 顯示 Modal
-
-        $.ajax({
-            type: 'GET',
-            url: '@Url.Action("LoadGeneralRecordPartial", "PhyFit")',
-            success: function (response) {
-                $('#recordModalBody').html(response); // 將部分視圖內容加載到 Modal 中
-            },
-            error: function (xhr, status, error) {
-                alert('獲取訓練紀錄失敗: ' + error);
-            }
-        });
-    });
-
-    // 關閉 Modal
-    $('#closeRecordModal').click(function () {
-        $('#recordModalGeneral').fadeOut(); // 隱藏 Modal
-    });
-
-    // 點擊 Modal 外部也隱藏 Modal
-    $(window).click(function(event) {
-        if ($(event.target).is('#recordModalGeneral')) {
-            $('#recordModalGeneral').fadeOut(); // 隱藏 Modal
-        }
-    });
-});
-    </script>
+</script>
 </body>
 </html>

@@ -138,6 +138,9 @@
     <Compile Include="Models\AbilityDetermination.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ArcheryRecord.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ArcheryTraining.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -333,6 +336,9 @@
     <Content Include="Scripts\RegisterSet.js" />
     <Content Include="Scripts\RollerSkatingCaculate.js" />
     <Content Include="Scripts\RPE_Modal.js" />
+    <Content Include="Scripts\SaveArcheryRecord.js" />
+    <Content Include="Scripts\SaveGeneralRecord.js" />
+    <Content Include="Scripts\SaveShootingRecord.js" />
     <Content Include="Scripts\SessionMonitoring.js" />
     <Content Include="Scripts\SessionTraining.js" />
     <Content Include="Scripts\SwimmingPoolCaculate.js" />
