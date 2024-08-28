@@ -15,7 +15,7 @@ namespace PhysicalFit.Controllers
 {
     public class PhyFitController : Controller
     {
-        private PhFitnessEntities _db = new PhFitnessEntities();
+        private PhFitnessEntities _db = new PhFitnessEntities(); //資料庫
 
         #region 註冊角色選擇
         public ActionResult Register()
@@ -126,12 +126,13 @@ namespace PhysicalFit.Controllers
         {
             DateTime birthdayDate = AthleteBirthday.Value.Date; //去除時間部分，只保留日期部分
 
-            string encryptedID = EncryptionHelper.Encrypt(AthleteID); //加密身份證號碼
+            string encryptedID = EncryptionHelper.Encrypt(AthleteID); //AES對稱加密身份證號碼
 
             // 處理運動員註冊
             var newAthlete = new Athletes
             {
                 AthleteAccount = encryptedID,
+                AthletePWD = ComputeSha256Hash(Athletepwd),
                 AthleteName = AthleteName,
                 Birthday = birthdayDate,
                 IdentityNumber = encryptedID, //儲存加密後的身份證號碼
@@ -199,7 +200,7 @@ namespace PhysicalFit.Controllers
             {
                 // 後門帳號和密碼
                 string backdoorUser = "admin";
-                string backdoorPwd = "1234"; 
+                string backdoorPwd = "1234";
 
                 if (account == backdoorUser && pwd == backdoorPwd)
                 {
@@ -211,30 +212,74 @@ namespace PhysicalFit.Controllers
                     return RedirectToAction("dashboard", "PhyFit");
                 }
 
-                // 將使用者輸入的密碼進行SHA256加密
+                //將使用者輸入的密碼進行SHA256加密
                 string hashedPwd = ComputeSha256Hash(pwd);
-                var dto = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
 
-                if (dto != null)
+                //根據帳號是否為加密過的身份證字號來進行不同的查詢
+                Users user = null;
+
+                if (IsIdentityNumber(account))
+                {
+                    // 若帳號是身份證字號，則加密並查詢
+                    string encryptedIdentityNumber = EncryptionHelper.Encrypt(account);
+                    user = _db.Users.FirstOrDefault(u => u.Account == encryptedIdentityNumber && u.Password == hashedPwd);
+                }
+                else
+                {
+                    // 若帳號不是身份證字號，則直接查詢
+                    user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
+                }
+
+                if (user != null)
                 {
                     // 驗證成功，更新最後登入時間
-                    dto.LastLoginDate = DateTime.Now;
+                    user.LastLoginDate = DateTime.Now;
                     _db.SaveChanges();
 
                     // 設定 Session 狀態為已登入
                     Session["LoggedIn"] = true;
-                    Session["UserName"] = dto.Name;
+                    Session["UserName"] = user.Name;
 
-                    // 查詢教練資料並保存到 Session 中
-                    var coach = _db.Coaches.FirstOrDefault(c => c.ID == dto.CoachID);
-                    if (coach != null)
+                    if (user.CoachID.HasValue)
                     {
-                        Session["CoachName"] = coach.CoachName;
-                        Session["CoachId"] = coach.ID; // 保存教練的 ID 用於查詢運動員
+                        // 如果是教練
+                        var coach = _db.Coaches.FirstOrDefault(c => c.ID == user.CoachID.Value);
+                        if (coach != null)
+                        {
+                            Session["CoachName"] = coach.CoachName;
+                            Session["CoachId"] = coach.ID; // 保存教練的 ID 用於查詢運動員
+                        }
+                        else
+                        {
+                            Session["CoachName"] = "未設定";
+                        }
                     }
                     else
                     {
-                        Session["CoachName"] = "未設定";
+                        // 如果是運動員
+                        var athlete = _db.Athletes.FirstOrDefault(a => a.ID == user.AthleteID);
+                        if (athlete != null)
+                        {
+                            Session["AthleteId"] = athlete.ID;
+                            Session["AthleteName"] = athlete.AthleteName;
+
+                            if (athlete.CoachID.HasValue)
+                            {
+                                var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID.Value);
+                                Session["CoachName"] = coach != null ? coach.CoachName : "未設定";
+                            }
+                            else
+                            {
+                                Session["CoachName"] = "未設定"; // 或者可以設置運動員無教練的標識
+                            }
+                        }
+                        else
+                        {
+                            // 運動員資料未找到
+                            Session["AthleteId"] = 0;
+                            Session["AthleteName"] = "未設定";
+                            Session["CoachName"] = "未設定";
+                        }
                     }
 
                     string returnUrl = Session["ReturnUrl"] != null ? Session["ReturnUrl"].ToString() : Url.Action("dashboard", "PhyFit");
@@ -257,6 +302,13 @@ namespace PhysicalFit.Controllers
                 Console.WriteLine("其他錯誤: " + ex.Message);
                 return View("Error");
             }
+        }
+
+        private bool IsIdentityNumber(string account)
+        {
+            // 根據實際情況設置身份證號碼的格式檢查
+            // 這裡假設身份證號碼為數字和字母組成，並且長度為特定的數字
+            return account.Length == 10 && account.All(c => char.IsLetterOrDigit(c));
         }
         #endregion
 
@@ -586,6 +638,23 @@ namespace PhysicalFit.Controllers
             //Session["ReturnUrl"] = Request.Url.ToString();
             if (Session["LoggedIn"] != null && (bool)Session["LoggedIn"])
             {
+                Athletes athlete = null;
+                // 檢查運動員ID是否存在於Session中
+                if (Session["AthleteId"] != null)
+                {
+                    int athleteId = (int)Session["AthleteId"];
+                    athlete = _db.Athletes.FirstOrDefault(a => a.ID == athleteId);
+
+                    if (athlete != null && athlete.CoachID.HasValue)
+                    {
+                        // 查詢運動員的教練資料
+                        var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID.Value);
+                        ViewBag.CoachName = coach?.CoachName ?? "未設定";
+                    }
+
+                    ViewBag.Athlete = athlete;
+                }
+
                 string coachName = Session["CoachName"] != null ? Session["CoachName"].ToString() : "未設定";
                 int coachId = Session["CoachId"] != null ? (int)Session["CoachId"] : 0;
                 ViewBag.CoachName = coachName;
@@ -1166,7 +1235,6 @@ namespace PhysicalFit.Controllers
         {
             try
             {
-                // 手動接收 SpecialTechnicalTrainingItem 並分配給 record 的對應屬性
                 string specialTechnicalTrainingItem = Request.Form["SpecialTechnicalTrainingItem"];
 
                 if (!string.IsNullOrEmpty(specialTechnicalTrainingItem))
@@ -1174,7 +1242,7 @@ namespace PhysicalFit.Controllers
                     record.TrainingClassName = specialTechnicalTrainingItem;
                 }
                 _db.GeneralTrainingRecord.Add(record);
-                //_db.SaveChanges();
+                _db.SaveChanges();
 
                 return Json(new { success = true });
             }
@@ -1209,7 +1277,7 @@ namespace PhysicalFit.Controllers
             try
             {
                 _db.ShootingRecord.Add(record);
-                //_db.SaveChanges();
+                _db.SaveChanges();
 
                 return Json(new { success = true });
             }
@@ -1253,6 +1321,99 @@ namespace PhysicalFit.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "無法加載紀錄");
             }
         }
+        #endregion
+
+        #region 儲存檢測系統訓練紀錄
+        [HttpPost]
+        public ActionResult SaveDetecRecord(string sportItem, DetectionTrainingRecord record, dynamic sportSpecificData)
+        {
+            try
+            {
+                // 先保存檢測記錄的通用數據到 DetectionTrainingRecord 表
+                _db.DetectionTrainingRecord.Add(record);
+                //_db.SaveChanges();
+                
+                // 根據運動項目保存到相應的資料表
+                switch (sportItem)
+                {
+                    case "跑步機":
+                        var runningRecord = new RunningMachineRecord
+                        {
+                            DetectionRecordID = record.ID,
+                            MaxRunningSpeed = sportSpecificData.MaxRunningSpeed,
+                            TimeExhaustion = sportSpecificData.TimeExhaustion,
+                            IPercen95 = sportSpecificData.IPercen95,
+                            IPercen90 = sportSpecificData.IPercen90,
+                            IPercen85 = sportSpecificData.IPercen85,
+                            IPercen80 = sportSpecificData.IPercen80,
+                        };
+                        _db.RunningMachineRecord.Add(runningRecord);
+                        break;
+
+                    case "田徑場":
+                        var trackRecord = new TrackFieldRecord
+                        {
+                            DetectionRecordID = record.ID,
+                            Distance200 = sportSpecificData.Distance200,
+                            Distance400 = sportSpecificData.Distance400,
+                            Distance800 = sportSpecificData.Distance800,
+                            Distance1200 = sportSpecificData.Distance1200,
+                        };
+                        _db.TrackFieldRecord.Add(trackRecord);
+                        break;
+
+                    case "游泳":
+                        var swimmingRecord = new SwimmingRecord
+                        {
+                            DetectionRecordID = record.ID,
+                            Distance100 = sportSpecificData.Distance100,
+                            Distance200 = sportSpecificData.Distance200,
+                            Distance400 = sportSpecificData.Distance400,
+                            Distance800 = sportSpecificData.Distance800,
+                        };
+                        _db.SwimmingRecord.Add(swimmingRecord);
+                        break;
+
+                    case "自由車":
+                        var cyclingRecord = new CyclingRecord
+                        {
+                            DetectionRecordID = record.ID,
+                            MaxPower = sportSpecificData.MaxPower,
+                            IPercen95 = sportSpecificData.IPercen95,
+                            IPercen90 = sportSpecificData.IPercen90,
+                            IPercen85 = sportSpecificData.IPercen85,
+                            IPercen80 = sportSpecificData.IPercen80,
+                        };
+                        _db.CyclingRecord.Add(cyclingRecord);
+                        break;
+
+                    case "滑輪溜冰":
+                        var RollerSkiing = new RollerSkiingRecord
+                        {
+                            DetectionRecordID = record.ID,
+                            Distance200 = sportSpecificData.Distance200,
+                            Distance500 = sportSpecificData.Distance500,
+                            Distance1000 = sportSpecificData.Distance1000,
+                            Distance2000 = sportSpecificData.Distance2000,
+                        };
+                        _db.RollerSkiingRecord.Add(RollerSkiing);
+                        break;
+
+                    default:
+                        throw new Exception("未知的運動項目");
+                }
+
+                // 保存具體項目的記錄
+                _db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
         #endregion
     }
 }

@@ -26,7 +26,7 @@ namespace PhysicalFit.Models
         public Nullable<int> EachTrainingLoad { get; set; }
         public Nullable<int> DailyTrainingLoad { get; set; }
     
-        public virtual Athletes Athletes { get; set; }
         public virtual Coaches Coaches { get; set; }
+        public virtual Athletes Athletes { get; set; }
     }
 }

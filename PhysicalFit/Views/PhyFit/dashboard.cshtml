@@ -12,33 +12,11 @@
     <script src="~/Scripts/SaveGeneralRecord.js"></script> @*一般訓練記錄存檔*@
     <script src="~/Scripts/SaveArcheryRecord.js"></script> @*射箭訓練記錄存檔*@
     <script src="~/Scripts/SaveShootingRecord.js"></script> @*射擊訓練記錄存檔*@
+    <script src="~/Scripts/SaveDetecRecord.js"></script>
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
     <link href="~/css/dashboardStyle.css" rel="stylesheet" />
 </head>
 <body>
-    @*<div class="main-container">
-            <div class="left-section">
-                <div style="margin-bottom:20px;">
-                    <label for="Item">訓練監控項目</label>
-                    <select class="form-control" id="Item" style="border:2px solid #000;">
-                        <option>請選擇訓練項目</option>
-                        @foreach (var item in ViewBag.MonitoringItems)
-                        {
-                            <option>@item</option>
-                        }
-                    </select>
-                </div>
-                <div id="identityCoach" style="display: flex; align-items: center;">
-                    <label for="coachName">教練：@ViewBag.CoachName</label>
-                </div>
-                <div id="identity_Athletes" style="display: flex; align-items: center;">
-                    <label for="AthletesName">運動員：</label>
-                    <select>
-                        <option>請選擇</option>
-                    </select>
-                </div>
-            </div>
-        </div>*@
     <form id="generalTrainingForm">
         <div style="display: flex; align-items: center; gap: 20px;">
             <div style="margin-bottom: 20px;">
@@ -54,8 +32,8 @@
             </div>
 
             <div id="identityCoach" style="display: flex; align-items: center;">
-                <label for="coachName">教練：@ViewBag.CoachName</label>
-                <input type="hidden" name="CoachName" value="@ViewBag.CoachName" />
+                <label>教練：@ViewBag.CoachName</label>
+                <input type="hidden" name="CoachName" id="coachName" value="@ViewBag.CoachName" />
             </div>
             <div id="identity_Athletes" style="display: flex; align-items: center;">
                 <label for="AthletesName">運動員：</label>
@@ -254,13 +232,17 @@
                 <div class="card-body">
                     <form>
                         <div class="form-group">
-                            <label for="Dete">項目</label>
+                            <label>日期：</label>
+                            <input type="datetime-local" class="form-control" name="DetectionDate" />
+                        </div>
+                        <div class="form-group">
+                            <label for="Dete">項目：</label>
                             <select class="form-control" id="Dete">
                                 <option>有/無氧代謝能力測定</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="DeteItem">運動項目</label>
+                            <label for="DeteItem">運動項目：</label>
                             <select class="form-control" id="DeteItem">
                                 <option>請選擇運動項目</option>
                                 @foreach (var SI in ViewBag.DetectionSport)
@@ -271,7 +253,7 @@
                         </div>
                         <hr />
                         <div class="result-section">
-                            <label for="Result">檢測結果</label>
+                            <label for="Result">檢測結果：</label>
                             <div class="mb-3">
                                 <label for="CriticalSpeed" style="font-size: 20px; display: block;">臨界速度 (km/h)</label>
                                 <input type="text" class="form-control form-control-sm" id="CriticalSpeed">
@@ -296,6 +278,7 @@
                     </form>
                 </div>
             </div>
+            <button class="btn btn-success" name="btn_Detec" id="btn_Detec">存檔</button>
         </div>
         <div id="distanceDetails" style="margin-top: -500px;"></div>
         @*@using (Html.BeginForm("RedirectToPrescription", "PhyFit", FormMethod.Post))
@@ -460,6 +443,8 @@
                 selectedItemSpan.textContent = selectedItem;
             });
         });
+
+
 </script>
 </body>
 </html>

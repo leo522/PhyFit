@@ -26,7 +26,7 @@ namespace PhysicalFit.Models
         public string Coach { get; set; }
         public string Athlete { get; set; }
     
-        public virtual Athletes Athletes { get; set; }
         public virtual Coaches Coaches { get; set; }
+        public virtual Athletes Athletes { get; set; }
     }
 }
