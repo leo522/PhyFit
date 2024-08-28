@@ -198,101 +198,50 @@ namespace PhysicalFit.Controllers
         {
             try
             {
-                // 後門帳號和密碼
                 string backdoorUser = "admin";
                 string backdoorPwd = "1234";
 
                 if (account == backdoorUser && pwd == backdoorPwd)
                 {
-                    // 設定後門帳號的 Session 狀態
-                    Session["LoggedIn"] = true;
-                    Session["UserName"] = backdoorUser;
-
-                    // 重定向到管理頁面或首頁
+                    FormsAuthentication.SetAuthCookie(backdoorUser, false);
                     return RedirectToAction("dashboard", "PhyFit");
                 }
 
-                //將使用者輸入的密碼進行SHA256加密
                 string hashedPwd = ComputeSha256Hash(pwd);
-
-                //根據帳號是否為加密過的身份證字號來進行不同的查詢
                 Users user = null;
 
                 if (IsIdentityNumber(account))
                 {
-                    // 若帳號是身份證字號，則加密並查詢
                     string encryptedIdentityNumber = EncryptionHelper.Encrypt(account);
                     user = _db.Users.FirstOrDefault(u => u.Account == encryptedIdentityNumber && u.Password == hashedPwd);
                 }
                 else
                 {
-                    // 若帳號不是身份證字號，則直接查詢
                     user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
                 }
 
                 if (user != null)
                 {
-                    // 驗證成功，更新最後登入時間
                     user.LastLoginDate = DateTime.Now;
                     _db.SaveChanges();
 
-                    // 設定 Session 狀態為已登入
-                    Session["LoggedIn"] = true;
-                    Session["UserName"] = user.Name;
+                    // 設定 FormsAuthentication Ticket
+                    var authTicket = new FormsAuthenticationTicket(
+                        1,
+                        user.Name,
+                        DateTime.Now,
+                        DateTime.Now.AddMinutes(30),
+                        false,
+                        user.CoachID.HasValue ? user.CoachID.Value.ToString() : user.AthleteID.ToString(),
+                        FormsAuthentication.FormsCookiePath);
 
-                    if (user.CoachID.HasValue)
-                    {
-                        // 如果是教練
-                        var coach = _db.Coaches.FirstOrDefault(c => c.ID == user.CoachID.Value);
-                        if (coach != null)
-                        {
-                            Session["CoachName"] = coach.CoachName;
-                            Session["CoachId"] = coach.ID; // 保存教練的 ID 用於查詢運動員
-                        }
-                        else
-                        {
-                            Session["CoachName"] = "未設定";
-                        }
-                    }
-                    else
-                    {
-                        // 如果是運動員
-                        var athlete = _db.Athletes.FirstOrDefault(a => a.ID == user.AthleteID);
-                        if (athlete != null)
-                        {
-                            Session["AthleteId"] = athlete.ID;
-                            Session["AthleteName"] = athlete.AthleteName;
+                    string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                    Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket));
 
-                            if (athlete.CoachID.HasValue)
-                            {
-                                var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID.Value);
-                                Session["CoachName"] = coach != null ? coach.CoachName : "未設定";
-                            }
-                            else
-                            {
-                                Session["CoachName"] = "未設定"; // 或者可以設置運動員無教練的標識
-                            }
-                        }
-                        else
-                        {
-                            // 運動員資料未找到
-                            Session["AthleteId"] = 0;
-                            Session["AthleteName"] = "未設定";
-                            Session["CoachName"] = "未設定";
-                        }
-                    }
-
-                    string returnUrl = Session["ReturnUrl"] != null ? Session["ReturnUrl"].ToString() : Url.Action("dashboard", "PhyFit");
-
-                    // 清除返回頁面的 Session 記錄
-                    Session.Remove("ReturnUrl");
-
-                    // 重定向到記錄的返回頁面
-                    return Redirect(returnUrl);
+                    return RedirectToAction("dashboard", "PhyFit");
                 }
                 else
                 {
-                    // 驗證失敗
                     ViewBag.ErrorMessage = "帳號或密碼錯誤";
                     return View();
                 }
@@ -635,70 +584,141 @@ namespace PhysicalFit.Controllers
         #region 訓練監控主視圖
         public ActionResult dashboard()
         {
-            //Session["ReturnUrl"] = Request.Url.ToString();
-            if (Session["LoggedIn"] != null && (bool)Session["LoggedIn"])
+            if (User.Identity.IsAuthenticated)
             {
-                Athletes athlete = null;
-                // 檢查運動員ID是否存在於Session中
-                if (Session["AthleteId"] != null)
-                {
-                    int athleteId = (int)Session["AthleteId"];
-                    athlete = _db.Athletes.FirstOrDefault(a => a.ID == athleteId);
+                string userName = User.Identity.Name; // 獲取當前登入用戶的名稱或其他唯一識別信息
+                var user = _db.Users.FirstOrDefault(u => u.Name == userName);
 
-                    if (athlete != null && athlete.CoachID.HasValue)
+                if (user != null)
+                {
+                    Athletes athlete = null;
+
+                    // 根據用戶的ID查詢運動員資料
+                    if (user.AthleteID.HasValue)
                     {
-                        // 查詢運動員的教練資料
-                        var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID.Value);
-                        ViewBag.CoachName = coach?.CoachName ?? "未設定";
+                        int athleteId = user.AthleteID.Value;
+                        athlete = _db.Athletes.FirstOrDefault(a => a.ID == athleteId);
+
+                        if (athlete != null && athlete.CoachID.HasValue)
+                        {
+                            // 查詢運動員的教練資料
+                            var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID.Value);
+                            ViewBag.CoachName = coach?.CoachName ?? "未設定";
+                        }
+
+                        ViewBag.Athlete = athlete;
                     }
 
-                    ViewBag.Athlete = athlete;
+                    string coachName = user.CoachID.HasValue ?
+                        _db.Coaches.FirstOrDefault(c => c.ID == user.CoachID.Value)?.CoachName ?? "未設定" : "未設定";
+
+                    ViewBag.CoachName = coachName;
+                    ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == user.CoachID).ToList();
+
+                    ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
+                    ViewBag.Description = GetTrainingItem(); //訓練衝量監控
+                    ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
+                    ViewBag.TrainingTimes = GetTrainingTimes(); //訓練時間
+                    ViewBag.RPEScore = GetRPE(); //RPE量表
+                    ViewBag.GunItem = GetGunsItems(); //射擊用具項目
+                    ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
+                    ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
+                    ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
+                    ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
+                    ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
+                    ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
+
+                    var records = _db.SessionRPETrainingRecords.ToList();
+                    var model = records.Select(r => new SessionRPETrainingRecordsModel
+                    {
+                        TrainingItem = r.TrainingItem, //訓練名稱
+                        RPEscore = r.RPEscore, //RPE分數
+                        TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
+                        DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
+                        WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
+                        TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
+                        TrainingTension = r.TrainingTension ?? 0, //張力值
+                        ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
+                    }).ToList();
+
+                    ViewBag.SessionTrainingRecords = model;
+
+                    return View();
                 }
-
-                string coachName = Session["CoachName"] != null ? Session["CoachName"].ToString() : "未設定";
-                int coachId = Session["CoachId"] != null ? (int)Session["CoachId"] : 0;
-                ViewBag.CoachName = coachName;
-
-                // 查詢對應的運動員資料
-                var athletes = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
-                ViewBag.Athletes = athletes;
-
-                ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
-                ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
-                ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
-                ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
-                ViewBag.RPEScore = GetRPE();//RPE量表
-                ViewBag.GunItem = GetGunsItems(); //射擊用具項目
-                ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-            //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
-                ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
-                ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
-                ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
-                ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
-                ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
-            var records = _db.SessionRPETrainingRecords.ToList();
-
-            var model = records.Select(r => new SessionRPETrainingRecordsModel
-            {
-                TrainingItem = r.TrainingItem, //訓練名稱
-                RPEscore = r.RPEscore, //RPE分數
-                //TrainingTime = r.TrainingTime, //訓練時間
-                TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
-                DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
-                WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
-                TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
-                TrainingTension = r.TrainingTension ?? 0, //張力值
-                ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
-            }).ToList();
-
-            ViewBag.SessionTrainingRecords = model;
-
-            return View();
+                else
+                {
+                    return RedirectToAction("Login");
+                }
             }
             else
             {
                 return RedirectToAction("Login");
             }
+
+            //Session["ReturnUrl"] = Request.Url.ToString();
+            //if (Session["LoggedIn"] != null && (bool)Session["LoggedIn"])
+            //{
+            //    Athletes athlete = null;
+            //    // 檢查運動員ID是否存在於Session中
+            //    if (Session["AthleteId"] != null)
+            //    {
+            //        int athleteId = (int)Session["AthleteId"];
+            //        athlete = _db.Athletes.FirstOrDefault(a => a.ID == athleteId);
+
+            //        if (athlete != null && athlete.CoachID.HasValue)
+            //        {
+            //            // 查詢運動員的教練資料
+            //            var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID.Value);
+            //            ViewBag.CoachName = coach?.CoachName ?? "未設定";
+            //        }
+
+            //        ViewBag.Athlete = athlete;
+            //    }
+
+            //    string coachName = Session["CoachName"] != null ? Session["CoachName"].ToString() : "未設定";
+            //    int coachId = Session["CoachId"] != null ? (int)Session["CoachId"] : 0;
+            //    ViewBag.CoachName = coachName;
+
+            //    // 查詢對應的運動員資料
+            //    var athletes = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
+            //    ViewBag.Athletes = athletes;
+
+            //    ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
+            //    ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
+            //    ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
+            //    ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
+            //    ViewBag.RPEScore = GetRPE();//RPE量表
+            //    ViewBag.GunItem = GetGunsItems(); //射擊用具項目
+            //    ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
+            ////ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
+            //    ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
+            //    ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
+            //    ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
+            //    ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
+            //    ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
+            //var records = _db.SessionRPETrainingRecords.ToList();
+
+            //var model = records.Select(r => new SessionRPETrainingRecordsModel
+            //{
+            //    TrainingItem = r.TrainingItem, //訓練名稱
+            //    RPEscore = r.RPEscore, //RPE分數
+            //    //TrainingTime = r.TrainingTime, //訓練時間
+            //    TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
+            //    DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
+            //    WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
+            //    TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
+            //    TrainingTension = r.TrainingTension ?? 0, //張力值
+            //    ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
+            //}).ToList();
+
+            //ViewBag.SessionTrainingRecords = model;
+
+            //return View();
+            //}
+            //else
+            //{
+            //    return RedirectToAction("Login");
+            //}
         }
         #endregion
 
