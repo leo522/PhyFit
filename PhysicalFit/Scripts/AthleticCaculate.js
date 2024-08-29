@@ -1,4 +1,6 @@
-﻿var FailureTime200 = 0;
+﻿//AthleticCaculate.js
+
+var FailureTime200 = 0;
 var FailureTime400 = 0;
 var FailureTime800 = 0;
 var FailureTime1200 = 0;
@@ -20,11 +22,18 @@ function calculateSpeed(inputElement) {
     var distance = parseFloat(row.find('td').eq(0).text());
     var exhaustionTime = parseFloat($(inputElement).val());
 
+    //if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
+    //    var speed = (distance / exhaustionTime) * 3.6;
+    //    row.find('td').eq(2).text(speed.toFixed(2));
+    //} else {
+    //    row.find('td').eq(2).text('');
+    //}
     if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
         var speed = (distance / exhaustionTime) * 3.6;
-        row.find('td').eq(2).text(speed.toFixed(2));
+        // 使用 id 來選擇元素
+        row.find('#speed-result').val(speed.toFixed(2)); // 更新速度結果
     } else {
-        row.find('td').eq(2).text('');
+        row.find('#speed-result').val(''); // 清空速度
     }
 
     trackCalculateLinearRegression();

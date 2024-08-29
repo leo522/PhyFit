@@ -223,130 +223,134 @@
     </div>
 
     @*檢測系統*@
-    <div class="training-section" id="Detection_Sys">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h2>檢測系統訓練詳情:<span id="selectedSportItem" style="font-size:1.5rem;"></span></h2>
-                </div>
-                <div class="card-body">
-                    <form>
-                        <div class="form-group">
-                            <label>日期：</label>
-                            <input type="datetime-local" class="form-control" name="DetectionDate" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Dete">項目：</label>
-                            <select class="form-control" id="Dete">
-                                <option>有/無氧代謝能力測定</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="DeteItem">運動項目：</label>
-                            <select class="form-control" id="DeteItem">
-                                <option>請選擇運動項目</option>
-                                @foreach (var SI in ViewBag.DetectionSport)
-                                {
-                                    <option>@SI</option>
-                                }
-                            </select>
-                        </div>
-                        <hr />
-                        <div class="result-section">
-                            <label for="Result">檢測結果：</label>
-                            <div class="mb-3">
-                                <label for="CriticalSpeed" style="font-size: 20px; display: block;">臨界速度 (km/h)</label>
-                                <input type="text" class="form-control form-control-sm" id="CriticalSpeed">
+    @using (Html.BeginForm("SaveTrackFieldRecord", "PhyFit", FormMethod.Post))
+    {
+        <div class="training-section" id="Detection_Sys">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>檢測系統訓練詳情:<span id="selectedSportItem" style="font-size:1.5rem;"></span></h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/PhyFit/SaveTrackFieldRecord" method="post">
+                            <div class="form-group">
+                                <label>日期：</label>
+                                <input type="datetime-local" class="form-control" id="DetectionDate" name="DetectionDate" />
                             </div>
-                            <div class="mb-3">
-                                <label for="AnaerobicPower" style="font-size: 20px; display: block;">最大無氧做功 (m)</label>
-                                <input type="text" class="form-control form-control-sm" id="AnaerobicPower">
+                            <div class="form-group">
+                                <label for="Dete">項目：</label>
+                                <select class="form-control" id="Dete">
+                                    <option>有/無氧代謝能力測定</option>
+                                </select>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="DeteItem">運動項目：</label>
+                                <select class="form-control" id="DeteItem">
+                                    <option>請選擇運動項目</option>
+                                    @foreach (var SI in ViewBag.DetectionSport)
+                                    {
+                                        <option>@SI</option>
+                                    }
+                                </select>
+                            </div>
+                            <hr />
+                            <div class="result-section">
+                                <label for="Result">檢測結果：</label>
+                                <div class="mb-3">
+                                    <label for="CriticalSpeed" style="font-size: 20px; display: block;">臨界速度 (km/h)</label>
+                                    <input type="text" class="form-control form-control-sm" id="CriticalSpeed">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="AnaerobicPower" style="font-size: 20px; display: block;">最大無氧做功 (m)</label>
+                                    <input type="text" class="form-control form-control-sm" id="AnaerobicPower">
+                                </div>
+                            </div>
 
-                        <!-- 訓練量區域 -->
-                        <div class="training-volume-section">
-                            <label for="TrainingVol" style="font-size: 20px;">訓練量</label>
-                            <input type="text" class="form-control" id="TrainingVol" placeholder="">
-                        </div>
+                            <!-- 訓練量區域 -->
+                            <div class="training-volume-section">
+                                <label for="TrainingVol" style="font-size: 20px;">訓練量</label>
+                                <input type="text" class="form-control" id="TrainingVol" placeholder="">
+                            </div>
 
-                        <!-- 速耐力間歇跑訓練處方區域 -->
-                        <div class="speed-prescription-section">
-                            <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
-                            <input type="text" class="form-control" id="SpeedPres" placeholder="">
-                        </div>
-                    </form>
+                            <!-- 速耐力間歇跑訓練處方區域 -->
+                            <div class="speed-prescription-section">
+                                <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
+                                <input type="text" class="form-control" id="SpeedPres" placeholder="">
+                            </div>
+                            <input type="hidden" id="CriticalSpeed" name="criticalSpeed" />
+                            <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />
+                        </form>
+                    </div>
                 </div>
+                <button class="btn btn-success" name="btn_Detec" id="btn_Detec">存檔</button>
             </div>
-            <button class="btn btn-success" name="btn_Detec" id="btn_Detec">存檔</button>
+            <div id="distanceDetails" style="margin-top: -500px;"></div>
+            @*@using (Html.BeginForm("RedirectToPrescription", "PhyFit", FormMethod.Post))
+                {
+                    <button type="submit" class="btn btn-primary" style="margin-top: 100px;" id="btn_Prescription">訓練處方系統</button>
+                }*@
         </div>
-        <div id="distanceDetails" style="margin-top: -500px;"></div>
-        @*@using (Html.BeginForm("RedirectToPrescription", "PhyFit", FormMethod.Post))
-            {
-                <button type="submit" class="btn btn-primary" style="margin-top: 100px;" id="btn_Prescription">訓練處方系統</button>
-            }*@
-    </div>
+    }
+        @*檢測系統-訓練內容-Partial view呈現*@
+        @*<div id="distanceDetails" style="margin-top: -200px;"></div>*@
+        @*檢測系統-訓練內容-Partial view呈現*@
 
-    @*檢測系統-訓練內容-Partial view呈現*@
-    @*<div id="distanceDetails" style="margin-top: -200px;"></div>*@
-    @*檢測系統-訓練內容-Partial view呈現*@
-
-    <div class="resultTable" id="sessionRPEresult">
-        <div class="col-md-5">
-            <div class="card">
-                <div class="card-header">
-                    <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;"></span></h3>
-                </div>
-                <div class="card-body">
-                    <form>
-                        @*<div class="form-group d-flex align-items-center justify-content-between">
-                                <label>運動訓練量</label>
+        <div class="resultTable" id="sessionRPEresult">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;"></span></h3>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            @*<div class="form-group d-flex align-items-center justify-content-between">
+                                    <label>運動訓練量</label>
+                                    <div class="form-group-inline d-flex align-items-center">
+                                        <input type="text" class="form-control" id="calculationResult" placeholder="計算結果將顯示在這裡" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex align-items-center justify-content-between">
+                                    <label>每日運動訓練量</label>
+                                    <div class="form-group-inline d-flex align-items-center">
+                                        <input type="text" class="form-control" id="DailyResult" placeholder="計算結果將顯示在這裡" readonly>
+                                    </div>
+                                </div>*@
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="每週運動訓練量為每週(通常是7 天)所有的運動訓練量之加總">每週運動訓練量</label>
                                 <div class="form-group-inline d-flex align-items-center">
-                                    <input type="text" class="form-control" id="calculationResult" placeholder="計算結果將顯示在這裡" readonly>
+                                    <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
                                 </div>
                             </div>
                             <div class="form-group d-flex align-items-center justify-content-between">
-                                <label>每日運動訓練量</label>
+                                <label title="一週內每日訓練的一致性，其計算方式為當週運動訓練量的日平均(mean load)除以當週TL的標準差(standard deviation)">訓練同質性</label>
                                 <div class="form-group-inline d-flex align-items-center">
-                                    <input type="text" class="form-control" id="DailyResult" placeholder="計算結果將顯示在這裡" readonly>
+                                    <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
                                 </div>
-                            </div>*@
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label title="每週運動訓練量為每週(通常是7 天)所有的運動訓練量之加總">每週運動訓練量</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label title="一週內每日訓練的一致性，其計算方式為當週運動訓練量的日平均(mean load)除以當週TL的標準差(standard deviation)">訓練同質性</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="整週訓練的整體壓力，計算方式為當週TL乘上當週TM">訓練張力值</label>
+                                <div class="form-group-inline d-flex align-items-center">
+                                    <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label title="整週訓練的整體壓力，計算方式為當週TL乘上當週TM">訓練張力值</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="當週與上一週之運動訓練量的絕對差異值">週間訓練變化</label>
+                                <div class="form-group-inline d-flex align-items-center">
+                                    <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label title="當週與上一週之運動訓練量的絕對差異值">週間訓練變化</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="ACWR，當週TL(acuteworkload) 除以過往連續四週TL平均值(chroni cworkload)所得之數值">短期：長期訓練量比值</label>
+                                <div class="form-group-inline d-flex align-items-center">
+                                    <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group d-flex align-items-center justify-content-between">
-                            <label title="ACWR，當週TL(acuteworkload) 除以過往連續四週TL平均值(chroni cworkload)所得之數值">短期：長期訓練量比值</label>
-                            <div class="form-group-inline d-flex align-items-center">
-                                <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script>
+        <script>
     function updateTechnicalActions(selectElement) {
     var selectedTechnical = selectElement.value;
     var actionDropdown = selectElement.closest('tr').querySelector('[name="SpecialTechName"]');
@@ -445,6 +449,6 @@
         });
 
 
-</script>
-</body>
+        </script>
+    </body>
 </html>

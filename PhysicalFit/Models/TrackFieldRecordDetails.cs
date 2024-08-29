@@ -12,16 +12,16 @@ namespace PhysicalFit.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TrackFieldRecord
+    public partial class TrackFieldRecordDetails
     {
-        public int ID { get; set; }
-        public Nullable<int> DetectionRecordID { get; set; }
-        public string Distance200 { get; set; }
-        public string Distance400 { get; set; }
-        public string Distance800 { get; set; }
-        public string Distance1200 { get; set; }
-        public string TimeExhaustion { get; set; }
-        public Nullable<double> SpeedResults { get; set; }
+        public int Id { get; set; }
+        public int DetectionTrainingRecordId { get; set; }
+        public string Distance { get; set; }
+        public int ForceDuration { get; set; }
+        public double Speed { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public Nullable<System.DateTime> TrainingDateTime { get; set; }
     
         public virtual DetectionTrainingRecord DetectionTrainingRecord { get; set; }
     }

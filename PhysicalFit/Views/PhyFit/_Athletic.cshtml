@@ -1,6 +1,7 @@
 ﻿@model List<string>
 @{
-    Layout = "~/Views/Shared/_PhyFitness.cshtml";
+    Layout = null;
+    //Layout = "~/Views/Shared/_PhyFitness.cshtml";
 }
 <!DOCTYPE html>
 <html>
@@ -36,9 +37,16 @@
                                 @foreach (var distance in Model)
                                 {
                                     <tr>
-                                        <td>@distance</td>
-                                        <td><input type="text" class="form-control exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" /></td>
-                                        <td><span class="speed-result"></span></td>
+                                        <td>
+                                            @distance
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" />
+                                        </td>
+                                        <td>
+                                            @*<span class="speed-result" id="speed-result"></span>*@
+                                            <input type="text" class="speed-result" readonly />
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
@@ -54,5 +62,50 @@
             </div>
         </div>
     </div>
+    <script>
+        $('form').submit(function () {
+            let distances = [];
+            let times = [];
+            let speeds = [];
+
+            $('#dataTable tr').each(function () {
+                distances.push($(this).find('td').eq(0).text());
+                times.push($(this).find('input.exhaustion-time').val());
+                speeds.push($(this).find('td').eq(2).text());
+            });
+
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'DistanceData',
+                value: JSON.stringify(distances)
+            }).appendTo('form');
+
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'TimeData',
+                value: JSON.stringify(times)
+            }).appendTo('form');
+
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'SpeedData',
+                value: JSON.stringify(speeds)
+            }).appendTo('form');
+        });
+        function calculateSpeed(inputElement) {
+            var row = $(inputElement).closest('tr');
+            var distance = parseFloat(row.find('td').eq(0).text());
+            var exhaustionTime = parseFloat($(inputElement).val());
+
+            if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
+                var speed = (distance / exhaustionTime) * 3.6;
+                row.find('.speed-result').val(speed.toFixed(2)); // 更新速度結果
+            } else {
+                row.find('.speed-result').val(''); // 清空速度
+            }
+
+            trackCalculateLinearRegression();
+        }
+    </script>
 </body>
 </html>

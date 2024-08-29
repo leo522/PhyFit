@@ -1,90 +1,55 @@
-﻿$(document).ready(function () {
-    $('#btn_Detec').click(function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('btn_Detec').addEventListener('click', function (event) {
+        event.preventDefault(); // 防止表單提交
 
-        var sportItem = $('#DeteItem').val();  // 選擇的運動項目
+        // 收集教練和運動員資料
+        var coachName = document.getElementById('coachName').value;
+        var athleteName = document.getElementById('AthletesName').value;
+        var TrainingDate = document.getElementById('DetectionDate').value;
+        // 收集數據
+        var criticalSpeed = document.getElementById('CriticalSpeed').value;
+        var anaerobicPower = document.getElementById('AnaerobicPower').value;
+        var distances = [];
+        var forceDurations = [];
+        var speeds = [];
 
-        var sportSpecificData = {}; //需要根據運動項目來收集相應的數據
-
-        if (sportItem === "跑步機") {
-            sportSpecificData = {
-                Distance200: $('#dataTable tr').eq(0).find('.exhaustion-time').val(), // 第一行
-                Distance400: $('#dataTable tr').eq(1).find('.exhaustion-time').val(), // 第二行
-                Distance800: $('#dataTable tr').eq(2).find('.exhaustion-time').val(), // 第三行
-                Distance1200: $('#dataTable tr').eq(3).find('.exhaustion-time').val(), // 第四行
-                CoefficientOfDetermination: $('#calculationResult').val() // 計算結果
-            };
-        } else if (sportItem === "田徑場") {
-            var distanceData = {};
-            $('#dataTable tr').each(function () {
-                var distance = $(this).find('td').first().text().trim(); // 距離
-                var exhaustionTime = $(this).find('.exhaustion-time').val(); // 力竭時間
-                if (distance) {
-                    distanceData[`Distance${distance}`] = exhaustionTime;
-                }
-            });
-            sportSpecificData = {
-                Distance200: distanceData['Distance200'] || '',
-                Distance400: distanceData['Distance400'] || '',
-                Distance800: distanceData['Distance800'] || '',
-                Distance1200: distanceData['Distance1200'] || '',
-                CoefficientOfDetermination: $('#calculationResult').val()
-            };
+        document.querySelectorAll('#dataTable tr').forEach(function (row) {
+            var distance = row.querySelector('td').innerText;
+            var forceDuration = row.querySelector('.exhaustion-time').value;
+            var speed = row.querySelector('.speed-result').value;
 
 
-        } else if (sportItem === "游泳") {
-            sportSpecificData = {
-                Distance100: $('#IPercen95').val(),
-                Distance200: $('#IPercen90').val(),
-                Distance400: $('#IPercen85').val(),
-                Distance800: $('#IPercen80').val(),
-                CoefficientOfDetermination: $('#calculationResult').val()
-            };
-        } else if (sportItem === "自由車") {
-            sportSpecificData = {
-                MaxPower: $('#MaxPower').val(),
-                IPercen95: $('#IPercen95').val(),
-                IPercen90: $('#IPercen90').val(),
-                IPercen85: $('#IPercen85').val(),
-                IPercen80: $('#IPercen80').val(),
-                CoefficientOfDetermination: $('#calculationResult').val()
-            };
-        } else if (sportItem === "滑輪溜冰") {
-            sportSpecificData = {
-                Distance200: $('#IPercen95').val(),
-                Distance500: $('#IPercen90').val(),
-                Distance1000: $('#IPercen85').val(),
-                Distance2000: $('#IPercen80').val(),
-                CoefficientOfDetermination: $('#calculationResult').val()
-            };
-        }
+            // 如果 speed 元素的值是從 JavaScript 設定的，確認它是否已正確賦值
+/*            var speed = speedElement.value || speedElement.innerText;*/
 
-        var detectionData = {
-            // 填寫 DetectionTrainingRecord 表需要的數據
-            CriticalSpeed: $('#CriticalSpeed').val(),
-            AnaerobicPower: $('#AnaerobicPower').val(),
-            TrainingVol: $('#TrainingVol').val(),
-            TrainingPrescription: $('#TrainingPrescription').val(),
-            // 添加其他字段...
-        };
-
+            if (distance && forceDuration && speed) {
+                distances.push(distance);
+                forceDurations.push(forceDuration);
+                speeds.push(speed);
+            }
+        });
+        // 發送 AJAX 請求
         $.ajax({
-            type: "POST",
-            url: '/PhyFit/SaveDetecRecord',
+            url: '/PhyFit/SaveTrackFieldRecord',
+            type: 'POST',
             data: JSON.stringify({
-                sportItem: sportItem,
-                record: detectionData,
-                sportSpecificData: sportSpecificData
+                criticalSpeed: criticalSpeed,
+                anaerobicPower: anaerobicPower,
+                distances: distances,
+                forceDurations: forceDurations,
+                speeds: speeds,
+                coach: coachName,
+                athlete: athleteName,
+                trainingDate: TrainingDate,
             }),
             contentType: 'application/json',
             success: function (response) {
-                if (response.success) {
-                    alert('存檔成功！');
-                } else {
-                    alert('存檔失敗：' + response.error);
-                }
+                alert('數據已儲存！');
+                // 處理成功後的邏輯
             },
             error: function (xhr, status, error) {
-                alert('請求失敗: ' + error);
+                alert('儲存數據時出錯！');
+                // 處理錯誤情況
             }
         });
     });

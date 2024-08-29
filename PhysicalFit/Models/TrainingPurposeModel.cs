@@ -115,4 +115,24 @@ namespace PhysicalFit.Models
         public int RPEscore { get; set; }
         public int DailyTrainingLoad { get; set; }
     }
+
+    public class SaveTrackFieldRecordModel
+    {
+        public int DetectionTrainingRecordId {  get; set; }
+        public string coach { get; set; }
+        public int coachID {  set; get; }
+        public string athlete {  get; set; }
+        public int athleteID { set; get; }
+        public string DetectionItem {  get; set; }
+        public string SportItem { get; set; }
+        public float CriticalSpeed { get; set; }
+        public float AnaerobicPower { get; set; }
+        public List<string> Distances { get; set; }
+        public List<string> ForceDurations { get; set; }
+        public List<string> Speeds { get; set; }
+        public DateTime CreatedDate {  get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public DateTime DetectionDate {  get; set; }
+        public float CoefficientOfDetermination { get; set; }
+    }
 }

@@ -39,34 +39,26 @@
         <EntityTypeShape EntityType="PhFitnessModel.JuniorHighSchoolList" Width="1.5" PointX="16.25" PointY="8" />
         <EntityTypeShape EntityType="PhFitnessModel.UniversitySchoolList" Width="1.5" PointX="18.25" PointY="6.25" />
         <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="16.375" PointY="1.125" />
-        <EntityTypeShape EntityType="PhFitnessModel.GeneralTrainingRecord" Width="1.5" PointX="20.875" PointY="1" />
-        <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Coaches" />
-        <EntityTypeShape EntityType="PhFitnessModel.ShootingRecord" Width="1.5" PointX="23.875" PointY="1.375" />
+        <EntityTypeShape EntityType="PhFitnessModel.ShootingRecord" Width="1.5" PointX="24.875" PointY="2.125" />
         <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Coaches" />
         <EntityTypeShape EntityType="PhFitnessModel.ArcheryRecord" Width="1.5" PointX="23.75" PointY="5.875" />
         <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Coach__5A4F643B" />
-        <EntityTypeShape EntityType="PhFitnessModel.CyclingRecord" Width="1.5" PointX="26.125" PointY="23.25" />
-        <EntityTypeShape EntityType="PhFitnessModel.DetectionTrainingRecord" Width="1.5" PointX="23.875" PointY="0.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.RollerSkiingRecord" Width="1.5" PointX="26.125" PointY="16.5" />
-        <EntityTypeShape EntityType="PhFitnessModel.RunningMachineRecord" Width="1.5" PointX="26.125" PointY="12.875" />
-        <EntityTypeShape EntityType="PhFitnessModel.SwimmingRecord" Width="1.5" PointX="26.125" PointY="19.875" />
-        <EntityTypeShape EntityType="PhFitnessModel.TrackFieldRecord" Width="1.5" PointX="26.125" PointY="26.875" />
-        <AssociationConnector Association="PhFitnessModel.FK__Detection__Coach__731B1205" />
-        <AssociationConnector Association="PhFitnessModel.FK__CyclingRe__Detec__2D47B39A" />
-        <AssociationConnector Association="PhFitnessModel.FK__RollerSki__Detec__30242045" />
-        <AssociationConnector Association="PhFitnessModel.FK__RunningMa__Coeff__24B26D99" />
-        <AssociationConnector Association="PhFitnessModel.FK__SwimmingR__Detec__2A6B46EF" />
-        <AssociationConnector Association="PhFitnessModel.FK__TrackFiel__Detec__278EDA44" />
-        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="18.625" PointY="5.625" />
-        <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="20.875" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="26" PointY="8" />
+        <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="22.25" PointY="1.5" />
         <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" />
-        <AssociationConnector Association="PhFitnessModel.FK__Detection__Athle__740F363E" />
         <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
-        <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_Users_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_Users_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" />
+        <EntityTypeShape EntityType="PhFitnessModel.GeneralTrainingRecord" Width="2.125" PointX="29.25" PointY="7.375" />
+        <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" />
+        <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Coaches" />
+        <EntityTypeShape EntityType="PhFitnessModel.DetectionTrainingRecord" Width="1.5" PointX="28.25" PointY="1.25" />
+        <AssociationConnector Association="PhFitnessModel.FK__Detection__Athle__740F363E" />
+        <AssociationConnector Association="PhFitnessModel.FK__Detection__Coach__731B1205" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrackFieldRecordDetails" Width="1.5" PointX="30.5" PointY="2.125" />
+        <AssociationConnector Association="PhFitnessModel.FK__TrackFiel__Detec__6F1576F7" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

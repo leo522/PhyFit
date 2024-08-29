@@ -153,9 +153,6 @@
     <Compile Include="Models\ComprehensiveHighSchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CyclingRecord.cs">
-      <DependentUpon>FitnessModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\DetectionSys.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -214,13 +211,7 @@
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RegisterCoachViewModel.cs" />
-    <Compile Include="Models\RollerSkiingRecord.cs">
-      <DependentUpon>FitnessModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\RPE.cs">
-      <DependentUpon>FitnessModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\RunningMachineRecord.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SessionRPETrainingRecords.cs">
@@ -244,13 +235,10 @@
     <Compile Include="Models\SpecialTechnicalAction.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SwimmingRecord.cs">
-      <DependentUpon>FitnessModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\TechnologyCategory.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\TrackFieldRecord.cs">
+    <Compile Include="Models\TrackFieldRecordDetails.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrainingItems.cs">

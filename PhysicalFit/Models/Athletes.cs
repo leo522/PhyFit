@@ -18,10 +18,10 @@ namespace PhysicalFit.Models
         public Athletes()
         {
             this.ArcheryRecord = new HashSet<ArcheryRecord>();
-            this.DetectionTrainingRecord = new HashSet<DetectionTrainingRecord>();
-            this.GeneralTrainingRecord = new HashSet<GeneralTrainingRecord>();
             this.ShootingRecord = new HashSet<ShootingRecord>();
             this.Users = new HashSet<Users>();
+            this.GeneralTrainingRecord = new HashSet<GeneralTrainingRecord>();
+            this.DetectionTrainingRecord = new HashSet<DetectionTrainingRecord>();
         }
     
         public int ID { get; set; }
@@ -37,14 +37,14 @@ namespace PhysicalFit.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArcheryRecord> ArcheryRecord { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DetectionTrainingRecord> DetectionTrainingRecord { get; set; }
         public virtual Coaches Coaches { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GeneralTrainingRecord> GeneralTrainingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GeneralTrainingRecord> GeneralTrainingRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DetectionTrainingRecord> DetectionTrainingRecord { get; set; }
     }
 }

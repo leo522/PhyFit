@@ -1344,96 +1344,143 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 儲存檢測系統訓練紀錄
+        //[HttpPost]
+        //public ActionResult SaveDetecRecord(string sportItem, DetectionTrainingRecord record, dynamic sportSpecificData)
+        //{
+        //    try
+        //    {
+        //        // 先保存檢測記錄的通用數據到 DetectionTrainingRecord 表
+        //        _db.DetectionTrainingRecord.Add(record);
+        //        //_db.SaveChanges();
+
+        //        // 根據運動項目保存到相應的資料表
+        //        switch (sportItem)
+        //        {
+        //            case "跑步機":
+        //                var runningRecord = new RunningMachineRecord
+        //                {
+        //                    DetectionRecordID = record.ID,
+        //                    MaxRunningSpeed = sportSpecificData.MaxRunningSpeed,
+        //                    TimeExhaustion = sportSpecificData.TimeExhaustion,
+        //                    IPercen95 = sportSpecificData.IPercen95,
+        //                    IPercen90 = sportSpecificData.IPercen90,
+        //                    IPercen85 = sportSpecificData.IPercen85,
+        //                    IPercen80 = sportSpecificData.IPercen80,
+        //                };
+        //                _db.RunningMachineRecord.Add(runningRecord);
+        //                break;
+
+        //            case "田徑場":
+        //                var trackRecord = new TrackFieldRecord
+        //                {
+        //                    DetectionRecordID = record.ID,
+        //                    Distance200 = sportSpecificData.Distance200,
+        //                    Distance400 = sportSpecificData.Distance400,
+        //                    Distance800 = sportSpecificData.Distance800,
+        //                    Distance1200 = sportSpecificData.Distance1200,
+        //                };
+        //                _db.TrackFieldRecord.Add(trackRecord);
+        //                break;
+
+        //            case "游泳":
+        //                var swimmingRecord = new SwimmingRecord
+        //                {
+        //                    DetectionRecordID = record.ID,
+        //                    Distance100 = sportSpecificData.Distance100,
+        //                    Distance200 = sportSpecificData.Distance200,
+        //                    Distance400 = sportSpecificData.Distance400,
+        //                    Distance800 = sportSpecificData.Distance800,
+        //                };
+        //                _db.SwimmingRecord.Add(swimmingRecord);
+        //                break;
+
+        //            case "自由車":
+        //                var cyclingRecord = new CyclingRecord
+        //                {
+        //                    DetectionRecordID = record.ID,
+        //                    MaxPower = sportSpecificData.MaxPower,
+        //                    IPercen95 = sportSpecificData.IPercen95,
+        //                    IPercen90 = sportSpecificData.IPercen90,
+        //                    IPercen85 = sportSpecificData.IPercen85,
+        //                    IPercen80 = sportSpecificData.IPercen80,
+        //                };
+        //                _db.CyclingRecord.Add(cyclingRecord);
+        //                break;
+
+        //            case "滑輪溜冰":
+        //                var RollerSkiing = new RollerSkiingRecord
+        //                {
+        //                    DetectionRecordID = record.ID,
+        //                    Distance200 = sportSpecificData.Distance200,
+        //                    Distance500 = sportSpecificData.Distance500,
+        //                    Distance1000 = sportSpecificData.Distance1000,
+        //                    Distance2000 = sportSpecificData.Distance2000,
+        //                };
+        //                _db.RollerSkiingRecord.Add(RollerSkiing);
+        //                break;
+
+        //            default:
+        //                throw new Exception("未知的運動項目");
+        //        }
+
+        //        // 保存具體項目的記錄
+        //        _db.SaveChanges();
+
+        //        return Json(new { success = true });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, error = ex.Message });
+        //    }
+        //}
+
+        #endregion
+
+        #region 功能測試
         [HttpPost]
-        public ActionResult SaveDetecRecord(string sportItem, DetectionTrainingRecord record, dynamic sportSpecificData)
+        public ActionResult SaveTrackFieldRecord(SaveTrackFieldRecordModel model)       
         {
             try
             {
-                // 先保存檢測記錄的通用數據到 DetectionTrainingRecord 表
-                _db.DetectionTrainingRecord.Add(record);
-                //_db.SaveChanges();
-                
-                // 根據運動項目保存到相應的資料表
-                switch (sportItem)
+                // 儲存檢測系統訓練紀錄
+                var detectionRecord = new DetectionTrainingRecord
                 {
-                    case "跑步機":
-                        var runningRecord = new RunningMachineRecord
-                        {
-                            DetectionRecordID = record.ID,
-                            MaxRunningSpeed = sportSpecificData.MaxRunningSpeed,
-                            TimeExhaustion = sportSpecificData.TimeExhaustion,
-                            IPercen95 = sportSpecificData.IPercen95,
-                            IPercen90 = sportSpecificData.IPercen90,
-                            IPercen85 = sportSpecificData.IPercen85,
-                            IPercen80 = sportSpecificData.IPercen80,
-                        };
-                        _db.RunningMachineRecord.Add(runningRecord);
-                        break;
+                    Coach = model.coach,
+                    Athlete = model.athlete,
+                    TrainingDate = model.DetectionDate,
+                    //CreatedDate = model.CreatedDate,
+                    ModifiedDate = DateTime.Now,
+                    CriticalSpeed = model.CriticalSpeed,
+                    MaxAnaerobicWork = model.AnaerobicPower,
+                };
+                _db.DetectionTrainingRecord.Add(detectionRecord);
+                _db.SaveChanges();
 
-                    case "田徑場":
-                        var trackRecord = new TrackFieldRecord
-                        {
-                            DetectionRecordID = record.ID,
-                            Distance200 = sportSpecificData.Distance200,
-                            Distance400 = sportSpecificData.Distance400,
-                            Distance800 = sportSpecificData.Distance800,
-                            Distance1200 = sportSpecificData.Distance1200,
-                        };
-                        _db.TrackFieldRecord.Add(trackRecord);
-                        break;
+                int detectionRecordId = detectionRecord.ID;
 
-                    case "游泳":
-                        var swimmingRecord = new SwimmingRecord
-                        {
-                            DetectionRecordID = record.ID,
-                            Distance100 = sportSpecificData.Distance100,
-                            Distance200 = sportSpecificData.Distance200,
-                            Distance400 = sportSpecificData.Distance400,
-                            Distance800 = sportSpecificData.Distance800,
-                        };
-                        _db.SwimmingRecord.Add(swimmingRecord);
-                        break;
-
-                    case "自由車":
-                        var cyclingRecord = new CyclingRecord
-                        {
-                            DetectionRecordID = record.ID,
-                            MaxPower = sportSpecificData.MaxPower,
-                            IPercen95 = sportSpecificData.IPercen95,
-                            IPercen90 = sportSpecificData.IPercen90,
-                            IPercen85 = sportSpecificData.IPercen85,
-                            IPercen80 = sportSpecificData.IPercen80,
-                        };
-                        _db.CyclingRecord.Add(cyclingRecord);
-                        break;
-
-                    case "滑輪溜冰":
-                        var RollerSkiing = new RollerSkiingRecord
-                        {
-                            DetectionRecordID = record.ID,
-                            Distance200 = sportSpecificData.Distance200,
-                            Distance500 = sportSpecificData.Distance500,
-                            Distance1000 = sportSpecificData.Distance1000,
-                            Distance2000 = sportSpecificData.Distance2000,
-                        };
-                        _db.RollerSkiingRecord.Add(RollerSkiing);
-                        break;
-
-                    default:
-                        throw new Exception("未知的運動項目");
+                // 儲存檢測詳細記錄
+                for (int i = 0; i < model.Distances.Count; i++)
+                {
+                    var detail = new TrackFieldRecordDetails
+                    {
+                        DetectionTrainingRecordId = detectionRecordId,
+                        Distance = (model.Distances[i]),
+                        ForceDuration = int.Parse(model.ForceDurations[i]),
+                        Speed = float.Parse(model.Speeds[i])
+                    };
+                    _db.TrackFieldRecordDetails.Add(detail);
                 }
-
-                // 保存具體項目的記錄
                 _db.SaveChanges();
 
                 return Json(new { success = true });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                // 處理錯誤
+                Console.WriteLine($"Error: {ex.Message}, StackTrace: {ex.StackTrace}");
+                return Json(new { success = false, message = ex.Message, stackTrace = ex.StackTrace });
             }
         }
-
         #endregion
     }
 }
