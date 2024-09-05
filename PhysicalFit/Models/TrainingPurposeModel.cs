@@ -132,7 +132,7 @@ namespace PhysicalFit.Models
         public List<string> Speeds { get; set; }
         public DateTime CreatedDate {  get; set; }
         public DateTime ModifiedDate { get; set; }
-        public DateTime DetectionDate {  get; set; }
+        public string DetectionDate {  get; set; }
         public float CoefficientOfDetermination { get; set; }
     }
 }

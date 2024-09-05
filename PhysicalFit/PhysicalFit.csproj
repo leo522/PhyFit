@@ -329,6 +329,7 @@
     <Content Include="Scripts\DashBoardmodal.js" />
     <Content Include="Scripts\dashDate.js" />
     <Content Include="Scripts\DistanceSys.js" />
+    <Content Include="Scripts\EWMA.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />

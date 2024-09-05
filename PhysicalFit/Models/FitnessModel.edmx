@@ -488,30 +488,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Detection__Athle__740F363E">
-          <End Role="Athletes" Type="Self.Athletes" Multiplicity="0..1" />
-          <End Role="DetectionTrainingRecord" Type="Self.DetectionTrainingRecord" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Athletes">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DetectionTrainingRecord">
-              <PropertyRef Name="AthleteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Detection__Coach__731B1205">
-          <End Role="Coaches" Type="Self.Coaches" Multiplicity="0..1" />
-          <End Role="DetectionTrainingRecord" Type="Self.DetectionTrainingRecord" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Coaches">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DetectionTrainingRecord">
-              <PropertyRef Name="CoachID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__SpecialTe__Speci__57A801BA">
           <End Role="SpecialTechnical" Type="Self.SpecialTechnical" Multiplicity="0..1" />
           <End Role="SpecialTechnicalAction" Type="Self.SpecialTechnicalAction" Multiplicity="*" />
@@ -702,14 +678,6 @@
           <AssociationSet Name="FK__ArcheryRe__Coach__5A4F643B" Association="Self.FK__ArcheryRe__Coach__5A4F643B">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="ArcheryRecord" EntitySet="ArcheryRecord" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Detection__Athle__740F363E" Association="Self.FK__Detection__Athle__740F363E">
-            <End Role="Athletes" EntitySet="Athletes" />
-            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Detection__Coach__731B1205" Association="Self.FK__Detection__Coach__731B1205">
-            <End Role="Coaches" EntitySet="Coaches" />
-            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
           </AssociationSet>
           <AssociationSet Name="FK__SpecialTe__Speci__57A801BA" Association="Self.FK__SpecialTe__Speci__57A801BA">
             <End Role="SpecialTechnical" EntitySet="SpecialTechnical" />

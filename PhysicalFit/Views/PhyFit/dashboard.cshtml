@@ -38,10 +38,11 @@
             <div id="identity_Athletes" style="display: flex; align-items: center;">
                 <label for="AthletesName">運動員：</label>
                 <select id="AthletesName" name="AthleteID">
-                    <option>請選擇</option>
+                    <option value="">請選擇</option>
                     @foreach (var athlete in ViewBag.Athletes)
                     {
-                        <option value="@athlete.ID">@athlete.AthleteName</option>
+                        @*<option value="@athlete.ID">@athlete.AthleteName</option>*@
+                        <option value="@athlete.AthleteName">@athlete.AthleteName</option>
                     }
                 </select>
             </div>
@@ -232,10 +233,12 @@
                         <h2>檢測系統訓練詳情:<span id="selectedSportItem" style="font-size:1.5rem;"></span></h2>
                     </div>
                     <div class="card-body">
-                        <form action="/PhyFit/SaveTrackFieldRecord" method="post">
+
                             <div class="form-group">
                                 <label>日期：</label>
-                                <input type="datetime-local" class="form-control" id="DetectionDate" name="DetectionDate" />
+                                @*<input type="datetime-local" class="form-control" id="DetectionDate" name="DetectionDate" />*@
+                                @*<input type="date" class="form-control" id="DetectionDate" name="DetectionDate" />*@
+                                <input id="DetectionDateTime" class="form-control" />
                             </div>
                             <div class="form-group">
                                 <label for="Dete">項目：</label>
@@ -279,7 +282,7 @@
                             </div>
                             <input type="hidden" id="CriticalSpeed" name="criticalSpeed" />
                             <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />
-                        </form>
+
                     </div>
                 </div>
                 <button class="btn btn-success" name="btn_Detec" id="btn_Detec">存檔</button>
@@ -448,7 +451,11 @@
             });
         });
 
-
+            flatpickr("#DetectionDateTime", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",  // 日期時間格式
+                time_24hr: true  // 使用24小時制
+            });
         </script>
     </body>
 </html>
