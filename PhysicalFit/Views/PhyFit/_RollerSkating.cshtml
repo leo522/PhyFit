@@ -1,6 +1,5 @@
 ﻿@model List<string>
 @{
-    //Layout = "~/Views/Shared/_PhyFitness.cshtml";
     Layout = null;
 }
 <!DOCTYPE html>
@@ -37,15 +36,20 @@
                                     @foreach (var distance in Model)
                                     {
                                         <tr>
-                                            <td>@distance</td>
-                                            <td><input type="text" class="exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" /></td>
-                                            <td></td>
+                                            <td>
+                                            @distance
+                                            </td>
+                                            <td>
+                                            <input type="text" class="form-control roller-time" data-distance="@distance" oninput="calculateSpeed(this)" />
+                                            </td>
+                                            <td>
+                                            <input type="text" class="roller-result" readonly /></td>
                                         </tr>
                                     }
                                 </tbody>
                                 <tr>
                                     <td><i>r</i> <sup>2</sup></td>
-                                    <td><input type="text" id="calculationResult" class="form-control" readonly /></td>
+                                    <td colspan="2"><input type="text" id="calculationResult" class="form-control" readonly /></td>
                                 </tr>
                             </table>
                         </div>

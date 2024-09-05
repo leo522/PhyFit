@@ -63,5 +63,9 @@ namespace PhysicalFit.Models
         public virtual DbSet<GeneralTrainingRecord> GeneralTrainingRecord { get; set; }
         public virtual DbSet<DetectionTrainingRecord> DetectionTrainingRecord { get; set; }
         public virtual DbSet<TrackFieldRecordDetails> TrackFieldRecordDetails { get; set; }
+        public virtual DbSet<TreadmillRecordDetails> TreadmillRecordDetails { get; set; }
+        public virtual DbSet<SwimmingRecordDetails> SwimmingRecordDetails { get; set; }
+        public virtual DbSet<BikeRecordDetails> BikeRecordDetails { get; set; }
+        public virtual DbSet<RollerSkatingRecordDetails> RollerSkatingRecordDetails { get; set; }
     }
 }

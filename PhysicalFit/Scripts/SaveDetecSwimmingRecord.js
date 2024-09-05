@@ -1,4 +1,5 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+﻿//游泳檢測
+document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn_Detec').addEventListener('click', function (event) {
         event.preventDefault(); // 防止表單提交
 
@@ -6,7 +7,7 @@
         var coachName = document.getElementById('coachName').value; //教練名字
         var athleteName = document.getElementById('AthletesName').value; //運動員名字
         var TrainingDate = document.getElementById('DetectionDateTime').value; //訓練日期
-        var deteItem = document.getElementById('DeteItem').value;
+        var deteItem = document.getElementById('DeteItem').value; //運動項目
 
         // 防呆機制：確認運動員是否已選擇
         if (!athleteName) {
@@ -20,8 +21,8 @@
         }
 
         // 收集田徑場數據
-        var criticalSpeed = document.getElementById('CriticalSpeed').value;
-        var anaerobicPower = document.getElementById('AnaerobicPower').value;
+        var criticalSpeed = document.getElementById('CriticalSpeed').value; //臨界速度
+        var anaerobicPower = document.getElementById('AnaerobicPower').value; //最大無氧做功
         var distances = [];
         var forceDurations = [];
         var speeds = [];
@@ -29,8 +30,8 @@
 
         document.querySelectorAll('#dataTable tr').forEach(function (row) {
             var distance = row.querySelector('td').innerText;
-            var forceDuration = row.querySelector('.exhaustion-time').value;
-            var speed = row.querySelector('.speed-result').value;
+            var forceDuration = row.querySelector('.swim-time').value;
+            var speed = row.querySelector('.swim-speed').innerText;
 
             if (distance && forceDuration && speed) {
                 distances.push(distance);
@@ -43,11 +44,11 @@
             url: '/PhyFit/SaveTrackFieldRecord',
             type: 'POST',
             data: JSON.stringify({
-                criticalSpeed: criticalSpeed,
-                anaerobicPower: anaerobicPower,
-                distances: distances,
-                forceDurations: forceDurations,
-                speeds: speeds,
+                criticalSpeed: criticalSpeed, //臨界速度
+                anaerobicPower: anaerobicPower, //最大無氧做功
+                distances: distances, //距離
+                forceDurations: forceDurations, //力竭時間
+                speeds: speeds, //速度
                 coach: coachName, //教練名字
                 athlete: athleteName, //運動員名字
                 detectionDate: TrainingDate, //訓練日期

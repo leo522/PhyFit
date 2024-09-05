@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3b6c3bc47f1947e2b41914fa0bd89621" Name="Diagram1" ZoomLevel="92">
+      <Diagram DiagramId="3b6c3bc47f1947e2b41914fa0bd89621" Name="Diagram1" ZoomLevel="52">
         <EntityTypeShape EntityType="PhFitnessModel.Permissions" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="PhFitnessModel.UserPermissions" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="PhFitnessModel.UserRoles" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
@@ -59,6 +59,14 @@
         <AssociationConnector Association="PhFitnessModel.FK__Detection__Coach__731B1205" />
         <EntityTypeShape EntityType="PhFitnessModel.TrackFieldRecordDetails" Width="1.5" PointX="30.5" PointY="2.125" />
         <AssociationConnector Association="PhFitnessModel.FK__TrackFiel__Detec__6F1576F7" />
+        <EntityTypeShape EntityType="PhFitnessModel.TreadmillRecordDetails" Width="1.5" PointX="22.25" PointY="10.25" />
+        <AssociationConnector Association="PhFitnessModel.FK__Treadmill__Detec__10766AC2" />
+        <EntityTypeShape EntityType="PhFitnessModel.SwimmingRecordDetails" Width="1.5" PointX="19.25" PointY="10.625" />
+        <AssociationConnector Association="PhFitnessModel.FK__SwimmingR__Detec__1352D76D" />
+        <EntityTypeShape EntityType="PhFitnessModel.BikeRecordDetails" Width="1.5" PointX="21.625" PointY="14" />
+        <AssociationConnector Association="PhFitnessModel.FK__BikeRecor__Detec__162F4418" />
+        <EntityTypeShape EntityType="PhFitnessModel.RollerSkatingRecordDetails" Width="1.5" PointX="24.625" PointY="13.5" />
+        <AssociationConnector Association="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

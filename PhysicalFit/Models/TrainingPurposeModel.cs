@@ -125,6 +125,9 @@ namespace PhysicalFit.Models
         public int athleteID { set; get; }
         public string DetectionItem {  get; set; }
         public string SportItem { get; set; }
+        public List<string> IntenPercen {  get; set; }
+        public string MaxRunningSpeed { get; set; }
+        public string MaxPower { get; set; }
         public float CriticalSpeed { get; set; }
         public float AnaerobicPower { get; set; }
         public List<string> Distances { get; set; }

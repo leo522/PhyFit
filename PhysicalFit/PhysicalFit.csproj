@@ -148,6 +148,9 @@
     <Compile Include="Models\Athletes.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\BikeRecordDetails.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Coaches.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -212,6 +215,9 @@
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RegisterCoachViewModel.cs" />
+    <Compile Include="Models\RollerSkatingRecordDetails.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RPE.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -236,6 +242,9 @@
     <Compile Include="Models\SpecialTechnicalAction.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SwimmingRecordDetails.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TechnologyCategory.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -253,6 +262,9 @@
     </Compile>
     <Compile Include="Models\TrainingPurposeModel.cs" />
     <Compile Include="Models\TrainingTimes.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TreadmillRecordDetails.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UniversitySchoolList.cs">
@@ -345,7 +357,11 @@
     <Content Include="Scripts\RollerSkatingCaculate.js" />
     <Content Include="Scripts\RPE_Modal.js" />
     <Content Include="Scripts\SaveArcheryRecord.js" />
-    <Content Include="Scripts\SaveDetecRecord.js" />
+    <Content Include="Scripts\SaveDetecBikeRecord.js" />
+    <Content Include="Scripts\SaveDetecRollerSkatingRecord.js" />
+    <Content Include="Scripts\SaveDetecSwimmingRecord.js" />
+    <Content Include="Scripts\SaveDetecTrackRecord.js" />
+    <Content Include="Scripts\SaveDetecTreadmillRecord.js" />
     <Content Include="Scripts\SaveGeneralRecord.js" />
     <Content Include="Scripts\SaveShootingRecord.js" />
     <Content Include="Scripts\SessionMonitoring.js" />

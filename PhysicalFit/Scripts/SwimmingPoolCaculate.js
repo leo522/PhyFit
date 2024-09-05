@@ -135,5 +135,5 @@ function PoolCaculateLinearRegression() {
     PoolMaxWork = PoolMaxR_a.toFixed(2); //臨界速度
     document.getElementById("AnaerobicPower").value = PoolMaxWork; //最大無氧做功
 
-    document.getElementById("calculationResult").value = (Math.floor(MaxR * 100) / 100).toFixed(2);
+    document.getElementById("calculationResult").value = (Math.floor(MaxR * 100) / 100).toFixed(2); //r^2，決定係數
 }

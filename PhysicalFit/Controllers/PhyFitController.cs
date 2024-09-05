@@ -1343,11 +1343,7 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 儲存檢測系統訓練紀錄-跑步機
-
-        #endregion
-
-        #region 儲存檢測系統訓練紀錄-田徑場
+        #region 儲存檢測系統訓練紀錄
         [HttpPost]
         public ActionResult SaveTrackFieldRecord(SaveTrackFieldRecordModel model)       
         {
@@ -1375,7 +1371,7 @@ namespace PhysicalFit.Controllers
                     return Json(new { success = false, message = "無效的運動員ID" });
                 }
 
-                // 儲存檢測系統訓練紀錄
+                // 儲存各項檢測系統訓練紀錄
                 var detectionRecord = new DetectionTrainingRecord
                 {
                     Coach = model.coach, //教練名字
@@ -1385,7 +1381,6 @@ namespace PhysicalFit.Controllers
                     DetectionItem = "有/無氧代謝能力測定",
                     SportItem = model.SportItem, //運動項目
                     TrainingDate = DateTime.Parse(model.DetectionDate), //訓練日期
-
                     CriticalSpeed = model.CriticalSpeed, //臨界速度
                     MaxAnaerobicWork = model.AnaerobicPower, //最大無氧做功
                     CreatedDate = DateTime.Now, //建立時間
@@ -1396,19 +1391,88 @@ namespace PhysicalFit.Controllers
 
                 int detectionRecordId = detectionRecord.ID;
 
-                // 儲存檢測詳細記錄
-                for (int i = 0; i < model.Distances.Count; i++)
+                // 儲存田徑場檢測詳細記錄
+                if (model.SportItem == "跑步機")
                 {
-                    var detail = new TrackFieldRecordDetails
+                    for (int i = 0; i < model.IntenPercen.Count; i++)
                     {
-                        DetectionTrainingRecordId = detectionRecordId, //主資料表ID
-                        Distance = (model.Distances[i]), //訓練距離
-                        ForceDuration = int.Parse(model.ForceDurations[i]), //線性總數
-                        Speed = float.Parse(model.Speeds[i]),
-                        CreatedDate = DateTime.Now, //建立時間
-                        TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
-                    };
-                    _db.TrackFieldRecordDetails.Add(detail);
+                        var dtos = new TreadmillRecordDetails
+                        {
+                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
+                            IntenPercen = (model.IntenPercen[i]), //強度百分比 
+                            MaxRunningSpeed = model.MaxRunningSpeed, //最大跑速
+                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
+                            Speed = float.Parse(model.Speeds[i]), //速度
+                            CreatedDate = DateTime.Now, //建立時間
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                        };
+                        _db.TreadmillRecordDetails.Add(dtos);
+                    }
+                }
+                else if (model.SportItem == "田徑場")
+                {
+                    for (int i = 0; i < model.Distances.Count; i++)
+                    {
+                        var dtos = new TrackFieldRecordDetails
+                        {
+                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
+                            Distance = (model.Distances[i]), //訓練距離
+                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
+                            Speed = float.Parse(model.Speeds[i]), //速度
+                            CreatedDate = DateTime.Now, //建立時間
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                        };
+                        _db.TrackFieldRecordDetails.Add(dtos);
+                    }
+                }
+                else if (model.SportItem == "游泳")
+                {
+                    for (int i = 0; i < model.Distances.Count; i++)
+                    {
+                        var dtos = new SwimmingRecordDetails
+                        {
+                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
+                            Distance = (model.Distances[i]), //訓練距離
+                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
+                            Speed = float.Parse(model.Speeds[i]), //速度
+                            CreatedDate = DateTime.Now, //建立時間
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                        };
+                        _db.SwimmingRecordDetails.Add(dtos);
+                    }
+                }
+                else if (model.SportItem == "自由車")
+                {
+                    for (int i = 0; i < model.IntenPercen.Count; i++)
+                    {
+                        var dtos = new BikeRecordDetails
+                        {
+                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
+                            IntenPercen = (model.IntenPercen[i]), //強度百分比 
+                            MaxPower = model.MaxPower, //最大功率
+                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
+                            Speed = float.Parse(model.Speeds[i]), //速度
+                            CreatedDate = DateTime.Now, //建立時間
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                        };
+                        _db.BikeRecordDetails.Add(dtos);
+                    }
+                }
+                else if (model.SportItem == "滑輪溜冰") 
+                {
+                    for (int i = 0; i < model.Distances.Count; i++)
+                    {
+                        var dtos = new RollerSkatingRecordDetails
+                        {
+                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
+                            Distance = (model.Distances[i]), //訓練距離
+                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
+                            Speed = float.Parse(model.Speeds[i]), //速度
+                            CreatedDate = DateTime.Now, //建立時間
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                        };
+                        _db.RollerSkatingRecordDetails.Add(dtos);
+                    }
                 }
                 _db.SaveChanges();
 
@@ -1421,16 +1485,5 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 儲存檢測系統訓練紀錄-游泳
-
-        #endregion
-
-        #region 儲存檢測系統訓練紀錄-自由車
-
-        #endregion
-
-        #region 儲存檢測系統訓練紀錄-滑輪溜冰
-
-        #endregion
     }
 }

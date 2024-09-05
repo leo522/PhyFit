@@ -175,11 +175,7 @@ function TreadmillTotalT() {
     for (var i = 1; i <= TreadmillCurrentSets; i++)
     {
         TotalTraining = TotalTraining + 1 ;
-        //TotT += parseFloat(document.getElementById("input_TM_PartT_S" + i).value);
     }
     
-    document.getElementById("TrainingVol").value = TotT.toFixed(2);
-    console.log(TotT);
-    debugger;
+    document.getElementById("TrainingVol").value = TotT.toFixed(2); //r^2，決定係數
 }
-//input_TM_PartT_S 訓練量小計

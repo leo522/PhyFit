@@ -1,7 +1,8 @@
-﻿var FailureTime200 = 0;
-var FailureTime400 = 0;
-var FailureTime800 = 0;
-var FailureTime1200 = 0;
+﻿//RollerSkatingCaculate.js
+var FailureTime200 = 0;
+var FailureTime500 = 0;
+var FailureTime1000 = 0;
+var FailureTime2000 = 0;
 var TrackTotT = 0;
 var TrackLimitSpeed = 0;
 var TrackMaxWork = 0;
@@ -14,13 +15,14 @@ var TrackMaxWork = 0; //最大無氧做功
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');
     var distance = parseFloat(row.find('td').eq(0).text());
-    var exhaustionTime = parseFloat($(inputElement).val());
+    var rollertime = parseFloat($(inputElement).val());
 
-    if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
-        var speed = (distance / exhaustionTime) * 3.6;
-        row.find('td').eq(2).text(speed.toFixed(2));
+    if (!isNaN(distance) && !isNaN(rollertime) && rollertime > 0) {
+        var speed = (distance / rollertime) * 3.6;
+        // 使用 .roller-result class 來選擇元素
+        row.find('.roller-result').val(speed.toFixed(2)); // 更新速度結果
     } else {
-        row.find('td').eq(2).text('');
+        row.find('.roller-result').val(''); // 清空速度
     }
 
     trackCalculateLinearRegression();
@@ -30,7 +32,7 @@ function trackCalculateLinearRegression() {
     var failureTimes = [];
     var distances = [];
 
-    $('.exhaustion-time').each(function () {
+    $('.roller-time').each(function () {
         var time = parseFloat($(this).val());
         if (!isNaN(time)) {
             failureTimes.push(time);
@@ -131,4 +133,14 @@ function trackCalculateLinearRegression() {
 
 
     $('#calculationResult').val(Math.floor(maxR * 100) / 100);
+
+    function TreadmillTotalT() {
+        var TotalTraining = 0;
+
+        for (var i = 1; i <= TreadmillCurrentSets; i++) {
+            TotalTraining = TotalTraining + 1;
+        }
+
+        document.getElementById("TrainingVol").value = TotT.toFixed(2); //r^2，決定係數
+    }
 }
