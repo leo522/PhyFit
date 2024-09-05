@@ -3,10 +3,11 @@
         event.preventDefault(); // 防止表單提交
 
         // 收集教練和運動員資料
-        var coachName = document.getElementById('coachName').value;
-        var athleteName = document.getElementById('AthletesName').value;
-        /*var TrainingDate = document.getElementById('DetectionDate').value;*/
-        var TrainingDate = document.getElementById('DetectionDateTime').value;
+        var coachName = document.getElementById('coachName').value; //教練名字
+        var athleteName = document.getElementById('AthletesName').value; //運動員名字
+        var TrainingDate = document.getElementById('DetectionDateTime').value; //訓練日期
+        var deteItem = document.getElementById('DeteItem').value;
+
         // 防呆機制：確認運動員是否已選擇
         if (!athleteName) {
             alert('請選擇運動員！');
@@ -47,9 +48,10 @@
                 distances: distances,
                 forceDurations: forceDurations,
                 speeds: speeds,
-                coach: coachName,
-                athlete: athleteName,
-                detectionDate: TrainingDate,
+                coach: coachName, //教練名字
+                athlete: athleteName, //運動員名字
+                detectionDate: TrainingDate, //訓練日期
+                sportItem: deteItem, //運動項目
             }),
             contentType: 'application/json',
             success: function (response) {

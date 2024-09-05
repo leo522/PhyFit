@@ -1343,26 +1343,53 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 儲存檢測系統訓練紀錄
+        #region 儲存檢測系統訓練紀錄-跑步機
 
         #endregion
 
-        #region 功能測試
+        #region 儲存檢測系統訓練紀錄-田徑場
         [HttpPost]
         public ActionResult SaveTrackFieldRecord(SaveTrackFieldRecordModel model)       
         {
             try
             {
+                
+                int? coachId = AuthHelper.GetCurrentCoachId(); //獲取當前登入的教練ID
+                int? athleteId = AuthHelper.GetCurrentAthleteId(); //獲取當前登入的運動員ID
+
+                if (!coachId.HasValue || !athleteId.HasValue)
+                {
+                    return Json(new { success = false, message = "使用者未登入或ID錯誤" });
+                }
+                
+                var coach = _db.Coaches.SingleOrDefault(c => c.ID == coachId.Value); //查詢教練資料
+                var athlete = _db.Athletes.SingleOrDefault(a => a.ID == athleteId.Value); //查詢運動員資料
+
+                if (coach == null)
+                {
+                    return Json(new { success = false, message = "無效的教練ID" });
+                }
+
+                if (athlete == null)
+                {
+                    return Json(new { success = false, message = "無效的運動員ID" });
+                }
+
                 // 儲存檢測系統訓練紀錄
                 var detectionRecord = new DetectionTrainingRecord
                 {
                     Coach = model.coach, //教練名字
-                    Athlete = model.athlete, //運動員ID
-                    TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
-                    CreatedDate = DateTime.Now, //建立時間
-                    ModifiedDate = DateTime.Now, //修改時間
+                    CoachID = coach.ID, //教練ID
+                    Athlete = model.athlete, //運動員
+                    AthleteID = athlete.ID, //運動員ID
+                    DetectionItem = "有/無氧代謝能力測定",
+                    SportItem = model.SportItem, //運動項目
+                    TrainingDate = DateTime.Parse(model.DetectionDate), //訓練日期
+
                     CriticalSpeed = model.CriticalSpeed, //臨界速度
                     MaxAnaerobicWork = model.AnaerobicPower, //最大無氧做功
+                    CreatedDate = DateTime.Now, //建立時間
+                    ModifiedDate = DateTime.Now, //修改時間
                 };
                 _db.DetectionTrainingRecord.Add(detectionRecord);
                 _db.SaveChanges();
@@ -1387,22 +1414,23 @@ namespace PhysicalFit.Controllers
 
                 return Json(new { success = true });
             }
-            catch (DbEntityValidationException dbEx)
-            {
-                // 捕捉資料庫驗證錯誤，返回具體錯誤訊息
-                var errorMessages = dbEx.EntityValidationErrors
-                    .SelectMany(x => x.ValidationErrors)
-                    .Select(x => x.ErrorMessage);
-                var fullErrorMessage = string.Join("; ", errorMessages);
-                var exceptionMessage = $"資料庫驗證錯誤: {fullErrorMessage}";
-
-                return Json(new { success = false, message = exceptionMessage });
-            }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
         }
+        #endregion
+
+        #region 儲存檢測系統訓練紀錄-游泳
+
+        #endregion
+
+        #region 儲存檢測系統訓練紀錄-自由車
+
+        #endregion
+
+        #region 儲存檢測系統訓練紀錄-滑輪溜冰
+
         #endregion
     }
 }

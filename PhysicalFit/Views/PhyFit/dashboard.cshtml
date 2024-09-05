@@ -236,8 +236,6 @@
 
                             <div class="form-group">
                                 <label>日期：</label>
-                                @*<input type="datetime-local" class="form-control" id="DetectionDate" name="DetectionDate" />*@
-                                @*<input type="date" class="form-control" id="DetectionDate" name="DetectionDate" />*@
                                 <input id="DetectionDateTime" class="form-control" />
                             </div>
                             <div class="form-group">
@@ -249,7 +247,7 @@
                             <div class="form-group">
                                 <label for="DeteItem">運動項目：</label>
                                 <select class="form-control" id="DeteItem">
-                                    <option>請選擇運動項目</option>
+                                    <option value="">請選擇運動項目</option>
                                     @foreach (var SI in ViewBag.DetectionSport)
                                     {
                                         <option>@SI</option>
@@ -426,21 +424,7 @@
                 }
             });
         });
-@*function updateTableHeaders() {
-    var selectedItem = document.getElementById('TrainingItem').value;
-    $.ajax({
-        url: '@Url.Action("UpdateTableHeaders", "PhyFit")',
-        type: 'GET',
-        data: { trainingItem: selectedItem },
-        success: function (result) {
-            var table = document.getElementById('trainingMonitoringTable');
-            table.innerHTML = result;
-        },
-        error: function (xhr, status, error) {
-            console.error('錯誤: ', status, error);
-        }
-    });
-}*@
+
         document.addEventListener('DOMContentLoaded', function () {
             var itemSelect = document.getElementById('Item');
             var selectedItemSpan = document.getElementById('selectedItem');
@@ -453,8 +437,8 @@
 
             flatpickr("#DetectionDateTime", {
                 enableTime: true,
-                dateFormat: "Y-m-d H:i",  // 日期時間格式
-                time_24hr: true  // 使用24小時制
+                dateFormat: "Y-m-d H:i", //日期時間格式
+                time_24hr: true //使用24小時制
             });
         </script>
     </body>
