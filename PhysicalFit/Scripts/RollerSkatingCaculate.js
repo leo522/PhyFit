@@ -3,14 +3,15 @@ var FailureTime200 = 0;
 var FailureTime500 = 0;
 var FailureTime1000 = 0;
 var FailureTime2000 = 0;
-var TrackTotT = 0;
-var TrackLimitSpeed = 0;
-var TrackMaxWork = 0;
-var TrackMaxR = 0;
-var TrackMaxR_a;
-var TrackMaxR_b;
-var TrackLimitSpeed = 0; //臨界速度
-var TrackMaxWork = 0; //最大無氧做功
+var RollerTotT = 0;
+var RollerLimitSpeed = 0;
+var RollerMaxWork = 0;
+var RollerMaxR = 0;
+var RollerMaxR_a;
+var RollerMaxR_b;
+var RollerLimitSpeed = 0; //臨界速度
+var RollerMaxWork = 0; //最大無氧做功
+var RollermillTotT = 0; //訓練量
 
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');
@@ -19,16 +20,16 @@ function calculateSpeed(inputElement) {
 
     if (!isNaN(distance) && !isNaN(rollertime) && rollertime > 0) {
         var speed = (distance / rollertime) * 3.6;
-        // 使用 .roller-result class 來選擇元素
-        row.find('.roller-result').val(speed.toFixed(2)); // 更新速度結果
+
+        row.find('.roller-result').val(speed.toFixed(2)); //更新速度結果
     } else {
-        row.find('.roller-result').val(''); // 清空速度
+        row.find('.roller-result').val(''); //清空速度
     }
 
-    trackCalculateLinearRegression();
+    rollerCalculateLinearRegression();  //每次更新速度時也呼叫線性回歸計算
 }
 
-function trackCalculateLinearRegression() {
+function rollerCalculateLinearRegression() {
     var failureTimes = [];
     var distances = [];
 
@@ -45,7 +46,7 @@ function trackCalculateLinearRegression() {
         return;
     }
 
-    var trackMaxR = 0;
+    var RollerMaxR = 0;
     var maxR = 0;
     var maxRA = 0;
     var maxRB = 0;
@@ -122,25 +123,28 @@ function trackCalculateLinearRegression() {
             maxRB = b;
         }
     }
-    TrackMaxR_a = maxRA;
-    TrackMaxR_b = maxRB;
 
-    TrackLimitSpeed = ((TrackMaxR_b * 3600) / 1000).toFixed(1); //臨界速度
-    document.getElementById("CriticalSpeed").value = TrackLimitSpeed; //臨界速度
+    $('#calculationResult').val(Math.floor(maxR * 100) / 100); //r^2，決定係數
 
-    TrackMaxWork = TrackMaxR_a.toFixed(2); //最大無氧做功
-    document.getElementById("AnaerobicPower").value = TrackMaxWork; //最大無氧做功
+    RollerMaxR_a = maxRA;
+    RollerMaxR_b = maxRB;
 
+    RollerLimitSpeed = ((RollerMaxR_b * 3600) / 1000).toFixed(1); //臨界速度
+    document.getElementById("CriticalSpeed").value = RollerLimitSpeed; //臨界速度
 
-    $('#calculationResult').val(Math.floor(maxR * 100) / 100);
+    RollerMaxWork = RollerMaxR_a.toFixed(2); //最大無氧做功
+    $('#AnaerobicPower').val(RollerMaxWork); //最大無氧做功
 
-    function TreadmillTotalT() {
+    //RollerMaxWork = RollerMaxR_a.toFixed(2); //最大無氧做功
+    //document.getElementById("AnaerobicPower").value = RollerMaxWork; //最大無氧做功
+}
+
+    function RollerSkatingTotalT() {
         var TotalTraining = 0;
 
         for (var i = 1; i <= TreadmillCurrentSets; i++) {
             TotalTraining = TotalTraining + 1;
         }
 
-        document.getElementById("TrainingVol").value = TotT.toFixed(2); //r^2，決定係數
+        document.getElementById("TrainingVol").value = TotT.toFixed(2); 
     }
-}

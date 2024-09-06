@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return; // 阻止提交
         }
 
-        // 收集田徑場數據
+        // 收集泳池數據
         var criticalSpeed = document.getElementById('CriticalSpeed').value; //臨界速度
         var anaerobicPower = document.getElementById('AnaerobicPower').value; //最大無氧做功
         var distances = [];
@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 speeds.push(speed);
             }
         });
+
         // 發送 AJAX 請求
         $.ajax({
             url: '/PhyFit/SaveTrackFieldRecord',

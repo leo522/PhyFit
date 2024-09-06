@@ -1,5 +1,4 @@
 ﻿//AthleticCaculate.js
-
 var FailureTime200 = 0;
 var FailureTime400 = 0;
 var FailureTime800 = 0;
@@ -14,8 +13,8 @@ var TrackLimitSpeed = 0; //臨界速度
 var TrackMaxWork = 0; //最大無氧做功
 var TreadmillTotT = 0; //訓練量
 var TreadmillCurrentSets = 1; //訓練量預設值
-//var TreadmillCurrentMode = "SingleSet"; //處方訓練模式，單組模式
 var TreadmillCurrentSets = 1; //設定組數
+//var TreadmillCurrentMode = "SingleSet"; //處方訓練模式，單組模式
 
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');

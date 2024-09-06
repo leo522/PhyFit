@@ -20,24 +20,36 @@ document.addEventListener('DOMContentLoaded', function () {
             return; // 阻止提交
         }
 
-        // 收集田徑場數據
+        // 收集滑輪溜冰數據
         var criticalSpeed = document.getElementById('CriticalSpeed').value; //臨界速度
         var anaerobicPower = document.getElementById('AnaerobicPower').value; //最大無氧做功
         var distances = [];
         var forceDurations = [];
         var speeds = [];
 
-
         document.querySelectorAll('#dataTable tr').forEach(function (row) {
             var distance = row.querySelector('td').innerText;
             var forceDuration = row.querySelector('.roller-time').value;
-            var speed = row.querySelector('.roller-speed').value;
+            /*var speed = row.querySelector('.roller-result').innerText;*/
+            var speed = row.querySelector('.roller-result').value;
 
             if (distance && forceDuration && speed) {
                 distances.push(distance);
                 forceDurations.push(forceDuration);
                 speeds.push(speed);
             }
+        });
+        // 檢查數據是否正確收集
+        console.log({
+            criticalSpeed: criticalSpeed,
+            anaerobicPower: anaerobicPower,
+            distances: distances,
+            forceDurations: forceDurations,
+            speeds: speeds,
+            coach: coachName,
+            athlete: athleteName,
+            detectionDate: TrainingDate,
+            sportItem: deteItem,
         });
         // 發送 AJAX 請求
         $.ajax({
