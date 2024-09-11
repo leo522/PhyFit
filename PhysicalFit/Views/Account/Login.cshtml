@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>學校代碼登入</title>
+    <title>登入</title>
     <link href="~/css/registerStyle.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/css/MainBkStyle.css" rel="stylesheet" />
@@ -17,30 +17,30 @@
         <div class="text-center">
             <img src="~/img/logo.svg" alt="Logo" style="height: 45px; width: 100%;">
         </div>
-        <form action="/PhyFit/SchoolLogin" method="post">
+        <form action="/Account/Login" method="post">
             <div class="form-group">
-                <label for="SchoolCode">學校代碼</label>
-                <input type="text" class="form-control" id="SchoolCode" name="SchoolCode" placeholder="請輸入學校代碼" required>
+                <label for="Account">帳號</label>
+                <input type="text" class="form-control" id="account" name="account" placeholder="請輸入帳號" required>
             </div>
-            @*<div class="form-group">
+            <div class="form-group">
                 <label for="Password">密碼</label>
                 <input type="password" class="form-control" id="pwd" name="pwd" placeholder="請輸入密碼" required>
-            </div>*@
+            </div>
             <button type="submit" class="btn btn-primary btn-block">登入</button>
         </form>
-        @*<div class="text-center mt-3">
-            <a href="/PhyFit/Register">註冊帳號</a>
-        </div>*@
+        <div class="text-center mt-3">
+            <a href="/Account/Register">註冊帳號</a>
+        </div>
         @if (ViewBag.ErrorMessage != null)
         {
             <div class="alert alert-danger" role="alert">
                 @ViewBag.ErrorMessage
             </div>
         }
-        @*<hr>
+        <hr>
         <div class="text-center">
-            <a href="/PhyFit/ForgotPassword" class="btn btn-link">忘記密碼</a>
-        </div>*@
+            <a href="/Account/ForgotPassword" class="btn btn-link">忘記密碼</a>
+        </div>
     </div>
 </body>
 </html>

@@ -39,7 +39,7 @@
             </div>
         }
     </div>
-<script>
+    <script>
     $(document).ready(function () {
         $('#Role').change(function () {
             var role = $(this).val();
@@ -55,12 +55,12 @@
             var role = $('#Role').val();
             var schoolID = $('#SchoolID').val();
             if (role === 'Coach') {
-                window.location.href = '/PhyFit/RegisterCoach?schoolID=' + encodeURIComponent(schoolID);
+                window.location.href = '/Account/RegisterCoach?schoolID=' + encodeURIComponent(schoolID);
             } else if (role === 'Athlete') {
-                window.location.href = '/PhyFit/RegisterAthlete';
+                window.location.href = '/Account/RegisterAthlete';
             }
         });
     });
-</script>
+    </script>
 </body>
 </html>

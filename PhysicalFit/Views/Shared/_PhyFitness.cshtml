@@ -39,7 +39,7 @@
 <body>
     <div>
         <div style="text-align: right; padding: 10px;">
-            <form action="/PhyFit/Logout" method="post" style="display: inline;">
+            <form action="/Account/Logout" method="post" style="display: inline;">
                 <label style="font-size:20px; margin-right: 10px;">目前登入者: @User.Identity.Name</label>
                 <button type="submit" class="btn btn-warning">登出</button>
             </form>
@@ -47,6 +47,5 @@
         <div class="countdown-timer" id="countdownTimer"></div>
         @RenderBody()
     </div>
-
 </body>
 </html>

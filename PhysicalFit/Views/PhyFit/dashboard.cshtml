@@ -444,6 +444,16 @@
                 dateFormat: "Y-m-d H:i", //日期時間格式
                 time_24hr: true //使用24小時制
             });
+
+       document.addEventListener("DOMContentLoaded", function () {
+        var userRole = '@Session["UserRole"]'; // 從Session獲取用戶角色
+        var athleteDiv = document.getElementById("identity_Athletes");
+
+        // 如果是運動員，隱藏運動員選項
+        if (userRole === "Athlete") {
+            athleteDiv.style.display = "none"; // 隱藏該區塊
+        }
+    });
         </script>
     </body>
 </html>

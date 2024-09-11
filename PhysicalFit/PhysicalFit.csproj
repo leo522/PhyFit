@@ -129,6 +129,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="AuthHelper.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PhyFitController.cs" />
     <Compile Include="Controllers\TrainingPrescriptionController.cs" />
@@ -388,8 +389,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_PhyFitness.cshtml" />
-    <Content Include="Views\PhyFit\Register.cshtml" />
-    <Content Include="Views\PhyFit\Login.cshtml" />
     <Content Include="Views\PhyFit\Home.cshtml" />
     <Content Include="Views\PhyFit\dashboard.cshtml" />
     <Content Include="Views\PhyFit\_WeeklyTrainingRecords.cshtml" />
@@ -405,7 +404,6 @@
     <Content Include="Views\PhyFit\createAthletes.cshtml" />
     <Content Include="Views\PhyFit\_RPESurvey.cshtml" />
     <Content Include="Views\PhyFit\_SpecialTechnical.cshtml" />
-    <Content Include="Views\PhyFit\SchoolLogin.cshtml" />
     <Content Include="Views\PhyFit\Prescription.cshtml" />
     <Content Include="Views\TrainingPrescription\Prescription.cshtml" />
     <Content Include="Views\TrainingPrescription\_TreadmillPrescription.cshtml" />
@@ -413,9 +411,12 @@
     <Content Include="Views\TrainingPrescription\_RollerSkatingPrescription.cshtml" />
     <Content Include="Views\TrainingPrescription\_SwimmingPrescription.cshtml" />
     <Content Include="Views\TrainingPrescription\_BicyclePrescription.cshtml" />
-    <Content Include="Views\PhyFit\RegisterAthlete.cshtml" />
-    <Content Include="Views\PhyFit\RegisterCoach.cshtml" />
     <Content Include="Views\PhyFit\_TrainingCalendar.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\RegisterCoach.cshtml" />
+    <Content Include="Views\Account\RegisterAthlete.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\SchoolLogin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
