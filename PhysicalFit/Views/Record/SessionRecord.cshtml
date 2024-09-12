@@ -1,0 +1,67 @@
+﻿@{
+    Layout = "~/Views/Shared/_PhyFitness.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    <div>
+        <div class="resultTable" id="sessionRPEresult">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;"></span></h3>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="每週運動訓練量為每週(通常是7 天)所有的運動訓練量之加總">每週運動訓練量</label>
+                                <div class="form-group-inline d-flex align-items-center">
+                                    <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="一週內每日訓練的一致性，其計算方式為當週運動訓練量的日平均(mean load)除以當週TL的標準差(standard deviation)">訓練同質性</label>
+                                <div class="form-group-inline d-flex align-items-center">
+                                    <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="整週訓練的整體壓力，計算方式為當週TL乘上當週TM">訓練張力值</label>
+                                <div class="form-group-inline d-flex align-items-center">
+                                    <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="當週與上一週之運動訓練量的絕對差異值">週間訓練變化</label>
+                                <div class="form-group-inline d-flex align-items-center">
+                                    <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex align-items-center justify-content-between">
+                                <label title="ACWR，當週TL(acuteworkload) 除以過往連續四週TL平均值(chroni cworkload)所得之數值">短期：長期訓練量比值</label>
+                                <div class="form-group-inline d-flex align-items-center">
+                                    <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><br/>
+        <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var selectedItem = urlParams.get('item');
+            if (selectedItem) {
+                document.getElementById('selectedItem').textContent = selectedItem;
+            }
+        });
+    </script>
+</body>
+</html>

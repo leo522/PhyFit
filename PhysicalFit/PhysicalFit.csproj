@@ -132,6 +132,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PhyFitController.cs" />
+    <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\TrainingPrescriptionController.cs" />
     <Compile Include="EncryptionHelper.cs" />
     <Compile Include="Global.asax.cs">
@@ -417,6 +418,7 @@
     <Content Include="Views\Account\RegisterAthlete.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\SchoolLogin.cshtml" />
+    <Content Include="Views\Record\SessionRecord.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
