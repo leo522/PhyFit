@@ -51,6 +51,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -362,6 +365,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\LinearEquation.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\RegisterSet.js" />
     <Content Include="Scripts\RollerSkatingCaculate.js" />
@@ -376,7 +380,6 @@
     <Content Include="Scripts\SaveShootingRecord.js" />
     <Content Include="Scripts\SessionMonitoring.js" />
     <Content Include="Scripts\SessionTraining.js" />
-    <Content Include="Scripts\Slope.js" />
     <Content Include="Scripts\SwimmingPoolCaculate.js" />
     <Content Include="Scripts\TL.js" />
     <Content Include="Scripts\TLCaculate.js" />

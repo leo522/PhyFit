@@ -1,4 +1,5 @@
-﻿@{
+﻿@*@model List<YourNamespace.SessionRecord>*@
+@{
     Layout = "~/Views/Shared/_PhyFitness.cshtml";
 }
 <!DOCTYPE html>
@@ -50,7 +51,39 @@
                     </div>
                 </div>
             </div>
-        </div><br/>
+        </div><br />
+
+        <div class="resultTable" id="sessionRPEresult">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>訓練日期紀錄</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>訓練日期</th>
+                                    <th>運動員名稱</th>
+                                    <th>訓練項目</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var record in Model)
+                                {
+                                    <tr>
+                                        <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
+                                        <td>@record.Athlete</td>
+                                        <td>@record.SportItem</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><br />
+
         <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
     </div>
 
