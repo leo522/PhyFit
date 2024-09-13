@@ -17,12 +17,12 @@ namespace PhysicalFit.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Coaches()
         {
-            this.ShootingRecord = new HashSet<ShootingRecord>();
             this.ArcheryRecord = new HashSet<ArcheryRecord>();
             this.Athletes = new HashSet<Athletes>();
             this.Users = new HashSet<Users>();
             this.GeneralTrainingRecord = new HashSet<GeneralTrainingRecord>();
             this.DetectionTrainingRecord = new HashSet<DetectionTrainingRecord>();
+            this.ShootingRecord = new HashSet<ShootingRecord>();
         }
     
         public int ID { get; set; }
@@ -39,8 +39,6 @@ namespace PhysicalFit.Models
         public string CoachAccount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArcheryRecord> ArcheryRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Athletes> Athletes { get; set; }
@@ -50,5 +48,7 @@ namespace PhysicalFit.Models
         public virtual ICollection<GeneralTrainingRecord> GeneralTrainingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DetectionTrainingRecord> DetectionTrainingRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
     }
 }

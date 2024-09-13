@@ -19,7 +19,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TrainingDate" Type="datetime" />
           <Property Name="Coach" Type="nvarchar" MaxLength="10" />
           <Property Name="CoachID" Type="int" />
@@ -30,6 +30,7 @@
           <Property Name="RPEscore" Type="int" />
           <Property Name="EachTrainingLoad" Type="int" />
           <Property Name="DailyTrainingLoad" Type="int" />
+          <Property Name="SessionRPETrainingRecordID" Type="int" />
         </EntityType>
         <EntityType Name="ArcheryTraining">
           <Key>
@@ -299,10 +300,10 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserAccount" Type="nvarchar" MaxLength="10" />
-          <Property Name="DifficultyCategory" Type="nvarchar" MaxLength="5" Nullable="false" />
-          <Property Name="TrainingItem" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="TrainingTime" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="RPEscore" Type="int" Nullable="false" />
+          <Property Name="DifficultyCategory" Type="nvarchar" MaxLength="5" />
+          <Property Name="TrainingItem" Type="nvarchar" MaxLength="20" />
+          <Property Name="TrainingTime" Type="nvarchar" MaxLength="10" />
+          <Property Name="RPEscore" Type="int" />
           <Property Name="TrainingLoad" Type="int" />
           <Property Name="DailyTrainingLoad" Type="int" />
           <Property Name="WeeklyTrainingLoad" Type="int" />
@@ -310,7 +311,7 @@
           <Property Name="TrainingTension" Type="int" />
           <Property Name="WeeklyTrainingChange" Type="int" />
           <Property Name="ShortToLongTermTrainingLoadRatio" Type="int" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" />
           <Property Name="TrainingActionName" Type="nvarchar" MaxLength="20" />
           <Property Name="TrainingDate" Type="datetime" />
         </EntityType>
@@ -326,9 +327,9 @@
           <Property Name="BulletCount" Type="int" />
           <Property Name="RPEscore" Type="int" />
           <Property Name="EachTrainingLoad" Type="int" />
-          <Property Name="DailyTrainingLoad" Type="int" />
           <Property Name="Coach" Type="nvarchar" MaxLength="10" />
           <Property Name="Athlete" Type="nvarchar" MaxLength="10" />
+          <Property Name="SessionRPEShottingRecordID" Type="int" />
         </EntityType>
         <EntityType Name="ShootingTraining">
           <Key>
@@ -350,6 +351,23 @@
           <Property Name="GunsItem" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="CreatedAt" Type="datetime2" Precision="7" />
           <Property Name="UpdatedAt" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="ShottingSessionRPERecord">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Coach" Type="nvarchar" MaxLength="10" />
+          <Property Name="CoachID" Type="int" />
+          <Property Name="Athlete" Type="nvarchar" MaxLength="10" />
+          <Property Name="AthleteID" Type="int" />
+          <Property Name="TrainingDate" Type="datetime" Nullable="false" />
+          <Property Name="ShootingTool" Type="nvarchar" MaxLength="10" />
+          <Property Name="BulletCount" Type="int" />
+          <Property Name="RPEScore" Type="int" />
+          <Property Name="EachTrainingLoad" Type="int" />
+          <Property Name="DailyTrainingLoad" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="SpecializedTraining">
           <Key>
@@ -530,7 +548,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ArcheryRe__Coach__5A4F643B">
+        <Association Name="FK__ArcheryRe__Coach__2D12A970">
           <End Role="Coaches" Type="Self.Coaches" Multiplicity="0..1" />
           <End Role="ArcheryRecord" Type="Self.ArcheryRecord" Multiplicity="*" />
           <ReferentialConstraint>
@@ -686,6 +704,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SessionRPETrainingRecord">
+          <End Role="SessionRPETrainingRecords" Type="Self.SessionRPETrainingRecords" Multiplicity="0..1" />
+          <End Role="ArcheryRecord" Type="Self.ArcheryRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SessionRPETrainingRecords">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ArcheryRecord">
+              <PropertyRef Name="SessionRPETrainingRecordID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ShootingRecord_Athletes">
           <End Role="Athletes" Type="Self.Athletes" Multiplicity="0..1" />
           <End Role="ShootingRecord" Type="Self.ShootingRecord" Multiplicity="*" />
@@ -707,6 +737,18 @@
             </Principal>
             <Dependent Role="ShootingRecord">
               <PropertyRef Name="CoachID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShootingRecord_SessionRPEShottingRecord">
+          <End Role="ShottingSessionRPERecord" Type="Self.ShottingSessionRPERecord" Multiplicity="0..1" />
+          <End Role="ShootingRecord" Type="Self.ShootingRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShottingSessionRPERecord">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ShootingRecord">
+              <PropertyRef Name="SessionRPEShottingRecordID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -762,6 +804,7 @@
           <EntitySet Name="ShootingRecord" EntityType="Self.ShootingRecord" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShootingTraining" EntityType="Self.ShootingTraining" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShottingItems" EntityType="Self.ShottingItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShottingSessionRPERecord" EntityType="Self.ShottingSessionRPERecord" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpecializedTraining" EntityType="Self.SpecializedTraining" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpecialTechnical" EntityType="Self.SpecialTechnical" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpecialTechnicalAction" EntityType="Self.SpecialTechnicalAction" Schema="dbo" store:Type="Tables" />
@@ -781,7 +824,7 @@
             <End Role="Athletes" EntitySet="Athletes" />
             <End Role="ArcheryRecord" EntitySet="ArcheryRecord" />
           </AssociationSet>
-          <AssociationSet Name="FK__ArcheryRe__Coach__5A4F643B" Association="Self.FK__ArcheryRe__Coach__5A4F643B">
+          <AssociationSet Name="FK__ArcheryRe__Coach__2D12A970" Association="Self.FK__ArcheryRe__Coach__2D12A970">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="ArcheryRecord" EntitySet="ArcheryRecord" />
           </AssociationSet>
@@ -833,12 +876,20 @@
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="GeneralTrainingRecord" EntitySet="GeneralTrainingRecord" />
           </AssociationSet>
+          <AssociationSet Name="FK_SessionRPETrainingRecord" Association="Self.FK_SessionRPETrainingRecord">
+            <End Role="SessionRPETrainingRecords" EntitySet="SessionRPETrainingRecords" />
+            <End Role="ArcheryRecord" EntitySet="ArcheryRecord" />
+          </AssociationSet>
           <AssociationSet Name="FK_ShootingRecord_Athletes" Association="Self.FK_ShootingRecord_Athletes">
             <End Role="Athletes" EntitySet="Athletes" />
             <End Role="ShootingRecord" EntitySet="ShootingRecord" />
           </AssociationSet>
           <AssociationSet Name="FK_ShootingRecord_Coaches" Association="Self.FK_ShootingRecord_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
+            <End Role="ShootingRecord" EntitySet="ShootingRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShootingRecord_SessionRPEShottingRecord" Association="Self.FK_ShootingRecord_SessionRPEShottingRecord">
+            <End Role="ShottingSessionRPERecord" EntitySet="ShottingSessionRPERecord" />
             <End Role="ShootingRecord" EntitySet="ShootingRecord" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_Athletes" Association="Self.FK_Users_Athletes">
@@ -951,11 +1002,6 @@
           <EntitySet Name="JuniorHighSchoolList" EntityType="PhFitnessModel.JuniorHighSchoolList" />
           <EntitySet Name="UniversitySchoolList" EntityType="PhFitnessModel.UniversitySchoolList" />
           <EntitySet Name="Coaches" EntityType="PhFitnessModel.Coaches" />
-          <EntitySet Name="ShootingRecord" EntityType="PhFitnessModel.ShootingRecord" />
-          <AssociationSet Name="FK_ShootingRecord_Coaches" Association="PhFitnessModel.FK_ShootingRecord_Coaches">
-            <End Role="Coaches" EntitySet="Coaches" />
-            <End Role="ShootingRecord" EntitySet="ShootingRecord" />
-          </AssociationSet>
           <EntitySet Name="ArcheryRecord" EntityType="PhFitnessModel.ArcheryRecord" />
           <AssociationSet Name="FK__ArcheryRe__Coach__5A4F643B" Association="PhFitnessModel.FK__ArcheryRe__Coach__5A4F643B">
             <End Role="Coaches" EntitySet="Coaches" />
@@ -970,10 +1016,6 @@
           <AssociationSet Name="FK_Athletes_Coaches" Association="PhFitnessModel.FK_Athletes_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="Athletes" EntitySet="Athletes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ShootingRecord_Athletes" Association="PhFitnessModel.FK_ShootingRecord_Athletes">
-            <End Role="Athletes" EntitySet="Athletes" />
-            <End Role="ShootingRecord" EntitySet="ShootingRecord" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_Athletes" Association="PhFitnessModel.FK_Users_Athletes">
             <End Role="Athletes" EntitySet="Athletes" />
@@ -1029,6 +1071,24 @@
           <AssociationSet Name="FK__RollerSka__Detec__190BB0C3" Association="PhFitnessModel.FK__RollerSka__Detec__190BB0C3">
             <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
             <End Role="RollerSkatingRecordDetails" EntitySet="RollerSkatingRecordDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SessionRPETrainingRecord" Association="PhFitnessModel.FK_SessionRPETrainingRecord">
+            <End Role="SessionRPETrainingRecords" EntitySet="SessionRPETrainingRecords" />
+            <End Role="ArcheryRecord" EntitySet="ArcheryRecord" />
+          </AssociationSet>
+          <EntitySet Name="ShootingRecord" EntityType="PhFitnessModel.ShootingRecord" />
+          <AssociationSet Name="FK_ShootingRecord_Athletes" Association="PhFitnessModel.FK_ShootingRecord_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="ShootingRecord" EntitySet="ShootingRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShootingRecord_Coaches" Association="PhFitnessModel.FK_ShootingRecord_Coaches">
+            <End Role="Coaches" EntitySet="Coaches" />
+            <End Role="ShootingRecord" EntitySet="ShootingRecord" />
+          </AssociationSet>
+          <EntitySet Name="ShottingSessionRPERecord" EntityType="PhFitnessModel.ShottingSessionRPERecord" />
+          <AssociationSet Name="FK_ShootingRecord_SessionRPEShottingRecord" Association="PhFitnessModel.FK_ShootingRecord_SessionRPEShottingRecord">
+            <End Role="ShottingSessionRPERecord" EntitySet="ShottingSessionRPERecord" />
+            <End Role="ShootingRecord" EntitySet="ShootingRecord" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="TrainingPurpose">
@@ -1188,10 +1248,10 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserAccount" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="DifficultyCategory" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
-          <Property Name="TrainingItem" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="TrainingTime" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="RPEscore" Type="Int32" Nullable="false" />
+          <Property Name="DifficultyCategory" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingItem" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TrainingTime" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="RPEscore" Type="Int32" />
           <Property Name="TrainingLoad" Type="Int32" />
           <Property Name="DailyTrainingLoad" Type="Int32" />
           <Property Name="WeeklyTrainingLoad" Type="Int32" />
@@ -1199,9 +1259,10 @@
           <Property Name="TrainingTension" Type="Int32" />
           <Property Name="WeeklyTrainingChange" Type="Int32" />
           <Property Name="ShortToLongTermTrainingLoadRatio" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="TrainingActionName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="TrainingDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ArcheryRecord" Relationship="PhFitnessModel.FK_SessionRPETrainingRecord" FromRole="SessionRPETrainingRecords" ToRole="ArcheryRecord" />
         </EntityType>
         <EntityType Name="DetectionTraining">
           <Key>
@@ -1360,43 +1421,13 @@
           <Property Name="SportsSpecific" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="CoachAccount" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ShootingRecord" Relationship="PhFitnessModel.FK_ShootingRecord_Coaches" FromRole="Coaches" ToRole="ShootingRecord" />
           <NavigationProperty Name="ArcheryRecord" Relationship="PhFitnessModel.FK__ArcheryRe__Coach__5A4F643B" FromRole="Coaches" ToRole="ArcheryRecord" />
           <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Coaches" ToRole="Athletes" />
           <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK_Users_Coaches" FromRole="Coaches" ToRole="Users" />
           <NavigationProperty Name="GeneralTrainingRecord" Relationship="PhFitnessModel.FK_GeneralTrainingRecord_Coaches" FromRole="Coaches" ToRole="GeneralTrainingRecord" />
           <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__Detection__Coach__731B1205" FromRole="Coaches" ToRole="DetectionTrainingRecord" />
+          <NavigationProperty Name="ShootingRecord" Relationship="PhFitnessModel.FK_ShootingRecord_Coaches" FromRole="Coaches" ToRole="ShootingRecord" />
         </EntityType>
-        <EntityType Name="ShootingRecord">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TrainingDate" Type="DateTime" Precision="3" />
-          <Property Name="CoachID" Type="Int32" />
-          <Property Name="AthleteID" Type="Int32" />
-          <Property Name="ShootingTool" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="BulletCount" Type="Int32" />
-          <Property Name="RPEscore" Type="Int32" />
-          <Property Name="EachTrainingLoad" Type="Int32" />
-          <Property Name="DailyTrainingLoad" Type="Int32" />
-          <Property Name="Coach" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Athlete" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_ShootingRecord_Coaches" FromRole="ShootingRecord" ToRole="Coaches" />
-          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_ShootingRecord_Athletes" FromRole="ShootingRecord" ToRole="Athletes" />
-        </EntityType>
-        <Association Name="FK_ShootingRecord_Coaches">
-          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.ShootingRecord" Role="ShootingRecord" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Coaches">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ShootingRecord">
-              <PropertyRef Name="CoachID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ArcheryRecord">
           <Key>
             <PropertyRef Name="ID" />
@@ -1414,6 +1445,8 @@
           <Property Name="DailyTrainingLoad" Type="Int32" />
           <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK__ArcheryRe__Coach__5A4F643B" FromRole="ArcheryRecord" ToRole="Coaches" />
           <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" FromRole="ArcheryRecord" ToRole="Athletes" />
+          <Property Name="SessionRPETrainingRecordID" Type="Int32" />
+          <NavigationProperty Name="SessionRPETrainingRecords" Relationship="PhFitnessModel.FK_SessionRPETrainingRecord" FromRole="ArcheryRecord" ToRole="SessionRPETrainingRecords" />
         </EntityType>
         <Association Name="FK__ArcheryRe__Coach__5A4F643B">
           <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
@@ -1443,10 +1476,10 @@
           <Property Name="IdentityNumber" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ArcheryRecord" Relationship="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" FromRole="Athletes" ToRole="ArcheryRecord" />
           <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Athletes" ToRole="Coaches" />
-          <NavigationProperty Name="ShootingRecord" Relationship="PhFitnessModel.FK_ShootingRecord_Athletes" FromRole="Athletes" ToRole="ShootingRecord" />
           <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK_Users_Athletes" FromRole="Athletes" ToRole="Users" />
           <NavigationProperty Name="GeneralTrainingRecord" Relationship="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" FromRole="Athletes" ToRole="GeneralTrainingRecord" />
           <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__Detection__Athle__740F363E" FromRole="Athletes" ToRole="DetectionTrainingRecord" />
+          <NavigationProperty Name="ShootingRecord" Relationship="PhFitnessModel.FK_ShootingRecord_Athletes" FromRole="Athletes" ToRole="ShootingRecord" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -1489,18 +1522,6 @@
             </Principal>
             <Dependent Role="Athletes">
               <PropertyRef Name="CoachID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ShootingRecord_Athletes">
-          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.ShootingRecord" Role="ShootingRecord" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Athletes">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ShootingRecord">
-              <PropertyRef Name="AthleteID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1768,6 +1789,91 @@
             </Principal>
             <Dependent Role="RollerSkatingRecordDetails">
               <PropertyRef Name="DetectionTrainingRecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SessionRPETrainingRecord">
+          <End Type="PhFitnessModel.SessionRPETrainingRecords" Role="SessionRPETrainingRecords" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.ArcheryRecord" Role="ArcheryRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SessionRPETrainingRecords">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ArcheryRecord">
+              <PropertyRef Name="SessionRPETrainingRecordID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ShootingRecord">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TrainingDate" Type="DateTime" Precision="3" />
+          <Property Name="CoachID" Type="Int32" />
+          <Property Name="AthleteID" Type="Int32" />
+          <Property Name="ShootingTool" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BulletCount" Type="Int32" />
+          <Property Name="RPEscore" Type="Int32" />
+          <Property Name="EachTrainingLoad" Type="Int32" />
+          <Property Name="Coach" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Athlete" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SessionRPEShottingRecordID" Type="Int32" />
+          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_ShootingRecord_Athletes" FromRole="ShootingRecord" ToRole="Athletes" />
+          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_ShootingRecord_Coaches" FromRole="ShootingRecord" ToRole="Coaches" />
+          <NavigationProperty Name="ShottingSessionRPERecord" Relationship="PhFitnessModel.FK_ShootingRecord_SessionRPEShottingRecord" FromRole="ShootingRecord" ToRole="ShottingSessionRPERecord" />
+        </EntityType>
+        <Association Name="FK_ShootingRecord_Athletes">
+          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.ShootingRecord" Role="ShootingRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ShootingRecord">
+              <PropertyRef Name="AthleteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShootingRecord_Coaches">
+          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.ShootingRecord" Role="ShootingRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coaches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ShootingRecord">
+              <PropertyRef Name="CoachID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ShottingSessionRPERecord">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Coach" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CoachID" Type="Int32" />
+          <Property Name="Athlete" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="AthleteID" Type="Int32" />
+          <Property Name="TrainingDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ShootingTool" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BulletCount" Type="Int32" />
+          <Property Name="RPEScore" Type="Int32" />
+          <Property Name="EachTrainingLoad" Type="Int32" />
+          <Property Name="DailyTrainingLoad" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ShootingRecord" Relationship="PhFitnessModel.FK_ShootingRecord_SessionRPEShottingRecord" FromRole="ShottingSessionRPERecord" ToRole="ShootingRecord" />
+        </EntityType>
+        <Association Name="FK_ShootingRecord_SessionRPEShottingRecord">
+          <End Type="PhFitnessModel.ShottingSessionRPERecord" Role="ShottingSessionRPERecord" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.ShootingRecord" Role="ShootingRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShottingSessionRPERecord">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ShootingRecord">
+              <PropertyRef Name="SessionRPEShottingRecordID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2146,26 +2252,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ShootingRecord">
-            <EntityTypeMapping TypeName="PhFitnessModel.ShootingRecord">
-              <MappingFragment StoreEntitySet="ShootingRecord">
-                <ScalarProperty Name="Athlete" ColumnName="Athlete" />
-                <ScalarProperty Name="Coach" ColumnName="Coach" />
-                <ScalarProperty Name="DailyTrainingLoad" ColumnName="DailyTrainingLoad" />
-                <ScalarProperty Name="EachTrainingLoad" ColumnName="EachTrainingLoad" />
-                <ScalarProperty Name="RPEscore" ColumnName="RPEscore" />
-                <ScalarProperty Name="BulletCount" ColumnName="BulletCount" />
-                <ScalarProperty Name="ShootingTool" ColumnName="ShootingTool" />
-                <ScalarProperty Name="AthleteID" ColumnName="AthleteID" />
-                <ScalarProperty Name="CoachID" ColumnName="CoachID" />
-                <ScalarProperty Name="TrainingDate" ColumnName="TrainingDate" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ArcheryRecord">
             <EntityTypeMapping TypeName="PhFitnessModel.ArcheryRecord">
               <MappingFragment StoreEntitySet="ArcheryRecord">
+                <ScalarProperty Name="SessionRPETrainingRecordID" ColumnName="SessionRPETrainingRecordID" />
                 <ScalarProperty Name="DailyTrainingLoad" ColumnName="DailyTrainingLoad" />
                 <ScalarProperty Name="EachTrainingLoad" ColumnName="EachTrainingLoad" />
                 <ScalarProperty Name="RPEscore" ColumnName="RPEscore" />
@@ -2327,6 +2417,41 @@
                 <ScalarProperty Name="Distance" ColumnName="Distance" />
                 <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShootingRecord">
+            <EntityTypeMapping TypeName="PhFitnessModel.ShootingRecord">
+              <MappingFragment StoreEntitySet="ShootingRecord">
+                <ScalarProperty Name="SessionRPEShottingRecordID" ColumnName="SessionRPEShottingRecordID" />
+                <ScalarProperty Name="Athlete" ColumnName="Athlete" />
+                <ScalarProperty Name="Coach" ColumnName="Coach" />
+                <ScalarProperty Name="EachTrainingLoad" ColumnName="EachTrainingLoad" />
+                <ScalarProperty Name="RPEscore" ColumnName="RPEscore" />
+                <ScalarProperty Name="BulletCount" ColumnName="BulletCount" />
+                <ScalarProperty Name="ShootingTool" ColumnName="ShootingTool" />
+                <ScalarProperty Name="AthleteID" ColumnName="AthleteID" />
+                <ScalarProperty Name="CoachID" ColumnName="CoachID" />
+                <ScalarProperty Name="TrainingDate" ColumnName="TrainingDate" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShottingSessionRPERecord">
+            <EntityTypeMapping TypeName="PhFitnessModel.ShottingSessionRPERecord">
+              <MappingFragment StoreEntitySet="ShottingSessionRPERecord">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="DailyTrainingLoad" ColumnName="DailyTrainingLoad" />
+                <ScalarProperty Name="EachTrainingLoad" ColumnName="EachTrainingLoad" />
+                <ScalarProperty Name="RPEScore" ColumnName="RPEScore" />
+                <ScalarProperty Name="BulletCount" ColumnName="BulletCount" />
+                <ScalarProperty Name="ShootingTool" ColumnName="ShootingTool" />
+                <ScalarProperty Name="TrainingDate" ColumnName="TrainingDate" />
+                <ScalarProperty Name="AthleteID" ColumnName="AthleteID" />
+                <ScalarProperty Name="Athlete" ColumnName="Athlete" />
+                <ScalarProperty Name="CoachID" ColumnName="CoachID" />
+                <ScalarProperty Name="Coach" ColumnName="Coach" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

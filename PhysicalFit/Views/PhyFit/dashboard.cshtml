@@ -23,8 +23,8 @@
 <body>
     <div>
         <form action="/Record/SessionRecord" method="get" id="generalTrainingForm">
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <div style="margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                <div style="margin-bottom: 20px; flex: 1;">
                     <label for="Item">訓練監控項目</label>
                     <select id="Item" name="TrainingItem" style="border: 2px solid #000;" onchange="toggleButtonVisibility()">
                         @*class="form-control"*@
@@ -36,18 +36,22 @@
                     </select>
                 </div>
 
-                <div id="identityCoach" style="display: flex; align-items: center;">
+                <div id="identityCoach" style="display: flex; align-items: center; flex: 1;">
                     <label>教練：@ViewBag.CoachName</label>
+                    <input type="hidden" name="CoachID" id="coachID" value="@ViewBag.CoachID" />
                     <input type="hidden" name="CoachName" id="coachName" value="@ViewBag.CoachName" />
                 </div>
-                <div id="identity_Athletes" style="display: flex; align-items: center;">
+                <div id="identity_Athletes" style="display: flex; align-items: center; flex: 1;">
                     <label for="AthletesName">運動員：</label>
                     <select id="AthletesName" name="AthleteID">
                         <option value="">請選擇</option>
-                        @foreach (var athlete in ViewBag.Athletes)
+                        @if (ViewBag.Athletes != null)
                         {
-                            @*<option value="@athlete.ID">@athlete.AthleteName</option>*@
-                            <option value="@athlete.AthleteName">@athlete.AthleteName</option>
+                            foreach (var athlete in ViewBag.Athletes)
+                            {
+                                @*<option value="@athlete.ID">@athlete.AthleteName</option>*@
+                                <option value="@athlete.AthleteName">@athlete.AthleteName</option>
+                            }
                         }
                     </select>
                 </div>
@@ -55,17 +59,6 @@
             <!-- 訓練衝量監控區塊 -->
             <div class="content" id="trainingMonitoring">
                 <h2>一般訓練衝量監控</h2>
-
-                @*<div class="form-group" style="display: inline-block; max-width: 100%;">
-                        <label for="TrainingItem" style="font-size: 24px;" title="請選擇課程名稱">請選擇課程名稱</label>
-                        <select class="form-control" id="TrainingItem" name="TrainingItem" onchange="updateTableHeaders()" style="width: auto; min-width: 200px; display: inline-block;">
-                            <option value="">請選擇課程名稱</option>
-                            @foreach (var item in ViewBag.Description)
-                            {
-                                <option value="@item" style="width: 50px;">@item</option>
-                            }
-                        </select>
-                    </div>*@
                 @Html.Partial("_SpecialTechnical")
                 <table id="trainingMonitoringTable">
                     <thead id="tableHeaders">
@@ -73,10 +66,6 @@
                     <tbody id="trainingRows">
                     </tbody>
                 </table>
-                @*<div class="form-group" style="width:450px;">
-                        <label for="dailyTL" title="每日運動訓練量(TL)">每日運動負荷(TL):</label>
-                        <input type="text" align="left" id="dailyTL" class="form-control" name="DailyTL" placeholder="每日運動負荷" readonly>
-                    </div>*@
                 <div style="margin-top: 20px;">
                     <button id="btn_calculate" class="btn btn-info" title="計算">計算</button>
                     <div id="RPEModalTraining" class="modal">
@@ -143,10 +132,7 @@
                         </tr>
                     </tbody>
                 </table>
-                @*<div class="form-group" style="width:450px;">
-                        <label for="dailyTL">每日運動負荷(TL):</label>
-                        <input type="text" align="left" id="dailyTLArchery" class="form-control" name="ArcheryDailyTL" placeholder="每日運動負荷" readonly>
-                    </div>*@
+
                 <div style="margin-top: 20px;">
                     <button id="btn_calculate_archery" class="btn btn-info" title="計算">計算</button>
                     <div id="RPEModalArchery" class="modal">
@@ -166,6 +152,8 @@
         <div class="content" id="shootingMonitoring">
             <h2>射擊訓練衝量監控</h2>
             <form id="shootingForm">
+                <input type="hidden" name="CoachID" value="@ViewBag.CoachID" />
+                <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" />
                 <table id="shootingMonitoringTable">
                     <thead>
                         <tr>
@@ -179,13 +167,13 @@
                     </thead>
                     <tbody id="ShootingtrainingRows">
                         <tr class="Shootingtraining-group">
-                            <td><input type="datetime-local" class="form-control" name="shootingDate" /></td>
+                            <td><input id="shootingDate" name="shootingDate" class="form-control" /></td>
                             <td>
-                                <select class="form-control" name="GunItem">
+                                <select class="form-control" name="GunsItem">
                                     <option>請選擇項目</option>
                                     @foreach (var gun in ViewBag.GunItem)
                                     {
-                                        <option>@gun</option>
+                                        <option value="@gun">@gun</option>
                                     }
                                 </select>
                             </td>
@@ -198,7 +186,7 @@
                                 <button type="button" class="btn btn-info openRPEModalShooting">運動自覺量表</button>
                             </td>
                             <td>
-                                <input type="text" align="left" style="width:200px;" id="dailyTLShooting" class="form-control" name="ShootingDailyTL" placeholder="每日運動負荷(TL)" readonly>
+                                <input type="text" align="left" style="width:200px;" id="dailyTLShooting" class="form-control" name="ShootingDailyTL" placeholder="單次運動負荷(TL)" readonly>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-primary add-row-shooting">+</button>
@@ -207,10 +195,7 @@
                         </tr>
                     </tbody>
                 </table>
-                @*<div class="form-group" style="width:450px;">
-                        <label for="dailyTL">每日運動負荷(TL):</label>
-                        <input type="text" align="left" id="dailyTLShooting" class="form-control" name="ShootingDailyTL" placeholder="每日運動負荷" readonly>
-                    </div>*@
+
                 <div style="margin-top: 20px;">
                     <button id="btn_calculate_shooting" class="btn btn-info" title="計算">計算</button>
                     <div id="RPEModalShooting" class="modal">
@@ -262,11 +247,11 @@
                         <div class="result-section">
                             <label for="Result">檢測結果：</label>
                             <div class="mb-3">
-                                <label for="CriticalSpeed" style="font-size: 20px; display: block;">臨界速度 (km/h)</label>
+                                <label for="CriticalSpeed" style="font-size: 20px; display: block;">臨界速度(km/h)_有氧能力</label>
                                 <input type="text" class="form-control form-control-sm" id="CriticalSpeed">
                             </div>
                             <div class="mb-3">
-                                <label for="AnaerobicPower" style="font-size: 20px; display: block;">最大無氧做功 (m)</label>
+                                <label for="AnaerobicPower" style="font-size: 20px; display: block;">最大無氧做功(m)_無氧能力</label>
                                 <input type="text" class="form-control form-control-sm" id="AnaerobicPower">
                             </div>
                         </div>
@@ -278,10 +263,10 @@
                         </div>
 
                         <!-- 速耐力間歇跑訓練處方區域 -->
-                        <div class="speed-prescription-section">
+                        @*<div class="speed-prescription-section">
                             <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
                             <input type="text" class="form-control" id="SpeedPres" placeholder="">
-                        </div>
+                        </div>*@
                         <input type="hidden" id="CriticalSpeed" name="criticalSpeed" />
                         <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />
 
@@ -399,13 +384,19 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('連結未找到');
     }
 
-    // 檢測系統的日期套件
+    //檢測系統的日期套件
     flatpickr("#DetectionDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true
     });
 
+    //射擊的日期套件
+    flatpickr("#shootingDate", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true
+    });
     // 運動員身分登入時，隱藏欄位
     const userRole = '@Session["UserRole"]';
     const athleteDiv = document.getElementById("identity_Athletes");
@@ -426,7 +417,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
     </script>
-
-
 </body>
 </html>

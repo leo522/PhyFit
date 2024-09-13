@@ -22,11 +22,12 @@ namespace PhysicalFit.Models
         public Nullable<int> BulletCount { get; set; }
         public Nullable<int> RPEscore { get; set; }
         public Nullable<int> EachTrainingLoad { get; set; }
-        public Nullable<int> DailyTrainingLoad { get; set; }
         public string Coach { get; set; }
         public string Athlete { get; set; }
+        public Nullable<int> SessionRPEShottingRecordID { get; set; }
     
-        public virtual Coaches Coaches { get; set; }
         public virtual Athletes Athletes { get; set; }
+        public virtual Coaches Coaches { get; set; }
+        public virtual ShottingSessionRPERecord ShottingSessionRPERecord { get; set; }
     }
 }

@@ -130,6 +130,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="AuthHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PhyFitController.cs" />
     <Compile Include="Controllers\RecordController.cs" />
@@ -235,6 +236,9 @@
     <Compile Include="Models\ShottingItems.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ShottingSessionRPERecord.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SpecializedTraining.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -310,6 +314,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="img\404圖片.jpg" />
     <Content Include="img\bg_img.jpg" />
     <Content Include="img\favicon.svg" />
     <Content Include="img\KiKi.jpg" />
@@ -419,6 +424,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\SchoolLogin.cshtml" />
     <Content Include="Views\Record\SessionRecord.cshtml" />
+    <Content Include="Views\Error\Error404.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

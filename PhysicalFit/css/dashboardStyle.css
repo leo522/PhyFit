@@ -23,37 +23,42 @@ th, td {
     text-overflow: ellipsis; /* 長文本使用省略號顯示 */
 }
 
-    /* 特定欄位寬度設置 */
+th, td {
+    min-width: 80px; /* 設定最小寬度 */
+    max-width: 150px; /* 設定最大寬度 */
+}
+
+    /* 調整特定欄位寬度設置 */
     th:nth-child(1), td:nth-child(1) { /* 日期欄位 */
-        min-width: 140px; /* 確保日期完整顯示 */
+        min-width: 120px; /* 確保日期完整顯示 */
     }
 
     th:nth-child(2), td:nth-child(2) { /* 課程名稱 */
-        min-width: 160px;
+        min-width: 140px;
     }
 
     th:nth-child(3), td:nth-child(3) { /* 項目 */
-        min-width: 130px;
+        min-width: 120px;
     }
 
     th:nth-child(4), td:nth-child(4) { /* 動作名稱 */
-        min-width: 155px;
+        min-width: 140px;
     }
 
     th:nth-child(5), td:nth-child(5) { /* 訓練動作名稱 */
-        min-width: 180px;
+        min-width: 160px;
     }
 
     th:nth-child(6), td:nth-child(6) { /* 自覺費力程度 */
-        min-width: 20px;
+        min-width: 80px;
     }
 
     th:nth-child(7), td:nth-child(7) { /* 訓練時間 */
-        min-width: 170px;
+        min-width: 140px;
     }
 
     th:nth-child(8), td:nth-child(8) { /* 每次運動訓練量(TL) */
-        min-width: 180px;
+        min-width: 140px;
     }
 
     th:nth-child(9), td:nth-child(9) { /* 增減欄位 */

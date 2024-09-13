@@ -57,6 +57,33 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
+        #region 模糊查詢學校名稱
+        [HttpGet]
+        public JsonResult GetSchoolByName(string name)
+        {
+            // 查詢小學
+            var primarySchoolResults = _db.PrimarySchoolList
+                     .Where(s => s.SchoolName.Contains(name))
+                     .Select(s => new { s.SchoolCode, s.SchoolName })
+                     .ToList();
+
+            // 查詢國中
+            var juniorHighSchoolResults = _db.JuniorHighSchoolList
+                                             .Where(j => j.SchoolName.Contains(name))
+                                             .Select(j => new { j.SchoolCode, j.SchoolName })
+                                             .ToList();
+
+            // 合併查詢結果
+            var results = primarySchoolResults.Concat(juniorHighSchoolResults).ToList();
+
+            if (results.Any())
+            {
+                return Json(results, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+        }
+        #endregion
         #region 教練註冊帳號
         public ActionResult RegisterCoach(string schoolID)
         {
@@ -112,7 +139,7 @@ namespace PhysicalFit.Controllers
             _db.Users.Add(newUser);
             _db.SaveChanges();
 
-            return RedirectToAction("Login", "PhyFit");
+            return RedirectToAction("Login", "Account");
         }
         #endregion
 
@@ -127,16 +154,16 @@ namespace PhysicalFit.Controllers
         {
             DateTime birthdayDate = AthleteBirthday.Value.Date; //去除時間部分，只保留日期部分
 
-            string encryptedID = EncryptionHelper.Encrypt(AthleteID); //AES對稱加密身份證號碼
+            //string encryptedID = EncryptionHelper.Encrypt(AthleteID); //AES對稱加密身份證號碼
 
             // 處理運動員註冊
             var newAthlete = new Athletes
             {
-                AthleteAccount = encryptedID,
+                AthleteAccount = AthleteID,
                 AthletePWD = ComputeSha256Hash(Athletepwd),
                 AthleteName = AthleteName,
                 Birthday = birthdayDate,
-                IdentityNumber = encryptedID, //儲存加密後的身份證號碼
+                IdentityNumber = AthleteID, //儲存加密後的身份證號碼
                 AthleteSchool = AthleteSchool,
                 TeamName = AthleteTeam,
                 CoachID = _db.Coaches.FirstOrDefault(c => c.CoachName == AthleteCoach)?.ID,
@@ -149,7 +176,7 @@ namespace PhysicalFit.Controllers
             var newUser = new Users
             {
                 Name = AthleteName,
-                Account = encryptedID,
+                Account = AthleteID,
                 Password = ComputeSha256Hash(Athletepwd), // 密碼加密
                 PhoneNumber = null, // 運動員如果有電話號碼可以加進來，否則設為 null
                 Email = null, // 如果運動員有 Email 可以加進來，否則設為 null
@@ -162,7 +189,7 @@ namespace PhysicalFit.Controllers
             _db.Users.Add(newUser);
             _db.SaveChanges();
 
-            return RedirectToAction("Login", "PhyFit");
+            return RedirectToAction("Login", "Account");
         }
         #endregion
 
@@ -213,8 +240,8 @@ namespace PhysicalFit.Controllers
 
                 if (IsIdentityNumber(account))
                 {
-                    string encryptedIdentityNumber = EncryptionHelper.Encrypt(account);
-                    user = _db.Users.FirstOrDefault(u => u.Account == encryptedIdentityNumber && u.Password == hashedPwd);
+                    //string encryptedIdentityNumber = EncryptionHelper.Encrypt(account);
+                    user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
                 }
                 else
                 {
@@ -271,9 +298,10 @@ namespace PhysicalFit.Controllers
 
         private bool IsIdentityNumber(string account)
         {
+            return account.Length == 10 && account.All(c => char.IsLetterOrDigit(c));
             // 根據實際情況設置身份證號碼的格式檢查
             // 這裡假設身份證號碼為數字和字母組成，並且長度為特定的數字
-            return Regex.IsMatch(account, "^[A-Za-z][0-9]{9}$"); // 假設身份證是1個字母+9個數字
+            //return Regex.IsMatch(account, "^[A-Za-z][0-9]{9}$"); // 假設身份證是1個字母+9個數字
         }
 
         #endregion
@@ -300,7 +328,7 @@ namespace PhysicalFit.Controllers
                     Session["LoggedIn"] = true;
                     Session["schoolName"] = dto.SchoolName;
 
-                    return RedirectToAction("Login", "PhyFit");
+                    return RedirectToAction("Login", "Account");
                 }
                 else
                 {
