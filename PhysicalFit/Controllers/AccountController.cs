@@ -84,6 +84,7 @@ namespace PhysicalFit.Controllers
             return Json(new List<object>(), JsonRequestBehavior.AllowGet);
         }
         #endregion
+        
         #region 教練註冊帳號
         public ActionResult RegisterCoach(string schoolID)
         {

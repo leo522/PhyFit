@@ -489,12 +489,23 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 儲存射箭訓練紀錄
-        public ActionResult SaveArcheryRecord(ArcheryRecord record)
+        public ActionResult SaveArcheryRecord(ArcheryRecord record, ArcherySessionRPERecord sessionRecord)
         {
             try
             {
+                // 1. 儲存ShottingSessionRPERecord
+                sessionRecord.CreatedDate = DateTime.Now; // 設定CreatedDate
+
+                _db.ArcherySessionRPERecord.Add(sessionRecord);
+                _db.SaveChanges();
+
+                // 2. 使用儲存後的ID更新ShootingRecord
+                record.SessionRPEArcheryRecordID = sessionRecord.ID;
+
+                // 3. 儲存ShootingRecord
                 _db.ArcheryRecord.Add(record);
                 _db.SaveChanges();
+
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -503,6 +514,7 @@ namespace PhysicalFit.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
         #endregion
 
         #region 儲存射擊訓練紀錄

@@ -12,23 +12,28 @@ namespace PhysicalFit.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ArcheryRecord
+    public partial class ArcherySessionRPERecord
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ArcherySessionRPERecord()
+        {
+            this.ArcheryRecord = new HashSet<ArcheryRecord>();
+        }
+    
         public int ID { get; set; }
-        public Nullable<System.DateTime> TrainingDate { get; set; }
         public string Coach { get; set; }
         public Nullable<int> CoachID { get; set; }
         public string Athlete { get; set; }
         public Nullable<int> AthleteID { get; set; }
+        public System.DateTime TrainingDate { get; set; }
         public Nullable<int> Poundage { get; set; }
         public Nullable<int> ArrowCount { get; set; }
-        public Nullable<int> RPEscore { get; set; }
+        public Nullable<int> RPEScore { get; set; }
         public Nullable<int> EachTrainingLoad { get; set; }
         public Nullable<int> DailyTrainingLoad { get; set; }
-        public Nullable<int> SessionRPEArcheryRecordID { get; set; }
+        public System.DateTime CreatedDate { get; set; }
     
-        public virtual Athletes Athletes { get; set; }
-        public virtual Coaches Coaches { get; set; }
-        public virtual ArcherySessionRPERecord ArcherySessionRPERecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ArcheryRecord> ArcheryRecord { get; set; }
     }
 }

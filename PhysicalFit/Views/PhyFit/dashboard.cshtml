@@ -5,6 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link href="~/css/HomeStyle.css" rel="stylesheet" />
+    <link href="~/css/dashboardStyle.css" rel="stylesheet" />
     <script src="~/Scripts/SessionMonitoring.js"></script>
     <script src="~/Scripts/RPE_Modal.js"></script> @*自覺量表彈跳視窗*@
     <script src="~/Scripts/TLCaculate.js"></script> @*運動訓練量計算*@
@@ -17,8 +19,7 @@
     <script src="~/Scripts/SaveDetecSwimmingRecord.js"></script> @*游泳檢測記錄存檔*@
     <script src="~/Scripts/SaveDetecBikeRecord.js"></script> @*自由車檢測記錄存檔*@
     <script src="~/Scripts/SaveDetecRollerSkatingRecord.js"></script> @*滑輪溜冰檢測記錄存檔*@
-    <link href="~/css/HomeStyle.css" rel="stylesheet" />
-    <link href="~/css/dashboardStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/Slope.js"></script> @*產生斜率圖表*@
 </head>
 <body>
     <div>
@@ -92,7 +93,9 @@
         <!-- 射箭訓練衝量監控區塊 -->
         <div class="content" id="archeryMonitoring">
             <h2>射箭訓練衝量監控</h2>
-            <form>
+            <form id="archeryForm">
+                <input type="hidden" name="CoachID" value="@ViewBag.CoachID" />
+                <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" />
                 <table id="archeryMonitoringTable">
                     <thead>
                         <tr>
@@ -107,7 +110,7 @@
                     </thead>
                     <tbody id="ArcherytrainingRows">
                         <tr class="Archerytraining-group">
-                            <td><input type="datetime-local" class="form-control" name="archeryDate" /></td>
+                            <td><input id="archeryDate" name="archeryDate" class="form-control" /></td>
                             <td>
                                 <input type="text" class="form-control" name="Pounds" placeholder="磅數">
                             </td>
@@ -120,7 +123,7 @@
                                 <button type="button" class="btn btn-info openRPEModalArchery">運動自覺量表</button>
                             </td>
                             <td>
-                                <input type="text" class="form-control" name="SessionArcheryTL" placeholder="每次運動負荷" readonly>
+                                <input type="text" class="form-control" name="SessionArcheryTL" placeholder="單次運動負荷" readonly>
                             </td>
                             <td>
                                 <input type="text" align="left" style="width:200px;" id="dailyTLArchery" class="form-control" name="ArcheryDailyTL" placeholder="每日運動負荷(TL)" readonly>
@@ -386,6 +389,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //檢測系統的日期套件
     flatpickr("#DetectionDateTime", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true
+    });
+
+    //射箭的日期套件
+    flatpickr("#archeryDate", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true

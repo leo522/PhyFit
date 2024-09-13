@@ -39,11 +39,8 @@
         <EntityTypeShape EntityType="PhFitnessModel.JuniorHighSchoolList" Width="1.5" PointX="16.25" PointY="8" />
         <EntityTypeShape EntityType="PhFitnessModel.UniversitySchoolList" Width="1.5" PointX="18.25" PointY="6.25" />
         <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="16.375" PointY="1.125" />
-        <EntityTypeShape EntityType="PhFitnessModel.ArcheryRecord" Width="1.5" PointX="23.75" PointY="5.875" />
-        <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Coach__5A4F643B" />
         <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="26" PointY="8" />
         <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="22.25" PointY="1.5" />
-        <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" />
         <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK_Users_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_Users_Coaches" />
@@ -64,12 +61,16 @@
         <AssociationConnector Association="PhFitnessModel.FK__BikeRecor__Detec__162F4418" />
         <EntityTypeShape EntityType="PhFitnessModel.RollerSkatingRecordDetails" Width="1.5" PointX="24.625" PointY="13.5" />
         <AssociationConnector Association="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" />
-        <AssociationConnector Association="PhFitnessModel.FK_SessionRPETrainingRecord" />
         <EntityTypeShape EntityType="PhFitnessModel.ShootingRecord" Width="1.5" PointX="32.25" PointY="6.875" />
         <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Coaches" />
         <EntityTypeShape EntityType="PhFitnessModel.ShottingSessionRPERecord" Width="1.5" PointX="0.75" PointY="13" />
         <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_SessionRPEShottingRecord" />
+        <EntityTypeShape EntityType="PhFitnessModel.ArcherySessionRPERecord" Width="1.5" PointX="3.375" PointY="13" />
+        <EntityTypeShape EntityType="PhFitnessModel.ArcheryRecord" Width="1.5" PointX="32.25" PointY="11.875" />
+        <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" />
+        <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Coach__2D12A970" />
+        <AssociationConnector Association="PhFitnessModel.FK_ArcheryRecord_ArcherySessionRPERecord" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

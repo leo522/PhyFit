@@ -16,13 +16,13 @@
 
         // 構建一個用於發送的數據對象
         var formData = {
-            TrainingDate: $('input[name="archeryDate"]').val(),
-            Coach: $('input[name="CoachName"]').val(),
-            Athlete: $('#AthletesName').val(),
-            Poundage: $('input[name="Pounds"]').val(),
-            ArrowCount: $('input[name="Arrows"]').val(),
-            RPEscore: $('input[name="RPEArchery"]').val(),
-            EachTrainingLoad: $('input[name="SessionArcheryTL"]').val(),
+            TrainingDate: $('input[name="archeryDate"]').val(), //訓練日
+            Coach: $('input[name="CoachName"]').val(), //教練名字
+            Athlete: $('#AthletesName').val(), //運動員名字
+            Poundage: $('input[name="Pounds"]').val(), //磅數
+            ArrowCount: $('input[name="Arrows"]').val(), //箭數
+            RPEscore: $('input[name="RPEArchery"]').val(), //自覺程度
+            EachTrainingLoad: $('input[name="SessionArcheryTL"]').val(), //單次運動負荷
             DailyTrainingLoad: $('input[name="ArcheryDailyTL"]').val()
         };
 
