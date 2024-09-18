@@ -12,7 +12,6 @@ var TrackMaxR_b;
 var TrackLimitSpeed = 0; //臨界速度
 var TrackMaxWork = 0; //最大無氧做功
 var TreadmillTotT = 0; //訓練量
-var TreadmillCurrentSets = 1; //訓練量預設值
 var TreadmillCurrentSets = 1; //設定組數
 //var TreadmillCurrentMode = "SingleSet"; //處方訓練模式，單組模式
 
@@ -146,6 +145,8 @@ function trackCalculateLinearRegression() {
 }
 
 //計算運動量
+
+
 function TreadmillPrescriptionTable(Mode, SetNum) {
     TreadmillCurrentMode = Mode;
     TreadmillCurrentSets = SetNum;
@@ -173,7 +174,8 @@ function TreadmillTotalT() {
 
     for (var i = 1; i <= TreadmillCurrentSets; i++)
     {
-        TotalTraining = TotalTraining + 1 ;
+        /*TotalTraining = TotalTraining + 1 ;*/
+        TotalTraining = TotalTraining + 1 * (+ i).value;
     }
     
     document.getElementById("TrainingVol").value = TotT.toFixed(2); //r^2，決定係數

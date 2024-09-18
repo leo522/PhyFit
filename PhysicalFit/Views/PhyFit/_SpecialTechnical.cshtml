@@ -30,7 +30,7 @@
                 </div>
             </td>
             <td>
-                <input type="datetime-local" class="form-control" name="TrainingDate" title="日期" />
+                <input id="TrainingDate" name="TrainingDate" class="form-control" title="日期"/>
             </td>
             <td>
                 <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)" disabled>
@@ -93,6 +93,11 @@
 </table>
 
 <script>
+    flatpickr("#TrainingDate", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true
+    });
     function updateTableContent(selectElement) {
 
         var selectedItem = selectElement.value; // 取得選擇的課程名稱

@@ -22,13 +22,18 @@
     <script src="~/Scripts/LinearEquation.js"></script> @*產生斜率圖表*@
 </head>
 <body>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
     <div>
         <form action="/Record/SessionRecord" method="get" id="generalTrainingForm">
             <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                 <div style="margin-bottom: 20px; flex: 1;">
                     <label for="Item">訓練監控項目</label>
                     <select id="Item" name="TrainingItem" style="border: 2px solid #000;" onchange="toggleButtonVisibility()">
-                        @*class="form-control"*@
                         <option>請選擇訓練項目</option>
                         @foreach (var item in ViewBag.MonitoringItems)
                         {
@@ -51,14 +56,15 @@
                             foreach (var athlete in ViewBag.Athletes)
                             {
                                 @*<option value="@athlete.ID">@athlete.AthleteName</option>*@
-                                <option value="@athlete.AthleteName">@athlete.AthleteName</option>
+                                <option value="@athlete.ID">@athlete.AthleteName</option>
                             }
                         }
                     </select>
                 </div>
             </div>
-            <!-- 訓練衝量監控區塊 -->
+            <!-- 一般訓練衝量監控區塊 -->
             <div class="content" id="trainingMonitoring">
+                <input type="hidden" name="trainingType" value="RPE" />
                 <h2>一般訓練衝量監控</h2>
                 @Html.Partial("_SpecialTechnical")
                 <table id="trainingMonitoringTable">
@@ -88,12 +94,13 @@
                     </div>
                 </div>
             </div>
-        </form>
 
-        <!-- 射箭訓練衝量監控區塊 -->
-        <div class="content" id="archeryMonitoring">
-            <h2>射箭訓練衝量監控</h2>
-            <form id="archeryForm">
+
+            <!-- 射箭訓練衝量監控區塊 -->
+            <div class="content" id="archeryMonitoring">
+                <h2>射箭訓練衝量監控</h2>
+                @*<form id="archeryForm">*@
+                <input type="hidden" name="trainingType" value="Archery" />
                 <input type="hidden" name="CoachID" value="@ViewBag.CoachID" />
                 <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" />
                 <table id="archeryMonitoringTable">
@@ -148,13 +155,14 @@
                     </div>
                     <button class="btn btn-success" id="btn-archeryMonitoring" title="存檔">存檔</button>
                 </div>
-            </form>
-        </div>
+                @*</form>*@
+            </div>
 
-        <!-- 射擊訓練衝量監控區塊 -->
-        <div class="content" id="shootingMonitoring">
-            <h2>射擊訓練衝量監控</h2>
-            <form id="shootingForm">
+            <!-- 射擊訓練衝量監控區塊 -->
+            <div class="content" id="shootingMonitoring">
+                <h2>射擊訓練衝量監控</h2>
+                @*<form id="shootingForm">*@
+                <input type="hidden" name="trainingType" value="Shooting" />
                 <input type="hidden" name="CoachID" value="@ViewBag.CoachID" />
                 <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" />
                 <table id="shootingMonitoringTable">
@@ -211,9 +219,10 @@
                     </div>
                     <button class="btn btn-success" id="btn-shootingMonitoring" title="存檔">存檔</button>
                 </div>
-            </form>
-        </div>
-        <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看訓練紀錄</a>
+                @*</form>*@
+            </div>
+            <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看訓練紀錄</a>
+        </form>
     </div>
     @*檢測系統*@
     @using (Html.BeginForm("SaveTrackFieldRecord", "PhyFit", FormMethod.Post))
@@ -267,15 +276,16 @@
 
                         <!-- 速耐力間歇跑訓練處方區域 -->
                         @*<div class="speed-prescription-section">
-                            <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
-                            <input type="text" class="form-control" id="SpeedPres" placeholder="">
-                        </div>*@
+                                <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
+                                <input type="text" class="form-control" id="SpeedPres" placeholder="">
+                            </div>*@
                         <input type="hidden" id="CriticalSpeed" name="criticalSpeed" />
                         <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />
 
                     </div>
                 </div>
                 <button class="btn btn-success" name="btn_Detec" id="btn_Detec">存檔</button>
+                <a href="/Record/SessionRecord" class="btn btn-outline-primary" id="DecCheck">查看檢測訓練紀錄</a>
             </div>
             <div id="distanceDetails" style="margin-top: -500px;"></div>
             @*@using (Html.BeginForm("RedirectToPrescription", "PhyFit", FormMethod.Post))
@@ -289,23 +299,25 @@
     @*檢測系統-訓練內容-Partial view呈現*@
 
     <script>
+// 更新動作名稱選單的技術項目
 function updateTechnicalActions(selectElement) {
     const selectedTechnical = selectElement.value;
     const actionDropdown = selectElement.closest('tr').querySelector('[name="SpecialTechName"]');
 
+    // 發送 AJAX 請求獲取對應的動作名稱
     $.ajax({
         url: '@Url.Action("GetSpecialTechnicalActions", "PhyFit")',
         type: 'GET',
         data: { technicalItem: selectedTechnical },
         success: function (data) {
-            actionDropdown.innerHTML = '';
+            actionDropdown.innerHTML = ''; // 清空原選單
 
-            // Add default option
+            // 添加默認選項
             const defaultOption = document.createElement("option");
             defaultOption.text = "請選擇動作名稱";
             actionDropdown.add(defaultOption);
 
-            // Populate the dropdown with received data
+            // 將返回的動作名稱加入選單
             data.forEach(function (item) {
                 const option = document.createElement("option");
                 option.value = item;
@@ -319,6 +331,7 @@ function updateTechnicalActions(selectElement) {
     });
 }
 
+// 檢查日期是否選擇
 function checkDateInput(dateInput) {
     if (!dateInput || !dateInput.value) {
         Swal.fire({
@@ -332,30 +345,32 @@ function checkDateInput(dateInput) {
     return true;
 }
 
+// 切換到檢測系統視圖
 function switchToDetectionSystem() {
     document.getElementById('Detection_Sys').style.display = "block"; // 顯示檢測系統
-    document.getElementById('trainingMonitoring').style.display = "none"; // 隱藏其他區塊
+    document.getElementById('trainingMonitoring').style.display = "none"; // 隱藏其他訓練區塊
     toggleButtonVisibility(); // 更新按鈕顯示狀態
 }
 
-// 查看訓練紀錄按鈕顯示隱藏
+// 查看訓練紀錄按鈕顯示與隱藏
 function toggleButtonVisibility() {
-    const selectElement = document.getElementById('Item'); // 確保這是正確的選擇框
+    const selectElement = document.getElementById('Item');
     const button = document.getElementById('recordCheck');
     const detectionSection = document.getElementById('Detection_Sys');
 
-    // 檢查檢測系統區塊是否顯示
+    // 根據檢測系統是否顯示來決定按鈕是否可見
     if (detectionSection.style.display === "block") {
-        button.style.display = "none"; // 在檢測系統中隱藏按鈕
+        button.style.display = "none"; // 檢測系統顯示時隱藏按鈕
     } else {
         button.style.display = (selectElement.value !== "請選擇訓練項目") ? "inline-block" : "none";
     }
 }
 
-// 在 DOMContentLoaded 時隱藏按鈕
+// 在 DOM 完全加載後初始化
 document.addEventListener('DOMContentLoaded', function () {
-    toggleButtonVisibility(); // 初始隱藏按鈕
+    toggleButtonVisibility(); // 初始設置按鈕顯示狀態
 
+    // 訓練計算按鈕的點擊事件綁定
     const calculateButtons = [
         { id: 'btn_calculate', dateInputName: 'TrainingDate' },
         { id: 'btn_calculate_archery', dateInputName: 'archeryDate' },
@@ -366,62 +381,66 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(button.id).addEventListener('click', function (event) {
             const dateInput = document.querySelector(`input[name="${button.dateInputName}"]`);
             if (!checkDateInput(dateInput)) {
-                event.preventDefault();
+                event.preventDefault(); // 阻止計算操作
             }
         });
     });
-
-    // 查看訓練紀錄把訓練項目代入到檢測頁
+    // 訓練紀錄按鈕點擊事件，將選擇的項目和運動員 ID 帶入到檢測頁
     const link = document.querySelector('a.btn.btn-outline-primary');
     if (link) {
         link.addEventListener('click', function (event) {
             event.preventDefault();
             const selectedItem = document.getElementById('Item').value;
+            const athleteID = document.getElementById('AthletesName').value; // 獲取運動員 ID
+
             if (selectedItem === "請選擇訓練項目") {
                 alert("請先選擇訓練項目");
+            } else if (!athleteID) {
+                alert("請先選擇運動員");
             } else {
-                window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem);
+                window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
             }
         });
     } else {
-        console.error('連結未找到');
+        console.error('未找到查看訓練紀錄的連結按鈕');
     }
 
-    //檢測系統的日期套件
+    // 檢測系統日期選擇器初始化
     flatpickr("#DetectionDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true
     });
 
-    //射箭的日期套件
+    // 射箭日期選擇器初始化
     flatpickr("#archeryDate", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true
     });
 
-    //射擊的日期套件
+    // 射擊日期選擇器初始化
     flatpickr("#shootingDate", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true
     });
-    // 運動員身分登入時，隱藏欄位
+
+    // 根據用戶身份隱藏運動員欄位
     const userRole = '@Session["UserRole"]';
     const athleteDiv = document.getElementById("identity_Athletes");
     if (userRole === "Athlete") {
-        athleteDiv.style.display = "none"; // 隱藏該區塊
+        athleteDiv.style.display = "none"; // 隱藏運動員欄位
     }
 
-    // 監聽選擇框變更事件
+    // 監聽訓練項目的選擇變更
     const selectElement = document.getElementById('Item');
     selectElement.addEventListener('change', function () {
         if (this.value === "檢測系統") {
             switchToDetectionSystem();
         } else {
             document.getElementById('Detection_Sys').style.display = "none"; // 隱藏檢測系統
-            document.getElementById('trainingMonitoring').style.display = "block"; // 顯示其他區塊
+            document.getElementById('trainingMonitoring').style.display = "block"; // 顯示訓練監控
             toggleButtonVisibility(); // 更新按鈕顯示狀態
         }
     });
