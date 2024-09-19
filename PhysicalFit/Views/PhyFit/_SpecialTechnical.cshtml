@@ -30,7 +30,7 @@
                 </div>
             </td>
             <td>
-                <input id="TrainingDate" name="TrainingDate" class="form-control" title="日期"/>
+                <input class="training-date form-control" name="TrainingDate" title="日期" />
             </td>
             <td>
                 <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)" disabled>
@@ -93,50 +93,81 @@
 </table>
 
 <script>
-    flatpickr("#TrainingDate", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        time_24hr: true
-    });
-    function updateTableContent(selectElement) {
+    $(document).ready(function () {
+        // 初始化 flatpickr 日期選擇器
+        function initializeFlatpickr() {
+            flatpickr(".training-date", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true
+            });
+        }
 
-        var selectedItem = selectElement.value; // 取得選擇的課程名稱
+        // 初始加載時初始化 flatpickr
+        initializeFlatpickr();
 
-        var row = selectElement.closest('tr'); // 使用 closest('tr') 限定只影響當前行的欄位
+        // 新增行處理
+        function addRow(selector, maxRows) {
+            var rowCount = $(selector).find('tr').length;
+            if (rowCount < maxRows) {
+                var newRow = $(selector).find('tr:last').clone(); // 克隆最後一行
+                newRow.find('input, select').each(function () {
+                    $(this).val(''); // 清空克隆行中的所有輸入值
+                });
+                $(selector).append(newRow); // 正確地將克隆的行附加到 tbody 的末尾
+                initializeFlatpickr(); // 新增行後重新初始化 flatpickr
+            } else {
+                alert("已達到最大行數，無法新增更多。");
+            }
+        }
 
-        var specialTechField = document.querySelector('select[name="SpecialTech"]'); //項目
-        var specialTechNameField = document.querySelector('select[name="SpecialTechName"]'); //動作名稱
-        var trainingMuscleField = document.querySelector('select[name="TrainingMuscle"]'); //訓練部位
-        var trainingTypeField = document.querySelector('select[name="TrainingType"]'); //訓練類型
-        var otherField = document.querySelector('input[name="SpecialTechOther"]'); //其他
-
-        // 先禁用所有欄位
-        [specialTechField, specialTechNameField, otherField, trainingMuscleField, trainingTypeField].forEach(function (field) {
-            if (field) field.disabled = true;
+        // 監聽新增行的按鈕
+        $(document).off('click', '.add-row').on('click', '.add-row', function () {
+            addRow('#trainingMonitoringRows', 7);
         });
 
-        // 根據選項來控制欄位啟用與否
-        switch (selectedItem) {
-            case "專項技術類":
-                specialTechField.disabled = false;
-                specialTechNameField.disabled = false;
-                otherField.disabled = false;
-                break;
+        // 監聽刪除行的按鈕
+        $(document).off('click', '.remove-row').on('click', '.remove-row', function () {
+            var $row = $(this).closest('tr');
+            var rowCount = $('#trainingMonitoringRows').find('tr').length;
+            if (rowCount > 1) {
+                $row.remove();
+            } else {
+                alert("至少需要一個訓練項目。");
+            }
+        });
 
-            case "肌力類":
-                trainingMuscleField.disabled = false;
-                break;
+        // 更新表格內容的函數
+        function updateTableContent(selectElement) {
+            var selectedItem = selectElement.value; // 取得選擇的課程名稱
+            var row = selectElement.closest('tr'); // 使用 closest('tr') 限定只影響當前行的欄位
+            var specialTechField = row.querySelector('select[name="SpecialTech"]'); // 項目
+            var specialTechNameField = row.querySelector('select[name="SpecialTechName"]'); // 動作名稱
+            var trainingMuscleField = row.querySelector('select[name="TrainingMuscle"]'); // 訓練部位
+            var trainingTypeField = row.querySelector('select[name="TrainingType"]'); // 訓練類型
+            var otherField = row.querySelector('input[name="SpecialTechOther"]'); // 其他
 
-            case "體能類":
-                trainingTypeField.disabled = false;
-                break;
+            // 先禁用所有欄位
+            [specialTechField, specialTechNameField, otherField, trainingMuscleField, trainingTypeField].forEach(function (field) {
+                if (field) field.disabled = true;
+            });
 
-            // 可以根據需要新增更多選項
-            case "混合肌力體能類":
-            default:
-
-                // 其他情況下不啟用任何欄位
-                break;
+            // 根據選項來控制欄位啟用與否
+            switch (selectedItem) {
+                case "專項技術類":
+                    specialTechField.disabled = false;
+                    specialTechNameField.disabled = false;
+                    otherField.disabled = false;
+                    break;
+                case "肌力類":
+                    trainingMuscleField.disabled = false;
+                    break;
+                case "體能類":
+                    trainingTypeField.disabled = false;
+                    break;
+                default:
+                    break;
+            }
         }
-    }
+    });
 </script>

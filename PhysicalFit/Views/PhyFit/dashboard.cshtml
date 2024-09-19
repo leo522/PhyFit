@@ -112,7 +112,7 @@
                     </thead>
                     <tbody id="ArcherytrainingRows">
                         <tr class="Archerytraining-group">
-                            <td><input id="archeryDate" name="archeryDate" class="form-control" /></td>
+                            <td><input class="archery-date form-control" name="archeryDate" /></td>
                             <td>
                                 <input type="text" class="form-control" name="Pounds" placeholder="磅數">
                             </td>
@@ -137,7 +137,6 @@
                         </tr>
                     </tbody>
                 </table>
-
                 <div style="margin-top: 20px;">
                     <button id="btn_calculate_archery" class="btn btn-info" title="計算">計算</button>
                     <div id="RPEModalArchery" class="modal">
@@ -169,7 +168,7 @@
                     </thead>
                     <tbody id="ShootingtrainingRows">
                         <tr class="Shootingtraining-group">
-                            <td><input id="shootingDate" name="shootingDate" class="form-control" /></td>
+                            <td><input class="shooting-date form-control" name="shootingDate" /></td>
                             <td>
                                 <select class="form-control" name="GunsItem">
                                     <option>請選擇項目</option>
@@ -403,14 +402,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     //射箭日期選擇器初始化
-    flatpickr("#archeryDate", {
+    // 射箭日期選擇器初始化
+    flatpickr(".archery-date", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true
     });
 
-    //射擊日期選擇器初始化
-    flatpickr("#shootingDate", {
+    // 射擊日期選擇器初始化
+    flatpickr(".shooting-date", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true

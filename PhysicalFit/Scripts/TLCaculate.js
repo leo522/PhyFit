@@ -1,6 +1,24 @@
-﻿// TLCalculation.js
+﻿$(document).ready(function () {
+    // 初始化 flatpickr 日期選擇器
+    function initializeFlatpickr() {
+        // 射箭日期選擇器初始化
+        flatpickr(".archery-date", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true
+        });
 
-$(document).ready(function () {
+        // 射擊日期選擇器初始化
+        flatpickr(".shooting-date", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true
+        });
+    }
+
+    // 初始加載時初始化日期選擇器
+    initializeFlatpickr();
+
     // 計算每日運動負荷的通用函數
     function calculateDailyTLForDate(dateSelector, tlInputSelector, calculationFn) {
         var dateToTL = {};  // 用來存儲每個日期的TL總和
@@ -44,6 +62,7 @@ $(document).ready(function () {
             return null;
         }
     }
+
     // 射箭訓練TL計算
     function calculateArcheryTL($row) {
         var rpeValue = $row.find('input[name="RPEArchery"]').val();
@@ -103,6 +122,7 @@ $(document).ready(function () {
             var newRow = $(selector).find('tr:last').clone();
             newRow.find('input, select').val('');
             $(selector).prepend(newRow);  // 新增行到最上方
+            initializeFlatpickr(); // 新增行後重新初始化 flatpickr
         } else {
             alert("已達到最大行數，無法新增更多。");
         }
