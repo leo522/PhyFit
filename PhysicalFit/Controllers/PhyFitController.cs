@@ -94,6 +94,7 @@ namespace PhysicalFit.Controllers
                         int coachId = user.CoachID.Value;
                         var coach = _db.Coaches.FirstOrDefault(c => c.ID == coachId);
                         ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
+                        ViewBag.CoachID = coach?.ID.ToString();
 
                         // 查詢與該教練相關的運動員
                         ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
@@ -493,16 +494,20 @@ namespace PhysicalFit.Controllers
         {
             try
             {
-                // 1. 儲存ShottingSessionRPERecord
+                //1.儲存ShottingSessionRPERecord
                 sessionRecord.CreatedDate = DateTime.Now; // 設定CreatedDate
 
                 _db.ArcherySessionRPERecord.Add(sessionRecord);
                 _db.SaveChanges();
 
-                // 2. 使用儲存後的ID更新ShootingRecord
+                //2.使用儲存後的ID更新ShootingRecord
                 record.SessionRPEArcheryRecordID = sessionRecord.ID;
 
-                // 3. 儲存ShootingRecord
+                //3.更新 record 的 CoachID 和 AthleteID
+                record.CoachID = record.CoachID; // 教練ID
+                record.AthleteID = record.AthleteID; // 運動員ID
+
+                //4.儲存ShootingRecord
                 _db.ArcheryRecord.Add(record);
                 _db.SaveChanges();
 
@@ -523,7 +528,7 @@ namespace PhysicalFit.Controllers
             try
             {
                 // 1. 儲存ShottingSessionRPERecord
-                sessionRecord.CreatedDate = DateTime.Now; // 設定CreatedDate
+                sessionRecord.CreatedDate = DateTime.Now; //設定CreatedDate
 
                 _db.ShottingSessionRPERecord.Add(sessionRecord);
                 _db.SaveChanges();
@@ -531,7 +536,11 @@ namespace PhysicalFit.Controllers
                 // 2. 使用儲存後的ID更新ShootingRecord
                 record.SessionRPEShottingRecordID = sessionRecord.ID;
 
-                // 3. 儲存ShootingRecord
+                //3.更新 record 的 CoachID 和 AthleteID
+                record.CoachID = record.CoachID; // 教練ID
+                record.AthleteID = record.AthleteID; // 運動員ID
+
+                //4. 儲存ShootingRecord
                 _db.ShootingRecord.Add(record);
                 _db.SaveChanges();
 

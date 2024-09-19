@@ -272,15 +272,6 @@ namespace PhysicalFit.Controllers
                     };
                     Response.Cookies.Add(authCookie);
 
-                    if (user.CoachID.HasValue)
-                    {
-                        Session["UserRole"] = "Coach";  // 教練
-                    }
-                    else
-                    {
-                        Session["UserRole"] = "Athlete";  // 運動員
-                    }
-
                     return RedirectToAction("dashboard", "PhyFit");
 
                 }

@@ -28,11 +28,11 @@ namespace PhysicalFit.Controllers
             switch (item)
             {
                 case "RPE訓練紀錄":
-                    viewModel.RPERecords = _db.SessionRPETrainingRecords
+                    viewModel.RPERecords = _db.SessionTrainingRecords
                                               .OrderBy(x => x.TrainingDate)
                                               .Select(x => new RPETrainingRecordViewModel
                                               {
-                                                  TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                                  TrainingDate = x.TrainingDate,
                                                   //AthleteName = x.UserAccount ?? 0,
                                                   //RPELevel = x.TrainingItem
                                               })

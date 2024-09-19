@@ -4,7 +4,7 @@
 
         var specialTechnicalTrainingItem = $('#SpecialTechnicalTrainingItem').val();
         // 檢查是否有選擇運動員
-        var selectedAthlete = $('#AthletesName').find('option:selected').val();
+        var selectedAthlete = $('#AthletesID').find('option:selected').val();
         if (!selectedAthlete || selectedAthlete === "請選擇") {
             Swal.fire({
                 icon: 'warning',
@@ -13,10 +13,16 @@
             });
             return; // 終止後續動作
         }
+
+        var coachName = $('#identityCoach #CoachName').text().trim();
+        var coachID = $('#identityCoach #CoachID').val().trim();
+
         // 構建一個用於發送的數據對象
         var formData = {
-            Coach: $('input[name="CoachName"]').val(),
-            Athlete: $('#AthletesName').find('option:selected').text(),
+            Coach: coachName, //教練名字
+            CoachID: coachID, //教練ID
+            Athlete: $('#AthletesID option:selected').text(), //運動員名字
+            AthleteID: $('#AthletesID').val(), //運動員ID
             TrainingClassName: specialTechnicalTrainingItem,
             TrainingDate: $('input[name="TrainingDate"]').val(),
             TrainingItme: $('select[name="TrainingItme"]').val(),

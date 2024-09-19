@@ -22,6 +22,7 @@ namespace PhysicalFit.Models
             this.DetectionTrainingRecord = new HashSet<DetectionTrainingRecord>();
             this.ShootingRecord = new HashSet<ShootingRecord>();
             this.ArcheryRecord = new HashSet<ArcheryRecord>();
+            this.SessionTrainingRecords = new HashSet<SessionTrainingRecords>();
         }
     
         public int ID { get; set; }
@@ -46,5 +47,7 @@ namespace PhysicalFit.Models
         public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArcheryRecord> ArcheryRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SessionTrainingRecords> SessionTrainingRecords { get; set; }
     }
 }

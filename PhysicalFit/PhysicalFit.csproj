@@ -233,6 +233,9 @@
     <Compile Include="Models\SessionRPETrainingRecords.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SessionTrainingRecords.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ShootingRecord.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>

@@ -43,20 +43,19 @@
                 </div>
 
                 <div id="identityCoach" style="display: flex; align-items: center; flex: 1;">
-                    <label>教練：@ViewBag.CoachName</label>
-                    <input type="hidden" name="CoachID" id="coachID" value="@ViewBag.CoachID" />
-                    <input type="hidden" name="CoachName" id="coachName" value="@ViewBag.CoachName" />
+                    <label>教練：<span id="CoachName">@ViewBag.CoachName</span></label>
+                    <input type="hidden" id="CoachID" value="@ViewBag.CoachID" />
                 </div>
                 <div id="identity_Athletes" style="display: flex; align-items: center; flex: 1;">
                     <label for="AthletesName">運動員：</label>
-                    <select id="AthletesName" name="AthleteID">
+                    <select id="AthletesID" name="AthleteID">
                         <option value="">請選擇</option>
                         @if (ViewBag.Athletes != null)
                         {
                             foreach (var athlete in ViewBag.Athletes)
                             {
-                                @*<option value="@athlete.ID">@athlete.AthleteName</option>*@
                                 <option value="@athlete.ID">@athlete.AthleteName</option>
+                                @*<option value="@athlete.AthleteName">@athlete.AthleteName</option>*@
                             }
                         }
                     </select>
@@ -95,14 +94,10 @@
                 </div>
             </div>
 
-
             <!-- 射箭訓練衝量監控區塊 -->
             <div class="content" id="archeryMonitoring">
                 <h2>射箭訓練衝量監控</h2>
-                @*<form id="archeryForm">*@
                 <input type="hidden" name="trainingType" value="Archery" />
-                <input type="hidden" name="CoachID" value="@ViewBag.CoachID" />
-                <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" />
                 <table id="archeryMonitoringTable">
                     <thead>
                         <tr>
@@ -155,16 +150,12 @@
                     </div>
                     <button class="btn btn-success" id="btn-archeryMonitoring" title="存檔">存檔</button>
                 </div>
-                @*</form>*@
             </div>
 
             <!-- 射擊訓練衝量監控區塊 -->
             <div class="content" id="shootingMonitoring">
                 <h2>射擊訓練衝量監控</h2>
-                @*<form id="shootingForm">*@
                 <input type="hidden" name="trainingType" value="Shooting" />
-                <input type="hidden" name="CoachID" value="@ViewBag.CoachID" />
-                <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" />
                 <table id="shootingMonitoringTable">
                     <thead>
                         <tr>
@@ -219,7 +210,6 @@
                     </div>
                     <button class="btn btn-success" id="btn-shootingMonitoring" title="存檔">存檔</button>
                 </div>
-                @*</form>*@
             </div>
             <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看訓練紀錄</a>
         </form>
@@ -298,26 +288,26 @@
     @*<div id="distanceDetails" style="margin-top: -200px;"></div>*@
     @*檢測系統-訓練內容-Partial view呈現*@
 
-    <script>
-// 更新動作名稱選單的技術項目
+<script>
+//更新動作名稱選單的技術項目
 function updateTechnicalActions(selectElement) {
     const selectedTechnical = selectElement.value;
     const actionDropdown = selectElement.closest('tr').querySelector('[name="SpecialTechName"]');
 
-    // 發送 AJAX 請求獲取對應的動作名稱
+    //發送AJAX請求獲取對應的動作名稱
     $.ajax({
         url: '@Url.Action("GetSpecialTechnicalActions", "PhyFit")',
         type: 'GET',
         data: { technicalItem: selectedTechnical },
         success: function (data) {
-            actionDropdown.innerHTML = ''; // 清空原選單
+            actionDropdown.innerHTML = ''; //清空原選單
 
-            // 添加默認選項
+            //添加默認選項
             const defaultOption = document.createElement("option");
             defaultOption.text = "請選擇動作名稱";
             actionDropdown.add(defaultOption);
 
-            // 將返回的動作名稱加入選單
+            //將返回的動作名稱加入選單
             data.forEach(function (item) {
                 const option = document.createElement("option");
                 option.value = item;
@@ -347,9 +337,9 @@ function checkDateInput(dateInput) {
 
 // 切換到檢測系統視圖
 function switchToDetectionSystem() {
-    document.getElementById('Detection_Sys').style.display = "block"; // 顯示檢測系統
-    document.getElementById('trainingMonitoring').style.display = "none"; // 隱藏其他訓練區塊
-    toggleButtonVisibility(); // 更新按鈕顯示狀態
+    document.getElementById('Detection_Sys').style.display = "block"; //顯示檢測系統
+    document.getElementById('trainingMonitoring').style.display = "none"; //隱藏其他訓練區塊
+    toggleButtonVisibility(); //更新按鈕顯示狀態
 }
 
 // 查看訓練紀錄按鈕顯示與隱藏
@@ -358,19 +348,19 @@ function toggleButtonVisibility() {
     const button = document.getElementById('recordCheck');
     const detectionSection = document.getElementById('Detection_Sys');
 
-    // 根據檢測系統是否顯示來決定按鈕是否可見
+    //根據檢測系統是否顯示來決定按鈕是否可見
     if (detectionSection.style.display === "block") {
-        button.style.display = "none"; // 檢測系統顯示時隱藏按鈕
+        button.style.display = "none"; //檢測系統顯示時隱藏按鈕
     } else {
         button.style.display = (selectElement.value !== "請選擇訓練項目") ? "inline-block" : "none";
     }
 }
 
-// 在 DOM 完全加載後初始化
+// 在DOM完全加載後初始化
 document.addEventListener('DOMContentLoaded', function () {
-    toggleButtonVisibility(); // 初始設置按鈕顯示狀態
+    toggleButtonVisibility(); //初始設置按鈕顯示狀態
 
-    // 訓練計算按鈕的點擊事件綁定
+    //訓練計算按鈕的點擊事件綁定
     const calculateButtons = [
         { id: 'btn_calculate', dateInputName: 'TrainingDate' },
         { id: 'btn_calculate_archery', dateInputName: 'archeryDate' },
@@ -381,17 +371,17 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(button.id).addEventListener('click', function (event) {
             const dateInput = document.querySelector(`input[name="${button.dateInputName}"]`);
             if (!checkDateInput(dateInput)) {
-                event.preventDefault(); // 阻止計算操作
+                event.preventDefault(); //阻止計算操作
             }
         });
     });
-    // 訓練紀錄按鈕點擊事件，將選擇的項目和運動員 ID 帶入到檢測頁
+    //訓練紀錄按鈕點擊事件，將選擇的項目和運動員 ID 帶入到檢測頁
     const link = document.querySelector('a.btn.btn-outline-primary');
     if (link) {
         link.addEventListener('click', function (event) {
             event.preventDefault();
             const selectedItem = document.getElementById('Item').value;
-            const athleteID = document.getElementById('AthletesName').value; // 獲取運動員 ID
+            const athleteID = document.getElementById('AthletesID').value; //獲取運動員ID
 
             if (selectedItem === "請選擇訓練項目") {
                 alert("請先選擇訓練項目");
@@ -405,21 +395,21 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('未找到查看訓練紀錄的連結按鈕');
     }
 
-    // 檢測系統日期選擇器初始化
+    //檢測系統日期選擇器初始化
     flatpickr("#DetectionDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true
     });
 
-    // 射箭日期選擇器初始化
+    //射箭日期選擇器初始化
     flatpickr("#archeryDate", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         time_24hr: true
     });
 
-    // 射擊日期選擇器初始化
+    //射擊日期選擇器初始化
     flatpickr("#shootingDate", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
@@ -445,6 +435,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-    </script>
+</script>
 </body>
 </html>

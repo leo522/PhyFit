@@ -71,6 +71,9 @@
         <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" />
         <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Coach__2D12A970" />
         <AssociationConnector Association="PhFitnessModel.FK_ArcheryRecord_ArcherySessionRPERecord" />
+        <EntityTypeShape EntityType="PhFitnessModel.SessionTrainingRecords" Width="1.5" PointX="33.25" PointY="1.625" />
+        <AssociationConnector Association="PhFitnessModel.FK__SessionTr__Athle__5AD97420" />
+        <AssociationConnector Association="PhFitnessModel.FK__SessionTr__Coach__59E54FE7" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
