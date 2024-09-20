@@ -65,7 +65,12 @@
                     type: 'GET',
                     data: { code: schoolID },
                     success: function (data) {
-                        $('#CoachSchool').val(data);  // 設置學校名稱
+                        if (data && data.SchoolName) {
+                            $('#CoachSchool').val(data.SchoolName);  // 設置學校名稱
+                        }
+                        //else {
+                        //    alert('未找到對應的小學名稱。');
+                        //}
                     },
                     error: function () {
                         alert('查詢小學名稱失敗，請檢查學校代碼。');
@@ -78,7 +83,12 @@
                     type: 'GET',
                     data: { code: schoolID },
                     success: function (data) {
-                        $('#CoachSchool').val(data);  // 設置學校名稱
+                        if (data && data.SchoolName) {
+                            $('#CoachSchool').val(data.SchoolName);  // 設置學校名稱
+                        }
+                        //else {
+                        //    alert('未找到對應的中學名稱。');
+                        //}
                     },
                     error: function () {
                         alert('查詢中學名稱失敗，請檢查學校代碼。');
@@ -86,6 +96,37 @@
                 });
             }
         });
+        //$(document).ready(function () {
+        //    // 取得 URL 查詢字串中的 SchoolID
+        //    var schoolID = $('#SchoolID').val();
+        //    if (schoolID) {
+        //        // 查詢小學名稱
+        //        $.ajax({
+        //            url: '/Account/GetSchoolByCode',
+        //            type: 'GET',
+        //            data: { code: schoolID },
+        //            success: function (data) {
+        //                $('#CoachSchool').val(data);  // 設置學校名稱
+        //            },
+        //            error: function () {
+        //                alert('查詢小學名稱失敗，請檢查學校代碼。');
+        //            }
+        //        });
+
+        //        // 查詢中學名稱
+        //        $.ajax({
+        //            url: '/Account/GetJuinorSchoolByCode',
+        //            type: 'GET',
+        //            data: { code: schoolID },
+        //            success: function (data) {
+        //                $('#CoachSchool').val(data);  // 設置學校名稱
+        //            },
+        //            error: function () {
+        //                alert('查詢中學名稱失敗，請檢查學校代碼。');
+        //            }
+        //        });
+        //    }
+        //});
     </script>
 </body>
 </html>

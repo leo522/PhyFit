@@ -5,7 +5,12 @@
         var specialTechnicalTrainingItem = $('#SpecialTechnicalTrainingItem').val();
         // 檢查是否有選擇運動員
         var selectedAthlete = $('#AthletesID').find('option:selected').val();
-        if (!selectedAthlete || selectedAthlete === "請選擇") {
+
+        // 檢查當前使用者是否為教練
+        var isCoach = $('#identityCoach').length > 0; // 檢查教練身份區域是否存在
+
+        // 如果使用者是教練，則檢查是否有選擇運動員
+        if (isCoach && (!selectedAthlete || selectedAthlete === "請選擇")) {
             Swal.fire({
                 icon: 'warning',
                 title: '未選擇運動員',

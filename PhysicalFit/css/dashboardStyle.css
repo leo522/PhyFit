@@ -29,12 +29,12 @@ th, td {
 }
 
     /* 調整特定欄位寬度設置 */
-    th:nth-child(1), td:nth-child(1) { /* 日期欄位 */
-        min-width: 120px; /* 確保日期完整顯示 */
+    th:nth-child(1), td:nth-child(1) { /* 課程名稱 */ 
+        min-width: 210px; /* 確保日期完整顯示 */
     }
 
-    th:nth-child(2), td:nth-child(2) { /* 課程名稱 */
-        min-width: 140px;
+    th:nth-child(2), td:nth-child(2) { /* 日期欄位 */
+        min-width: 180px;
     }
 
     th:nth-child(3), td:nth-child(3) { /* 項目 */
@@ -46,11 +46,11 @@ th, td {
     }
 
     th:nth-child(5), td:nth-child(5) { /* 訓練動作名稱 */
-        min-width: 160px;
+        min-width: 210px;
     }
 
     th:nth-child(6), td:nth-child(6) { /* 自覺費力程度 */
-        min-width: 80px;
+        min-width: 180px;
     }
 
     th:nth-child(7), td:nth-child(7) { /* 訓練時間 */

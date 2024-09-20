@@ -27,8 +27,9 @@
             </div>
             <div class="form-group" id="schoolCodeGroup" style="display:none;">
                 <label for="SchoolID">學校代碼</label>
-                <input type="text" class="form-control" id="SchoolID" name="SchoolID" placeholder="請輸入學校代碼" >
+                <input type="text" class="form-control" id="SchoolID" name="SchoolID" placeholder="請輸入學校代碼" required>
 
+                <label for="Ctiy">縣市區域</label>
                 <label for="SchoolSearch">查詢學校代碼</label>
                 <input type="text" class="form-control" id="SchoolSearch" placeholder="請輸入學校名稱進行查詢代碼">
                 <ul id="schoolSuggestions" class="list-group" style="display:none;"></ul>
@@ -49,8 +50,10 @@
                 var role = $(this).val();
                 if (role === 'Coach') {
                     $('#schoolCodeGroup').show();
+                    $('#SchoolID').attr('required', true); // 設置為必填
                 } else {
                     $('#schoolCodeGroup').hide();
+                    $('#SchoolID').removeAttr('required'); // 移除必填
                 }
             });
 
@@ -65,7 +68,8 @@
                             $('#schoolSuggestions').empty().show();  // 清空並顯示下拉列表
                             response.forEach(function (school) {
                                 $('#schoolSuggestions').append(
-                                    '<li class="list-group-item" data-code="' + school.SchoolCode + '">' + school.SchoolName + '</li>'
+                                    '<li class="list-group-item" data-code="' + school.SchoolCode + '">'
+                                    + school.SchoolName + ' (' + school.CityName + ')</li>'
                                 );
                             });
                         }

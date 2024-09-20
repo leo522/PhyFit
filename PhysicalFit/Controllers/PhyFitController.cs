@@ -18,39 +18,39 @@ namespace PhysicalFit.Controllers
         private PhFitnessEntities _db = new PhFitnessEntities(); //資料庫
 
         #region 首頁-測試
-        public ActionResult Home()
-        {
-            Session["ReturnUrl"] = Request.Url.ToString();
+        //public ActionResult Home()
+        //{
+        //    Session["ReturnUrl"] = Request.Url.ToString();
 
-            ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
-            ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
-            ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
-            ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
-            ViewBag.RPEScore = GetRPE();//RPE量表
-            ViewBag.GunItem = GetGunsItems(); //射擊用具項目
-            ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-            //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
-            ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
+        //    ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
+        //    ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
+        //    ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
+        //    ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
+        //    ViewBag.RPEScore = GetRPE();//RPE量表
+        //    ViewBag.GunItem = GetGunsItems(); //射擊用具項目
+        //    ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
+        //    //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
+        //    ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
 
-            var records = _db.SessionRPETrainingRecords.ToList();
+        //    var records = _db.SessionRPETrainingRecords.ToList();
 
-            var model = records.Select(r => new SessionRPETrainingRecordsModel
-            {
-                TrainingItem = r.TrainingItem, //訓練名稱
-                RPEscore = r.RPEscore.GetValueOrDefault(), //RPE分數
-                //TrainingTime = r.TrainingTime, //訓練時間
-                TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
-                DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
-                WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
-                TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
-                TrainingTension = r.TrainingTension ?? 0, //張力值
-                ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
-            }).ToList();
+        //    var model = records.Select(r => new SessionRPETrainingRecordsModel
+        //    {
+        //        TrainingItem = r.TrainingItem, //訓練名稱
+        //        RPEscore = r.RPEscore.GetValueOrDefault(), //RPE分數
+        //        //TrainingTime = r.TrainingTime, //訓練時間
+        //        TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
+        //        DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
+        //        WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
+        //        TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
+        //        TrainingTension = r.TrainingTension ?? 0, //張力值
+        //        ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
+        //    }).ToList();
 
-            ViewBag.SessionTrainingRecords = model;
+        //    ViewBag.SessionTrainingRecords = model;
 
-            return View();
-        }
+        //    return View();
+        //}
         #endregion
 
         #region 訓練監控主視圖
@@ -58,6 +58,10 @@ namespace PhysicalFit.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                // 檢查用戶角色
+                var userRole = Session["UserRole"]?.ToString();
+                ViewBag.UserRole = userRole; // 儲存用戶角色以便在視圖中使用
+
                 string userName = User.Identity.Name; // 獲取當前登入用戶的名稱或其他唯一識別信息
                 var user = _db.Users.FirstOrDefault(u => u.Name == userName);
 
@@ -114,6 +118,7 @@ namespace PhysicalFit.Controllers
                     ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
 
                     var records = _db.SessionRPETrainingRecords.ToList();
+
                     var model = records.Select(r => new SessionRPETrainingRecordsModel
                     {
                         TrainingItem = r.TrainingItem, //訓練名稱

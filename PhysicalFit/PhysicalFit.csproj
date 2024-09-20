@@ -135,6 +135,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Controllers\PhyFitController.cs" />
     <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\TrainingPrescriptionController.cs" />
@@ -437,6 +438,8 @@
     <Content Include="Views\Account\SchoolLogin.cshtml" />
     <Content Include="Views\Record\SessionRecord.cshtml" />
     <Content Include="Views\Error\Error404.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Indicators\Indicator.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

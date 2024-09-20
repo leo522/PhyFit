@@ -1,0 +1,83 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="~/img/favicon.svg" />
+    <title>_Indicators</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #FFD700; /* Gold color for headers */
+            text-align: left;
+        }
+
+        .highlight {
+            background-color: #FFFF99; /* Highlight row with light yellow */
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Indicators</th>
+                    <th>Value 1</th>
+                    <th>Value 2</th>
+                    <th>Value 3</th>
+                    <th>Value 4</th>
+                    <th>Value 5</th>
+                    <th>Value 6</th>
+                    <th>Value 7</th>
+                    <th>Value 8</th>
+                    <th>Value 9</th>
+                    <th>Value 10</th>
+                    <!-- Add more columns if needed -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>sRPE</td>
+                    <td>15</td>
+                    <td>12</td>
+                    <td>18</td>
+                    <td>16</td>
+                    <td>15</td>
+                    <td>20</td>
+                    <td>10</td>
+                    <td>8</td>
+                    <td>5</td>
+                    <td>3</td>
+                    <!-- Add more data if needed -->
+                </tr>
+                <tr>
+                    <td>acute 急性</td>
+                    <td colspan="10">15.13</td>
+                </tr>
+                <tr>
+                    <td>chronic 慢性</td>
+                    <td colspan="10">9.02</td>
+                </tr>
+                <tr class="highlight">
+                    <td>ACWR</td>
+                    <td colspan="10">1.68</td>
+                </tr>
+                <!-- Add additional rows if necessary -->
+            </tbody>
+        </table>
+    </div>
+    <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
+</body>
+</html>

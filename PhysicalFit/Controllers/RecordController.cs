@@ -295,5 +295,15 @@ namespace PhysicalFit.Controllers
         }
 
         #endregion
+
+        public ActionResult Indicator(int coachId)
+        {
+            var athletes = _db.Athletes
+                              .Where(a => a.CoachID == coachId)
+                              .Select(a => a.AthleteName)
+                              .ToList();
+            return PartialView("_Indicator");
+
+        }
     }
 }

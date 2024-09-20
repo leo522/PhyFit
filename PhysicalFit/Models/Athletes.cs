@@ -35,6 +35,7 @@ namespace PhysicalFit.Models
         public Nullable<bool> IsActive { get; set; }
         public System.DateTime Birthday { get; set; }
         public string IdentityNumber { get; set; }
+        public System.DateTime RegistrationDate { get; set; }
     
         public virtual Coaches Coaches { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

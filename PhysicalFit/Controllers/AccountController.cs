@@ -35,7 +35,7 @@ namespace PhysicalFit.Controllers
 
             if (dto != null)
             {
-                return Json(dto.SchoolName, JsonRequestBehavior.AllowGet);
+                return Json(new { SchoolName = dto.SchoolName, CityName = dto.CityName }, JsonRequestBehavior.AllowGet);
             }
 
             return Json("", JsonRequestBehavior.AllowGet);
@@ -50,7 +50,7 @@ namespace PhysicalFit.Controllers
 
             if (dto != null)
             {
-                return Json(dto.SchoolName, JsonRequestBehavior.AllowGet);
+                return Json(new { SchoolName = dto.SchoolName, CityName = dto.CityName }, JsonRequestBehavior.AllowGet);
             }
 
             return Json("", JsonRequestBehavior.AllowGet);
@@ -64,13 +64,13 @@ namespace PhysicalFit.Controllers
             // 查詢小學
             var primarySchoolResults = _db.PrimarySchoolList
                      .Where(s => s.SchoolName.Contains(name))
-                     .Select(s => new { s.SchoolCode, s.SchoolName })
+                     .Select(s => new { s.SchoolCode, s.SchoolName, s.CityName })
                      .ToList();
 
             // 查詢國中
             var juniorHighSchoolResults = _db.JuniorHighSchoolList
                                              .Where(j => j.SchoolName.Contains(name))
-                                             .Select(j => new { j.SchoolCode, j.SchoolName })
+                                             .Select(j => new { j.SchoolCode, j.SchoolName, j.CityName})
                                              .ToList();
 
             // 合併查詢結果
@@ -90,13 +90,14 @@ namespace PhysicalFit.Controllers
         {
             var model = new RegisterCoachViewModel();
 
+            model.SchoolID = schoolID;
             // 根據 SchoolID 查詢學校名稱
             var schoolName = _db.PrimarySchoolList
                           .Where(s => s.SchoolCode.ToString() == schoolID)
                           .Select(s => s.SchoolName)
                           .FirstOrDefault();
 
-            model.SchoolID = schoolID;
+           
             model.CoachSchool = schoolName;
 
             return View(model);
@@ -118,6 +119,7 @@ namespace PhysicalFit.Controllers
                 Title = "教練",
                 TeamName = model.CoachTeam,
                 SportsSpecific = model.CoachSpecialty,
+                RegistrationDate = DateTime.Now, // 設定註冊時間
                 IsActive = true
             };
             _db.Coaches.Add(newCoach);
@@ -168,6 +170,7 @@ namespace PhysicalFit.Controllers
                 AthleteSchool = AthleteSchool,
                 TeamName = AthleteTeam,
                 CoachID = _db.Coaches.FirstOrDefault(c => c.CoachName == AthleteCoach)?.ID,
+                RegistrationDate = DateTime.Now, // 設定註冊時間
                 IsActive = true
             };
             _db.Athletes.Add(newAthlete);
@@ -253,6 +256,9 @@ namespace PhysicalFit.Controllers
                 {
                     user.LastLoginDate = DateTime.Now;
                     _db.SaveChanges();
+
+                    // 設定 Session
+                    Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete";
 
                     // 設定 FormsAuthentication Ticket
                     var authTicket = new FormsAuthenticationTicket(
