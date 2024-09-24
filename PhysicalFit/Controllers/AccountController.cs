@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Text.RegularExpressions;
+using System.Data.Entity;
 
 namespace PhysicalFit.Controllers
 {
@@ -166,7 +167,7 @@ namespace PhysicalFit.Controllers
                 AthletePWD = ComputeSha256Hash(Athletepwd),
                 AthleteName = AthleteName,
                 Birthday = birthdayDate,
-                IdentityNumber = AthleteID, //儲存加密後的身份證號碼
+                IdentityNumber = AthleteID.ToUpper(),
                 AthleteSchool = AthleteSchool,
                 TeamName = AthleteTeam,
                 CoachID = _db.Coaches.FirstOrDefault(c => c.CoachName == AthleteCoach)?.ID,
@@ -290,7 +291,7 @@ namespace PhysicalFit.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine("其他錯誤: " + ex.Message);
-                return View("Error");
+                return RedirectToAction("Error404", "Error");
             }
         }
 
@@ -585,6 +586,120 @@ namespace PhysicalFit.Controllers
 
             ViewBag.Message = "您的密碼已成功重置";
             return RedirectToAction("Login");
+        }
+        #endregion
+
+        #region 運動員資料編輯頁
+        public ActionResult AthleteEdit()
+        {
+            // 確保用戶已登入且為運動員
+            if (!User.Identity.IsAuthenticated || Session["UserRole"]?.ToString() != "Athlete")
+            {
+                return RedirectToAction("Login", "Account"); // 如果未登入或不是運動員，重定向到登入頁
+            }
+
+            // 使用 User.Identity.Name 查找運動員的帳號
+            var athleteAccount = User.Identity.Name;
+
+            // 查詢運動員資料，通過 AthleteAccount 來匹配
+            var dto = _db.Athletes.FirstOrDefault(a => a.AthleteName == athleteAccount);
+
+            if (dto == null)
+            {
+                return RedirectToAction("Error404", "Error"); // 如果查不到對應的運動員資料
+            }
+
+            // 獲取可用的教練列表
+            var coaches = _db.Coaches.Where(c => c.IsActive).ToList();
+
+            ViewBag.Coaches = new SelectList(coaches, "ID", "CoachName", dto.CoachID);
+
+            return View(dto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AthleteEdit(Athletes athlete)
+        {
+            if (ModelState.IsValid)
+            {
+                // 查找原始資料
+                var existingAthlete = _db.Athletes.Find(athlete.ID);
+
+                if (existingAthlete != null)
+                {
+                    // 更新需要的欄位，避免更新敏感資料
+                    existingAthlete.AthleteName = athlete.AthleteName; //姓名
+                    existingAthlete.AthleteSchool = athlete.AthleteSchool; //學校
+                    existingAthlete.TeamName = athlete.TeamName; //隊伍名稱
+                    existingAthlete.Birthday = athlete.Birthday; //生日
+                    //existingAthlete.IdentityNumber = athlete.IdentityNumber; //身分證字號
+                    existingAthlete.CoachID = athlete.CoachID; // 更新教練ID
+
+                    _db.Entry(existingAthlete).State = EntityState.Modified;
+                    _db.SaveChanges();
+
+                    return RedirectToAction("dashboard", "PhtFit");
+                }
+            }
+
+            // 如果模型狀態無效，重新加載教練資料
+            var coaches = _db.Coaches.Where(c => c.IsActive).ToList();
+            ViewBag.Coaches = new SelectList(coaches, "ID", "CoachName", athlete.CoachID);
+
+            return View(athlete);
+        }
+        #endregion
+
+        #region 教練資料編輯頁
+        public ActionResult CoachEdit() 
+        {
+            // 確保用戶已登入且為教練
+            if (!User.Identity.IsAuthenticated || Session["UserRole"]?.ToString() != "Coach")
+            {
+                return RedirectToAction("Login", "Account"); //如果未登入或不是教練，重定向到登入頁
+            }
+
+            // 根據登入的教練帳號獲取教練的資料
+            var coachName = User.Identity.Name; //假設教練的帳號是 User.Identity.Name
+            var coach = _db.Coaches.FirstOrDefault(c => c.CoachName == coachName);
+
+            if (coach == null)
+            {
+                return RedirectToAction("Error404", "Error"); //如果查不到對應的教練資料
+            }
+
+            return View(coach);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CoachEdit(Coaches coach)
+        {
+            if (ModelState.IsValid)
+            {
+                // 查找原始資料
+                var existingCoach = _db.Coaches.Find(coach.ID);
+                if (existingCoach != null)
+                {
+                    // 更新需要的欄位
+                    existingCoach.CoachName = coach.CoachName; //教練名字
+                    existingCoach.Email = coach.Email; //教練信箱
+                    existingCoach.PhoneNumber = coach.PhoneNumber; //電話號碼
+                    existingCoach.SchoolName = coach.SchoolName; //學校名稱
+                    existingCoach.Title = coach.Title; //職稱
+                    existingCoach.TeamName = coach.TeamName; //隊伍名稱
+                    existingCoach.SportsSpecific = coach.SportsSpecific; //專項
+
+                    _db.Entry(existingCoach).State = EntityState.Modified;
+                    _db.SaveChanges();
+
+                    return RedirectToAction("Dashboard", "Coach"); // 編輯後重定向到教練的儀表板
+                }
+            }
+
+            // 如果模型狀態無效，重新返回視圖
+            return View(coach); // 重新返回視圖，並顯示錯誤信息
         }
         #endregion
     }

@@ -2,7 +2,7 @@
     $('#btn-rainingMonitoring').click(function (event) {
         event.preventDefault(); // 防止表單的默認提交行為
 
-        var specialTechnicalTrainingItem = $('#SpecialTechnicalTrainingItem').val();
+        var specialTechnicalTrainingItem = $('#SpecialTechnicalTrainingItem').val(); //課程名稱
 
         // 檢查是否有選擇運動員
         var selectedAthlete = $('#AthletesID').find('option:selected').val();
@@ -29,19 +29,19 @@
             CoachID: coachID, //教練ID
             Athlete: $('#AthletesID option:selected').text(), //運動員名字
             AthleteID: $('#AthletesID').val(), //運動員ID
-            TrainingClassName: specialTechnicalTrainingItem,
-            TrainingDate: $('input[name="TrainingDate"]').val(),
-            TrainingItme: $('select[name="TrainingItme"]').val(),
-            ActionName: $('select[name="ActionName"]').val(), // 根據實際表單項目進行調整
-            TrainingParts: $('select[name="TrainingParts"]').val(), // 根據實際表單項目進行調整
-            TrainingType: $('select[name="TrainingType"]').val(), // 根據實際表單項目進行調整
+            TrainingClassName: specialTechnicalTrainingItem, //課程名稱
+            TrainingDate: $('input[name="TrainingDate"]').val(), //訓練日期
+            TrainingItem: $('select[name="SpecialTech"]').val(), //運動種類
+            ActionName: $('select[name="SpecialTechName"]').val(), //動作項目
+            TrainingParts: $('select[name="TrainingParts"]').val(), //訓練部位
+            TrainingType: $('select[name="TrainingType"]').val(), //訓練類型
             TrainingOther: $('input[name="TrainingOther"]').val(), // 根據實際表單項目進行調整
-            TrainingTime: $('select[name="TrainingTime"]').val(),
-            RPEscore: $('input[name="RPEscore"]').val(), // 根據實際表單項目進行調整
-            EachTrainingLoad: $('input[name="EachTrainingLoad"]').val(), // 根據實際表單項目進行調整
-            DailyTrainingLoad: $('input[name="DailyTrainingLoad"]').val() // 根據實際表單項目進行調整
+            TrainingTime: $('select[name="TrainingTime"]').val(), //訓練時間
+            RPEscore: $('input[name="RPE"]').val(), //自覺費力程度
+            EachTrainingLoad: $('input[name="DailyTL"]').val(), //單次訓練負荷量
+            DailyTrainingLoad: $('input[name="DailyTrainingLoad"]').val() //每次訓練負荷量
         };
-
+        debugger;
         $.ajax({
             type: 'POST',
             url: '/PhyFit/SaveGeneralTrainingRecord',

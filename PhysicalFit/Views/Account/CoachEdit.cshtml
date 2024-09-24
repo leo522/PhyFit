@@ -1,0 +1,45 @@
+﻿@model PhysicalFit.Models.Coaches
+@{
+    ViewBag.Title = "CoachEdit";
+    Layout = "~/Views/Shared/_PhyFitness.cshtml";
+}
+
+
+<div class="container mt-5">
+    <h2>教練編輯資料</h2>
+    <form id="coachEditForm" method="post" action="/Coach/CoachEdit">
+        <input type="hidden" name="ID" value="@Model.ID" />
+
+        <div class="form-group">
+            <label for="name">姓名</label>
+            <input type="text" class="form-control" id="name" name="CoachName" value="@Model.CoachName" required />
+        </div>
+
+        <div class="form-group">
+            <label for="email">電子郵件</label>
+            <input type="email" class="form-control" id="email" name="Email" value="@Model.Email" required />
+        </div>
+
+        <div class="form-group">
+            <label for="phone">電話號碼</label>
+            <input type="text" class="form-control" id="phone" name="PhoneNumber" value="@Model.PhoneNumber" required />
+        </div>
+
+        <div class="form-group">
+            <label for="school">學校名稱</label>
+            <input type="text" class="form-control" id="school" name="SchoolName" value="@Model.SchoolName" />
+        </div>
+
+        <div class="form-group">
+            <label for="title">職稱</label>
+            <input type="text" class="form-control" id="title" name="Title" value="@Model.Title" />
+        </div>
+        <div class="form-group">
+            <label for="title">專項</label>
+            <input type="text" class="form-control" id="title" name="Title" value="@Model.SportsSpecific" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">儲存</button>
+        <a href="/PhyFit/dashboard" class="btn btn-secondary">取消</a>
+    </form>
+</div>

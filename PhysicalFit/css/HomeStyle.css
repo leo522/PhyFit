@@ -5,6 +5,7 @@
     flex-wrap: wrap; /* 允許換行以適應小螢幕 */
 }
 
+/* 左邊區塊 */
 .left-section {
     flex: 1;
     display: flex;
@@ -13,12 +14,14 @@
     min-width: 300px; /* 設定最小寬度 */
 }
 
+/* 圖片容器樣式 */
 .image-container img {
     width: 100%;
     max-width: 100%; /* 確保圖片在小螢幕上不會超出容器 */
     height: auto; /* 保持圖片比例 */
 }
 
+/* 右邊區塊 */
 .right-section {
     flex: 1;
     display: flex;
@@ -26,24 +29,29 @@
     min-width: 300px; /* 設定最小寬度 */
 }
 
+/* 訓練區塊 */
 .training-section {
     margin-bottom: 20px;
 }
 
+/* 標籤樣式 */
 label {
     font-size: 1.5rem; /* 使用相對單位 */
 }
 
+/* 下拉選單樣式 */
 select {
     font-size: 1.2rem; /* 使用相對單位 */
 }
 
+/* 結果表格 */
 .resultTable {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
+/* 表單組樣式 */
 .form-group {
     display: flex;
     align-items: center;
@@ -56,6 +64,7 @@ select {
         white-space: nowrap;
     }
 
+/* 行內表單組樣式 */
 .form-group-inline {
     display: flex;
     align-items: center;
@@ -71,3 +80,70 @@ select {
         flex-grow: 1; /* 使輸入框填滿剩餘空間 */
         max-width: 200px; /* 設定最大寬度以防止過長 */
     }
+
+/* RWD 設計：針對不同螢幕尺寸的調整 */
+@media (max-width: 1200px) {
+    .main-container {
+        padding: 15px;
+        flex-direction: column; /* 改為垂直排列 */
+    }
+
+    .left-section, .right-section {
+        min-width: 100%; /* 改為全寬 */
+    }
+}
+
+@media (max-width: 992px) {
+    .main-container {
+        padding: 10px;
+    }
+
+    .left-section, .right-section {
+        min-width: 100%;
+    }
+
+    .form-group, .form-group-inline {
+        flex-direction: column; /* 垂直排列 */
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding: 8px;
+    }
+
+    .left-section, .right-section {
+        min-width: 100%;
+    }
+
+    .form-group > label, .form-group-inline > label {
+        margin-bottom: 5px;
+    }
+
+    .form-group-inline .form-control {
+        max-width: 100%; /* 讓輸入框佔滿可用空間 */
+    }
+}
+
+@media (max-width: 576px) {
+    .main-container {
+        padding: 5px;
+    }
+
+    .left-section, .right-section {
+        min-width: 100%;
+    }
+
+    .form-group, .form-group-inline {
+        width: 100%; /* 確保表單寬度為全寬 */
+    }
+
+    label {
+        font-size: 1.2rem; /* 縮小字體 */
+    }
+
+    select {
+        font-size: 1rem; /* 縮小字體 */
+    }
+}

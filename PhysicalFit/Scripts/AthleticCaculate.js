@@ -1,4 +1,4 @@
-﻿//AthleticCaculate.js
+﻿//AthleticCaculate.js 田徑
 var FailureTime200 = 0;
 var FailureTime400 = 0;
 var FailureTime800 = 0;
@@ -169,6 +169,7 @@ function TreadmillPrescriptionTable(Mode, SetNum) {
     xmlhttp.send();
 }
 
+//訓練量
 function TreadmillTotalT() {
     var TotalTraining = 0;
 
@@ -178,5 +179,5 @@ function TreadmillTotalT() {
         TotalTraining = TotalTraining + 1 * (+ i).value;
     }
     
-    document.getElementById("TrainingVol").value = TotT.toFixed(2); //r^2，決定係數
+    document.getElementById("TrainingVol").value = TotT.toFixed(2);
 }

@@ -1,4 +1,4 @@
-﻿/* 設定 .content 區塊的樣式，使其對齊到左側 */
+﻿/* 基本樣式設置 */
 .content {
     display: none; /* 初始隱藏 */
     width: 100%; /* 設定寬度為100% */
@@ -28,40 +28,40 @@ th, td {
     max-width: 150px; /* 設定最大寬度 */
 }
 
-    /* 調整特定欄位寬度設置 */
-    th:nth-child(1), td:nth-child(1) { /* 課程名稱 */ 
-        min-width: 210px; /* 確保日期完整顯示 */
-    }
-
-    th:nth-child(2), td:nth-child(2) { /* 日期欄位 */
-        min-width: 180px;
-    }
-
-    th:nth-child(3), td:nth-child(3) { /* 項目 */
-        min-width: 120px;
-    }
-
-    th:nth-child(4), td:nth-child(4) { /* 動作名稱 */
-        min-width: 140px;
-    }
-
-    th:nth-child(5), td:nth-child(5) { /* 訓練動作名稱 */
+    /* 特定欄位寬度設置 */
+    th:nth-child(1), td:nth-child(1) {
         min-width: 210px;
     }
 
-    th:nth-child(6), td:nth-child(6) { /* 自覺費力程度 */
+    th:nth-child(2), td:nth-child(2) {
         min-width: 180px;
     }
 
-    th:nth-child(7), td:nth-child(7) { /* 訓練時間 */
+    th:nth-child(3), td:nth-child(3) {
+        min-width: 120px;
+    }
+
+    th:nth-child(4), td:nth-child(4) {
         min-width: 140px;
     }
 
-    th:nth-child(8), td:nth-child(8) { /* 每次運動訓練量(TL) */
+    th:nth-child(5), td:nth-child(5) {
+        min-width: 210px;
+    }
+
+    th:nth-child(6), td:nth-child(6) {
+        min-width: 180px;
+    }
+
+    th:nth-child(7), td:nth-child(7) {
         min-width: 140px;
     }
 
-    th:nth-child(9), td:nth-child(9) { /* 增減欄位 */
+    th:nth-child(8), td:nth-child(8) {
+        min-width: 140px;
+    }
+
+    th:nth-child(9), td:nth-child(9) {
         min-width: 100px;
     }
 
@@ -100,3 +100,72 @@ th, td {
         text-decoration: none;
         cursor: pointer;
     }
+
+/* RWD 設計：針對不同螢幕尺寸的調整 */
+@media (max-width: 1200px) {
+    .content {
+        padding: 15px;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+}
+
+@media (max-width: 992px) {
+    .content {
+        padding: 10px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 6px;
+        min-width: 70px;
+        max-width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 8px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 4px;
+        min-width: 60px;
+        max-width: 100px;
+    }
+
+    .modal-content {
+        margin: 20% auto;
+        width: 95%;
+    }
+}
+
+@media (max-width: 576px) {
+    .content {
+        padding: 5px;
+    }
+
+    table {
+        font-size: 11px;
+    }
+
+    th, td {
+        padding: 3px;
+        min-width: 50px;
+        max-width: 90px;
+    }
+
+    .modal-content {
+        margin: 25% auto;
+        width: 98%;
+    }
+}

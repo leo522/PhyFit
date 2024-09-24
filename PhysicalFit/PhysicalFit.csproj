@@ -134,8 +134,8 @@
     <Compile Include="AuthHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\EWMAweightingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Controllers\PhyFitController.cs" />
     <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\TrainingPrescriptionController.cs" />
@@ -176,6 +176,7 @@
     <Compile Include="Models\DetectionTrainingRecord.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\EWMAViewModel.cs" />
     <Compile Include="Models\FitnessModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -332,6 +333,7 @@
     <Content Include="img\KiKi.jpg" />
     <Content Include="img\LOGO.jpg" />
     <Content Include="img\logo.svg" />
+    <Content Include="img\maintance.jpg" />
     <Content Include="Models\FitnessModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>FitnessModel.Context.cs</LastGenOutput>
@@ -439,7 +441,10 @@
     <Content Include="Views\Record\SessionRecord.cshtml" />
     <Content Include="Views\Error\Error404.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Indicators\Indicator.cshtml" />
+    <Content Include="Views\Error\Maintenance.cshtml" />
+    <Content Include="Views\EWMAweighting\Indicators.cshtml" />
+    <Content Include="Views\Account\AthleteEdit.cshtml" />
+    <Content Include="Views\Account\CoachEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

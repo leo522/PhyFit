@@ -12,5 +12,10 @@ namespace PhysicalFit.Controllers
         {
             return View("Error404");
         }
+
+        public ActionResult Maintenance()
+        {
+            return View("Maintenance");
+        }
     }
 }

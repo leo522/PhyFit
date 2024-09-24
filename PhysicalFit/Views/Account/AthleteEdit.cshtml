@@ -1,0 +1,72 @@
+﻿@model PhysicalFit.Models.Athletes
+
+@{
+    ViewBag.Title = "運動員資料編輯";
+    Layout = "~/Views/Shared/_PhyFitness.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>運動員資料編輯</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>運動員資料編輯</h2>
+
+        @using (Html.BeginForm("AthleteEdit", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken() <!-- 防止CSRF攻擊 -->
+
+            <!-- 隱藏欄位: 運動員ID -->
+            @Html.HiddenFor(model => model.ID)
+
+            <!-- 姓名 -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.AthleteName, "姓名")
+                @Html.TextBoxFor(model => model.AthleteName, new { @class = "form-control", @required = "required" })
+                @Html.ValidationMessageFor(model => model.AthleteName, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- 生日 -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Birthday, "生日")
+                @Html.TextBoxFor(model => model.Birthday, new { @class = "form-control", @type = "date", @required = "required" })
+                @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- 學校 -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.AthleteSchool, "學校")
+                @Html.TextBoxFor(model => model.AthleteSchool, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AthleteSchool, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- 隊伍名稱 -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.TeamName, "隊伍名稱")
+                @Html.TextBoxFor(model => model.TeamName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TeamName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="coach">教練</label>
+                <select class="form-control" id="coach" name="CoachID">
+                    <option value="">選擇教練</option>
+                    @foreach (var coach in ViewBag.Coaches)
+                    {
+                        <option value="@coach.Value" @(coach.Value == Model.CoachID.ToString() ? "selected" : "")>@coach.Text</option>
+                    }
+                </select>
+            </div>
+
+            <!-- 提交按鈕 -->
+            <button type="submit" class="btn btn-primary">儲存</button>
+            <a href="/PhyFit/dashboard" class="btn btn-secondary">取消</a>
+        }
+    </div>
+</body>
+</html>

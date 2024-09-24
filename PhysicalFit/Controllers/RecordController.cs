@@ -27,14 +27,19 @@ namespace PhysicalFit.Controllers
 
             switch (item)
             {
-                case "RPE訓練紀錄":
-                    viewModel.RPERecords = _db.SessionTrainingRecords
+                case "一般訓練衝量監控 (session-RPE)":
+                    viewModel.RPERecords = _db.GeneralTrainingRecord
                                               .OrderBy(x => x.TrainingDate)
                                               .Select(x => new RPETrainingRecordViewModel
                                               {
-                                                  TrainingDate = x.TrainingDate,
-                                                  //AthleteName = x.UserAccount ?? 0,
-                                                  //RPELevel = x.TrainingItem
+                                                  TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                                  AthleteName = x.Athlete,
+                                                  TrainingClassName = x.TrainingClassName,
+                                                  TrainingItem = x.TrainingItem,
+                                                  ActionName = x.ActionName,
+                                                  TrainingTime = x.TrainingTime,
+                                                  RPEscore = x.RPEscore ?? 0,
+                                                  EachTrainingLoad = x.EachTrainingLoad ?? 0,
                                               })
                                               .ToList();
                     break;
@@ -90,7 +95,7 @@ namespace PhysicalFit.Controllers
             // 建立 TrainingRecordViewModel 並傳入訓練項目名稱
             var model = new TrainingRecordViewModel { TrainingItem = item };
             // 從三個表中讀取資料
-            var sessionRPERecords = _db.SessionRPETrainingRecords.ToList();
+            var sessionRPERecords = _db.GeneralTrainingRecord.ToList();
             var archeryRecords = _db.ArcheryRecord.ToList();
             var shootingRecords = _db.ShootingRecord.ToList();
 
@@ -99,7 +104,13 @@ namespace PhysicalFit.Controllers
                 .Select(record => new RPETrainingRecordViewModel
                 {
                     TrainingDate = record.TrainingDate ?? DateTime.Now,
-                    RPELevel = record.RPEscore ?? 0,
+                    AthleteName = record.Athlete,
+                    TrainingClassName = record.TrainingClassName,
+                    TrainingItem = record.TrainingItem,
+                    ActionName = record.ActionName,
+                    TrainingTime = record.TrainingTime,
+                    RPEscore = record.RPEscore ?? 0,
+                    EachTrainingLoad = record.EachTrainingLoad ?? 0,
                     // 可以繼續添加其他字段
                 })
                 .ToList();
@@ -219,7 +230,7 @@ namespace PhysicalFit.Controllers
                 return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
         #endregion
 
         #region 儲存sessionRPE訓練量結果

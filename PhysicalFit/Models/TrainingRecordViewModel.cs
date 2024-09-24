@@ -8,8 +8,16 @@ namespace PhysicalFit.Models
     public class RPETrainingRecordViewModel
     {
         public DateTime TrainingDate { get; set; }
+        public string TrainingClassName { get; set; }
         public string AthleteName { get; set; }
-        public int RPELevel { get; set; }
+        public string TrainingItem { get; set; }
+        public string ActionName { get; set; }
+        public string TrainingParts { get; set; }
+        public string TrainingType { get; set; }
+        public string TrainingOther { get; set; }
+        public string TrainingTime { get; set; }
+        public int RPEscore { get; set; }
+        public int EachTrainingLoad { get; set; }
     }
 
     public class ArcheryTrainingRecordViewModel

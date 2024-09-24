@@ -34,6 +34,10 @@
             font-size: 24px;
             font-weight: bold;
         }
+        .button-container {
+            text-align: right; /* 將按鈕靠右對齊 */
+            padding: 10px 0; /* 增加上下內邊距 */
+        }
     </style>
 </head>
 <body>
@@ -44,7 +48,28 @@
                 <button type="submit" class="btn btn-warning">登出</button>
             </form>
         </div>
-        <div class="countdown-timer" id="countdownTimer"></div>
+
+        <!-- 運動員或教練登入後顯示編輯個人資料按鈕 -->
+        <div class="button-container">
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (Session["UserRole"]?.ToString() == "Athlete")
+                {
+                    <a href="@Url.Action("AthleteEdit", "Account")" class="btn btn-primary">
+                        編輯個人資料
+                    </a>
+                }
+                else if (Session["UserRole"]?.ToString() == "Coach")
+                {
+                    <a href="@Url.Action("CoachEdit", "Account")" class="btn btn-primary">
+                        編輯個人資料
+                    </a>
+                }
+            }
+        </div>
+
+        @*<div class="countdown-timer" id="countdownTimer"></div>*@ @*倒數計時功能-未開放*@
+
         @RenderBody()
     </div>
 </body>

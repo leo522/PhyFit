@@ -61,10 +61,14 @@
             <thead>
                 <tr>
                     <th>訓練日期</th>
-                    @if (Model.TrainingItem == "RPE訓練紀錄")
+                    @if (Model.TrainingItem == "一般訓練衝量監控 (session-RPE)")
                     {
                         <th>運動員</th>
-                        <th>訓練強度</th>
+                        <th>運動種類</th>
+                        <th>訓練動作</th>
+                        <th>訓練時間</th>
+                        <th>自覺費力程度</th>
+                        <th>單次運動負荷量</th>
                     }
                     else if (Model.TrainingItem == "專項訓練-射箭訓練衝量")
                     {
@@ -86,14 +90,18 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.TrainingItem == "RPE訓練紀錄")
+                @if (Model.TrainingItem == "一般訓練衝量監控 (session-RPE)")
                 {
                     foreach (var record in Model.RPERecords)
                     {
                         <tr>
                             <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
                             <td>@record.AthleteName</td>
-                            <td>@record.RPELevel</td>
+                            <td>@record.TrainingItem</td>
+                            <td>@record.ActionName</td>
+                            <td>@record.TrainingTime</td>
+                            <td>@record.RPEscore</td>
+                            <td>@record.EachTrainingLoad</td>
                         </tr>
                     }
                 }
@@ -128,36 +136,6 @@
                 }
             </tbody>
         </table>
-        @*<div class="resultTable" id="sessionRPEresult">
-            <div class="col-md-5">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>訓練日期紀錄</h3>
-                    </div>
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>訓練日期</th>
-                                    <th>運動員名稱</th>
-                                    <th>訓練項目</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var record in Model)
-                                {
-                                    <tr>
-                                        <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
-                                        <td>@record.Athlete</td>
-                                        <td>@record.SportItem</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div><br />*@
 
         <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
     </div>
