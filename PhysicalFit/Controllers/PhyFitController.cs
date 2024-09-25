@@ -68,6 +68,7 @@ namespace PhysicalFit.Controllers
                 if (user != null)
                 {
                     Athletes athlete = null;
+                    List<Athletes> athletesUnderCoach = null; // 這裡我們先定義一個運動員列表
 
                     //判斷用戶是否為運動員
                     if (user.AthleteID.HasValue)
@@ -77,32 +78,60 @@ namespace PhysicalFit.Controllers
 
                         if (athlete != null)
                         {
+                            ViewBag.AthleteName = athlete.AthleteName;  // 設置運動員名字
+                            ViewBag.AthleteID = athlete.ID;             // 設置運動員ID
+
                             if (athlete.CoachID.HasValue)
                             {
                                 // 查詢教練資料
                                 var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID.Value);
                                 ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
+                                ViewBag.CoachID = coach?.ID; // 設置CoachID
                             }
                         }
                         else
                         {
-                            ViewBag.CoachName = "未設定教練"; // 提示運動員沒有教練
+                            // 當運動員資料不存在時，設置預設值
+                            ViewBag.AthleteName = "無運動員資料";
+                            ViewBag.AthleteID = 0;
                         }
-
-                        ViewBag.Athlete = athlete;
                     }
+                    else if (user.CoachID.HasValue) // 如果用戶是教練
+                {
+                    int coachId = user.CoachID.Value;
+                    var coach = _db.Coaches.FirstOrDefault(c => c.ID == coachId);
+                    ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
+                    ViewBag.CoachID = coach?.ID; // 設置CoachID
 
-                    // 判斷用戶是否為教練
-                    if (user.CoachID.HasValue)
+                    // 查詢與該教練相關的運動員
+                    athletesUnderCoach = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
+                    
+                    if (athletesUnderCoach.Any())
                     {
-                        int coachId = user.CoachID.Value;
-                        var coach = _db.Coaches.FirstOrDefault(c => c.ID == coachId);
-                        ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
-                        ViewBag.CoachID = coach?.ID.ToString();
-
-                        // 查詢與該教練相關的運動員
-                        ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
+                        athlete = athletesUnderCoach.First();
+                        ViewBag.AthleteName = athlete.AthleteName;  
+                        ViewBag.AthleteID = athlete.ID;  
                     }
+                    else
+                    {
+                        ViewBag.AthleteName = "無運動員資料"; 
+                        ViewBag.AthleteID = 0; 
+                    }
+                }
+
+                // 將運動員列表儲存到 ViewBag 中
+                ViewBag.Athletes = athletesUnderCoach ?? new List<Athletes>(); // 避免空值
+                    // 判斷用戶是否為教練
+                    //if (user.CoachID.HasValue)
+                    //{
+                    //    int coachId = user.CoachID.Value;
+                    //    var coach = _db.Coaches.FirstOrDefault(c => c.ID == coachId);
+                    //    ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
+                    //    ViewBag.CoachID = coach?.ID; // 確保CoachID也設置
+
+                    //    // 查詢與該教練相關的運動員
+                    //    ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
+                    //}
 
                     ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
                     ViewBag.Description = GetTrainingItem(); //訓練衝量監控
@@ -470,11 +499,17 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 儲存一般訓練紀錄
+        #region 儲存一般訓練紀錄-教練
         public ActionResult SaveGeneralTrainingRecord(GeneralTrainingRecord record)
         {
             try
             {
+                // 確認用戶是教練
+                if (Session["UserRole"]?.ToString() != "Coach")
+                {
+                    return Json(new { success = false, message = "請確認是否為教練身份。" });
+                }
+
                 string specialTechnicalTrainingItem = Request.Form["SpecialTechnicalTrainingItem"];
 
                 if (!string.IsNullOrEmpty(specialTechnicalTrainingItem))
@@ -494,11 +529,17 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 儲存射箭訓練紀錄
+        #region 儲存射箭訓練紀錄-教練
         public ActionResult SaveArcheryRecord(ArcheryRecord record, ArcherySessionRPERecord sessionRecord)
         {
             try
             {
+                // 確認用戶是教練
+                if (Session["UserRole"]?.ToString() != "Coach")
+                {
+                    return Json(new { success = false, message = "請確認是否為教練身份。" });
+                }
+
                 //1.儲存ShottingSessionRPERecord
                 sessionRecord.CreatedDate = DateTime.Now; // 設定CreatedDate
 
@@ -527,11 +568,18 @@ namespace PhysicalFit.Controllers
 
         #endregion
 
-        #region 儲存射擊訓練紀錄
+        #region 儲存射擊訓練紀錄-教練
         public ActionResult SaveShootingRecord(ShootingRecord record, ShottingSessionRPERecord sessionRecord)
         {
             try
             {
+                // 確認用戶是教練
+                if (Session["UserRole"]?.ToString() != "Coach")
+                {
+                    return Json(new { success = false, message = "請確認是否為教練身份。" });
+                }
+
+
                 // 1. 儲存ShottingSessionRPERecord
                 sessionRecord.CreatedDate = DateTime.Now; //設定CreatedDate
 

@@ -7,10 +7,13 @@
         var selectedAthlete = $('#AthletesID').find('option:selected').val();
 
         // 檢查當前使用者是否為教練
-        var isCoach = $('#identityCoach').length > 0; // 檢查教練身份區域是否存在
+        /*var isCoach = $('#identityCoach').length > 0; */// 檢查教練身份區域是否存在
+
+        // 假設有一個變數 isAthlete 來判斷使用者身份
+        var isAthlete = $('#identity_Athletes').length > 0;
 
         // 如果使用者是教練，則檢查是否有選擇運動員
-        if (isCoach && (!selectedAthlete || selectedAthlete === "請選擇")) {
+        if (!isAthlete && (!selectedAthlete || selectedAthlete === "請選擇")) {
             Swal.fire({
                 icon: 'warning',
                 title: '未選擇運動員',
@@ -35,9 +38,11 @@
             EachTrainingLoad: $('input[name="ShootingDailyTL"]').val(), //單次訓練負荷量
         };
 
+        // 根據身份選擇不同的 URL
+        var url = isAthlete ? '/Record/SaveAthleteArcheryRecord' : '/PhyFit/SaveShootingRecord';
         $.ajax({
             type: 'POST',
-            url: '/PhyFit/SaveShootingRecord',
+            url: url,
             data: JSON.stringify(formData),
             contentType: 'application/json; charset=utf-8', // 設置請求內容類型為 JSON
             success: function (response) {

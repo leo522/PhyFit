@@ -70,5 +70,10 @@ namespace PhysicalFit.Models
         public virtual DbSet<ArcherySessionRPERecord> ArcherySessionRPERecord { get; set; }
         public virtual DbSet<ArcheryRecord> ArcheryRecord { get; set; }
         public virtual DbSet<SessionTrainingRecords> SessionTrainingRecords { get; set; }
+        public virtual DbSet<AthleteArcheryRPERecord> AthleteArcheryRPERecord { get; set; }
+        public virtual DbSet<AthleteArcheryTrainingRecord> AthleteArcheryTrainingRecord { get; set; }
+        public virtual DbSet<AthleteGeneralTrainingRecord> AthleteGeneralTrainingRecord { get; set; }
+        public virtual DbSet<AthleteShootingRecord> AthleteShootingRecord { get; set; }
+        public virtual DbSet<AthleteShootingSessionRPERecord> AthleteShootingSessionRPERecord { get; set; }
     }
 }

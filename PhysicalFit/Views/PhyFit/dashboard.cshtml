@@ -48,17 +48,37 @@
                 </div>
                 <div id="identity_Athletes" style="display: flex; align-items: center; flex: 1;">
                     <label for="AthletesName">運動員：</label>
-                    <select id="AthletesID" name="AthleteID">
-                        <option value="">請選擇</option>
-                        @if (ViewBag.Athletes != null)
-                        {
-                            foreach (var athlete in ViewBag.Athletes)
+                    @if (ViewBag.UserRole == "Coach")
+                    {
+                        <!-- 教練登入時，顯示運動員選單 -->
+                        <select id="AthletesID" name="AthleteID">
+                            <option value="">請選擇</option>
+                            @foreach (var athlete in ViewBag.Athletes)
                             {
                                 <option value="@athlete.ID">@athlete.AthleteName</option>
                             }
-                        }
-                    </select>
+                        </select>
+                    }
+                    else if (ViewBag.UserRole == "Athlete")
+                    {
+                        <!-- 運動員登入時，顯示運動員名字和隱藏的 AthleteID -->
+                        <span id="AthleteNameDisplay">@ViewBag.AthleteName</span>
+                        <input type="hidden" id="AthletesID" name="AthleteID" value="@ViewBag.AthleteID" />
+                    }
                 </div>
+                @*<div id="identity_Athletes" style="display: flex; align-items: center; flex: 1;">
+            <label for="AthletesName">運動員：</label>
+            <select id="AthletesID" name="AthleteID">
+                <option value="">請選擇</option>
+                @if (ViewBag.Athletes != null)
+                {
+                    foreach (var athlete in ViewBag.Athletes)
+                    {
+                        <option value="@athlete.ID">@athlete.AthleteName</option>
+                    }
+                }
+            </select>
+        </div>*@
             </div>
             <!-- 一般訓練衝量監控區塊 -->
             <div class="content" id="trainingMonitoring">
@@ -212,7 +232,7 @@
             <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看訓練紀錄</a>
         </form>
     </div>
-    <a href="/Indicators/Indicator" class="btn btn-outline-primary" id="IndicatorCheck">查看指標</a>
+    <a href="/EWMAweighting/Indicators" class="btn btn-outline-primary" id="IndicatorCheck">查看指標</a>
 
     @*檢測系統*@
     @using (Html.BeginForm("SaveTrackFieldRecord", "PhyFit", FormMethod.Post))

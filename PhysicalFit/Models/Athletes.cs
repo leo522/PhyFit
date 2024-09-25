@@ -23,6 +23,9 @@ namespace PhysicalFit.Models
             this.ShootingRecord = new HashSet<ShootingRecord>();
             this.ArcheryRecord = new HashSet<ArcheryRecord>();
             this.SessionTrainingRecords = new HashSet<SessionTrainingRecords>();
+            this.AthleteArcheryTrainingRecord = new HashSet<AthleteArcheryTrainingRecord>();
+            this.AthleteGeneralTrainingRecord = new HashSet<AthleteGeneralTrainingRecord>();
+            this.AthleteShootingRecord = new HashSet<AthleteShootingRecord>();
         }
     
         public int ID { get; set; }
@@ -36,6 +39,7 @@ namespace PhysicalFit.Models
         public System.DateTime Birthday { get; set; }
         public string IdentityNumber { get; set; }
         public System.DateTime RegistrationDate { get; set; }
+        public Nullable<System.DateTime> LastUpdated { get; set; }
     
         public virtual Coaches Coaches { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -50,5 +54,11 @@ namespace PhysicalFit.Models
         public virtual ICollection<ArcheryRecord> ArcheryRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SessionTrainingRecords> SessionTrainingRecords { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AthleteArcheryTrainingRecord> AthleteArcheryTrainingRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AthleteGeneralTrainingRecord> AthleteGeneralTrainingRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AthleteShootingRecord> AthleteShootingRecord { get; set; }
     }
 }

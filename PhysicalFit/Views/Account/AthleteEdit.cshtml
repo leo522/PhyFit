@@ -34,7 +34,7 @@
             <!-- 生日 -->
             <div class="form-group">
                 @Html.LabelFor(model => model.Birthday, "生日")
-                @Html.TextBoxFor(model => model.Birthday, new { @class = "form-control", @type = "date", @required = "required" })
+                @Html.TextBoxFor(model => model.Birthday, new { @class = "form-control", @type = "date"})
                 @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
             </div>
 
@@ -48,7 +48,7 @@
             <!-- 隊伍名稱 -->
             <div class="form-group">
                 @Html.LabelFor(model => model.TeamName, "隊伍名稱")
-                @Html.TextBoxFor(model => model.TeamName, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.TeamName, new { @class = "form-control", @required = "required" })
                 @Html.ValidationMessageFor(model => model.TeamName, "", new { @class = "text-danger" })
             </div>
 

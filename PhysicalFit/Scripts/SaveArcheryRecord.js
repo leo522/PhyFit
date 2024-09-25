@@ -3,16 +3,19 @@ $(document).ready(function () {
     $('#btn-archeryMonitoring').click(function (event) {
         event.preventDefault(); // 防止表單的默認提交行為
 
-        var specialTechnicalTrainingItem = $('#SpecialTechnicalTrainingItem').val();
+        var athleteID = $('#AthletesID').val();
+        var athleteName = $('#AthleteNameDisplay').text().trim();
 
-        // 檢查是否有選擇運動員
-        var selectedAthlete = $('#AthletesID').find('option:selected').val();
+        // 假設變數 isAthlete 用來判斷是否為運動員身份
+        var isAthlete = '@ViewBag.UserRole' === 'Athlete';
 
         // 檢查當前使用者是否為教練
-        var isCoach = $('#identityCoach').length > 0; // 檢查教練身份區域是否存在
+        /*var isCoach = $('#identityCoach').length > 0;*/ // 檢查教練身份區域是否存在
+        // 假設有一個變數 isAthlete 來判斷使用者身份
+        var isAthlete = $('#identity_Athletes').length > 0;
 
         // 如果使用者是教練，則檢查是否有選擇運動員
-        if (isCoach && (!selectedAthlete || selectedAthlete === "請選擇")) {
+        if (!isAthlete && (!selectedAthlete || selectedAthlete === "請選擇")) {
             Swal.fire({
                 icon: 'warning',
                 title: '未選擇運動員',
@@ -29,8 +32,8 @@ $(document).ready(function () {
             TrainingDate: $('input[name="archeryDate"]').val(), //訓練日
             Coach: coachName, //教練名字
             CoachID: coachID, //教練ID
-            Athlete: $('#AthletesID option:selected').text(), //運動員名字
-            AthleteID: $('#AthletesID').val(), //運動員ID
+            Athlete: athleteName, //運動員名字
+            AthleteID: athleteID, //運動員ID
             Poundage: $('input[name="Pounds"]').val(), //磅數
             ArrowCount: $('input[name="Arrows"]').val(), //箭數
             RPEscore: $('input[name="RPEArchery"]').val(), //自覺程度
@@ -38,9 +41,12 @@ $(document).ready(function () {
             DailyTrainingLoad: $('input[name="ArcheryDailyTL"]').val()
         };
         debugger;
+        // 根據身份選擇不同的 URL
+        var url = isAthlete ? '/Record/SaveAthleteArcheryRecord' : '/PhyFit/SaveShootingRecord';
+
         $.ajax({
             type: 'POST',
-            url: '/PhyFit/SaveArcheryRecord',
+            url: url,
             data: JSON.stringify(formData),
             contentType: 'application/json; charset=utf-8', // 設置請求內容類型為 JSON
             success: function (response) {

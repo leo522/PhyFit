@@ -634,12 +634,13 @@ namespace PhysicalFit.Controllers
                     existingAthlete.TeamName = athlete.TeamName; //隊伍名稱
                     existingAthlete.Birthday = athlete.Birthday; //生日
                     //existingAthlete.IdentityNumber = athlete.IdentityNumber; //身分證字號
-                    existingAthlete.CoachID = athlete.CoachID; // 更新教練ID
+                    existingAthlete.CoachID = athlete.CoachID; // 更新教練ID 
+                    existingAthlete.LastUpdated = DateTime.Now; // 設置為當前時間
 
                     _db.Entry(existingAthlete).State = EntityState.Modified;
                     _db.SaveChanges();
 
-                    return RedirectToAction("dashboard", "PhtFit");
+                    return RedirectToAction("dashboard", "PhyFit");
                 }
             }
 
@@ -690,6 +691,7 @@ namespace PhysicalFit.Controllers
                     existingCoach.Title = coach.Title; //職稱
                     existingCoach.TeamName = coach.TeamName; //隊伍名稱
                     existingCoach.SportsSpecific = coach.SportsSpecific; //專項
+                    existingCoach.LastUpdated = DateTime.Now; // 設置為當前時間
 
                     _db.Entry(existingCoach).State = EntityState.Modified;
                     _db.SaveChanges();

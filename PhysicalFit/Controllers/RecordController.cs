@@ -316,5 +316,112 @@ namespace PhysicalFit.Controllers
             return PartialView("_Indicator");
 
         }
+
+        #region 儲存運動員一般訓練紀錄
+        public ActionResult SaveAthleteTrainingRecord(AthleteGeneralTrainingRecord record)
+        {
+            try
+            {
+                // 確認用戶是運動員
+                if (Session["UserRole"]?.ToString() != "Athlete")
+                {
+                    return Json(new { success = false, message = "請確認是否為運動員身份。" });
+                }
+
+                string specialTechnicalTrainingItem = Request.Form["SpecialTechnicalTrainingItem"];
+
+                if (!string.IsNullOrEmpty(specialTechnicalTrainingItem))
+                {
+                    record.TrainingClassName = specialTechnicalTrainingItem;
+                }
+
+                _db.AthleteGeneralTrainingRecord.Add(record);
+                _db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("儲存失敗: " + ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+        #region 儲存運動員射箭訓練紀錄
+        public ActionResult SaveAthleteArcheryRecord(AthleteArcheryTrainingRecord record, AthleteArcheryRPERecord sessionRecord)
+        {
+            try
+            {
+                // 確認用戶是運動員
+                if (Session["UserRole"]?.ToString() != "Athlete")
+                {
+                    return Json(new { success = false, message = "請確認是否為運動員身份。" });
+                }
+
+                //1.儲存ShottingSessionRPERecord
+                sessionRecord.CreatedDate = DateTime.Now; // 設定CreatedDate
+
+                _db.AthleteArcheryRPERecord.Add(sessionRecord);
+                _db.SaveChanges();
+
+                //2.使用儲存後的ID更新ShootingRecord
+                record.SessionRPEAthleteRecordID = sessionRecord.ID;
+
+                //3.更新 record 的 CoachID 和 AthleteID
+                record.CoachID = record.CoachID; // 教練ID
+                record.AthleteID = record.AthleteID; // 運動員ID
+
+                //4.儲存ShootingRecord
+                _db.AthleteArcheryTrainingRecord.Add(record);
+                _db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("儲存失敗: " + ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+        #region 儲存運動員射擊訓練紀錄
+        public ActionResult SaveAthleteShootingRecord(AthleteShootingRecord record, AthleteShootingSessionRPERecord sessionRecord)
+        {
+            try
+            {
+                // 確認用戶是運動員
+                if (Session["UserRole"]?.ToString() != "Athlete")
+                {
+                    return Json(new { success = false, message = "請確認是否為運動員身份。" });
+                }
+
+                // 1. 儲存ShottingSessionRPERecord
+                sessionRecord.CreatedDate = DateTime.Now; //設定CreatedDate
+
+                _db.AthleteShootingSessionRPERecord.Add(sessionRecord);
+                _db.SaveChanges();
+
+                // 2. 使用儲存後的ID更新ShootingRecord
+                record.SessionRPEShottingRecordID = sessionRecord.ID;
+
+                //3.更新 record 的 CoachID 和 AthleteID
+                record.CoachID = record.CoachID; // 教練ID
+                record.AthleteID = record.AthleteID; // 運動員ID
+
+                //4. 儲存ShootingRecord
+                _db.AthleteShootingRecord.Add(record);
+                _db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("儲存失敗: " + ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
     }
 }
