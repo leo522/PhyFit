@@ -11,20 +11,27 @@ namespace PhysicalFit.Controllers
     {
         private PhFitnessEntities _db = new PhFitnessEntities(); //資料庫
 
-        #region 指標
-        public ActionResult Indicators()
+        #region 指標主頁
+        public ActionResult IndicatorsMain()
         {
             return View(new EWMAViewModel());
         }
-
         [HttpPost]
         public ActionResult Calculate(EWMAViewModel model)
         {
             // 計算 EWMA 權重
             model.Calculate();
 
-            return View("Indicators", model); // 返回同一視圖並顯示結果
+            return View("IndicatorsMain", model); // 返回同一視圖並顯示結果
         }
+        #endregion
+
+        #region 指標
+        public ActionResult Indicators()
+        {
+            return View();
+        }
+        
         #endregion
 
         #region 睡眠品質

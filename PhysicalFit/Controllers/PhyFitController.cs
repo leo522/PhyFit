@@ -67,71 +67,28 @@ namespace PhysicalFit.Controllers
 
                 if (user != null)
                 {
-                    Athletes athlete = null;
-                    List<Athletes> athletesUnderCoach = null; // 這裡我們先定義一個運動員列表
-
-                    //判斷用戶是否為運動員
-                    if (user.AthleteID.HasValue)
+                    // 根據用戶角色查詢運動員或教練資料
+                    if (userRole == "Athlete" && user.AthleteID.HasValue)
                     {
-                        int athleteId = user.AthleteID.Value;
-                        athlete = _db.Athletes.FirstOrDefault(a => a.ID == athleteId);
-
+                        var athlete = _db.Athletes.FirstOrDefault(a => a.ID == user.AthleteID.Value);
                         if (athlete != null)
                         {
-                            ViewBag.AthleteName = athlete.AthleteName;  // 設置運動員名字
-                            ViewBag.AthleteID = athlete.ID;             // 設置運動員ID
-
-                            if (athlete.CoachID.HasValue)
-                            {
-                                // 查詢教練資料
-                                var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID.Value);
-                                ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
-                                ViewBag.CoachID = coach?.ID; // 設置CoachID
-                            }
-                        }
-                        else
-                        {
-                            // 當運動員資料不存在時，設置預設值
-                            ViewBag.AthleteName = "無運動員資料";
-                            ViewBag.AthleteID = 0;
+                            ViewBag.AthleteName = athlete.AthleteName;
+                            ViewBag.AthleteID = athlete.ID.ToString();
+                            var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID);
+                            ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
+                            ViewBag.CoachID = coach?.ID.ToString() ?? string.Empty;
                         }
                     }
-                    else if (user.CoachID.HasValue) // 如果用戶是教練
-                {
-                    int coachId = user.CoachID.Value;
-                    var coach = _db.Coaches.FirstOrDefault(c => c.ID == coachId);
-                    ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
-                    ViewBag.CoachID = coach?.ID; // 設置CoachID
+                    else if (userRole == "Coach" && user.CoachID.HasValue)
+                    {
+                        var coach = _db.Coaches.FirstOrDefault(c => c.ID == user.CoachID.Value);
+                        ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
+                        ViewBag.CoachID = coach?.ID.ToString() ?? string.Empty;
+                        ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == user.CoachID.Value).ToList();
+                    }
 
-                    // 查詢與該教練相關的運動員
-                    athletesUnderCoach = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
                     
-                    if (athletesUnderCoach.Any())
-                    {
-                        athlete = athletesUnderCoach.First();
-                        ViewBag.AthleteName = athlete.AthleteName;  
-                        ViewBag.AthleteID = athlete.ID;  
-                    }
-                    else
-                    {
-                        ViewBag.AthleteName = "無運動員資料"; 
-                        ViewBag.AthleteID = 0; 
-                    }
-                }
-
-                // 將運動員列表儲存到 ViewBag 中
-                ViewBag.Athletes = athletesUnderCoach ?? new List<Athletes>(); // 避免空值
-                    // 判斷用戶是否為教練
-                    //if (user.CoachID.HasValue)
-                    //{
-                    //    int coachId = user.CoachID.Value;
-                    //    var coach = _db.Coaches.FirstOrDefault(c => c.ID == coachId);
-                    //    ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
-                    //    ViewBag.CoachID = coach?.ID; // 確保CoachID也設置
-
-                    //    // 查詢與該教練相關的運動員
-                    //    ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == coachId).ToList();
-                    //}
 
                     ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
                     ViewBag.Description = GetTrainingItem(); //訓練衝量監控

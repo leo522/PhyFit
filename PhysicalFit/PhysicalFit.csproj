@@ -334,6 +334,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="css\dashboardStyle.css" />
+    <Content Include="css\EWMAStyle.css" />
     <Content Include="css\HomeStyle.css" />
     <Content Include="css\loginStyle.css" />
     <Content Include="css\MainBkStyle.css" />
@@ -457,9 +458,15 @@
     <Content Include="Views\Error\Error404.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Error\Maintenance.cshtml" />
-    <Content Include="Views\EWMAweighting\Indicators.cshtml" />
     <Content Include="Views\Account\AthleteEdit.cshtml" />
     <Content Include="Views\Account\CoachEdit.cshtml" />
+    <Content Include="Views\EWMAweighting\IndicatorsMain.cshtml" />
+    <Content Include="Views\EWMAweighting\_Indicators.cshtml" />
+    <Content Include="Views\EWMAweighting\_SleepQuality.cshtml" />
+    <Content Include="Views\EWMAweighting\_FaitgueLevel.cshtml" />
+    <Content Include="Views\EWMAweighting\_Appetite.cshtml" />
+    <Content Include="Views\EWMAweighting\_WillingnessofTraining.cshtml" />
+    <Content Include="Views\EWMAweighting\_WillingnessofRace.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

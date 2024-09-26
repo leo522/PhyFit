@@ -48,37 +48,39 @@
                 </div>
                 <div id="identity_Athletes" style="display: flex; align-items: center; flex: 1;">
                     <label for="AthletesName">運動員：</label>
-                    @if (ViewBag.UserRole == "Coach")
+                    @if (ViewBag.UserRole == "Athlete")
                     {
-                        <!-- 教練登入時，顯示運動員選單 -->
+                        <span>@ViewBag.AthleteName</span> <!-- 顯示運動員的名稱 -->
+                        <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" /> <!-- 隱藏運動員ID -->
+                    }
+                    else if (ViewBag.UserRole == "Coach")
+                    {
                         <select id="AthletesID" name="AthleteID">
                             <option value="">請選擇</option>
-                            @foreach (var athlete in ViewBag.Athletes)
+                            @if (ViewBag.Athletes != null)
                             {
-                                <option value="@athlete.ID">@athlete.AthleteName</option>
+                                foreach (var athlete in ViewBag.Athletes)
+                                {
+                                    <option value="@athlete.ID">@athlete.AthleteName</option>
+
+                                }
                             }
                         </select>
+
                     }
-                    else if (ViewBag.UserRole == "Athlete")
-                    {
-                        <!-- 運動員登入時，顯示運動員名字和隱藏的 AthleteID -->
-                        <span id="AthleteNameDisplay">@ViewBag.AthleteName</span>
-                        <input type="hidden" id="AthletesID" name="AthleteID" value="@ViewBag.AthleteID" />
-                    }
-                </div>
-                @*<div id="identity_Athletes" style="display: flex; align-items: center; flex: 1;">
-            <label for="AthletesName">運動員：</label>
-            <select id="AthletesID" name="AthleteID">
-                <option value="">請選擇</option>
-                @if (ViewBag.Athletes != null)
+                    <input type="hidden" id="athleteName" value="@ViewBag.AthleteName" />
+                    <input type="hidden" id="userRole" value="@ViewBag.UserRole" />
+                    @*<select id="AthletesID" name="AthleteID">
+            <option value="">請選擇</option>
+            @if (ViewBag.Athletes != null)
+            {
+                foreach (var athlete in ViewBag.Athletes)
                 {
-                    foreach (var athlete in ViewBag.Athletes)
-                    {
-                        <option value="@athlete.ID">@athlete.AthleteName</option>
-                    }
+                    <option value="@athlete.ID">@athlete.AthleteName</option>
                 }
-            </select>
-        </div>*@
+            }
+        </select>*@
+                </div>
             </div>
             <!-- 一般訓練衝量監控區塊 -->
             <div class="content" id="trainingMonitoring">
@@ -232,7 +234,7 @@
             <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看訓練紀錄</a>
         </form>
     </div>
-    <a href="/EWMAweighting/Indicators" class="btn btn-outline-primary" id="IndicatorCheck">查看指標</a>
+    <a href="/EWMAweighting/IndicatorsMain" class="btn btn-outline-primary" id="IndicatorCheck">查看心理特質與食慾圖量表</a>
 
     @*檢測系統*@
     @using (Html.BeginForm("SaveTrackFieldRecord", "PhyFit", FormMethod.Post))
@@ -305,7 +307,21 @@
         </div>
     }
 
-    <script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/Account/Login', // 替換為您的控制器和方法
+            success: function (response) {
+                var userRole = response.userRole; // 假設返回的 JSON 包含 userRole
+                // 在這裡使用 userRole
+            },
+            error: function (xhr, status, error) {
+                console.error('獲取用戶角色失敗：', error);
+            }
+        });
+    });
+
 // 更新動作名稱選單的技術項目
 function updateTechnicalActions(selectElement) {
     const selectedTechnical = selectElement.value;
@@ -449,11 +465,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 根據用戶身份隱藏運動員欄位
-    const userRole = '@Session["UserRole"]';
+    @*const userRole = '@Session["UserRole"]';
     const athleteDiv = document.getElementById("identity_Athletes");
     if (userRole === "Athlete") {
         athleteDiv.style.display = "none"; // 隱藏運動員欄位
-    }
+    }*@
 
     // 監聽訓練項目的選擇變更
     const selectElement = document.getElementById('Item');
