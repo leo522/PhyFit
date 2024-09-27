@@ -13,6 +13,16 @@ $(document).ready(function () {
             $('#athleteName').val().trim() :
             $('#AthletesID option:selected').text().trim();
 
+        // 如果使用者是教練，則檢查是否有選擇運動員
+        if (!isAthlete && (!selectedAthlete || selectedAthlete === "請選擇")) {
+            Swal.fire({
+                icon: 'warning',
+                title: '未選擇運動員',
+                text: '請先選擇一位運動員才能存檔。',
+            });
+            return; // 終止後續動作
+        }
+
         // 構建一個用於發送的數據對象
         var formData = {
             TrainingDate: $('input[name="archeryDate"]').val(), //訓練日
@@ -26,7 +36,7 @@ $(document).ready(function () {
             EachTrainingLoad: $('input[name="SessionArcheryTL"]').val(), //單次運動負荷
             DailyTrainingLoad: $('input[name="ArcheryDailyTL"]').val()
         };
-        debugger;
+
         // 根據身份選擇不同的 URL
         var url = isAthlete ? '/Record/SaveAthleteArcheryRecord' : '/PhyFit/SaveShootingRecord';
 

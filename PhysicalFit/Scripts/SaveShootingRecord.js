@@ -2,15 +2,18 @@
     $('#btn-shootingMonitoring').click(function (event) {
         event.preventDefault(); // 防止表單的默認提交行為
 
-        var specialTechnicalTrainingItem = $('#SpecialTechnicalTrainingItem').val();
-        // 檢查是否有選擇運動員
-        var selectedAthlete = $('#AthletesID').find('option:selected').val();
+        var athleteID = $('#AthletesID').val() || $('input[name="AthleteID"]').val(); // 獲取運動員 ID
+        var userRole = $('#userRole').val();
+        var isAthlete = userRole === 'Athlete'; // 判斷是否為運動員
+        var coachName = $('#identityCoach #CoachName').text().trim();
+        var coachID = $('#identityCoach #CoachID').val().trim();
 
-        // 檢查當前使用者是否為教練
-        /*var isCoach = $('#identityCoach').length > 0; */// 檢查教練身份區域是否存在
+        var athleteName = isAthlete ?
+            $('#athleteName').val().trim() :
+            $('#AthletesID option:selected').text().trim();
 
-        // 假設有一個變數 isAthlete 來判斷使用者身份
-        var isAthlete = $('#identity_Athletes').length > 0;
+        var coachName = $('#identityCoach #CoachName').text().trim();
+        var coachID = $('#identityCoach #CoachID').val().trim();
 
         // 如果使用者是教練，則檢查是否有選擇運動員
         if (!isAthlete && (!selectedAthlete || selectedAthlete === "請選擇")) {
@@ -22,16 +25,13 @@
             return; // 終止後續動作
         }
 
-        var coachName = $('#identityCoach #CoachName').text().trim();
-        var coachID = $('#identityCoach #CoachID').val().trim();
-
         // 構建一個用於發送的數據對象
         var formData = {
             TrainingDate: $('input[name="shootingDate"]').val(), //訓練日期
             Coach: coachName, //教練名字
             CoachID: coachID, //教練ID
-            Athlete: $('#AthletesID option:selected').text(), //運動員名字
-            AthleteID: $('#AthletesID').val(), //運動員ID
+            Athlete: athleteName, //運動員名字
+            AthleteID: athleteID, //運動員ID
             ShootingTool: $('select[name="GunsItem"]').val(), //訓練用具
             BulletCount: $('input[name="Bullet"]').val(), //子彈數量
             RPEscore: $('input[name="RPEshooting"]').val(), //自覺量表
