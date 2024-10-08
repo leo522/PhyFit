@@ -75,5 +75,7 @@ namespace PhysicalFit.Models
         public virtual DbSet<AthleteGeneralTrainingRecord> AthleteGeneralTrainingRecord { get; set; }
         public virtual DbSet<AthleteShootingRecord> AthleteShootingRecord { get; set; }
         public virtual DbSet<AthleteShootingSessionRPERecord> AthleteShootingSessionRPERecord { get; set; }
+        public virtual DbSet<PsychologicalTraitsItem> PsychologicalTraitsItem { get; set; }
+        public virtual DbSet<PsychologicalTraitsStatus> PsychologicalTraitsStatus { get; set; }
     }
 }

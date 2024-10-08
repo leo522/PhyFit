@@ -240,6 +240,13 @@
     <Compile Include="Models\PrimarySchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PsychologicalTraitsItem.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PsychologicalTraitsStatus.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PsychologicalTraitsViewModel.cs" />
     <Compile Include="Models\RegisterCoachViewModel.cs" />
     <Compile Include="Models\RollerSkatingRecordDetails.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
@@ -378,6 +385,7 @@
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\DashBoardmodal.js" />
     <Content Include="Scripts\dashDate.js" />
+    <Content Include="Scripts\datepickr.js" />
     <Content Include="Scripts\DistanceSys.js" />
     <Content Include="Scripts\EWMA.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
@@ -467,6 +475,7 @@
     <Content Include="Views\EWMAweighting\_Appetite.cshtml" />
     <Content Include="Views\EWMAweighting\_WillingnessofTraining.cshtml" />
     <Content Include="Views\EWMAweighting\_WillingnessofRace.cshtml" />
+    <Content Include="Views\PhyFit\_PsychologicalTraits.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

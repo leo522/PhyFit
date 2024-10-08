@@ -20,6 +20,7 @@
     <script src="~/Scripts/SaveDetecBikeRecord.js"></script> @*自由車檢測記錄存檔*@
     <script src="~/Scripts/SaveDetecRollerSkatingRecord.js"></script> @*滑輪溜冰檢測記錄存檔*@
     <script src="~/Scripts/LinearEquation.js"></script> @*產生斜率圖表*@
+    <script src="~/Scripts/datepickr.js"></script> @*初始化日期選擇器*@
 </head>
 <body>
     @if (TempData["ErrorMessage"] != null)
@@ -31,6 +32,8 @@
     <div>
         <form action="/Record/SessionRecord" method="get" id="generalTrainingForm">
             <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+
+                @*訓練監控項目*@
                 <div style="margin-bottom: 20px; flex: 1;">
                     <label for="Item">訓練監控項目</label>
                     <select id="Item" name="TrainingItem" style="border: 2px solid #000;" onchange="toggleButtonVisibility()">
@@ -42,6 +45,7 @@
                     </select>
                 </div>
 
+                @*角色身分*@
                 <div id="identityCoach" style="display: flex; align-items: center; flex: 1;">
                     <label>教練：<span id="CoachName">@ViewBag.CoachName</span></label>
                     <input type="hidden" id="CoachID" value="@ViewBag.CoachID" />
@@ -62,26 +66,15 @@
                                 foreach (var athlete in ViewBag.Athletes)
                                 {
                                     <option value="@athlete.ID">@athlete.AthleteName</option>
-
                                 }
                             }
                         </select>
-
                     }
                     <input type="hidden" id="athleteName" value="@ViewBag.AthleteName" />
                     <input type="hidden" id="userRole" value="@ViewBag.UserRole" />
-                    @*<select id="AthletesID" name="AthleteID">
-            <option value="">請選擇</option>
-            @if (ViewBag.Athletes != null)
-            {
-                foreach (var athlete in ViewBag.Athletes)
-                {
-                    <option value="@athlete.ID">@athlete.AthleteName</option>
-                }
-            }
-        </select>*@
                 </div>
             </div>
+
             <!-- 一般訓練衝量監控區塊 -->
             <div class="content" id="trainingMonitoring">
                 <input type="hidden" name="trainingType" value="RPE" />
@@ -103,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-success" id="btn-rainingMonitoring" title="存檔">存檔</button>
+                    <button class="btn btn-success" id="btn-TrainingMonitoring" title="存檔">存檔</button>
                     <div id="recordModalGeneral" class="modal">
                         <div class="modal-content">
                             <span class="close" id="closeRecordModal">&times;</span>
@@ -113,6 +106,19 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- 心理特質與食慾圖量表 -->
+            <div class="content" id="PsychologicalTraitsArea">
+                <input type="hidden" name="trainingType" value="RPE" />
+                <h2>心理特質和食慾圖</h2>
+                @Html.Partial("_PsychologicalTraits")
+                <table id="PsychologicalTraitsTable">
+                    <thead id="tableHeaders">
+                    </thead>
+                    <tbody id="trainingRows">
+                    </tbody>
+                </table>
             </div>
 
             <!-- 射箭訓練衝量監控區塊 -->
@@ -231,10 +237,11 @@
                     <button class="btn btn-success" id="btn-shootingMonitoring" title="存檔">存檔</button>
                 </div>
             </div>
+
             <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看訓練紀錄</a>
         </form>
     </div>
-    <a href="/EWMAweighting/IndicatorsMain" class="btn btn-outline-primary" id="IndicatorCheck">查看心理特質與食慾圖量表</a>
+    @*<a href="/EWMAweighting/IndicatorsMain" class="btn btn-outline-primary" id="IndicatorCheck">查看心理特質與食慾圖量表</a>*@
 
     @*檢測系統*@
     @using (Html.BeginForm("SaveTrackFieldRecord", "PhyFit", FormMethod.Post))
@@ -282,7 +289,7 @@
 
                         <!-- 訓練量區域 -->
                         <div class="training-volume-section">
-                            <label for="TrainingVol" style="font-size: 20px;">訓練量</label>
+                            <label for="TrainingVol" style="font-size: 20px;">前次訓練效果_有氧能力</label>
                             <input type="text" class="form-control" id="TrainingVol" placeholder="">
                         </div>
 
@@ -428,14 +435,30 @@ document.addEventListener('DOMContentLoaded', function () {
     if (link) {
         link.addEventListener('click', function (event) {
             event.preventDefault();
-            const selectedItem = document.getElementById('Item').value;
-            const athleteID = document.getElementById('AthletesID').value; // 獲取運動員ID
 
+            // 取得選中的訓練項目
+            const selectedItem = document.getElementById('Item').value;
+
+            // 根據 userRole 判斷是否是運動員或教練
+            const userRole = document.getElementById('userRole').value;
+
+            let athleteID;
+
+            // 如果是運動員，使用隱藏的 AthleteID
+            if (userRole === "Athlete") {
+                athleteID = document.querySelector('input[name="AthleteID"]').value;
+            } else if (userRole === "Coach") {
+                // 如果是教練，使用下拉選單的 AthleteID
+                athleteID = document.getElementById('AthletesID').value;
+            }
+
+            // 驗證選擇的項目和運動員ID是否有效
             if (selectedItem === "請選擇訓練項目") {
                 alert("請先選擇訓練項目");
             } else if (!athleteID) {
                 alert("請先選擇運動員");
             } else {
+                // 重定向到 SessionRecord，帶上選定的項目和運動員ID
                 window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
             }
         });
@@ -443,33 +466,12 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('未找到查看訓練紀錄的連結按鈕');
     }
 
-    // 檢測系統日期選擇器初始化
-    flatpickr("#DetectionDateTime", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        time_24hr: true
-    });
-
-    // 射箭日期選擇器初始化
-    flatpickr(".archery-date", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        time_24hr: true
-    });
-
-    // 射擊日期選擇器初始化
-    flatpickr(".shooting-date", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        time_24hr: true
-    });
-
     // 根據用戶身份隱藏運動員欄位
-    @*const userRole = '@Session["UserRole"]';
+    const userRole = '@Session["UserRole"]';
     const athleteDiv = document.getElementById("identity_Athletes");
     if (userRole === "Athlete") {
         athleteDiv.style.display = "none"; // 隱藏運動員欄位
-    }*@
+    }
 
     // 監聽訓練項目的選擇變更
     const selectElement = document.getElementById('Item');
@@ -492,7 +494,38 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('selectedSportItem').textContent = this.value !== "請選擇訓練項目" ? this.value : "";
     });
 });
-    </script>
 
+    /*心理特質與食慾圖量表*/
+    function updateStatusActions(selectElement) {
+    const selectedStatus = selectElement.value;
+    const StatusDropdown = selectElement.closest('tr').querySelector('[name="psychologicalStatus"]');
+
+    // 發送 AJAX 請求獲取對應的感受名稱
+    $.ajax({
+        url: '@Url.Action("GetFellStatuS", "PhyFit")',
+        type: 'GET',
+        data: { StatusItem: selectedStatus },
+        success: function (data) {
+            StatusDropdown.innerHTML = ''; // 清空原選單
+
+            // 添加默認選項
+            const defaultStatusOption = document.createElement("option");
+            defaultStatusOption.text = "請選擇感受";
+            StatusDropdown.add(defaultStatusOption);
+
+            // 將返回的感受名稱加入選單
+            data.forEach(function (item) {
+                const option = document.createElement("option");
+                option.value = item;
+                option.text = item;
+                StatusDropdown.add(option);
+            });
+        },
+        error: function () {
+            alert('請稍後再試。');
+        }
+    });
+}
+</script>
 </body>
 </html>

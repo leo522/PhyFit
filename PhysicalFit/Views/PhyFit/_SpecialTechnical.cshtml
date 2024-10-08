@@ -112,10 +112,10 @@
             if (rowCount < maxRows) {
                 var newRow = $(selector).find('tr:last').clone(); // 克隆最後一行
                 newRow.find('input, select').each(function () {
-                    $(this).val(''); // 清空克隆行中的所有輸入值
+                    $(this).val('');
                 });
-                $(selector).append(newRow); // 正確地將克隆的行附加到 tbody 的末尾
-                initializeFlatpickr(); // 新增行後重新初始化 flatpickr
+                $(selector).append(newRow);
+                initializeFlatpickr(); //新增行後重新初始化 flatpickr
             } else {
                 alert("已達到最大行數，無法新增更多。");
             }

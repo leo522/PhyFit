@@ -30,14 +30,14 @@ namespace PhysicalFit
                         throw new ArgumentException("TrainingTime 格式無效");
                     }
                 }
-                else if (trainingType == "專項訓練-射箭訓練衝量")
+                else if (trainingType == "射箭訓練衝量")
                 {
                     // 射箭訓練的計算方式，例如根據箭數和磅數計算
                     // 示例邏輯：箭數 * 磅數
                     int arrowCount = Convert.ToInt32(trainingTime); // 假設 trainingTime 存儲的是箭數
                     return arrowCount * rpeScore; // 射箭的負荷量可能根據箭數和自覺費力程度來計算
                 }
-                else if (trainingType == "專項訓練-射擊訓練衝量")
+                else if (trainingType == "射擊訓練衝量")
                 {
                     // 射擊訓練的計算方式，例如根據子彈數來計算
                     int bulletCount = Convert.ToInt32(trainingTime); // 假設 trainingTime 存儲的是子彈數
@@ -71,23 +71,23 @@ namespace PhysicalFit
 
                     return records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, "RPE訓練紀錄"));
                 }
-                else if (trainingType == "專項訓練-射箭訓練衝量")
+                else if (trainingType == "射箭訓練衝量")
                 {
                     // 射箭訓練的加總
                     var records = dbContext.ArcheryRecord
                         .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
                         .ToList(); // 拉取到內存中
 
-                    return records.Sum(record => CalculateTrainingLoad(record.ArrowCount.ToString(), record.RPEscore ?? 0, "專項訓練-射箭訓練衝量"));
+                    return records.Sum(record => CalculateTrainingLoad(record.ArrowCount.ToString(), record.RPEscore ?? 0, "射箭訓練衝量"));
                 }
-                else if (trainingType == "專項訓練-射擊訓練衝量")
+                else if (trainingType == "射擊訓練衝量")
                 {
                     // 射擊訓練的加總
                     var records = dbContext.ShootingRecord
                         .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
                         .ToList(); // 拉取到內存中
 
-                    return records.Sum(record => CalculateTrainingLoad(record.BulletCount.ToString(), record.RPEscore ?? 0, "專項訓練-射擊訓練衝量"));
+                    return records.Sum(record => CalculateTrainingLoad(record.BulletCount.ToString(), record.RPEscore ?? 0, "射擊訓練衝量"));
                 }
                 else
                 {
@@ -126,7 +126,7 @@ namespace PhysicalFit
                                       && DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endOfWeek))
                         .Sum(record => record.TrainingLoad ?? 0);
                 }
-                else if (trainingType == "專項訓練-射箭訓練衝量")
+                else if (trainingType == "射箭訓練衝量")
                 {
                     // 射箭訓練的每週訓練量計算
                     return dbContext.ArcheryRecord
@@ -134,7 +134,7 @@ namespace PhysicalFit
                                       && DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endOfWeek))
                         .Sum(record => record.EachTrainingLoad ?? 0);
                 }
-                else if (trainingType == "專項訓練-射擊訓練衝量")
+                else if (trainingType == "射擊訓練衝量")
                 {
                     // 射擊訓練的每週訓練量計算
                     return dbContext.ShootingRecord
@@ -235,7 +235,7 @@ namespace PhysicalFit
                     .Select(record => record.TrainingLoad ?? 0)
                     .ToList();
             }
-            else if (trainingType == "專項訓練-射箭訓練衝量")
+            else if (trainingType == "射箭訓練衝量")
             {
                 trainingRecords = dbContext.ArcheryRecord
                     .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
@@ -316,7 +316,7 @@ namespace PhysicalFit
                         .ToList() // 將結果取到內存中
                         .Sum(record => record.TrainingLoad ?? 0); // 在內存中處理 nullable 值
                 }
-                else if (trainingType == "專項訓練-射箭訓練衝量")
+                else if (trainingType == "射箭訓練衝量")
                 {
                     previousWeekLoad = dbContext.ArcheryRecord
                         .Where(record => DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfPreviousWeek)
@@ -324,7 +324,7 @@ namespace PhysicalFit
                         .ToList() // 將結果取到內存中
                         .Sum(record => record.EachTrainingLoad ?? 0); // 在內存中處理 nullable 值
                 }
-                else if (trainingType == "專項訓練-射擊訓練衝量")
+                else if (trainingType == "射擊訓練衝量")
                 {
                     previousWeekLoad = dbContext.ShootingRecord
                         .Where(record => DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfPreviousWeek)
@@ -390,7 +390,7 @@ namespace PhysicalFit
                             .ToList()  // 將資料取到內存中
                             .Sum(record => record.TrainingLoad ?? 0);  // 處理 nullable 值
                     }
-                    else if (trainingType == "專項訓練-射箭訓練衝量")
+                    else if (trainingType == "射箭訓練衝量")
                     {
                         pastFourWeeksLoad += dbContext.ArcheryRecord
                             .Where(record => DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfWeek)
@@ -398,7 +398,7 @@ namespace PhysicalFit
                             .ToList()  // 將資料取到內存中
                             .Sum(record => record.EachTrainingLoad ?? 0);  // 處理 nullable 值
                     }
-                    else if (trainingType == "專項訓練-射擊訓練衝量")
+                    else if (trainingType == "射擊訓練衝量")
                     {
                         pastFourWeeksLoad += dbContext.ShootingRecord
                             .Where(record => DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfWeek)

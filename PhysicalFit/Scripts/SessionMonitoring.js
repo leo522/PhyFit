@@ -13,10 +13,10 @@
             if (selectItem === '一般訓練衝量監控 (session-RPE)') {
                 $('#session_RPE, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
                 $('#sessionRPEresult').show(); // 顯示 #sessionRPEresult
-            } else if (selectItem === '專項訓練-射箭訓練衝量') {
+            } else if (selectItem === '射箭訓練衝量') {
                 $('#arrow_Training, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
                 $('#sessionRPEresult').show(); // 顯示 #sessionRPEresult
-            } else if (selectItem === '專項訓練-射擊訓練衝量') {
+            } else if (selectItem === '射擊訓練衝量') {
                 $('#shotting_Training, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').show();
                 $('#sessionRPEresult').show(); // 顯示 #sessionRPEresult
             } else if (selectItem === '檢測系統') {

@@ -378,6 +378,28 @@
           <Property Name="SchoolName" Type="nvarchar" MaxLength="20" />
           <Property Name="IsRecruiting" Type="bit" />
         </EntityType>
+        <EntityType Name="PsychologicalTraitsItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemID" Type="int" Nullable="false" />
+          <Property Name="Item" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <!--產生期間發現錯誤:
+警告 6002: 資料表/檢視 'PhFitness.dbo.PsychologicalTraitsStatus' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。-->
+        <EntityType Name="PsychologicalTraitsStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="ItemID" />
+            <PropertyRef Name="FeelItem" />
+            <PropertyRef Name="FeelScore" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemID" Type="int" Nullable="false" />
+          <Property Name="FeelItem" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="FeelScore" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="RollerSkatingRecordDetails">
           <Key>
             <PropertyRef Name="Id" />
@@ -709,6 +731,18 @@
             </Principal>
             <Dependent Role="BikeRecordDetails">
               <PropertyRef Name="DetectionTrainingRecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Psycholog__ItemI__7093AB15">
+          <End Role="PsychologicalTraitsItem" Type="Self.PsychologicalTraitsItem" Multiplicity="1" />
+          <End Role="PsychologicalTraitsStatus" Type="Self.PsychologicalTraitsStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PsychologicalTraitsItem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PsychologicalTraitsStatus">
+              <PropertyRef Name="ItemID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1044,6 +1078,7 @@
           <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PhysicalFitness" EntityType="Self.PhysicalFitness" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PrimarySchoolList" EntityType="Self.PrimarySchoolList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PsychologicalTraitsItem" EntityType="Self.PsychologicalTraitsItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RollerSkatingRecordDetails" EntityType="Self.RollerSkatingRecordDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RPE" EntityType="Self.RPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SessionRPETrainingRecords" EntityType="Self.SessionRPETrainingRecords" Schema="dbo" store:Type="Tables" />
@@ -1067,6 +1102,14 @@
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PsychologicalTraitsStatus" EntityType="Self.PsychologicalTraitsStatus" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PsychologicalTraitsStatus].[ID] AS [ID], 
+    [PsychologicalTraitsStatus].[ItemID] AS [ItemID], 
+    [PsychologicalTraitsStatus].[FeelItem] AS [FeelItem], 
+    [PsychologicalTraitsStatus].[FeelScore] AS [FeelScore]
+    FROM [dbo].[PsychologicalTraitsStatus] AS [PsychologicalTraitsStatus]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__ArcheryRe__Athle__5B438874" Association="Self.FK__ArcheryRe__Athle__5B438874">
             <End Role="Athletes" EntitySet="Athletes" />
             <End Role="ArcheryRecord" EntitySet="ArcheryRecord" />
@@ -1082,6 +1125,10 @@
           <AssociationSet Name="FK__BikeRecor__Detec__162F4418" Association="Self.FK__BikeRecor__Detec__162F4418">
             <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
             <End Role="BikeRecordDetails" EntitySet="BikeRecordDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Psycholog__ItemI__7093AB15" Association="Self.FK__Psycholog__ItemI__7093AB15">
+            <End Role="PsychologicalTraitsItem" EntitySet="PsychologicalTraitsItem" />
+            <End Role="PsychologicalTraitsStatus" EntitySet="PsychologicalTraitsStatus" />
           </AssociationSet>
           <AssociationSet Name="FK__RollerSka__Detec__190BB0C3" Association="Self.FK__RollerSka__Detec__190BB0C3">
             <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
@@ -1419,6 +1466,12 @@
           <AssociationSet Name="FK_AthleteShootingRecord_SessionRPEShottingRecord" Association="PhFitnessModel.FK_AthleteShootingRecord_SessionRPEShottingRecord">
             <End Role="AthleteShootingSessionRPERecord" EntitySet="AthleteShootingSessionRPERecord" />
             <End Role="AthleteShootingRecord" EntitySet="AthleteShootingRecord" />
+          </AssociationSet>
+          <EntitySet Name="PsychologicalTraitsItem" EntityType="PhFitnessModel.PsychologicalTraitsItem" />
+          <EntitySet Name="PsychologicalTraitsStatus" EntityType="PhFitnessModel.PsychologicalTraitsStatus" />
+          <AssociationSet Name="FK__Psycholog__ItemI__7093AB15" Association="PhFitnessModel.FK__Psycholog__ItemI__7093AB15">
+            <End Role="PsychologicalTraitsItem" EntitySet="PsychologicalTraitsItem" />
+            <End Role="PsychologicalTraitsStatus" EntitySet="PsychologicalTraitsStatus" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="TrainingPurpose">
@@ -2479,6 +2532,40 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="PsychologicalTraitsItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemID" Type="Int32" Nullable="false" />
+          <Property Name="Item" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PsychologicalTraitsStatus" Relationship="PhFitnessModel.FK__Psycholog__ItemI__7093AB15" FromRole="PsychologicalTraitsItem" ToRole="PsychologicalTraitsStatus" />
+        </EntityType>
+        <EntityType Name="PsychologicalTraitsStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="ItemID" />
+            <PropertyRef Name="FeelItem" />
+            <PropertyRef Name="FeelScore" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemID" Type="Int32" Nullable="false" />
+          <Property Name="FeelItem" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PsychologicalTraitsItem" Relationship="PhFitnessModel.FK__Psycholog__ItemI__7093AB15" FromRole="PsychologicalTraitsStatus" ToRole="PsychologicalTraitsItem" />
+          <Property Name="FeelScore" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Psycholog__ItemI__7093AB15">
+          <End Type="PhFitnessModel.PsychologicalTraitsItem" Role="PsychologicalTraitsItem" Multiplicity="1" />
+          <End Type="PhFitnessModel.PsychologicalTraitsStatus" Role="PsychologicalTraitsStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PsychologicalTraitsItem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PsychologicalTraitsStatus">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3188,6 +3275,25 @@
                 <ScalarProperty Name="Athlete" ColumnName="Athlete" />
                 <ScalarProperty Name="CoachID" ColumnName="CoachID" />
                 <ScalarProperty Name="Coach" ColumnName="Coach" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PsychologicalTraitsItem">
+            <EntityTypeMapping TypeName="PhFitnessModel.PsychologicalTraitsItem">
+              <MappingFragment StoreEntitySet="PsychologicalTraitsItem">
+                <ScalarProperty Name="Item" ColumnName="Item" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PsychologicalTraitsStatus">
+            <EntityTypeMapping TypeName="PhFitnessModel.PsychologicalTraitsStatus">
+              <MappingFragment StoreEntitySet="PsychologicalTraitsStatus">
+                <ScalarProperty Name="FeelScore" ColumnName="FeelScore" />
+                <ScalarProperty Name="FeelItem" ColumnName="FeelItem" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

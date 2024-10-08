@@ -9,14 +9,17 @@
         if (selectedItem === '一般訓練衝量監控 (session-RPE)') {
             $('#trainingMonitoring').show();
         }
-        else if (selectedItem === '專項訓練-射箭訓練衝量') {
+        else if (selectedItem === '射箭訓練衝量') {
             $('#archeryMonitoring').show();
         }
-        else if (selectedItem === '專項訓練-射擊訓練衝量') {
+        else if (selectedItem === '射擊訓練衝量') {
             $('#shootingMonitoring').show();
         }
         else if (selectedItem === '檢測系統') {
             $('#distanceDetails').show();
+        }
+        else if (selectedItem === '心理特質與食慾圖量表') {
+            $('#PsychologicalTraitsArea').show();
         }
     });
 

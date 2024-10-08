@@ -218,11 +218,6 @@ namespace PhysicalFit.Controllers
         #region 登入
         public ActionResult Login()
         {
-            // 如果用戶已經登入，直接重定向到主頁
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("dashboard", "PhyFit");
-            }
             return View();
         }
 
@@ -234,16 +229,14 @@ namespace PhysicalFit.Controllers
                 string hashedPwd = ComputeSha256Hash(pwd);
                 Users user = null;
 
-                // 驗證身份並查詢用戶
-                user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
+                user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);  //驗證身份並查詢用戶
 
                 if (user != null)
                 {
                     user.LastLoginDate = DateTime.Now; //更新用戶的最後登入時間
                     _db.SaveChanges();
-
-                    //設定 Session，根據 CoachID 判斷用戶角色
-                    Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete";
+     
+                    Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete"; //設定 Session，根據 CoachID 判斷用戶角色
 
                     // 設定 FormsAuthentication Ticket
                     var authTicket = new FormsAuthenticationTicket(
@@ -259,8 +252,7 @@ namespace PhysicalFit.Controllers
                     string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                     var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
                     {
-                        HttpOnly = true,
-                        //Secure = Request.IsSecureConnection // 確保在HTTPS下傳輸
+                        HttpOnly = true, //Secure = Request.IsSecureConnection // 確保在HTTPS下傳輸
                     };
                     Response.Cookies.Add(authCookie);
 

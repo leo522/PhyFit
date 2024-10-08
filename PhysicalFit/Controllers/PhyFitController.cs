@@ -88,8 +88,6 @@ namespace PhysicalFit.Controllers
                         ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == user.CoachID.Value).ToList();
                     }
 
-                    
-
                     ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
                     ViewBag.Description = GetTrainingItem(); //訓練衝量監控
                     ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
@@ -102,6 +100,8 @@ namespace PhysicalFit.Controllers
                     ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
                     ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
                     ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
+                    ViewBag.Psychological = PsychologicalTraits(); //心理特質與食慾圖-項目
+                    ViewBag.FellStatus = FellStatuS(); //心理特質與食慾圖-感受
 
                     var records = _db.SessionRPETrainingRecords.ToList();
 
@@ -457,7 +457,7 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 儲存一般訓練紀錄-教練
-        public ActionResult SaveGeneralTrainingRecord(GeneralTrainingRecord record)
+        public ActionResult SaveGeneralTrainingRecord(List<GeneralTrainingRecord> records)
         {
             try
             {
@@ -467,13 +467,49 @@ namespace PhysicalFit.Controllers
                     return Json(new { success = false, message = "請確認是否為教練身份。" });
                 }
 
-                string specialTechnicalTrainingItem = Request.Form["SpecialTechnicalTrainingItem"];
-
-                if (!string.IsNullOrEmpty(specialTechnicalTrainingItem))
+                // 逐筆處理每一筆 GeneralTrainingRecord
+                foreach (var record in records)
                 {
-                    record.TrainingClassName = specialTechnicalTrainingItem;
+                    // 根據不同的課程名稱來清理不相關的項目
+                    switch (record.TrainingClassName)
+                    {
+                        case "專項技術類":
+                            // 清理與專項技術類無關的項目
+                            record.TrainingParts = null;
+                            record.TrainingType = null;
+                            break;
+
+                        case "混合肌力體能類":
+                            record.TrainingItem = null;
+                            record.ActionName = null;
+                            record.TrainingParts = null;
+                            record.TrainingType = null;
+                            break;
+
+                        case "肌力類":
+                            record.TrainingItem = null;
+                            record.ActionName = null;
+                            record.TrainingType = null;
+                            break;
+
+                        case "體能類":
+                            record.TrainingItem = null;
+                            record.ActionName = null;
+                            record.TrainingParts = null;
+                            break;
+                    }
+
+                    // 確認 record 是否有正確的資料要存入
+                    if (string.IsNullOrEmpty(record.TrainingClassName))
+                    {
+                        return Json(new { success = false, message = "訓練項目資料不完整，無法儲存。" });
+                    }
+
+                    // 將每筆清理過的資料新增到資料庫
+                    _db.GeneralTrainingRecord.Add(record);
                 }
-                _db.GeneralTrainingRecord.Add(record);
+
+                // 儲存所有變更
                 _db.SaveChanges();
 
                 return Json(new { success = true });
@@ -487,7 +523,8 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 儲存射箭訓練紀錄-教練
-        public ActionResult SaveArcheryRecord(ArcheryRecord record, ArcherySessionRPERecord sessionRecord)
+
+        public ActionResult SaveArcheryRecord(List<ArcheryRecord> records, List<ArcherySessionRPERecord> sessionRecords)
         {
             try
             {
@@ -497,22 +534,33 @@ namespace PhysicalFit.Controllers
                     return Json(new { success = false, message = "請確認是否為教練身份。" });
                 }
 
-                //1.儲存ShottingSessionRPERecord
-                sessionRecord.CreatedDate = DateTime.Now; // 設定CreatedDate
+                // 檢查 sessionRecords 和 records 的數量是否一致
+                if (records.Count != sessionRecords.Count)
+                {
+                    return Json(new { success = false, message = "記錄數量不匹配，請檢查輸入資料。" });
+                }
 
-                _db.ArcherySessionRPERecord.Add(sessionRecord);
-                _db.SaveChanges();
+                // 逐一儲存每一筆 RPE 記錄及其對應的訓練記錄
+                for (int i = 0; i < sessionRecords.Count; i++)
+                {
+                    var sessionRecord = sessionRecords[i];
+                    sessionRecord.CreatedDate = DateTime.Now; // 設定 CreatedDate
 
-                //2.使用儲存後的ID更新ShootingRecord
-                record.SessionRPEArcheryRecordID = sessionRecord.ID;
+                    _db.ArcherySessionRPERecord.Add(sessionRecord);
+                    _db.SaveChanges(); // 儲存當前的 RPE 記錄
 
-                //3.更新 record 的 CoachID 和 AthleteID
-                record.CoachID = record.CoachID; // 教練ID
-                record.AthleteID = record.AthleteID; // 運動員ID
+                    // 將對應的射箭訓練記錄與當前的 sessionRecord 綁定
+                    var correspondingRecord = records[i];
+                    correspondingRecord.SessionRPEArcheryRecordID = sessionRecord.ID;
 
-                //4.儲存ShootingRecord
-                _db.ArcheryRecord.Add(record);
-                _db.SaveChanges();
+                    // 更新 record 的 CoachID 和 AthleteID
+                    correspondingRecord.CoachID = sessionRecord.CoachID; // 教練ID
+                    correspondingRecord.AthleteID = sessionRecord.AthleteID; // 運動員ID
+
+                    _db.ArcheryRecord.Add(correspondingRecord); // 儲存射箭訓練記錄
+                }
+
+                _db.SaveChanges(); // 儲存所有變更
 
                 return Json(new { success = true });
             }
@@ -526,7 +574,8 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 儲存射擊訓練紀錄-教練
-        public ActionResult SaveShootingRecord(ShootingRecord record, ShottingSessionRPERecord sessionRecord)
+
+        public ActionResult SaveShootingRecord(List<ShootingRecord> records, List<ShottingSessionRPERecord> sessionRecords)
         {
             try
             {
@@ -536,23 +585,33 @@ namespace PhysicalFit.Controllers
                     return Json(new { success = false, message = "請確認是否為教練身份。" });
                 }
 
+                // 檢查 sessionRecords 和 records 的數量是否一致
+                if (records.Count != sessionRecords.Count)
+                {
+                    return Json(new { success = false, message = "記錄數量不匹配，請檢查輸入資料。" });
+                }
 
-                // 1. 儲存ShottingSessionRPERecord
-                sessionRecord.CreatedDate = DateTime.Now; //設定CreatedDate
+                // 逐一儲存每一筆 RPE 記錄及其對應的射擊訓練記錄
+                for (int i = 0; i < sessionRecords.Count; i++)
+                {
+                    var sessionRecord = sessionRecords[i];
+                    sessionRecord.CreatedDate = DateTime.Now; // 設定 CreatedDate
 
-                _db.ShottingSessionRPERecord.Add(sessionRecord);
-                _db.SaveChanges();
+                    _db.ShottingSessionRPERecord.Add(sessionRecord);
+                    _db.SaveChanges(); // 儲存當前的 RPE 記錄
 
-                // 2. 使用儲存後的ID更新ShootingRecord
-                record.SessionRPEShottingRecordID = sessionRecord.ID;
+                    // 將對應的射擊訓練記錄與當前的 sessionRecord 綁定
+                    var correspondingRecord = records[i];
+                    correspondingRecord.SessionRPEShottingRecordID = sessionRecord.ID;
 
-                //3.更新 record 的 CoachID 和 AthleteID
-                record.CoachID = record.CoachID; // 教練ID
-                record.AthleteID = record.AthleteID; // 運動員ID
+                    // 更新 record 的 CoachID 和 AthleteID
+                    correspondingRecord.CoachID = sessionRecord.CoachID; // 教練ID
+                    correspondingRecord.AthleteID = sessionRecord.AthleteID; // 運動員ID
 
-                //4. 儲存ShootingRecord
-                _db.ShootingRecord.Add(record);
-                _db.SaveChanges();
+                    _db.ShootingRecord.Add(correspondingRecord); // 儲存射擊訓練記錄
+                }
+
+                _db.SaveChanges(); // 儲存所有變更
 
                 return Json(new { success = true });
             }
@@ -562,6 +621,7 @@ namespace PhysicalFit.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
         #endregion
 
         #region 運動員資訊
@@ -783,6 +843,29 @@ namespace PhysicalFit.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+        #endregion
+
+        #region 心理特質與食慾圖-項目
+        public List<string> PsychologicalTraits()
+        {
+            var dto = (from pt in _db.PsychologicalTraitsItem select pt.Item).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 感受項目
+        public List<string> FellStatuS()
+        {
+            var dto = (from fs in _db.PsychologicalTraitsStatus select fs.FeelItem).ToList();
+            return dto;
+        }
+
+        public JsonResult GetFellStatuS(string StatusItem)
+        {
+            var dtos = _db.PsychologicalTraitsStatus.Where(fs => fs.PsychologicalTraitsItem.Item == StatusItem).Select(fs => fs.FeelItem).ToList();
+
+            return Json(dtos, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }
