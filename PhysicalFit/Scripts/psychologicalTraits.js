@@ -46,12 +46,21 @@ function sendTraitsToServer(traitsData) {
         contentType: 'application/json',
         data: JSON.stringify(traitsData),
         success: function (response) {
-            Swal.fire({
-                title: '成功',
-                text: '資料已成功儲存！',
-                icon: 'success',
-                confirmButtonText: '確定'
-            });
+            if (response.success) {
+                Swal.fire({
+                    title: '成功',
+                    text: response.message,
+                    icon: 'success',
+                    confirmButtonText: '確定'
+                });
+            } else {
+                Swal.fire({
+                    title: '錯誤',
+                    text: response.message,
+                    icon: 'error',
+                    confirmButtonText: '確定'
+                });
+            }
         },
         error: function (xhr, status, error) {
             Swal.fire({

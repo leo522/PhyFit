@@ -911,24 +911,31 @@ namespace PhysicalFit.Controllers
         #region 心理特質感受
         public Dictionary<string, List<string>> GetPsyFeelings()
         {
-            var psychologicalWithFeelings = new Dictionary<string, List<string>>();
+            try
+            {
+                var psychologicalWithFeelings = new Dictionary<string, List<string>>();
 
-            var sleepQuality = (from sl in _db.SleepQuality select sl.Quality).ToList();
-            psychologicalWithFeelings.Add("睡眠品質", sleepQuality);
+                var sleepQuality = (from sl in _db.SleepQuality select sl.Quality).ToList();
+                psychologicalWithFeelings.Add("睡眠品質", sleepQuality);
 
-            var fatigueLevel = (from fa in _db.FatigueLevel select fa.Fatigue).ToList();
-            psychologicalWithFeelings.Add("疲憊程度", fatigueLevel);
+                var fatigueLevel = (from fa in _db.FatigueLevel select fa.Fatigue).ToList();
+                psychologicalWithFeelings.Add("疲憊程度", fatigueLevel);
 
-            var trainingMotivation = (from tr in _db.TrainingMotivation select tr.TrainingWillingness).ToList();
-            psychologicalWithFeelings.Add("訓練意願", trainingMotivation);
+                var trainingMotivation = (from tr in _db.TrainingMotivation select tr.TrainingWillingness).ToList();
+                psychologicalWithFeelings.Add("訓練意願", trainingMotivation);
 
-            var appetite = (from ap in _db.Appetite select ap.AppetiteStatus).ToList();
-            psychologicalWithFeelings.Add("胃口", appetite);
+                var appetite = (from ap in _db.Appetite select ap.AppetiteStatus).ToList();
+                psychologicalWithFeelings.Add("胃口", appetite);
 
-            var competitionMotivation = (from co in _db.CompetitionMotivation select co.CompetitionWillingness).ToList();
-            psychologicalWithFeelings.Add("比賽意願", competitionMotivation);
+                var competitionMotivation = (from co in _db.CompetitionMotivation select co.CompetitionWillingness).ToList();
+                psychologicalWithFeelings.Add("比賽意願", competitionMotivation);
 
-            return psychologicalWithFeelings;
+                return psychologicalWithFeelings;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         #endregion

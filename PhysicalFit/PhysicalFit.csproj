@@ -182,6 +182,7 @@
     <Compile Include="Models\Coaches.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CombinedViewModel.cs" />
     <Compile Include="Models\CompetitionMotivation.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -257,6 +258,7 @@
     </Compile>
     <Compile Include="Models\PsychologicalTraitsViewModel.cs" />
     <Compile Include="Models\PsychologicalTraitViewModel.cs" />
+    <Compile Include="Models\PsychologicalViewModel.cs" />
     <Compile Include="Models\RegisterCoachViewModel.cs" />
     <Compile Include="Models\RollerSkatingRecordDetails.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
