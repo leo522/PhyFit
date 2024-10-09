@@ -235,7 +235,17 @@ namespace PhysicalFit.Controllers
                 {
                     user.LastLoginDate = DateTime.Now; //更新用戶的最後登入時間
                     _db.SaveChanges();
-     
+
+                    // 保存 UserID 到 Session
+                    if (user.CoachID.HasValue)
+                    {
+                        Session["UserID"] = user.CoachID.Value; // 如果是教練，保存 CoachID
+                    }
+                    else
+                    {
+                        Session["UserID"] = user.AthleteID; // 如果是運動員，保存 AthleteID
+                    }
+
                     Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete"; //設定 Session，根據 CoachID 判斷用戶角色
 
                     // 設定 FormsAuthentication Ticket

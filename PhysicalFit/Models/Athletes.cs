@@ -17,15 +17,14 @@ namespace PhysicalFit.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Athletes()
         {
-            this.Users = new HashSet<Users>();
-            this.GeneralTrainingRecord = new HashSet<GeneralTrainingRecord>();
-            this.DetectionTrainingRecord = new HashSet<DetectionTrainingRecord>();
-            this.ShootingRecord = new HashSet<ShootingRecord>();
             this.ArcheryRecord = new HashSet<ArcheryRecord>();
-            this.SessionTrainingRecords = new HashSet<SessionTrainingRecords>();
             this.AthleteArcheryTrainingRecord = new HashSet<AthleteArcheryTrainingRecord>();
             this.AthleteGeneralTrainingRecord = new HashSet<AthleteGeneralTrainingRecord>();
+            this.SessionTrainingRecords = new HashSet<SessionTrainingRecords>();
             this.AthleteShootingRecord = new HashSet<AthleteShootingRecord>();
+            this.GeneralTrainingRecord = new HashSet<GeneralTrainingRecord>();
+            this.ShootingRecord = new HashSet<ShootingRecord>();
+            this.Users = new HashSet<Users>();
         }
     
         public int ID { get; set; }
@@ -41,24 +40,22 @@ namespace PhysicalFit.Models
         public System.DateTime RegistrationDate { get; set; }
         public Nullable<System.DateTime> LastUpdated { get; set; }
     
-        public virtual Coaches Coaches { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Users> Users { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GeneralTrainingRecord> GeneralTrainingRecord { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DetectionTrainingRecord> DetectionTrainingRecord { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArcheryRecord> ArcheryRecord { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SessionTrainingRecords> SessionTrainingRecords { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AthleteArcheryTrainingRecord> AthleteArcheryTrainingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AthleteGeneralTrainingRecord> AthleteGeneralTrainingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SessionTrainingRecords> SessionTrainingRecords { get; set; }
+        public virtual Coaches Coaches { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AthleteShootingRecord> AthleteShootingRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GeneralTrainingRecord> GeneralTrainingRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users> Users { get; set; }
     }
 }

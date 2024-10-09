@@ -4,93 +4,100 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3b6c3bc47f1947e2b41914fa0bd89621" Name="Diagram1" ZoomLevel="84">
-        <EntityTypeShape EntityType="PhFitnessModel.Permissions" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="PhFitnessModel.UserPermissions" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="PhFitnessModel.UserRoles" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
-        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__Permi__2E1BDC42" ManuallyRouted="false" />
-        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__RoleI__2D27B809" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="PhFitnessModel.TrainingPurpose" Width="1.5" PointX="5.375" PointY="0.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.AbilityDetermination" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.ArcheryTraining" Width="1.5" PointX="7.75" PointY="3.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.IntensityClassification" Width="1.5" PointX="3.375" PointY="5.875" />
-        <EntityTypeShape EntityType="PhFitnessModel.MusclePhysical" Width="1.5" PointX="9.75" PointY="0.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.RPE" Width="1.5" PointX="9.75" PointY="4.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.ShootingTraining" Width="1.5" PointX="5.125" PointY="8.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.SpecializedTraining" Width="1.5" PointX="1.375" PointY="9" />
-        <EntityTypeShape EntityType="PhFitnessModel.TechnologyCategory" Width="1.5" PointX="11.75" PointY="0.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.TrainingTimes" Width="1.5" PointX="3.125" PointY="8.625" />
-        <EntityTypeShape EntityType="PhFitnessModel.TrainingItems" Width="1.5" PointX="5.125" PointY="6.125" />
-        <EntityTypeShape EntityType="PhFitnessModel.TrainingMonitoringItems" Width="1.5" PointX="12.375" PointY="4.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.ShottingItems" Width="1.5" PointX="11.25" PointY="7.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.DetectionSys" Width="1.5" PointX="7.25" PointY="9.25" />
-        <EntityTypeShape EntityType="PhFitnessModel.SessionRPETrainingRecords" Width="1.5" PointX="9.25" PointY="7.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.DetectionTraining" Width="1.5" PointX="6.875" PointY="6.5" />
-        <EntityTypeShape EntityType="PhFitnessModel.PasswordResetRequests" Width="1.5" PointX="1.125" PointY="6.375" />
-        <EntityTypeShape EntityType="PhFitnessModel.MixedStrength" Width="1.5" PointX="16.375" PointY="6" />
-        <EntityTypeShape EntityType="PhFitnessModel.MuscleStrength" Width="1.5" PointX="14.625" PointY="7.625" />
-        <EntityTypeShape EntityType="PhFitnessModel.PhysicalFitness" Width="1.5" PointX="14.375" PointY="0.75" />
-        <EntityTypeShape EntityType="PhFitnessModel.SpecialTechnical" Width="1.5" PointX="11" PointY="9.875" />
-        <EntityTypeShape EntityType="PhFitnessModel.SpecialTechnicalAction" Width="1.5" PointX="13.875" PointY="10.125" />
-        <AssociationConnector Association="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" />
-        <EntityTypeShape EntityType="PhFitnessModel.PrimarySchoolList" Width="1.5" PointX="20.375" PointY="6.375" />
-        <EntityTypeShape EntityType="PhFitnessModel.ComprehensiveHighSchoolList" Width="1.5" PointX="13" PointY="7.625" />
-        <EntityTypeShape EntityType="PhFitnessModel.GeneralHighSchoolList" Width="1.5" PointX="14.375" PointY="4" />
-        <EntityTypeShape EntityType="PhFitnessModel.JuniorHighSchoolList" Width="1.5" PointX="16.25" PointY="8" />
-        <EntityTypeShape EntityType="PhFitnessModel.UniversitySchoolList" Width="1.5" PointX="18.25" PointY="6.25" />
-        <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="16.375" PointY="1.125" />
-        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="26" PointY="8" />
-        <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="22.25" PointY="1.5" />
-        <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
-        <AssociationConnector Association="PhFitnessModel.FK_Users_Athletes" />
-        <AssociationConnector Association="PhFitnessModel.FK_Users_Coaches" />
-        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" />
-        <EntityTypeShape EntityType="PhFitnessModel.GeneralTrainingRecord" Width="2.125" PointX="29.25" PointY="7.375" />
-        <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" />
-        <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Coaches" />
-        <EntityTypeShape EntityType="PhFitnessModel.DetectionTrainingRecord" Width="1.5" PointX="28.25" PointY="1.25" />
-        <AssociationConnector Association="PhFitnessModel.FK__Detection__Athle__740F363E" />
-        <AssociationConnector Association="PhFitnessModel.FK__Detection__Coach__731B1205" />
-        <EntityTypeShape EntityType="PhFitnessModel.TrackFieldRecordDetails" Width="1.5" PointX="30.5" PointY="2.125" />
-        <AssociationConnector Association="PhFitnessModel.FK__TrackFiel__Detec__6F1576F7" />
-        <EntityTypeShape EntityType="PhFitnessModel.TreadmillRecordDetails" Width="1.5" PointX="22.25" PointY="10.25" />
-        <AssociationConnector Association="PhFitnessModel.FK__Treadmill__Detec__10766AC2" />
-        <EntityTypeShape EntityType="PhFitnessModel.SwimmingRecordDetails" Width="1.5" PointX="19.25" PointY="10.625" />
-        <AssociationConnector Association="PhFitnessModel.FK__SwimmingR__Detec__1352D76D" />
-        <EntityTypeShape EntityType="PhFitnessModel.BikeRecordDetails" Width="1.5" PointX="21.625" PointY="14" />
-        <AssociationConnector Association="PhFitnessModel.FK__BikeRecor__Detec__162F4418" />
-        <EntityTypeShape EntityType="PhFitnessModel.RollerSkatingRecordDetails" Width="1.5" PointX="24.625" PointY="13.5" />
-        <AssociationConnector Association="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" />
-        <EntityTypeShape EntityType="PhFitnessModel.ShootingRecord" Width="1.5" PointX="32.25" PointY="6.875" />
-        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Athletes" />
-        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Coaches" />
-        <EntityTypeShape EntityType="PhFitnessModel.ShottingSessionRPERecord" Width="1.5" PointX="0.75" PointY="13" />
-        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_SessionRPEShottingRecord" />
-        <EntityTypeShape EntityType="PhFitnessModel.ArcherySessionRPERecord" Width="1.5" PointX="3.375" PointY="13" />
-        <EntityTypeShape EntityType="PhFitnessModel.ArcheryRecord" Width="1.5" PointX="32.25" PointY="11.875" />
+      <Diagram DiagramId="3b6c3bc47f1947e2b41914fa0bd89621" Name="Diagram1" ZoomLevel="81">
+        <EntityTypeShape EntityType="PhFitnessModel.AbilityDetermination" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.Appetite" Width="1.5" PointX="14" PointY="12.125" />
+        <EntityTypeShape EntityType="PhFitnessModel.ArcheryRecord" Width="1.5" PointX="11.25" PointY="28.625" />
+        <EntityTypeShape EntityType="PhFitnessModel.ArcherySessionRPERecord" Width="1.5" PointX="9" PointY="36.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.ArcheryTraining" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.AthleteArcheryRPERecord" Width="1.5" PointX="6" PointY="13.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.AthleteArcheryTrainingRecord" Width="1.5" PointX="8.25" PointY="23.625" />
+        <EntityTypeShape EntityType="PhFitnessModel.AthleteGeneralTrainingRecord" Width="1.5" PointX="5.25" PointY="23.375" />
+        <EntityTypeShape EntityType="PhFitnessModel.Athletes" Width="1.5" PointX="3" PointY="28" />
+        <EntityTypeShape EntityType="PhFitnessModel.AthleteShootingRecord" Width="1.5" PointX="5.25" PointY="18.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.AthleteShootingSessionRPERecord" Width="1.5" PointX="3" PointY="18.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.BikeRecordDetails" Width="1.5" PointX="16" PointY="26.875" />
+        <EntityTypeShape EntityType="PhFitnessModel.Coaches" Width="1.5" PointX="0.75" PointY="18.125" />
+        <EntityTypeShape EntityType="PhFitnessModel.CompetitionMotivation" Width="1.5" PointX="14" PointY="9.5" />
+        <EntityTypeShape EntityType="PhFitnessModel.ComprehensiveHighSchoolList" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.DetectionSys" Width="1.5" PointX="5.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.DetectionTraining" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.DetectionTrainingRecord" Width="1.5" PointX="13.75" PointY="20.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.FatigueLevel" Width="1.5" PointX="14" PointY="6.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.GeneralHighSchoolList" Width="1.5" PointX="6.75" PointY="6.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.GeneralTrainingRecord" Width="1.5" PointX="8.25" PointY="28.375" />
+        <EntityTypeShape EntityType="PhFitnessModel.IntensityClassification" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.JuniorHighSchoolList" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.MixedStrength" Width="1.5" PointX="2.75" PointY="7.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.MusclePhysical" Width="1.5" PointX="8.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.MuscleStrength" Width="1.5" PointX="8.75" PointY="7.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.PasswordResetRequests" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.Permissions" Width="1.5" PointX="5.25" PointY="33.625" />
+        <EntityTypeShape EntityType="PhFitnessModel.PhysicalFitness" Width="1.5" PointX="2.75" PointY="10.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.PrimarySchoolList" Width="1.5" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.PsychologicalTraitsChart" Width="1.5" PointX="11.75" PointY="6.625" />
+        <EntityTypeShape EntityType="PhFitnessModel.RollerSkatingRecordDetails" Width="1.5" PointX="16" PointY="23.5" />
+        <EntityTypeShape EntityType="PhFitnessModel.RPE" Width="1.5" PointX="4.75" PointY="10.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.SessionRPETrainingRecords" Width="1.5" PointX="11.75" PointY="15.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.SessionTrainingRecords" Width="1.5" PointX="8.25" PointY="18.5" />
+        <EntityTypeShape EntityType="PhFitnessModel.ShootingRecord" Width="1.5" PointX="11.25" PointY="23.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.ShootingTraining" Width="1.5" PointX="6.75" PointY="10.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.ShottingItems" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.ShottingSessionRPERecord" Width="1.5" PointX="9" PointY="13.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.SleepQuality" Width="1.5" PointX="14" PointY="4.125" />
+        <EntityTypeShape EntityType="PhFitnessModel.SpecializedTraining" Width="1.5" PointX="0.75" PointY="13.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.SpecialTechnical" Width="1.5" PointX="0.75" PointY="0.875" />
+        <EntityTypeShape EntityType="PhFitnessModel.SpecialTechnicalAction" Width="1.5" PointX="3" PointY="0.875" />
+        <EntityTypeShape EntityType="PhFitnessModel.SwimmingRecordDetails" Width="1.5" PointX="16" PointY="20.125" />
+        <EntityTypeShape EntityType="PhFitnessModel.TechnologyCategory" Width="1.5" PointX="2.75" PointY="14.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrackFieldRecordDetails" Width="1.5" PointX="16.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingItems" Width="1.5" PointX="16.75" PointY="4.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingMonitoringItems" Width="1.5" PointX="16.75" PointY="7.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingMotivation" Width="1.5" PointX="14" PointY="1.5" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingPurpose" Width="1.5" PointX="16.75" PointY="10.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TrainingTimes" Width="1.5" PointX="16.75" PointY="13.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.TreadmillRecordDetails" Width="1.5" PointX="16" PointY="16.5" />
+        <EntityTypeShape EntityType="PhFitnessModel.UniversitySchoolList" Width="1.5" PointX="18.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.UserPermissions" Width="1.5" PointX="7.5" PointY="33.5" />
+        <EntityTypeShape EntityType="PhFitnessModel.UserRoles" Width="1.5" PointX="5.25" PointY="35.875" />
+        <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="5.25" PointY="28.625" />
+        <AssociationConnector Association="PhFitnessModel.FK__Appetite__Psycho__5B638405" />
         <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" />
         <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Coach__2D12A970" />
         <AssociationConnector Association="PhFitnessModel.FK_ArcheryRecord_ArcherySessionRPERecord" />
-        <EntityTypeShape EntityType="PhFitnessModel.SessionTrainingRecords" Width="1.5" PointX="33.25" PointY="1.625" />
-        <AssociationConnector Association="PhFitnessModel.FK__SessionTr__Athle__5AD97420" />
-        <AssociationConnector Association="PhFitnessModel.FK__SessionTr__Coach__59E54FE7" />
-        <EntityTypeShape EntityType="PhFitnessModel.AthleteArcheryRPERecord" Width="1.5" PointX="33" PointY="16.375" />
-        <EntityTypeShape EntityType="PhFitnessModel.AthleteArcheryTrainingRecord" Width="1.5" PointX="35.25" PointY="7.25" />
-        <EntityTypeShape EntityType="PhFitnessModel.AthleteGeneralTrainingRecord" Width="1.5" PointX="28.25" PointY="12.875" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteArcheryTrainingRecord_SessionRPE" />
         <AssociationConnector Association="PhFitnessModel.FK__AthleteAr__Coach__290D0E62" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteArcheryTrainingRecord_Athlete" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteGeneralTrainingRecord_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteGeneralTrainingRecord_Coaches" />
-        <EntityTypeShape EntityType="PhFitnessModel.AthleteShootingRecord" Width="1.5" PointX="35.25" PointY="12.25" />
-        <EntityTypeShape EntityType="PhFitnessModel.AthleteShootingSessionRPERecord" Width="1.5" PointX="33" PointY="21.375" />
+        <AssociationConnector Association="PhFitnessModel.FK__SessionTr__Athle__5AD97420" />
+        <AssociationConnector Association="PhFitnessModel.FK_Athletes_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteShootingRecord_Athletes" />
+        <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" />
+        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Athletes" />
+        <AssociationConnector Association="PhFitnessModel.FK_Users_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteShootingRecord_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteShootingRecord_SessionRPEShottingRecord" />
-        <EntityTypeShape EntityType="PhFitnessModel.PsychologicalTraitsItem" Width="1.5" PointX="5.375" PointY="12.875" />
-        <EntityTypeShape EntityType="PhFitnessModel.PsychologicalTraitsStatus" Width="1.5" PointX="7.625" PointY="12.875" />
-        <AssociationConnector Association="PhFitnessModel.FK__Psycholog__ItemI__7093AB15" />
-        </Diagram>
+        <AssociationConnector Association="PhFitnessModel.FK__BikeRecor__Detec__162F4418" />
+        <AssociationConnector Association="PhFitnessModel.FK__SessionTr__Coach__59E54FE7" />
+        <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Coaches" />
+        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Coaches" />
+        <AssociationConnector Association="PhFitnessModel.FK_Users_Coaches" />
+        <AssociationConnector Association="PhFitnessModel.FK__Competiti__Psych__5E3FF0B0" />
+        <AssociationConnector Association="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" />
+        <AssociationConnector Association="PhFitnessModel.FK__SwimmingR__Detec__1352D76D" />
+        <AssociationConnector Association="PhFitnessModel.FK__Treadmill__Detec__10766AC2" />
+        <AssociationConnector Association="PhFitnessModel.FK__FatigueLe__Psych__55AAAAAF" />
+        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__Permi__2E1BDC42" />
+        <AssociationConnector Association="PhFitnessModel.FK__SleepQual__Psych__52CE3E04" />
+        <AssociationConnector Association="PhFitnessModel.FK__TrainingM__Psych__5887175A" />
+        <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_SessionRPEShottingRecord" />
+        <AssociationConnector Association="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" />
+        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__RoleI__2D27B809" />
+        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" />
+        <EntityTypeShape EntityType="PhFitnessModel.PsychologicalTraitsResults" Width="1.5" PointX="7.5" PointY="41.375" />
+        <AssociationConnector Association="PhFitnessModel.FK__Psycholog__UserI__6304A5CD" />
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

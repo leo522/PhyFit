@@ -21,6 +21,7 @@
     <script src="~/Scripts/SaveDetecRollerSkatingRecord.js"></script> @*滑輪溜冰檢測記錄存檔*@
     <script src="~/Scripts/LinearEquation.js"></script> @*產生斜率圖表*@
     <script src="~/Scripts/datepickr.js"></script> @*初始化日期選擇器*@
+    <script src="~/Scripts/psychologicalTraits.js"></script>
 </head>
 <body>
     @if (TempData["ErrorMessage"] != null)
@@ -111,7 +112,7 @@
             <!-- 心理特質與食慾圖量表 -->
             <div class="content" id="PsychologicalTraitsArea">
                 <input type="hidden" name="trainingType" value="RPE" />
-                <h2>心理特質和食慾圖</h2>
+                <h2>心理特質和食慾感受</h2>
                 @Html.Partial("_PsychologicalTraits")
                 <table id="PsychologicalTraitsTable">
                     <thead id="tableHeaders">
@@ -288,16 +289,19 @@
                         </div>
 
                         <!-- 訓練量區域 -->
-                        <div class="training-volume-section">
+                        <div class="Criticaltraining-volume-section">
                             <label for="TrainingVol" style="font-size: 20px;">前次訓練效果_有氧能力</label>
-                            <input type="text" class="form-control" id="TrainingVol" placeholder="">
+                            <input type="text" class="form-control" id="CriticalTrainingVol" placeholder="">
                         </div>
-
+                        <div class="Anaerobictraining-volume-section">
+                            <label for="TrainingVol" style="font-size: 20px;">前次訓練效果_無氧能力</label>
+                            <input type="text" class="form-control" id="AnaerobicTrainingVol" placeholder="">
+                        </div>
                         <!-- 速耐力間歇跑訓練處方區域 -->
                         @*<div class="speed-prescription-section">
-                                <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
-                                <input type="text" class="form-control" id="SpeedPres" placeholder="">
-                            </div>*@
+            <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
+            <input type="text" class="form-control" id="SpeedPres" placeholder="">
+        </div>*@
                         <input type="hidden" id="CriticalSpeed" name="criticalSpeed" />
                         <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />
 

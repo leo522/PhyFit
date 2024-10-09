@@ -101,7 +101,7 @@ namespace PhysicalFit.Controllers
                     ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
                     ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
                     ViewBag.Psychological = PsychologicalTraits(); //心理特質與食慾圖-項目
-                    ViewBag.FellStatus = FellStatuS(); //心理特質與食慾圖-感受
+                    ViewBag.PsychologicalFeelings = GetPsyFeelings();
 
                     var records = _db.SessionRPETrainingRecords.ToList();
 
@@ -201,6 +201,20 @@ namespace PhysicalFit.Controllers
             // 讀取 TrainingPurpose 資料
             var dto = (from ti in _db.TrainingMonitoringItems
                        select ti.TrainingItem).ToList();
+
+            // 檢查 Session 以獲取用戶角色
+            var userRole = Session["UserRole"]?.ToString();
+
+            // 如果是運動員，則移除 "檢測系統" 項目
+            if (userRole == "Athlete")
+            {
+                dto.Remove("檢測系統");
+            }
+            else if (userRole == "Coach") 
+            {
+                dto.Remove("心理特質與食慾圖量表");
+            }
+
             return dto;
         }
 
@@ -846,26 +860,113 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 心理特質與食慾圖-項目
+        #region 心理特質與食慾圖標題
         public List<string> PsychologicalTraits()
         {
-            var dto = (from pt in _db.PsychologicalTraitsItem select pt.Item).ToList();
+            var dto = (from pt in _db.PsychologicalTraitsChart select pt.Item).ToList();
             return dto;
         }
         #endregion
 
-        #region 感受項目
-        public List<string> FellStatuS()
+        #region 睡眠品質
+        public List<string> SleeP()
         {
-            var dto = (from fs in _db.PsychologicalTraitsStatus select fs.FeelItem).ToList();
+            var dto = (from sl in _db.SleepQuality select sl.Quality).ToList();
             return dto;
         }
+        #endregion
 
-        public JsonResult GetFellStatuS(string StatusItem)
+        #region 疲憊程度
+        public List<string> FatiguE()
         {
-            var dtos = _db.PsychologicalTraitsStatus.Where(fs => fs.PsychologicalTraitsItem.Item == StatusItem).Select(fs => fs.FeelItem).ToList();
+            var dto = (from fa in _db.FatigueLevel select fa.Fatigue).ToList();
+            return dto;
+        }
+        #endregion
 
-            return Json(dtos, JsonRequestBehavior.AllowGet);
+        #region 訓練意願
+        public List<string> TrainingMotivatioN()
+        {
+            var dto = (from tr in _db.TrainingMotivation select tr.TrainingWillingness).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 胃口
+        public List<string> AppetitE()
+        {
+            var dto = (from ap in _db.Appetite select ap.AppetiteStatus).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 比賽意願
+        public List<string> CompetitioN()
+        {
+            var dto = (from co in _db.CompetitionMotivation select co.CompetitionWillingness).ToList();
+            return dto;
+        }
+        #endregion
+
+        #region 心理特質感受
+        public Dictionary<string, List<string>> GetPsyFeelings()
+        {
+            var psychologicalWithFeelings = new Dictionary<string, List<string>>();
+
+            var sleepQuality = (from sl in _db.SleepQuality select sl.Quality).ToList();
+            psychologicalWithFeelings.Add("睡眠品質", sleepQuality);
+
+            var fatigueLevel = (from fa in _db.FatigueLevel select fa.Fatigue).ToList();
+            psychologicalWithFeelings.Add("疲憊程度", fatigueLevel);
+
+            var trainingMotivation = (from tr in _db.TrainingMotivation select tr.TrainingWillingness).ToList();
+            psychologicalWithFeelings.Add("訓練意願", trainingMotivation);
+
+            var appetite = (from ap in _db.Appetite select ap.AppetiteStatus).ToList();
+            psychologicalWithFeelings.Add("胃口", appetite);
+
+            var competitionMotivation = (from co in _db.CompetitionMotivation select co.CompetitionWillingness).ToList();
+            psychologicalWithFeelings.Add("比賽意願", competitionMotivation);
+
+            return psychologicalWithFeelings;
+        }
+
+        #endregion
+
+        #region 心理特質感受-存檔
+        [HttpPost]
+        public JsonResult SubmitTraits(List<PsychologicalTraitViewModel> traits)
+        {
+            try
+            {
+                if (traits == null || !traits.Any())
+                {
+                    return Json(new { success = false, message = "沒有接收到資料" });
+                }
+
+                foreach (var trait in traits)
+                {
+                    var psychologicalResult = new PsychologicalTraitsResults
+                    {
+                        UserID = trait.UserID,
+                        PsychologicalDate = trait.PsychologicalDate,
+                        Trait = trait.Trait,
+                        Feeling = trait.Feeling,
+                        Score = trait.Score,
+                        CreatedAt = DateTime.Now
+                    };
+                    _db.PsychologicalTraitsResults.Add(psychologicalResult);
+                }
+
+                _db.SaveChanges();
+
+                return Json(new { success = true, message = "資料儲存成功"});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "儲存過程中發生錯誤", error = ex.Message });
+            }
+            
         }
         #endregion
     }

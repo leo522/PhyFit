@@ -146,6 +146,9 @@
     <Compile Include="Models\AbilityDetermination.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Appetite.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ArcheryRecord.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -179,6 +182,9 @@
     <Compile Include="Models\Coaches.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CompetitionMotivation.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ComprehensiveHighSchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -192,6 +198,9 @@
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EWMAViewModel.cs" />
+    <Compile Include="Models\FatigueLevel.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FitnessModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -240,13 +249,14 @@
     <Compile Include="Models\PrimarySchoolList.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PsychologicalTraitsItem.cs">
+    <Compile Include="Models\PsychologicalTraitsChart.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PsychologicalTraitsStatus.cs">
+    <Compile Include="Models\PsychologicalTraitsResults.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PsychologicalTraitsViewModel.cs" />
+    <Compile Include="Models\PsychologicalTraitViewModel.cs" />
     <Compile Include="Models\RegisterCoachViewModel.cs" />
     <Compile Include="Models\RollerSkatingRecordDetails.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
@@ -272,6 +282,9 @@
     <Compile Include="Models\ShottingSessionRPERecord.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SleepQuality.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SpecializedTraining.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -294,6 +307,9 @@
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrainingMonitoringItems.cs">
+      <DependentUpon>FitnessModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrainingMotivation.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrainingPurpose.cs">
@@ -399,6 +415,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\LinearEquation.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\psychologicalTraits.js" />
     <Content Include="Scripts\RegisterSet.js" />
     <Content Include="Scripts\RollerSkatingCaculate.js" />
     <Content Include="Scripts\RPE_Modal.js" />

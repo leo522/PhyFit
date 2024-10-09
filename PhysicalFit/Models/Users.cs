@@ -18,6 +18,7 @@ namespace PhysicalFit.Models
         public Users()
         {
             this.UserPermissions = new HashSet<UserPermissions>();
+            this.PsychologicalTraitsResults = new HashSet<PsychologicalTraitsResults>();
         }
     
         public int UID { get; set; }
@@ -37,5 +38,7 @@ namespace PhysicalFit.Models
         public virtual Coaches Coaches { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPermissions> UserPermissions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PsychologicalTraitsResults> PsychologicalTraitsResults { get; set; }
     }
 }

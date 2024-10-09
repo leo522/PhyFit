@@ -12,13 +12,16 @@ namespace PhysicalFit.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PsychologicalTraitsStatus
+    public partial class PsychologicalTraitsResults
     {
         public int ID { get; set; }
-        public int ItemID { get; set; }
-        public string FeelItem { get; set; }
-        public int FeelScore { get; set; }
+        public int UserID { get; set; }
+        public System.DateTime PsychologicalDate { get; set; }
+        public string Trait { get; set; }
+        public string Feeling { get; set; }
+        public int Score { get; set; }
+        public Nullable<System.DateTime> CreatedAt { get; set; }
     
-        public virtual PsychologicalTraitsItem PsychologicalTraitsItem { get; set; }
+        public virtual Users Users { get; set; }
     }
 }

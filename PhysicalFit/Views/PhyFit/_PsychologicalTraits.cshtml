@@ -1,61 +1,83 @@
 ﻿@model PhysicalFit.Models.PsychologicalTraitsViewModel
-<table id="PsychologicalTraitsTable" class="table table-bordered">
-    <thead>
-        <tr>
-            <th>日期</th>
-            <th>狀態項目</th>
-            <th>感受</th>
-        </tr>
-    </thead>
-    <tbody id="psychologicalRows">
-        <tr class="psychological-group">
-            <td>
-                <input class="psychological-date form-control" name="PsychologicalDate" title="日期" />
-            </td>
-            <td>
-                <div class="form-group" style="display: inline-block; max-width: 100%;">
-                    <!-- 將狀態項目呈現為列表 -->
-                    <ul class="list-unstyled">
-                        @foreach (var item in ViewBag.Psychological)
+<script src="~/Scripts/psychologicalTraits.js"></script>
+
+<div id="PsyDate" class="form-group" style="margin-top:30px; width:200px;">
+    <label for="date">日期</label>
+    <input class="form-control" type="date" name="PsychologicalDate" id="date" />
+</div>
+<div id="PsyTable" style="margin-top:30px;">
+    <table id="PsychologicalTraitsTable" class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width:20px;">狀態項目</th>
+                <th>感受</th>
+            </tr>
+        </thead>
+        <tbody id="psychologicalRows">
+            @foreach (var trait in ViewBag.PsychologicalFeelings.Keys)
+            {
+                <tr>
+                    <td><label>@trait</label></td> <!-- 狀態項目 -->
+                    <td>
+                        @foreach (var feeling in ViewBag.PsychologicalFeelings[trait])
                         {
-                            <li>
-                                <input type="checkbox" name="psychological" value="@item" id="psychological_@item" />
-                                <label for="psychological_@item">@item</label>
-                            </li>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="@trait" id="@trait-@feeling" value="@feeling" required>
+                                <label class="form-check-label" for="@trait-@feeling">@feeling</label>
+                            </div>
                         }
-                    </ul>
-                </div>
-                @*<div class="form-group" style="display: inline-block; max-width: 100%;">
-            <select class="form-control" onchange="updateStatusActions(this)" id="psychological" name="psychological" style="width: auto; min-width: 200px; display: inline-block;">
-                <option value="">請選擇狀態項目</option>
-                @foreach (var item in ViewBag.Psychological)
-                {
-                    <option value="@item" style="width: 50px;">@item</option>
-                }
-            </select>
-        </div>*@
-            </td>
-            <td>
-                <div class="form-group" style="display: inline-block; max-width: 100%;">
-                    <select class="form-control" name="psychologicalStatus" style="width: auto; min-width: 200px; display: inline-block;">
-                        <option>請選擇感受</option>
-                    </select>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<button id="submitBtn" class="btn btn-primary" style="margin-top: 20px;">存檔</button>
+
 <script>
     $(document).ready(function () {
         // 初始化 flatpickr 日期選擇器
-        function initializeFlatpickr() {
-            flatpickr(".psychological-date", {
-                enableTime: false,
-                dateFormat: "Y-m-d",
-                time_24hr: true
-            });
-        }
+        flatpickr("#date", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            time_24hr: true
+        });
 
-        initializeFlatpickr(); //初始加載時初始化 flatpickr
+        // 提交按鈕事件
+        $('#submitBtn').on('click', function (e) {
+            e.preventDefault(); // 防止表單默認提交
+
+            // 獲取日期值
+            var dateValue = $('#date').val();
+            var userId = '@Session["UserID"]';
+
+            // 檢查日期是否選擇
+            if (!dateValue) {
+                Swal.fire({
+                    title: '錯誤',
+                    text: '請選擇日期！',
+                    icon: 'warning',
+                    confirmButtonText: '確定'
+                });
+                return;
+            }
+
+            // 收集心理特質資料
+            var traitsData = collectPsychologicalTraits(dateValue, userId);
+
+            // 發送資料到後端
+            if (traitsData.length > 0) {
+                sendTraitsToServer(traitsData);
+            } else {
+                Swal.fire({
+                    title: '錯誤',
+                    text: '請選擇感受！',
+                    icon: 'warning',
+                    confirmButtonText: '確定'
+                });
+            }
+        });
     });
 </script>

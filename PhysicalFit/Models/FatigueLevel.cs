@@ -12,15 +12,13 @@ namespace PhysicalFit.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TrackFieldRecordDetails
+    public partial class FatigueLevel
     {
-        public int Id { get; set; }
-        public int DetectionTrainingRecordId { get; set; }
-        public string Distance { get; set; }
-        public int ForceDuration { get; set; }
-        public double Speed { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<System.DateTime> ModifiedDate { get; set; }
-        public Nullable<System.DateTime> TrainingDateTime { get; set; }
+        public int ID { get; set; }
+        public string Fatigue { get; set; }
+        public int FatigueScore { get; set; }
+        public int PsychologicalTraitID { get; set; }
+    
+        public virtual PsychologicalTraitsChart PsychologicalTraitsChart { get; set; }
     }
 }
