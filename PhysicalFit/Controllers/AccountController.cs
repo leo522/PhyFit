@@ -85,7 +85,7 @@ namespace PhysicalFit.Controllers
             return Json(new List<object>(), JsonRequestBehavior.AllowGet);
         }
         #endregion
-        
+
         #region 教練註冊帳號
         public ActionResult RegisterCoach(string schoolID)
         {
@@ -98,7 +98,7 @@ namespace PhysicalFit.Controllers
                           .Select(s => s.SchoolName)
                           .FirstOrDefault();
 
-           
+
             model.CoachSchool = schoolName;
 
             return View(model);
@@ -107,6 +107,16 @@ namespace PhysicalFit.Controllers
         [HttpPost]
         public ActionResult RegisterCoach(RegisterCoachViewModel model)
         {
+            // 檢查電子郵件和帳號是否已存在
+            var existingCoach = _db.Coaches
+                .FirstOrDefault(c => c.Email == model.CoachEmail || c.CoachAccount == model.CoachAccount);
+
+            if (existingCoach != null)
+            {
+                ModelState.AddModelError("", "該電子郵件或帳號已被使用。");
+                return View(model); // 返回註冊頁面，並顯示錯誤訊息
+            }
+
             // 處理教練註冊
             var newCoach = new Coaches
             {
@@ -156,40 +166,63 @@ namespace PhysicalFit.Controllers
         [HttpPost]
         public ActionResult RegisterAthlete(string AthleteName, DateTime? AthleteBirthday, string AthleteID, string Athletepwd, string AthleteSchool, string AthleteTeam, string AthleteCoach)
         {
-            DateTime birthdayDate = AthleteBirthday.Value.Date; //去除時間部分，只保留日期部分
+            if (!AthleteBirthday.HasValue)
+            {
+                ViewBag.ErrorMessage = "請提供生日";
+                return View();
+            }
 
-            //string encryptedID = EncryptionHelper.Encrypt(AthleteID); //AES對稱加密身份證號碼
+            DateTime birthdayDate = AthleteBirthday.Value.Date;
+
+            if (birthdayDate.Year < 1900 || birthdayDate > DateTime.Now)
+            {
+                ViewBag.ErrorMessage = "生日必須為有效的西元年，且不能是未來日期";
+                return View();
+            }
+
+            string encryptedID = ComputeSha256Hash(AthleteID.ToUpper());
+
+            if (_db.Athletes.Any(a => a.AthleteAccount == AthleteID))
+            {
+                ViewBag.ErrorMessage = "此帳號已存在，請選擇其他帳號";
+                return View();
+            }
+
+            if (_db.Athletes.Any(a => a.IdentityNumber == encryptedID))
+            {
+                ViewBag.ErrorMessage = "此身份證號碼已被註冊";
+                return View();
+            }
 
             // 處理運動員註冊
             var newAthlete = new Athletes
             {
-                AthleteAccount = AthleteID,
+                AthleteAccount = encryptedID,
                 AthletePWD = ComputeSha256Hash(Athletepwd),
                 AthleteName = AthleteName,
                 Birthday = birthdayDate,
-                IdentityNumber = AthleteID.ToUpper(),
+                IdentityNumber = encryptedID,
                 AthleteSchool = AthleteSchool,
                 TeamName = AthleteTeam,
                 CoachID = _db.Coaches.FirstOrDefault(c => c.CoachName == AthleteCoach)?.ID,
-                RegistrationDate = DateTime.Now, // 設定註冊時間
+                RegistrationDate = DateTime.Now,
                 IsActive = true
             };
             _db.Athletes.Add(newAthlete);
             _db.SaveChanges();
 
-            // 將運動員的帳號與密碼寫入Users資料表
             var newUser = new Users
             {
                 Name = AthleteName,
-                Account = AthleteID,
-                Password = ComputeSha256Hash(Athletepwd), // 密碼加密
-                PhoneNumber = null, // 運動員如果有電話號碼可以加進來，否則設為 null
-                Email = null, // 如果運動員有 Email 可以加進來，否則設為 null
+                Account = encryptedID,
+                Password = ComputeSha256Hash(Athletepwd),
+                PhoneNumber = null,
+                Email = null,
                 RegistrationDate = DateTime.Now,
                 IsActive = true,
                 LastLoginDate = DateTime.Now,
                 CreatedDate = DateTime.Now,
-                AthleteID = newAthlete.ID // 設定外鍵連結到Athletes表
+                AthleteID = newAthlete.ID
             };
             _db.Users.Add(newUser);
             _db.SaveChanges();
@@ -226,18 +259,33 @@ namespace PhysicalFit.Controllers
         {
             try
             {
-                string hashedPwd = ComputeSha256Hash(pwd);
+                string hashedPwd = ComputeSha256Hash(pwd); //將密碼加密
                 Users user = null;
 
-                user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);  //驗證身份並查詢用戶
-
-                if (user != null)
+                if (IsIdentityNumber(account)) //檢查帳號是否為身份證號碼
                 {
-                    user.LastLoginDate = DateTime.Now; //更新用戶的最後登入時間
+                    // 使用加密後的身份證號碼查詢
+                    string encryptedID = ComputeSha256Hash(account.ToUpper());
+                    user = _db.Users.FirstOrDefault(u => u.Account == encryptedID && u.Password == hashedPwd);
+                }
+                else
+                {
+                    // 使用帳號查詢
+                    user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
+                }
+
+                if (user != null) //驗證使用者
+                {
+                    if (!(user.IsActive ?? false)) // 如果 IsActive 是 null，則視為 false
+                    {
+                        ViewBag.ErrorMessage = "此帳號已被停用，請聯繫管理員";
+                        return View();
+                    }
+
+                    user.LastLoginDate = DateTime.Now; // 更新用戶的最後登入時間
                     _db.SaveChanges();
 
-                    // 保存 UserID 到 Session
-                    if (user.CoachID.HasValue)
+                    if (user.CoachID.HasValue) // 保存 UserID 到 Session
                     {
                         Session["UserID"] = user.CoachID.Value; // 如果是教練，保存 CoachID
                     }
@@ -246,7 +294,7 @@ namespace PhysicalFit.Controllers
                         Session["UserID"] = user.AthleteID; // 如果是運動員，保存 AthleteID
                     }
 
-                    Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete"; //設定 Session，根據 CoachID 判斷用戶角色
+                    Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete"; //設定用戶角色
 
                     // 設定 FormsAuthentication Ticket
                     var authTicket = new FormsAuthenticationTicket(
@@ -258,16 +306,15 @@ namespace PhysicalFit.Controllers
                         user.CoachID.HasValue ? user.CoachID.Value.ToString() : user.AthleteID.ToString(),
                         FormsAuthentication.FormsCookiePath);
 
-                    //加密並設定 Cookie
+                    // 加密並設定 Cookie
                     string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                     var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
                     {
-                        HttpOnly = true, //Secure = Request.IsSecureConnection // 確保在HTTPS下傳輸
+                        HttpOnly = true // 確保Cookie只能透過伺服器訪問
                     };
                     Response.Cookies.Add(authCookie);
 
                     return RedirectToAction("dashboard", "PhyFit");
-
                 }
                 else
                 {
@@ -282,14 +329,13 @@ namespace PhysicalFit.Controllers
             }
         }
 
+        // 身份證號碼格式檢查
         private bool IsIdentityNumber(string account)
         {
             return account.Length == 10 && account.All(c => char.IsLetterOrDigit(c));
-            // 根據實際情況設置身份證號碼的格式檢查
-            // 這裡假設身份證號碼為數字和字母組成，並且長度為特定的數字
-            //return Regex.IsMatch(account, "^[A-Za-z][0-9]{9}$"); // 假設身份證是1個字母+9個數字
         }
 
+        // 獲取當前用戶角色
         public JsonResult GetUserRole()
         {
             var userRole = Session["UserRole"]?.ToString();
@@ -357,8 +403,7 @@ namespace PhysicalFit.Controllers
         #region 登出
         public ActionResult Logout()
         {
-            // 清除所有的 Session 資訊
-            Session.Remove("LoggedIn");
+            Session.Clear(); // 清除所有的 Session 資訊
 
             // 清除所有的 Forms 認證 Cookies
             FormsAuthentication.SignOut();

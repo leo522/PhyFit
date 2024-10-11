@@ -9,6 +9,7 @@
     <link href="~/css/registerStyle.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/css/MainBkStyle.css" rel="stylesheet" />
+    <script src="~/SweetAlert2/sweetalert2.all.min.js"></script>
     <link rel="icon" href="~/img/favicon.svg" />
 </head>
 <body>
@@ -37,18 +38,16 @@
                 </div>
                 <input type="hidden" id="SchoolID" name="SchoolID" value="@Request.QueryString["schoolID"]" />
                 <div class="form-group">
-                    <div class="form-group">
-                        <label for="CoachSchool">學校名稱</label>
-                        <input type="text" class="form-control" id="CoachSchool" name="CoachSchool" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="CoachTeam">隊伍名稱</label>
-                        <input type="text" class="form-control" id="CoachTeam" name="CoachTeam" placeholder="請輸入隊伍名稱" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="CoachSpecialty">專長</label>
-                        <input type="text" class="form-control" id="CoachSpecialty" name="CoachSpecialty" placeholder="請輸入專業項目" required>
-                    </div>
+                    <label for="CoachSchool">學校名稱</label>
+                    <input type="text" class="form-control" id="CoachSchool" name="CoachSchool" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="CoachTeam">隊伍名稱</label>
+                    <input type="text" class="form-control" id="CoachTeam" name="CoachTeam" placeholder="請輸入隊伍名稱" required>
+                </div>
+                <div class="form-group">
+                    <label for="CoachSpecialty">專長</label>
+                    <input type="text" class="form-control" id="CoachSpecialty" name="CoachSpecialty" placeholder="請輸入專業項目" required>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">註冊</button>
             </div>
@@ -68,12 +67,14 @@
                         if (data && data.SchoolName) {
                             $('#CoachSchool').val(data.SchoolName);  // 設置學校名稱
                         }
-                        //else {
-                        //    alert('未找到對應的小學名稱。');
-                        //}
                     },
                     error: function () {
-                        alert('查詢小學名稱失敗，請檢查學校代碼。');
+                        Swal.fire({
+                            icon: 'error',
+                            title: '查詢失敗',
+                            text: '查詢小學名稱失敗，請檢查學校代碼。',
+                            confirmButtonText: '確定'
+                        });
                     }
                 });
 
@@ -86,47 +87,18 @@
                         if (data && data.SchoolName) {
                             $('#CoachSchool').val(data.SchoolName);  // 設置學校名稱
                         }
-                        //else {
-                        //    alert('未找到對應的中學名稱。');
-                        //}
                     },
                     error: function () {
-                        alert('查詢中學名稱失敗，請檢查學校代碼。');
+                        Swal.fire({
+                            icon: 'error',
+                            title: '查詢失敗',
+                            text: '查詢中學名稱失敗，請檢查學校代碼。',
+                            confirmButtonText: '確定'
+                        });
                     }
                 });
             }
         });
-        //$(document).ready(function () {
-        //    // 取得 URL 查詢字串中的 SchoolID
-        //    var schoolID = $('#SchoolID').val();
-        //    if (schoolID) {
-        //        // 查詢小學名稱
-        //        $.ajax({
-        //            url: '/Account/GetSchoolByCode',
-        //            type: 'GET',
-        //            data: { code: schoolID },
-        //            success: function (data) {
-        //                $('#CoachSchool').val(data);  // 設置學校名稱
-        //            },
-        //            error: function () {
-        //                alert('查詢小學名稱失敗，請檢查學校代碼。');
-        //            }
-        //        });
-
-        //        // 查詢中學名稱
-        //        $.ajax({
-        //            url: '/Account/GetJuinorSchoolByCode',
-        //            type: 'GET',
-        //            data: { code: schoolID },
-        //            success: function (data) {
-        //                $('#CoachSchool').val(data);  // 設置學校名稱
-        //            },
-        //            error: function () {
-        //                alert('查詢中學名稱失敗，請檢查學校代碼。');
-        //            }
-        //        });
-        //    }
-        //});
     </script>
 </body>
 </html>

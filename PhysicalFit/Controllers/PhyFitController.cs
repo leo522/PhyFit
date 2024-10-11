@@ -56,6 +56,11 @@ namespace PhysicalFit.Controllers
         #region 訓練監控主視圖
         public ActionResult dashboard()
         {
+            if (!User.Identity.IsAuthenticated || Session["UserID"] == null)
+            {
+                return RedirectToAction("Login", "Account"); // 如果未登入，重定向到登入頁
+            }
+
             if (User.Identity.IsAuthenticated)
             {
                 // 檢查用戶角色

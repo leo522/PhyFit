@@ -9,6 +9,7 @@
     <link href="~/css/registerStyle.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/css/MainBkStyle.css" rel="stylesheet" />
+    <script src="~/SweetAlert2/sweetalert2.all.min.js"></script>
     <link rel="icon" href="~/img/favicon.svg" />
 </head>
 <body>
@@ -25,7 +26,8 @@
                 </div>
                 <div class="form-group">
                     <label for="AthleteBirthday">生日</label>
-                    <input type="date" class="form-control" id="AthleteBirthday" name="AthleteBirthday" required>
+                    <input type="date" class="form-control" id="AthleteBirthday" name="AthleteBirthday" required
+                           min="1900-01-01" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                 </div>
                 <div class="form-group">
                     <label for="AthleteID">身分證字號</label>
@@ -53,9 +55,16 @@
         </form>
         @if (ViewBag.ErrorMessage != null)
         {
-            <div class="alert alert-danger" role="alert">
-                @ViewBag.ErrorMessage
-            </div>
+            <script>
+                $(document).ready(function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '註冊失敗',
+                        text: '@ViewBag.ErrorMessage',
+                        confirmButtonText: '確認'
+                    });
+                });
+            </script>
         }
     </div>
 </body>

@@ -5,9 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="~/Scripts/RollerSkatingCaculate.js"></script>
+    <script src="~/Scripts/RollerSkatingCaculate.js"></script> @*滑輪溜冰計算公式*@
     <script src="~/Scripts/jquery-3.7.0.min.js"></script>
-    @*滑輪溜冰計算公式*@
 </head>
 <body>
     <div class="container">
@@ -16,44 +15,45 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>有/無氧代謝能力測定：<span id="selectedSportItem"></span></h4>
-                        <a>測3-4種距離的力竭時間。</a>
+                        <p>測3-4種距離的力竭時間。</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="row justify-content-end">
-                <div class="col-md-7">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>距離(m)</th>
-                                        <th>力竭時間(s)</th>
-                                        <th>速度(km/h)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dataTable">
-                                    @foreach (var distance in Model)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @distance
-                                            </td>
-                                            <td>
-                                            <input type="text" class="roller-time" data-distance="@distance" oninput="calculateSpeed(this)" />
-                                            </td>
-                                            <td>
-                                            <input type="text" class="roller-result" readonly /></td>
-                                        </tr>
-                                    }
-                                </tbody>
+        <div class="row justify-content-end" style="margin-top:20px;">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td><i>r</i> <sup>2</sup></td>
-                                    <td colspan="2"><input type="text" id="calculationResult" class="form-control" readonly /></td>
+                                    <th>距離(m)</th>
+                                    <th>力竭時間(s)</th>
+                                    <th>速度(km/h)</th>
                                 </tr>
-                            </table>
-                        </div>
+                            </thead>
+                            <tbody id="dataTable">
+                                @foreach (var distance in Model)
+                                {
+                                    <tr>
+                                        <td>@distance</td>
+                                        <td>
+                                            <input type="text" class="roller-time" data-distance="@distance" oninput="calculateSpeed(this)" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="roller-result" readonly />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tr>
+                                <td><i>r</i> <sup>2</sup></td>
+                                <td colspan="2">
+                                    <input type="text" id="calculationResult" class="form-control" readonly />
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

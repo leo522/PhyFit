@@ -138,58 +138,75 @@
                 }
             </tbody>
         </table>
-
-        <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
     </div>
+
     <div>
         <h3>心理特質狀態與食慾感受趨勢圖</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>日期</th>
-                    <th>心理特質狀態</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < Model.PsychologicalRecord.Dates.Count; i++)
-                {
-                    <tr>
-                        <td>@Model.PsychologicalRecord.Dates[i]</td>
-                        <td>@Model.PsychologicalRecord.TraitsStatuses[i]</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
 
         <!-- 顯示食慾感受分數的折線圖 -->
         <div>
-            <canvas id="appetiteChart" width="400" height="200"></canvas>
+            <canvas id="appetiteChart" width="70" height="20"></canvas>
         </div>
     </div>
-
+    <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var ctx = document.getElementById('appetiteChart').getContext('2d');
-            var chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.Dates)), // 日期作為 x 軸
-                    datasets: [{
-                        label: '食慾感受分數',
-                        data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.AppetiteScores)), // 食慾感受分數作為 y 軸
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        fill: false
-                    }]
+       document.addEventListener('DOMContentLoaded', function () {
+    // 檢查是否有心理特質的數據
+    var psychologicalDataExists = @Html.Raw(Model.PsychologicalRecord != null && Model.PsychologicalRecord.Dates.Any() ? "true" : "false");
+
+    if (psychologicalDataExists) {
+        var ctx = document.getElementById('appetiteChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.Dates)), // 日期作為 x 軸
+                datasets: [{
+                    label: '睡眠品質',
+                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.SleepQualityScores)), // 睡眠品質的分數
+                    borderColor: 'rgba(255, 99, 132, 1)', // 顏色
+                    fill: false
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: { title: { display: true, text: '日期' } },
-                        y: { title: { display: true, text: '分數' }, min: 0, max: 10 }
+                {
+                    label: '疲憊程度',
+                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.FatigueScores)), // 疲憊程度的分數
+                    borderColor: 'rgba(54, 162, 235, 1)', // 顏色
+                    fill: false
+                },
+                {
+                    label: '訓練意願',
+                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.TrainingWillingnessScores)), // 訓練意願的分數
+                    borderColor: 'rgba(75, 192, 192, 1)', // 顏色
+                    fill: false
+                },
+                {
+                    label: '胃口',
+                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.AppetiteScores)), // 胃口的分數
+                    borderColor: 'rgba(153, 102, 255, 1)', // 顏色
+                    fill: false
+                },
+                {
+                    label: '比賽意願',
+                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.CompetitionWillingnessScores)), // 比賽意願的分數
+                    borderColor: 'rgba(255, 206, 86, 1)', // 顏色
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: { display: true, text: '日期' }
+                    },
+                    y: {
+                        title: { display: true, text: '分數' },
+                        min: 0,
+                        max: 10
                     }
                 }
-            });
+            }
         });
+    }
+});
     </script>
 </body>
 </html>
