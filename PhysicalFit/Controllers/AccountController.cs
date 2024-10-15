@@ -98,7 +98,6 @@ namespace PhysicalFit.Controllers
                           .Select(s => s.SchoolName)
                           .FirstOrDefault();
 
-
             model.CoachSchool = schoolName;
 
             return View(model);
@@ -114,6 +113,7 @@ namespace PhysicalFit.Controllers
             if (existingCoach != null)
             {
                 ModelState.AddModelError("", "該電子郵件或帳號已被使用。");
+                TempData["ErrorMessage"] = "該電子郵件或帳號已被使用。";
                 return View(model); // 返回註冊頁面，並顯示錯誤訊息
             }
 
@@ -148,7 +148,7 @@ namespace PhysicalFit.Controllers
                 IsActive = true,
                 LastLoginDate = DateTime.Now,
                 CreatedDate = DateTime.Now,
-                CoachID = newCoach.ID // 設定外鍵連結到Coaches表
+                CoachID = newCoach.ID, // 設定外鍵連結到Coaches表
             };
             _db.Users.Add(newUser);
             _db.SaveChanges();
@@ -168,7 +168,7 @@ namespace PhysicalFit.Controllers
         {
             if (!AthleteBirthday.HasValue)
             {
-                ViewBag.ErrorMessage = "請提供生日";
+                TempData["ErrorMessage"] = "請提供生日";
                 return View();
             }
 
@@ -176,7 +176,7 @@ namespace PhysicalFit.Controllers
 
             if (birthdayDate.Year < 1900 || birthdayDate > DateTime.Now)
             {
-                ViewBag.ErrorMessage = "生日必須為有效的西元年，且不能是未來日期";
+                TempData["ErrorMessage"] = "生日必須為有效的西元年";
                 return View();
             }
 
@@ -184,13 +184,13 @@ namespace PhysicalFit.Controllers
 
             if (_db.Athletes.Any(a => a.AthleteAccount == AthleteID))
             {
-                ViewBag.ErrorMessage = "此帳號已存在，請選擇其他帳號";
+                TempData["ErrorMessage"] = "此帳號已存在，請選擇其他帳號";
                 return View();
             }
 
             if (_db.Athletes.Any(a => a.IdentityNumber == encryptedID))
             {
-                ViewBag.ErrorMessage = "此身份證號碼已被註冊";
+                TempData["ErrorMessage"] = "此身份證號碼已被註冊";
                 return View();
             }
 
@@ -222,29 +222,12 @@ namespace PhysicalFit.Controllers
                 IsActive = true,
                 LastLoginDate = DateTime.Now,
                 CreatedDate = DateTime.Now,
-                AthleteID = newAthlete.ID
+                AthleteID = newAthlete.ID,
             };
             _db.Users.Add(newUser);
             _db.SaveChanges();
 
             return RedirectToAction("Login", "Account");
-        }
-        #endregion
-
-        #region 密碼加密
-        private static string Sha256Hash(string rawData)
-        {
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
-            }
         }
         #endregion
 
@@ -260,26 +243,37 @@ namespace PhysicalFit.Controllers
             try
             {
                 string hashedPwd = ComputeSha256Hash(pwd); //將密碼加密
+                string hashedAccount = ComputeSha256Hash(account.ToUpper()); // 身分證號碼加密
                 Users user = null;
 
-                if (IsIdentityNumber(account)) //檢查帳號是否為身份證號碼
+                // 先嘗試用加密的方式登入
+                //user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
+                user = _db.Users.FirstOrDefault(u => u.Account == hashedAccount && u.Password == hashedPwd);
+                if (user == null)
                 {
-                    // 使用加密後的身份證號碼查詢
-                    string encryptedID = ComputeSha256Hash(account.ToUpper());
-                    user = _db.Users.FirstOrDefault(u => u.Account == encryptedID && u.Password == hashedPwd);
-                }
-                else
-                {
-                    // 使用帳號查詢
+                    // 如果找不到加密的帳號，嘗試用明碼帳號（未加密）進行查詢
                     user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
+
+                    if (user != null)
+                    {
+                        // 如果找到明碼帳號，則更新帳號為加密的版本
+                        user.Account = hashedAccount; // 將帳號更新為加密後的
+                        _db.SaveChanges();
+                    }
                 }
 
-                if (user != null) //驗證使用者
+                if (user != null) // 驗證使用者
                 {
                     if (!(user.IsActive ?? false)) // 如果 IsActive 是 null，則視為 false
                     {
                         ViewBag.ErrorMessage = "此帳號已被停用，請聯繫管理員";
                         return View();
+                    }
+
+                    if (user.IsTemporaryPassword == true)
+                    {
+                        // 如果是臨時密碼，重定向到重置密碼頁面
+                        return RedirectToAction("ResetPassword", new { userId = user.UID });
                     }
 
                     user.LastLoginDate = DateTime.Now; // 更新用戶的最後登入時間
@@ -329,10 +323,12 @@ namespace PhysicalFit.Controllers
             }
         }
 
+
         // 身份證號碼格式檢查
         private bool IsIdentityNumber(string account)
         {
-            return account.Length == 10 && account.All(c => char.IsLetterOrDigit(c));
+            // 檢查長度是否為10並且第一個字符為字母，後面9個字符為數字
+            return account.Length == 10 && char.IsLetter(account[0]) && account.Substring(1).All(char.IsDigit);
         }
 
         // 獲取當前用戶角色
@@ -422,7 +418,7 @@ namespace PhysicalFit.Controllers
         }
         #endregion
 
-        #region 忘記密碼
+        #region 忘記密碼-教練
         public ActionResult ForgotPassword()
         {
             return View();
@@ -624,6 +620,76 @@ namespace PhysicalFit.Controllers
 
             ViewBag.Message = "您的密碼已成功重置";
             return RedirectToAction("Login");
+        }
+        #endregion
+
+        #region 臨時密碼-學生
+        // 顯示忘記密碼頁面
+        public ActionResult ForgotPwd()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForgotPwd(string AthleteID)
+        {
+            string encryptedID = ComputeSha256Hash(AthleteID.ToUpper());
+            var user = _db.Users.FirstOrDefault(u => u.Account == encryptedID);
+
+            if (user != null)
+            {
+                string tempPassword = GenerateTemporaryPassword(); // 生成臨時密碼
+                user.Password = ComputeSha256Hash(tempPassword); // 更新為臨時密碼
+                user.IsTemporaryPassword = true; // 標記為臨時密碼
+                _db.SaveChanges();
+
+                // 可以在這裡將臨時密碼發送給學生，或透過其他方式通知他們
+                TempData["SuccessMessage"] = $"臨時密碼為: {tempPassword}";
+                return RedirectToAction("Login", "Account");
+            }
+
+            TempData["ErrorMessage"] = "找不到該帳號";
+            return View();
+        }
+
+        private string GenerateTemporaryPassword()
+        {
+            // 生成隨機臨時密碼
+            var random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        #endregion
+
+        #region 重置密碼-學生
+        public ActionResult ResetPwd(int userId)
+        {
+            var user = _db.Users.Find(userId);
+            if (user == null)
+            {
+                return RedirectToAction("Error404", "Error");
+            }
+            return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult ResetPwd(int userId, string newPassword)
+        {
+            var user = _db.Users.Find(userId);
+            if (user != null)
+            {
+                user.Password = ComputeSha256Hash(newPassword); // 設定新密碼
+                user.IsTemporaryPassword = false; // 移除臨時密碼標記
+                _db.SaveChanges();
+
+                TempData["SuccessMessage"] = "密碼已成功重置";
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "找不到該用戶";
+                return View();
+            }
         }
         #endregion
 

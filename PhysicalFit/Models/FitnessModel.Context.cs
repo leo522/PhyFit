@@ -80,7 +80,7 @@ namespace PhysicalFit.Models
         public virtual DbSet<UniversitySchoolList> UniversitySchoolList { get; set; }
         public virtual DbSet<UserPermissions> UserPermissions { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<PsychologicalTraitsResults> PsychologicalTraitsResults { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
     }
 }

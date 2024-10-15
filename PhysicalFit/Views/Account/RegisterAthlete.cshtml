@@ -53,19 +53,21 @@
 
             <button type="submit" class="btn btn-primary btn-block">註冊</button>
         </form>
-        @if (ViewBag.ErrorMessage != null)
-        {
-            <script>
-                $(document).ready(function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '註冊失敗',
-                        text: '@ViewBag.ErrorMessage',
-                        confirmButtonText: '確認'
-                    });
-                });
-            </script>
+<script>
+    $(document).ready(function () {
+        // 檢查 TempData 中是否有錯誤訊息
+        var errorMessage = '@TempData["ErrorMessage"]';
+        if (errorMessage) {
+            Swal.fire({
+                icon: 'error',
+                title: '註冊失敗',
+                text: errorMessage,
+                confirmButtonText: '確認'
+            });
         }
+    });
+</script>
+
     </div>
 </body>
 </html>

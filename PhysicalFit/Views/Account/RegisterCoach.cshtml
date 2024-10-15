@@ -53,8 +53,19 @@
             </div>
         </form>
     </div>
-    <script>
+<script>
         $(document).ready(function () {
+
+            var errorMessage = '@TempData["ErrorMessage"]';
+        if (errorMessage) {
+            Swal.fire({
+                icon: 'error',
+                title: '註冊失敗',
+                text: errorMessage,
+                confirmButtonText: '確定'
+            });
+            }
+
             // 取得 URL 查詢字串中的 SchoolID
             var schoolID = $('#SchoolID').val();
             if (schoolID) {
@@ -99,6 +110,6 @@
                 });
             }
         });
-    </script>
+</script>
 </body>
 </html>

@@ -60,7 +60,6 @@
         <EntityTypeShape EntityType="PhFitnessModel.UniversitySchoolList" Width="1.5" PointX="18.75" PointY="0.75" />
         <EntityTypeShape EntityType="PhFitnessModel.UserPermissions" Width="1.5" PointX="7.5" PointY="33.5" />
         <EntityTypeShape EntityType="PhFitnessModel.UserRoles" Width="1.5" PointX="5.25" PointY="35.875" />
-        <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="5.25" PointY="28.625" />
         <AssociationConnector Association="PhFitnessModel.FK__Appetite__Psycho__5B638405" />
         <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" />
         <AssociationConnector Association="PhFitnessModel.FK__ArcheryRe__Coach__2D12A970" />
@@ -75,14 +74,12 @@
         <AssociationConnector Association="PhFitnessModel.FK_AthleteShootingRecord_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Athletes" />
-        <AssociationConnector Association="PhFitnessModel.FK_Users_Athletes" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteShootingRecord_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK_AthleteShootingRecord_SessionRPEShottingRecord" />
         <AssociationConnector Association="PhFitnessModel.FK__BikeRecor__Detec__162F4418" />
         <AssociationConnector Association="PhFitnessModel.FK__SessionTr__Coach__59E54FE7" />
         <AssociationConnector Association="PhFitnessModel.FK_GeneralTrainingRecord_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_Coaches" />
-        <AssociationConnector Association="PhFitnessModel.FK_Users_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK__Competiti__Psych__5E3FF0B0" />
         <AssociationConnector Association="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" />
         <AssociationConnector Association="PhFitnessModel.FK__SwimmingR__Detec__1352D76D" />
@@ -94,9 +91,12 @@
         <AssociationConnector Association="PhFitnessModel.FK_ShootingRecord_SessionRPEShottingRecord" />
         <AssociationConnector Association="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" />
         <AssociationConnector Association="PhFitnessModel.FK__UserPermi__RoleI__2D27B809" />
-        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" />
         <EntityTypeShape EntityType="PhFitnessModel.PsychologicalTraitsResults" Width="1.5" PointX="7.5" PointY="41.375" />
+        <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="5.25" PointY="28.5" />
+        <AssociationConnector Association="PhFitnessModel.FK_Users_Athletes" />
+        <AssociationConnector Association="PhFitnessModel.FK_Users_Coaches" />
         <AssociationConnector Association="PhFitnessModel.FK__Psycholog__UserI__6304A5CD" />
+        <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

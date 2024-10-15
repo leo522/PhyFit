@@ -727,6 +727,7 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CoachID" Type="int" />
           <Property Name="AthleteID" Type="int" />
+          <Property Name="IsTemporaryPassword" Type="bit" />
         </EntityType>
         <Association Name="FK__Appetite__Psycho__5B638405">
           <End Role="PsychologicalTraitsChart" Type="Self.PsychologicalTraitsChart" Multiplicity="1">
@@ -1421,7 +1422,6 @@
           <EntitySet Name="UniversitySchoolList" EntityType="PhFitnessModel.UniversitySchoolList" />
           <EntitySet Name="UserPermissions" EntityType="PhFitnessModel.UserPermissions" />
           <EntitySet Name="UserRoles" EntityType="PhFitnessModel.UserRoles" />
-          <EntitySet Name="Users" EntityType="PhFitnessModel.Users" />
           <AssociationSet Name="FK__Appetite__Psycho__5B638405" Association="PhFitnessModel.FK__Appetite__Psycho__5B638405">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="Appetite" EntitySet="Appetite" />
@@ -1478,10 +1478,6 @@
             <End Role="Athletes" EntitySet="Athletes" />
             <End Role="ShootingRecord" EntitySet="ShootingRecord" />
           </AssociationSet>
-          <AssociationSet Name="FK_Users_Athletes" Association="PhFitnessModel.FK_Users_Athletes">
-            <End Role="Athletes" EntitySet="Athletes" />
-            <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
           <AssociationSet Name="FK_AthleteShootingRecord_Coaches" Association="PhFitnessModel.FK_AthleteShootingRecord_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="AthleteShootingRecord" EntitySet="AthleteShootingRecord" />
@@ -1505,10 +1501,6 @@
           <AssociationSet Name="FK_ShootingRecord_Coaches" Association="PhFitnessModel.FK_ShootingRecord_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="ShootingRecord" EntitySet="ShootingRecord" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Coaches" Association="PhFitnessModel.FK_Users_Coaches">
-            <End Role="Coaches" EntitySet="Coaches" />
-            <End Role="Users" EntitySet="Users" />
           </AssociationSet>
           <AssociationSet Name="FK__Competiti__Psych__5E3FF0B0" Association="PhFitnessModel.FK__Competiti__Psych__5E3FF0B0">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
@@ -1554,14 +1546,23 @@
             <End Role="UserRoles" EntitySet="UserRoles" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
-          <AssociationSet Name="FK__UserPermi__UserI__2C3393D0" Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserPermissions" EntitySet="UserPermissions" />
-          </AssociationSet>
           <EntitySet Name="PsychologicalTraitsResults" EntityType="PhFitnessModel.PsychologicalTraitsResults" />
+          <EntitySet Name="Users" EntityType="PhFitnessModel.Users" />
+          <AssociationSet Name="FK_Users_Athletes" Association="PhFitnessModel.FK_Users_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Coaches" Association="PhFitnessModel.FK_Users_Coaches">
+            <End Role="Coaches" EntitySet="Coaches" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
           <AssociationSet Name="FK__Psycholog__UserI__6304A5CD" Association="PhFitnessModel.FK__Psycholog__UserI__6304A5CD">
             <End Role="Users" EntitySet="Users" />
             <End Role="PsychologicalTraitsResults" EntitySet="PsychologicalTraitsResults" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserPermi__UserI__2C3393D0" Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AbilityDetermination">
@@ -2323,27 +2324,6 @@
           <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="UserPermissions" Relationship="PhFitnessModel.FK__UserPermi__RoleI__2D27B809" FromRole="UserRoles" ToRole="UserPermissions" />
         </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="UID" />
-          </Key>
-          <Property Name="UID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Account" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CoachID" Type="Int32" />
-          <Property Name="AthleteID" Type="Int32" />
-          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Users_Athletes" FromRole="Users" ToRole="Athletes" />
-          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Users_Coaches" FromRole="Users" ToRole="Coaches" />
-          <NavigationProperty Name="UserPermissions" Relationship="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" FromRole="Users" ToRole="UserPermissions" />
-          <NavigationProperty Name="PsychologicalTraitsResults" Relationship="PhFitnessModel.FK__Psycholog__UserI__6304A5CD" FromRole="Users" ToRole="PsychologicalTraitsResults" />
-        </EntityType>
         <Association Name="FK__Appetite__Psycho__5B638405">
           <End Type="PhFitnessModel.PsychologicalTraitsChart" Role="PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -2518,18 +2498,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Users_Athletes">
-          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Athletes">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Users">
-              <PropertyRef Name="AthleteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_AthleteShootingRecord_Coaches">
           <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
           <End Type="PhFitnessModel.AthleteShootingRecord" Role="AthleteShootingRecord" Multiplicity="*" />
@@ -2598,18 +2566,6 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="ShootingRecord">
-              <PropertyRef Name="CoachID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Users_Coaches">
-          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Coaches">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Users">
               <PropertyRef Name="CoachID" />
             </Dependent>
           </ReferentialConstraint>
@@ -2754,18 +2710,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__UserPermi__UserI__2C3393D0">
-          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="1" />
-          <End Type="PhFitnessModel.UserPermissions" Role="UserPermissions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UID" />
-            </Principal>
-            <Dependent Role="UserPermissions">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="PsychologicalTraitsResults">
           <Key>
             <PropertyRef Name="ID" />
@@ -2779,6 +2723,52 @@
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK__Psycholog__UserI__6304A5CD" FromRole="PsychologicalTraitsResults" ToRole="Users" />
         </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Account" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CoachID" Type="Int32" />
+          <Property Name="AthleteID" Type="Int32" />
+          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Users_Athletes" FromRole="Users" ToRole="Athletes" />
+          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Users_Coaches" FromRole="Users" ToRole="Coaches" />
+          <NavigationProperty Name="PsychologicalTraitsResults" Relationship="PhFitnessModel.FK__Psycholog__UserI__6304A5CD" FromRole="Users" ToRole="PsychologicalTraitsResults" />
+          <NavigationProperty Name="UserPermissions" Relationship="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" FromRole="Users" ToRole="UserPermissions" />
+          <Property Name="IsTemporaryPassword" Type="Boolean" />
+        </EntityType>
+        <Association Name="FK_Users_Athletes">
+          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="AthleteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Coaches">
+          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coaches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="CoachID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Psycholog__UserI__6304A5CD">
           <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="1" />
           <End Type="PhFitnessModel.PsychologicalTraitsResults" Role="PsychologicalTraitsResults" Multiplicity="*" />
@@ -2787,6 +2777,18 @@
               <PropertyRef Name="UID" />
             </Principal>
             <Dependent Role="PsychologicalTraitsResults">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserPermi__UserI__2C3393D0">
+          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="PhFitnessModel.UserPermissions" Role="UserPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="UserPermissions">
               <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
@@ -3544,9 +3546,23 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PsychologicalTraitsResults">
+            <EntityTypeMapping TypeName="PhFitnessModel.PsychologicalTraitsResults">
+              <MappingFragment StoreEntitySet="PsychologicalTraitsResults">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Feeling" ColumnName="Feeling" />
+                <ScalarProperty Name="Trait" ColumnName="Trait" />
+                <ScalarProperty Name="PsychologicalDate" ColumnName="PsychologicalDate" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="PhFitnessModel.Users">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="IsTemporaryPassword" ColumnName="IsTemporaryPassword" />
                 <ScalarProperty Name="AthleteID" ColumnName="AthleteID" />
                 <ScalarProperty Name="CoachID" ColumnName="CoachID" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
@@ -3559,19 +3575,6 @@
                 <ScalarProperty Name="Account" ColumnName="Account" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="UID" ColumnName="UID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PsychologicalTraitsResults">
-            <EntityTypeMapping TypeName="PhFitnessModel.PsychologicalTraitsResults">
-              <MappingFragment StoreEntitySet="PsychologicalTraitsResults">
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="Score" ColumnName="Score" />
-                <ScalarProperty Name="Feeling" ColumnName="Feeling" />
-                <ScalarProperty Name="Trait" ColumnName="Trait" />
-                <ScalarProperty Name="PsychologicalDate" ColumnName="PsychologicalDate" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

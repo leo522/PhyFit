@@ -260,6 +260,7 @@
     <Compile Include="Models\PsychologicalTraitViewModel.cs" />
     <Compile Include="Models\PsychologicalViewModel.cs" />
     <Compile Include="Models\RegisterCoachViewModel.cs" />
+    <Compile Include="Models\ResetPwdViewModel.cs" />
     <Compile Include="Models\RollerSkatingRecordDetails.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -495,6 +496,8 @@
     <Content Include="Views\EWMAweighting\_WillingnessofTraining.cshtml" />
     <Content Include="Views\EWMAweighting\_WillingnessofRace.cshtml" />
     <Content Include="Views\PhyFit\_PsychologicalTraits.cshtml" />
+    <Content Include="Views\Account\ForgotPwd.cshtml" />
+    <Content Include="Views\Account\ResetPwd.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -17,8 +17,8 @@ namespace PhysicalFit.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Users()
         {
-            this.UserPermissions = new HashSet<UserPermissions>();
             this.PsychologicalTraitsResults = new HashSet<PsychologicalTraitsResults>();
+            this.UserPermissions = new HashSet<UserPermissions>();
         }
     
         public int UID { get; set; }
@@ -33,12 +33,13 @@ namespace PhysicalFit.Models
         public System.DateTime CreatedDate { get; set; }
         public Nullable<int> CoachID { get; set; }
         public Nullable<int> AthleteID { get; set; }
+        public Nullable<bool> IsTemporaryPassword { get; set; }
     
         public virtual Athletes Athletes { get; set; }
         public virtual Coaches Coaches { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserPermissions> UserPermissions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PsychologicalTraitsResults> PsychologicalTraitsResults { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserPermissions> UserPermissions { get; set; }
     }
 }
