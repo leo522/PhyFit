@@ -243,15 +243,16 @@ namespace PhysicalFit.Controllers
             try
             {
                 string hashedPwd = ComputeSha256Hash(pwd); //將密碼加密
-                string hashedAccount = ComputeSha256Hash(account.ToUpper()); // 身分證號碼加密
+                string hashedAccount = ComputeSha256Hash(account.ToUpper()); //身分證號碼加密
                 Users user = null;
 
                 // 先嘗試用加密的方式登入
                 //user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
                 user = _db.Users.FirstOrDefault(u => u.Account == hashedAccount && u.Password == hashedPwd);
+
                 if (user == null)
                 {
-                    // 如果找不到加密的帳號，嘗試用明碼帳號（未加密）進行查詢
+                    //如果找不到加密的帳號，嘗試用明碼帳號(未加密)進行查詢
                     user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
 
                     if (user != null)
@@ -262,18 +263,18 @@ namespace PhysicalFit.Controllers
                     }
                 }
 
-                if (user != null) // 驗證使用者
+                if (user != null) //驗證使用者
                 {
-                    if (!(user.IsActive ?? false)) // 如果 IsActive 是 null，則視為 false
+                    if (!(user.IsActive ?? false)) //如果IsActive是null，則視為false
                     {
                         ViewBag.ErrorMessage = "此帳號已被停用，請聯繫管理員";
                         return View();
                     }
 
-                    if (user.IsTemporaryPassword == true)
+                    if (user.IsTemporaryPassword ?? false) // 檢查是否是臨時密碼
                     {
                         // 如果是臨時密碼，重定向到重置密碼頁面
-                        return RedirectToAction("ResetPassword", new { userId = user.UID });
+                        return RedirectToAction("ResetPwd", "Account", new { userId = user.UID });
                     }
 
                     user.LastLoginDate = DateTime.Now; // 更新用戶的最後登入時間
@@ -644,7 +645,7 @@ namespace PhysicalFit.Controllers
                 _db.SaveChanges();
 
                 // 可以在這裡將臨時密碼發送給學生，或透過其他方式通知他們
-                TempData["SuccessMessage"] = $"臨時密碼為: {tempPassword}";
+                TempData["SuccessMessage"] = $"臨時密碼為: {tempPassword}"; // 顯示臨時密碼訊息
                 return RedirectToAction("Login", "Account");
             }
 
@@ -669,26 +670,42 @@ namespace PhysicalFit.Controllers
             {
                 return RedirectToAction("Error404", "Error");
             }
-            return View(user);
+
+            var model = new ResetPwdViewModel
+            {
+                UserId = user.UID,
+
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult ResetPwd(int userId, string newPassword)
+        public ActionResult ResetPwd(ResetPwdViewModel model)
         {
-            var user = _db.Users.Find(userId);
+            var user = _db.Users.Find(model.UserId);
+
             if (user != null)
             {
-                user.Password = ComputeSha256Hash(newPassword); // 設定新密碼
-                user.IsTemporaryPassword = false; // 移除臨時密碼標記
-                _db.SaveChanges();
+                if (model.NewPassword == model.ConfirmPassword) // 確保兩次輸入的密碼一致
+                {
+                    user.Password = ComputeSha256Hash(model.NewPassword); // 設定新密碼
+                    user.IsTemporaryPassword = false; // 移除臨時密碼標記
+                    _db.SaveChanges();
 
-                TempData["SuccessMessage"] = "密碼已成功重置";
-                return RedirectToAction("Login", "Account");
+                    TempData["SuccessMessage"] = "密碼已成功重置";
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "密碼不一致，請重試";
+                    return View(model); // 返回視圖並顯示錯誤
+                }
             }
             else
             {
                 TempData["ErrorMessage"] = "找不到該用戶";
-                return View();
+                return View(model); // 返回視圖
             }
         }
         #endregion
@@ -702,19 +719,26 @@ namespace PhysicalFit.Controllers
                 return RedirectToAction("Login", "Account"); // 如果未登入或不是運動員，重定向到登入頁
             }
 
-            // 使用 User.Identity.Name 查找運動員的帳號
-            var athleteAccount = User.Identity.Name;
+            var athleteAccount = User.Identity.Name; //使用 User.Identity.Name 查找運動員的帳號
 
-            // 查詢運動員資料，通過 AthleteAccount 來匹配
-            var dto = _db.Athletes.FirstOrDefault(a => a.AthleteName == athleteAccount);
+            var dto = _db.Athletes.FirstOrDefault(a => a.AthleteName == athleteAccount);  //查詢運動員資料，通過 AthleteAccount 來匹配
 
             if (dto == null)
             {
-                return RedirectToAction("Error404", "Error"); // 如果查不到對應的運動員資料
+                return RedirectToAction("Error404", "Error"); //如果查不到對應的運動員資料
             }
 
+            // 確保日期格式符合 yyyy-MM-dd
+            ViewBag.Birthday = dto.Birthday.ToString("yyyy-MM-dd");
+
+            // 模糊查詢教練名單，根據運動員學校名稱的部分內容進行匹配
+            var coaches = _db.Coaches
+                             .Where(c => c.IsActive && c.SchoolName.Contains(dto.AthleteSchool))
+                             .ToList();
+
+
             // 獲取可用的教練列表
-            var coaches = _db.Coaches.Where(c => c.IsActive).ToList();
+            //var coaches = _db.Coaches.Where(c => c.IsActive).ToList();
 
             ViewBag.Coaches = new SelectList(coaches, "ID", "CoachName", dto.CoachID);
 
@@ -723,7 +747,7 @@ namespace PhysicalFit.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AthleteEdit(Athletes athlete)
+        public ActionResult AthleteEdit(Athletes athlete, string NewPassword, string ConfirmPassword)
         {
             if (ModelState.IsValid)
             {
@@ -740,6 +764,12 @@ namespace PhysicalFit.Controllers
                     //existingAthlete.IdentityNumber = athlete.IdentityNumber; //身分證字號
                     existingAthlete.CoachID = athlete.CoachID; // 更新教練ID 
                     existingAthlete.LastUpdated = DateTime.Now; // 設置為當前時間
+
+                    // 處理新密碼更新邏輯
+                    if (!string.IsNullOrEmpty(NewPassword) && NewPassword == ConfirmPassword)
+                    {
+                        existingAthlete.AthletePWD = ComputeSha256Hash(NewPassword); // 更新密碼
+                    }
 
                     _db.Entry(existingAthlete).State = EntityState.Modified;
                     _db.SaveChanges();

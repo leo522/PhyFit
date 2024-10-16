@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
             detectionDate: TrainingDate,
             sportItem: deteItem,
         });
+        debugger;
         // 發送 AJAX 請求
         $.ajax({
             url: '/Record/SaveTrackFieldRecord',

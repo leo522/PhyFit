@@ -34,7 +34,7 @@
             <!-- 生日 -->
             <div class="form-group">
                 @Html.LabelFor(model => model.Birthday, "生日")
-                @Html.TextBoxFor(model => model.Birthday, new { @class = "form-control", @type = "date"})
+                <input type="date" class="form-control" value="@ViewBag.Birthday" />
                 @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
             </div>
 
@@ -52,6 +52,7 @@
                 @Html.ValidationMessageFor(model => model.TeamName, "", new { @class = "text-danger" })
             </div>
 
+            <!-- 教練 -->
             <div class="form-group">
                 <label for="coach">教練</label>
                 <select class="form-control" id="coach" name="CoachID">
@@ -62,7 +63,6 @@
                     }
                 </select>
             </div>
-
             <!-- 提交按鈕 -->
             <button type="submit" class="btn btn-primary">儲存</button>
             <a href="/PhyFit/dashboard" class="btn btn-secondary">取消</a>

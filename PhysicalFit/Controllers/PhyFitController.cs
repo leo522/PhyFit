@@ -974,7 +974,7 @@ namespace PhysicalFit.Controllers
 
                 return Json(new { success = true, message = "資料儲存成功"});
             }
-            catch (Exception ex)
+             catch (Exception ex)
             {
                 return Json(new { success = false, message = "儲存過程中發生錯誤", error = ex.Message });
             }

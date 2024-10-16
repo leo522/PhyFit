@@ -37,12 +37,20 @@
                 @ViewBag.ErrorMessage
             </div>
         }
+
+        @*顯示臨時密碼的消息*@
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-info" role="alert">
+                @TempData["SuccessMessage"]
+            </div>
+        }
         <hr>
         <div class="text-center">
-            <a href="/Account/ForgotPassword" class="btn btn-link">忘記密碼-教練使用</a> 
+            <a href="/Account/ForgotPassword" class="btn btn-link">忘記密碼-教練使用</a>
         </div>
         <div class="text-center">
-            <a href="/Account/ForgotPwd" class="btn btn-link">忘記密碼-學生使用</a> 
+            <a href="/Account/ForgotPwd" class="btn btn-link">忘記密碼-學生使用</a>
         </div>
     </div>
 </body>

@@ -879,7 +879,7 @@ namespace PhysicalFit.Controllers
                     TrainingDate = DateTime.Parse(model.DetectionDate), //訓練日期
                     CriticalSpeed = model.CriticalSpeed, //臨界速度
                     MaxAnaerobicWork = model.AnaerobicPower, //最大無氧做功
-                                                             //TrainingVolume = model.TrainingVolume,
+                    //TrainingVolume = model.TrainingVolume,
                     CreatedDate = DateTime.Now, //建立時間
                     ModifiedDate = DateTime.Now, //修改時間
                 };
@@ -963,7 +963,7 @@ namespace PhysicalFit.Controllers
                         {
                             DetectionTrainingRecordId = detectionRecordId, //主資料表ID
                             Distance = (model.Distances[i]), //訓練距離
-                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
+                            ForceDuration = float.Parse(model.ForceDurations[i]), //力竭時間
                             Speed = float.Parse(model.Speeds[i]), //速度
                             CreatedDate = DateTime.Now, //建立時間
                             TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期

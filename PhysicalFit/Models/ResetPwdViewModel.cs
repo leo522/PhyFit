@@ -13,20 +13,10 @@ namespace PhysicalFit.Models
         public string AthleteID { get; set; }
     }
 
-
     public class ResetPwdViewModel
     {
         public int UserId { get; set; }
-
-        [Required]
-        [Display(Name = "新密碼")]
-        [DataType(DataType.Password)]
         public string NewPassword { get; set; }
-
-        [Required]
-        [Display(Name = "確認新密碼")]
-        [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage = "新密碼與確認密碼不一致")]
         public string ConfirmPassword { get; set; }
     }
 }

@@ -17,10 +17,11 @@ namespace PhysicalFit.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DetectionTrainingRecord()
         {
-            this.BikeRecordDetails = new HashSet<BikeRecordDetails>();
             this.RollerSkatingRecordDetails = new HashSet<RollerSkatingRecordDetails>();
+            this.BikeRecordDetails = new HashSet<BikeRecordDetails>();
             this.SwimmingRecordDetails = new HashSet<SwimmingRecordDetails>();
             this.TreadmillRecordDetails = new HashSet<TreadmillRecordDetails>();
+            this.TrackFieldRecordDetails = new HashSet<TrackFieldRecordDetails>();
         }
     
         public int ID { get; set; }
@@ -41,12 +42,14 @@ namespace PhysicalFit.Models
         public Nullable<System.DateTime> TrainingDateTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BikeRecordDetails> BikeRecordDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RollerSkatingRecordDetails> RollerSkatingRecordDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BikeRecordDetails> BikeRecordDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SwimmingRecordDetails> SwimmingRecordDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TreadmillRecordDetails> TreadmillRecordDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TrackFieldRecordDetails> TrackFieldRecordDetails { get; set; }
     }
 }

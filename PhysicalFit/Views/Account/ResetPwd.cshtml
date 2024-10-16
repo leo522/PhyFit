@@ -1,38 +1,20 @@
 ﻿@model PhysicalFit.Models.ResetPwdViewModel
-
 @{
     Layout = null;
 }
-
 <!DOCTYPE html>
-
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>ResetPwd</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>重置密碼</title>
+    <link href="~/css/registerStyle.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/MainBkStyle.css" rel="stylesheet" />
+    <link href="~/css/loginStyle.css" rel="stylesheet" />
+    <link rel="icon" href="~/img/favicon.svg" />
 </head>
 <body>
-    @{
-        ViewBag.Title = "重置密碼";
-    }
-
-    <h2>重置密碼</h2>
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
-        </div>
-    }
-
-    @using (Html.BeginForm("ResetPassword", "Account", FormMethod.Post))
+    @using (Html.BeginForm("ResetPwd", "Account", FormMethod.Post))
     {
         @Html.HiddenFor(model => model.UserId)
 
@@ -48,16 +30,5 @@
 
         <button type="submit" class="btn btn-primary">重置密碼</button>
     }
-    <script>
-        document.querySelector("form").addEventListener("submit", function (e) {
-            var newPassword = document.getElementById("NewPassword").value;
-            var confirmPassword = document.getElementById("ConfirmPassword").value;
-
-            if (newPassword !== confirmPassword) {
-                e.preventDefault();
-                alert("兩次輸入的密碼不相符！");
-            }
-        });
-    </script>
 </body>
 </html>

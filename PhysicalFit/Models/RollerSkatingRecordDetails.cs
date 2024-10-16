@@ -17,7 +17,7 @@ namespace PhysicalFit.Models
         public int Id { get; set; }
         public int DetectionTrainingRecordId { get; set; }
         public string Distance { get; set; }
-        public int ForceDuration { get; set; }
+        public double ForceDuration { get; set; }
         public double Speed { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
