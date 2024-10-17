@@ -958,6 +958,14 @@ namespace PhysicalFit.Controllers
 
                 foreach (var trait in traits)
                 {
+                   
+                    var user = _db.Users.FirstOrDefault(u => u.UID == trait.UserID); //檢查UserID 是否存在於Users表中的 UID 欄位
+
+                    if (user == null)
+                    {
+                        return Json(new { success = false, message = $"UserID {trait.UserID} 用戶不存在，請確認用戶資料。" });
+                    }
+
                     var psychologicalResult = new PsychologicalTraitsResults
                     {
                         UserID = trait.UserID,
@@ -978,7 +986,6 @@ namespace PhysicalFit.Controllers
             {
                 return Json(new { success = false, message = "儲存過程中發生錯誤", error = ex.Message });
             }
-            
         }
         #endregion
     }

@@ -963,7 +963,7 @@ namespace PhysicalFit.Controllers
                         {
                             DetectionTrainingRecordId = detectionRecordId, //主資料表ID
                             Distance = (model.Distances[i]), //訓練距離
-                            ForceDuration = float.Parse(model.ForceDurations[i]), //力竭時間
+                            //ForceDuration = float.Parse(model.ForceDurations[i]), //力竭時間
                             Speed = float.Parse(model.Speeds[i]), //速度
                             CreatedDate = DateTime.Now, //建立時間
                             TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期

@@ -48,10 +48,10 @@
         $('#submitBtn').on('click', function (e) {
             e.preventDefault(); // 防止表單默認提交
 
-            // 獲取日期值
-            var dateValue = $('#date').val();
+            var dateValue = $('#date').val(); //獲取日期值
             var userId = '@Session["UserID"]';
-
+            console.log(userId);
+            debugger;
             // 檢查日期是否選擇
             if (!dateValue) {
                 Swal.fire({

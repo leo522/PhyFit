@@ -245,10 +245,9 @@ namespace PhysicalFit.Controllers
                 string hashedPwd = ComputeSha256Hash(pwd); //將密碼加密
                 string hashedAccount = ComputeSha256Hash(account.ToUpper()); //身分證號碼加密
                 Users user = null;
-
-                // 先嘗試用加密的方式登入
+          
                 //user = _db.Users.FirstOrDefault(u => u.Account == account && u.Password == hashedPwd);
-                user = _db.Users.FirstOrDefault(u => u.Account == hashedAccount && u.Password == hashedPwd);
+                user = _db.Users.FirstOrDefault(u => u.Account == hashedAccount && u.Password == hashedPwd); //先用加密的方式登入
 
                 if (user == null)
                 {
@@ -258,7 +257,7 @@ namespace PhysicalFit.Controllers
                     if (user != null)
                     {
                         // 如果找到明碼帳號，則更新帳號為加密的版本
-                        user.Account = hashedAccount; // 將帳號更新為加密後的
+                        user.Account = hashedAccount; //將帳號更新為加密後
                         _db.SaveChanges();
                     }
                 }
@@ -280,16 +279,18 @@ namespace PhysicalFit.Controllers
                     user.LastLoginDate = DateTime.Now; // 更新用戶的最後登入時間
                     _db.SaveChanges();
 
-                    if (user.CoachID.HasValue) // 保存 UserID 到 Session
-                    {
-                        Session["UserID"] = user.CoachID.Value; // 如果是教練，保存 CoachID
-                    }
-                    else
-                    {
-                        Session["UserID"] = user.AthleteID; // 如果是運動員，保存 AthleteID
-                    }
+                    // 保存 UID 到 Session，而不是 CoachID 或 AthleteID
+                    Session["UserID"] = user.UID; // 將Users表的UID保存到Session
 
                     Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete"; //設定用戶角色
+                    //if (user.CoachID.HasValue) // 保存 UserID 到 Session
+                    //{
+                    //    Session["UserID"] = user.CoachID.Value; // 如果是教練，保存 CoachID
+                    //}
+                    //else
+                    //{
+                    //    Session["UserID"] = user.AthleteID; // 如果是運動員，保存 AthleteID
+                    //}
 
                     // 設定 FormsAuthentication Ticket
                     var authTicket = new FormsAuthenticationTicket(
