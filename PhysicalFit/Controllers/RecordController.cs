@@ -175,6 +175,7 @@ namespace PhysicalFit.Controllers
         }
 
         #endregion
+        
         //#region 查詢訓練紀錄
         //public ActionResult SessionRecord(string item, int? AthleteID, DateTime? date)
         //{
@@ -980,34 +981,6 @@ namespace PhysicalFit.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        #endregion
-
-        #region 查詢心理特質與食慾量
-        //public ActionResult PsychologicalTraitRecord(int studentId, DateTime date)
-        //{
-        //    var dtos = _db.PsychologicalTraitsResults
-        //    .Where(r => r.UserID == studentId && r.PsychologicalDate <= date)
-        //    .OrderBy(r => r.PsychologicalDate)
-        //    .ToList();
-
-        //    var viewModel = new CombinedViewModel
-        //    {
-        //        TrainingRecord = new TrainingRecordViewModel
-        //        {
-        //            // 填充訓練記錄的屬性
-        //        },
-
-        //        PsychologicalRecord = new PsychologicalViewModel
-        //        {
-        //            Dates = dtos.Select(r => r.PsychologicalDate.ToString("yyyy-MM-dd")).ToList(),
-        //            TraitsStatuses = dtos.Select(r => r.Trait).ToList(), //心理特質的狀態名稱
-        //            AppetiteScores = dtos.Select(r => r.Score).ToList() // 感受的分數
-        //        }
-        //    };
-
-
-        //    return View(viewModel);
-        //}
         #endregion
     }
 }

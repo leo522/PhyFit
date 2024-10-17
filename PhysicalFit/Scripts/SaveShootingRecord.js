@@ -45,7 +45,12 @@ $(document).ready(function () {
 
         // 檢查是否有資料
         if (records.length === 0) {
-            alert('請先輸入至少一筆資料。');
+            Swal.fire({
+                icon: 'warning',
+                title: '無資料',
+                text: '請先輸入至少一筆資料。',
+                confirmButtonText: '確定'
+            });
             return;
         }
 
@@ -59,13 +64,28 @@ $(document).ready(function () {
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 if (response.success) {
-                    alert('存檔成功');
+                    Swal.fire({
+                        icon: 'success',
+                        title: '存檔成功',
+                        text: '射擊訓練記錄已成功存檔。',
+                        confirmButtonText: '確定'
+                    });
                 } else {
-                    alert('存檔失敗: ' + response.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: '存檔失敗',
+                        text: '存檔失敗: ' + response.message,
+                        confirmButtonText: '確定'
+                    });
                 }
             },
             error: function (xhr, status, error) {
-                alert('存檔失敗: ' + error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '存檔失敗',
+                    text: '存檔失敗，請聯絡管理員。錯誤資訊：' + error,
+                    confirmButtonText: '確定'
+                });
             }
         });
     });

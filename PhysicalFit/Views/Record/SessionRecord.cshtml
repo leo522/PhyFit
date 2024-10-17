@@ -7,7 +7,8 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/chart.js"></script>
+    <script src="~/js/PsychologicalTraitChart.js"></script>
 </head>
 <body>
     <div>
@@ -58,6 +59,7 @@
                 </div>
             </div>
         </div><br />
+
         @*<h2>訓練紀錄: @Model.TrainingItem</h2>*@
         <table class="table">
             <thead>
@@ -140,73 +142,41 @@
         </table>
     </div>
 
+    <!-- 顯示食慾感受分數的折線圖 -->
     <div>
-        <h3>心理特質狀態與食慾感受趨勢圖</h3>
+        <input type="hidden" id="psychologicalDataExists" value="@((Model.PsychologicalRecord != null && Model.PsychologicalRecord.Dates.Any()) ? "true" : "false")" />
+        <input type="hidden" id="psychologicalDates" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.Dates))' />
+        <input type="hidden" id="psychologicalSleepQualityScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.SleepQualityScores))' />
+        <input type="hidden" id="psychologicalFatigueScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.FatigueScores))' />
+        <input type="hidden" id="psychologicalTrainingWillingnessScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.TrainingWillingnessScores))' />
+        <input type="hidden" id="psychologicalAppetiteScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.AppetiteScores))' />
+        <input type="hidden" id="psychologicalCompetitionWillingnessScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.CompetitionWillingnessScores))' />
 
-        <!-- 顯示食慾感受分數的折線圖 -->
         <div>
+            <h4>睡眠品質</h4>
+            <canvas id="sleepQualityChart" width="70" height="20"></canvas>
+        </div>
+        <div>
+            <h4>疲憊程度</h4>
+            <canvas id="fatigueChart" width="70" height="20"></canvas>
+        </div>
+        <div>
+            <h4>訓練意願</h4>
+            <canvas id="trainingWillingnessChart" width="70" height="20"></canvas>
+        </div>
+        <div>
+            <h4>胃口</h4>
             <canvas id="appetiteChart" width="70" height="20"></canvas>
+        </div>
+        <div>
+            <h4>比賽意願</h4>
+            <canvas id="competitionWillingnessChart" width="70" height="20"></canvas>
         </div>
     </div>
     <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
-    <script>
-       document.addEventListener('DOMContentLoaded', function () {
-    // 檢查是否有心理特質的數據
-    var psychologicalDataExists = @Html.Raw(Model.PsychologicalRecord != null && Model.PsychologicalRecord.Dates.Any() ? "true" : "false");
 
-    if (psychologicalDataExists) {
-        var ctx = document.getElementById('appetiteChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.Dates)), // 日期作為 x 軸
-                datasets: [{
-                    label: '睡眠品質',
-                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.SleepQualityScores)), // 睡眠品質的分數
-                    borderColor: 'rgba(255, 99, 132, 1)', // 顏色
-                    fill: false
-                },
-                {
-                    label: '疲憊程度',
-                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.FatigueScores)), // 疲憊程度的分數
-                    borderColor: 'rgba(54, 162, 235, 1)', // 顏色
-                    fill: false
-                },
-                {
-                    label: '訓練意願',
-                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.TrainingWillingnessScores)), // 訓練意願的分數
-                    borderColor: 'rgba(75, 192, 192, 1)', // 顏色
-                    fill: false
-                },
-                {
-                    label: '胃口',
-                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.AppetiteScores)), // 胃口的分數
-                    borderColor: 'rgba(153, 102, 255, 1)', // 顏色
-                    fill: false
-                },
-                {
-                    label: '比賽意願',
-                    data: @Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.CompetitionWillingnessScores)), // 比賽意願的分數
-                    borderColor: 'rgba(255, 206, 86, 1)', // 顏色
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        title: { display: true, text: '日期' }
-                    },
-                    y: {
-                        title: { display: true, text: '分數' },
-                        min: 0,
-                        max: 10
-                    }
-                }
-            }
-        });
-    }
-});
-    </script>
+<script>
+    
+</script>
 </body>
 </html>
