@@ -151,32 +151,28 @@
         <input type="hidden" id="psychologicalTrainingWillingnessScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.TrainingWillingnessScores))' />
         <input type="hidden" id="psychologicalAppetiteScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.AppetiteScores))' />
         <input type="hidden" id="psychologicalCompetitionWillingnessScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.CompetitionWillingnessScores))' />
-
+        <hr />
         <div>
             <h4>睡眠品質</h4>
-            <canvas id="sleepQualityChart" width="70" height="20"></canvas>
+            <canvas id="sleepQualityChart" width="200" height="20"></canvas>
         </div>
         <div>
             <h4>疲憊程度</h4>
-            <canvas id="fatigueChart" width="70" height="20"></canvas>
+            <canvas id="fatigueChart" width="200" height="20"></canvas>
         </div>
         <div>
             <h4>訓練意願</h4>
-            <canvas id="trainingWillingnessChart" width="70" height="20"></canvas>
+            <canvas id="trainingWillingnessChart" width="200" height="20"></canvas>
         </div>
         <div>
             <h4>胃口</h4>
-            <canvas id="appetiteChart" width="70" height="20"></canvas>
+            <canvas id="appetiteChart" width="200" height="20"></canvas>
         </div>
         <div>
             <h4>比賽意願</h4>
-            <canvas id="competitionWillingnessChart" width="70" height="20"></canvas>
+            <canvas id="competitionWillingnessChart" width="200" height="20"></canvas>
         </div>
     </div>
     <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
-
-<script>
-    
-</script>
 </body>
 </html>

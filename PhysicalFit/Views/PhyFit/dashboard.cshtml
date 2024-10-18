@@ -24,12 +24,12 @@
     <script src="~/Scripts/psychologicalTraits.js"></script> @*心理特質及食慾圖量表*@
 </head>
 <body>
-    @if (TempData["ErrorMessage"] != null)
+    @*@if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">
             @TempData["ErrorMessage"]
         </div>
-    }
+    }*@
     <div>
         <form action="/Record/SessionRecord" method="get" id="generalTrainingForm">
             <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">

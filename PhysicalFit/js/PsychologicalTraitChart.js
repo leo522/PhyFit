@@ -1,4 +1,6 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+﻿/*PsychologicalTraitChart.js*/
+
+document.addEventListener('DOMContentLoaded', function () {
     function createChart(canvasId, label, data, borderColor) {
         var ctx = document.getElementById(canvasId).getContext('2d');
         new Chart(ctx, {
