@@ -174,5 +174,40 @@
         </div>
     </div>
     <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
+
+<script>
+   document.getElementById("TrainingDate").addEventListener("change", function () {
+    var selectedDate = this.value;
+    var trainingType = '@ViewBag.SelectedTrainingItem'; // 使用 ViewBag.SelectedTrainingItem 獲取所選的訓練項目
+
+    if (selectedDate && trainingType !== "請選擇訓練項目") {  // 確保日期和訓練類型都選擇了
+        $.ajax({
+            url: '/Record/CalculateTrainingLoad',
+            type: 'GET',
+            data: {
+                date: selectedDate,
+                trainingType: trainingType // 使用選擇的訓練類型
+            },
+            success: function (data) {
+                if (data.error) {
+                    alert('計算出現錯誤: ' + data.error);
+                } else {
+                    // 更新 UI 顯示結果
+                    $('#WeeklyResult').val(data.WeeklyTrainingLoadSum);
+                    $('#TrainingHomogeneity').val(data.TrainingMonotony);
+                    $('#TensionValue').val(data.TrainingStrain);
+                    $('#WeeklyTrainingChanges').val(data.WeekToWeekChange);
+                    $('#ShortLongRatio').val(data.ACWR);
+                }
+            },
+            error: function () {
+                alert('計算失敗，請稍後再試。');
+            }
+        });
+    } else {
+        alert('請選擇有效的訓練項目和日期');
+    }
+});
+</script>
 </body>
 </html>

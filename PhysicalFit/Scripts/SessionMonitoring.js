@@ -21,7 +21,8 @@
                 $('#sessionRPEresult').show(); // 顯示 #sessionRPEresult
             } else if (selectItem === '檢測系統') {
                 $('#Detection_Sys, #RPEtable, #btnModal,#btn_detection').show();
-                $('#btn_result, #btn_save, #btnRecord, #sessionRPEresult').hide(); // 隱藏 #btn_result, #btn_save, #btnRecord 和 #sessionRPEresult
+                $('#btn_result, #btn_save, #btnRecord, #sessionRPEresult').hide();
+                // 隱藏 #btn_result, #btn_save, #btnRecord 和 #sessionRPEresult
             }
         });
 });

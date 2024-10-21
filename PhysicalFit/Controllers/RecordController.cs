@@ -19,6 +19,7 @@ namespace PhysicalFit.Controllers
         {
             try
             {
+                ViewBag.SelectedTrainingItem = item; //把item傳遞到ViewBag
                 var userRole = Session["UserRole"]?.ToString();
                 var loggedInAthleteID = AthleteID;
 
@@ -53,7 +54,7 @@ namespace PhysicalFit.Controllers
                 var appetiteScores = new List<int>();
                 var competitionWillingnessScores = new List<int>();
 
-                // 迭代資料並根據 Trait 將不同的數據分到對應的 List 中
+                //迭代資料並根據 Trait 將不同的數據分到對應的 List 中
                 foreach (var record in psychologicalData)
                 {
                     var dateString = record.PsychologicalDate.ToString("yyyy-MM-dd");

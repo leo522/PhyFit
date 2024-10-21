@@ -378,6 +378,7 @@
     <Content Include="img\maintance.jpg" />
     <Content Include="js\chart.js" />
     <Content Include="js\PsychologicalTraitChart.js" />
+    <Content Include="js\sessionRecordRedirect.js" />
     <Content Include="Models\FitnessModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>FitnessModel.Context.cs</LastGenOutput>
