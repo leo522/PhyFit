@@ -383,6 +383,7 @@
     <Content Include="js\chart.js" />
     <Content Include="js\PsychologicalTraitChart.js" />
     <Content Include="js\sessionRecordRedirect.js" />
+    <Content Include="js\trainingRecordFilter.js" />
     <Content Include="Models\FitnessModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>FitnessModel.Context.cs</LastGenOutput>
@@ -505,7 +506,6 @@
     <Content Include="Views\PhyFit\_PsychologicalTraits.cshtml" />
     <Content Include="Views\Account\ForgotPwd.cshtml" />
     <Content Include="Views\Account\ResetPwd.cshtml" />
-    <Content Include="Views\Home\Friend.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
