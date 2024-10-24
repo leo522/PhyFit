@@ -1,5 +1,7 @@
 ﻿@model string
-
+<link href="~/FlatPickr/flatpickr.min.css" rel="stylesheet" />
+<script src="~/FlatPickr/flatpickr.js"></script>
+<script src="~/FlatPickr/zh-tw.js"></script>
 <table id="trainingMonitoringTable" class="table table-bordered">
     <thead>
         <tr>
@@ -30,7 +32,7 @@
                 </div>
             </td>
             <td>
-                <input class="training-date form-control" name="TrainingDate" title="日期" />
+                <input class="TrainingDate form-control" name="TrainingDate"/>
             </td>
             <td>
                 <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)" disabled>
@@ -96,10 +98,11 @@
     $(document).ready(function () {
         // 初始化 flatpickr 日期選擇器
         function initializeFlatpickr() {
-            flatpickr(".training-date", {
+            flatpickr(".TrainingDate", {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i",
-                time_24hr: true
+                time_24hr: true,
+                "locale": "zh_tw",
             });
         }
 
@@ -137,36 +140,36 @@
             }
         });
     });
-        // 更新表格內容的函數
-        function updateTableContent(selectElement) {
-            var selectedItem = selectElement.value; // 取得選擇的課程名稱
-            var row = selectElement.closest('tr'); // 使用 closest('tr') 限定只影響當前行的欄位
-            var specialTechField = row.querySelector('select[name="SpecialTech"]'); // 項目
-            var specialTechNameField = row.querySelector('select[name="SpecialTechName"]'); // 動作名稱
-            var trainingMuscleField = row.querySelector('select[name="TrainingMuscle"]'); // 訓練部位
-            var trainingTypeField = row.querySelector('select[name="TrainingType"]'); // 訓練類型
-            var otherField = row.querySelector('input[name="SpecialTechOther"]'); // 其他
+    // 更新表格內容的函數
+    function updateTableContent(selectElement) {
+        var selectedItem = selectElement.value; // 取得選擇的課程名稱
+        var row = selectElement.closest('tr'); // 使用 closest('tr') 限定只影響當前行的欄位
+        var specialTechField = row.querySelector('select[name="SpecialTech"]'); // 項目
+        var specialTechNameField = row.querySelector('select[name="SpecialTechName"]'); // 動作名稱
+        var trainingMuscleField = row.querySelector('select[name="TrainingMuscle"]'); // 訓練部位
+        var trainingTypeField = row.querySelector('select[name="TrainingType"]'); // 訓練類型
+        var otherField = row.querySelector('input[name="SpecialTechOther"]'); // 其他
 
-            // 先禁用所有欄位
-            [specialTechField, specialTechNameField, otherField, trainingMuscleField, trainingTypeField].forEach(function (field) {
-                if (field) field.disabled = true;
-            });
+        // 先禁用所有欄位
+        [specialTechField, specialTechNameField, otherField, trainingMuscleField, trainingTypeField].forEach(function (field) {
+            if (field) field.disabled = true;
+        });
 
-            // 根據選項來控制欄位啟用與否
-            switch (selectedItem) {
-                case "專項技術類":
-                    specialTechField.disabled = false;
-                    specialTechNameField.disabled = false;
-                    otherField.disabled = false;
-                    break;
-                case "肌力類":
-                    trainingMuscleField.disabled = false;
-                    break;
-                case "體能類":
-                    trainingTypeField.disabled = false;
-                    break;
-                default:
-                    break;
-            }
+        // 根據選項來控制欄位啟用與否
+        switch (selectedItem) {
+            case "專項技術類":
+                specialTechField.disabled = false;
+                specialTechNameField.disabled = false;
+                otherField.disabled = false;
+                break;
+            case "肌力類":
+                trainingMuscleField.disabled = false;
+                break;
+            case "體能類":
+                trainingTypeField.disabled = false;
+                break;
+            default:
+                break;
         }
+    }
 </script>

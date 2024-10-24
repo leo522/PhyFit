@@ -31,5 +31,11 @@ namespace PhysicalFit.Controllers
         { 
         return View();
         }
+
+
+        public ActionResult Friend() 
+        {
+            return View();
+        }
     }
 }

@@ -1,26 +1,30 @@
 ﻿// datepickr.js
 
 // 封裝初始化日期選擇器的功能
+/*datepickr.js*/
 function initializeDatePickers() {
     // 檢測系統日期選擇器初始化
     flatpickr("#DetectionDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        time_24hr: true
+        time_24hr: true,
+        "locale": "zh_tw",
     });
 
     // 射箭日期選擇器初始化
-    flatpickr(".archery-date", {
+    flatpickr(".archeryDate", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        time_24hr: true
+        time_24hr: true,
+        "locale": "zh_tw",
     });
 
     // 射擊日期選擇器初始化
-    flatpickr(".shooting-date", {
+    flatpickr(".shootingDate", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        time_24hr: true
+        time_24hr: true,
+        "locale": "zh_tw",
     });
 }
 

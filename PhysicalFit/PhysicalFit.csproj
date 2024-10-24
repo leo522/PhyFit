@@ -368,6 +368,9 @@
     <Content Include="css\registerStyle.css" />
     <Content Include="css\RPE_Modal.css" />
     <Content Include="favicon.ico" />
+    <Content Include="FlatPickr\flatpickr.js" />
+    <Content Include="FlatPickr\flatpickr.min.css" />
+    <Content Include="FlatPickr\zh-tw.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="img\404圖片.jpg" />
@@ -502,6 +505,7 @@
     <Content Include="Views\PhyFit\_PsychologicalTraits.cshtml" />
     <Content Include="Views\Account\ForgotPwd.cshtml" />
     <Content Include="Views\Account\ResetPwd.cshtml" />
+    <Content Include="Views\Home\Friend.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -534,7 +538,11 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="FlatPickr\zh_tw.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

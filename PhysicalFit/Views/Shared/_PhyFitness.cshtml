@@ -5,6 +5,14 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="~/img/favicon.svg" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/MainBkStyle.css" rel="stylesheet" />
+    <link href="~/css/HomeStyle.css" rel="stylesheet" />
+    <link href="~/css/dashboardStyle.css" rel="stylesheet" />
+    <link href="~/FlatPickr/flatpickr.min.css" rel="stylesheet" />
+    <script src="~/FlatPickr/flatpickr.js"></script>
+    <script src="~/FlatPickr/zh-tw.js"></script>
     <script src="~/Scripts/jquery-3.7.0.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
     <script src="~/Scripts/AthleticCaculate.js"></script> @*田徑計算*@
@@ -14,16 +22,7 @@
     <script src="~/Scripts/RollerSkatingCaculate.js"></script> @*滑輪溜冰計算*@
     <script src="~/SweetAlert2/sweetalert.min.js"></script>
     <script src="~/SweetAlert2/sweetalert2.all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    @*<script src="~/SweetAlert2/sweetalert2@11.js"></script>*@
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="~/Content/bootstrap.css" rel="stylesheet" />
-    <link href="~/css/MainBkStyle.css" rel="stylesheet" />
-    <link href="~/css/HomeStyle.css" rel="stylesheet" />
-    <link href="~/css/dashboardStyle.css" rel="stylesheet" />
-    <link rel="icon" href="~/img/favicon.svg" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
+    <script src="~/SweetAlert2/sweetalert2@11.js"></script>
     <title>體能與肌力訓練處方系統</title>
     <style>
         .swal2-container {
@@ -34,6 +33,7 @@
             font-size: 24px;
             font-weight: bold;
         }
+
         .button-container {
             text-align: right; /* 將按鈕靠右對齊 */
             padding: 10px 0; /* 增加上下內邊距 */

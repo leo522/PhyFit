@@ -134,7 +134,9 @@
                     </thead>
                     <tbody id="ArcherytrainingRows">
                         <tr class="Archerytraining-group">
-                            <td><input class="archery-date form-control" name="archeryDate" /></td>
+                            <td>
+                                <input class="archeryDate form-control" name="archeryDate" />
+                            </td>
                             <td>
                                 <input type="text" class="form-control" name="Pounds" placeholder="磅數">
                             </td>
@@ -190,7 +192,9 @@
                     </thead>
                     <tbody id="ShootingtrainingRows">
                         <tr class="Shootingtraining-group">
-                            <td><input class="shooting-date form-control" name="shootingDate" /></td>
+                            <td>
+                                <input class="shootingDate form-control" name="shootingDate" />
+                            </td>
                             <td>
                                 <select class="form-control" name="GunsItem">
                                     <option>請選擇項目</option>
@@ -457,8 +461,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
             }
         });
-    } else {
-        console.error('未找到查看訓練紀錄的連結按鈕');
     }
 
     //根據用戶身份隱藏運動員欄位
