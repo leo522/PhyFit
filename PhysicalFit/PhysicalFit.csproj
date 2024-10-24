@@ -340,6 +340,7 @@
     </Compile>
     <Compile Include="OriginalTrainingRecordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TrainingLoadResult.cs" />
     <Compile Include="TrainingRecordHelper.cs" />
   </ItemGroup>
   <ItemGroup>

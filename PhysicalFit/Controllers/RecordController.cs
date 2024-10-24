@@ -20,6 +20,7 @@ namespace PhysicalFit.Controllers
             try
             {
                 ViewBag.SelectedTrainingItem = item; //把item傳遞到ViewBag
+
                 var userRole = Session["UserRole"]?.ToString();
                 var loggedInAthleteID = AthleteID;
 
@@ -65,7 +66,7 @@ namespace PhysicalFit.Controllers
                         dates.Add(dateString);
                     }
 
-                    // 根據不同的 Trait 來填充對應的分數 List
+                    // 根據不同的心理特質與食慾圖量表來填充對應的分數 List
                     switch (record.Trait)
                     {
                         case "睡眠品質":
@@ -86,7 +87,7 @@ namespace PhysicalFit.Controllers
                     }
                 }
 
-                // 填充 ViewModel
+                // 填充心理特質與食慾圖量表 ViewModel
                 combinedViewModel.PsychologicalRecord = new PsychologicalViewModel
                 {
                     Dates = dates,
@@ -102,7 +103,25 @@ namespace PhysicalFit.Controllers
                 switch (item)
                 {
                     case "一般訓練衝量監控 (session-RPE)":
-                        combinedViewModel.TrainingRecord.RPERecords = _db.GeneralTrainingRecord
+                        if (userRole == "Athlete")
+                        {
+                            combinedViewModel.TrainingRecord.RPERecords = _db.AthleteGeneralTrainingRecord
+                        .Where(x => x.AthleteID == AthleteID)
+                        .OrderBy(x => x.TrainingDate)
+                        .Select(x => new RPETrainingRecordViewModel
+                        {
+                            TrainingDate = x.TrainingDate ?? DateTime.Now,
+                            AthleteName = x.Athlete,
+                            TrainingItem = x.TrainingItem,
+                            ActionName = x.ActionName,
+                            TrainingTime = x.TrainingTime,
+                            RPEscore = x.RPEscore ?? 0,
+                            EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                        }).ToList();
+                        }
+                        else
+                        {
+                            combinedViewModel.TrainingRecord.RPERecords = _db.GeneralTrainingRecord
                             .Where(x => x.AthleteID == AthleteID)
                             .OrderBy(x => x.TrainingDate)
                             .Select(x => new RPETrainingRecordViewModel
@@ -115,10 +134,31 @@ namespace PhysicalFit.Controllers
                                 RPEscore = x.RPEscore ?? 0,
                                 EachTrainingLoad = x.EachTrainingLoad ?? 0,
                             }).ToList();
+
+                        }
+
                         break;
 
                     case "射箭訓練衝量":
-                        combinedViewModel.TrainingRecord.ArcheryRecords = _db.ArcheryRecord
+                        if (userRole == "Athlete")
+                        {
+                            combinedViewModel.TrainingRecord.ArcheryRecords = _db.AthleteArcheryTrainingRecord
+                       .Where(x => x.AthleteID == AthleteID)
+                       .OrderBy(x => x.TrainingDate)
+                       .Select(x => new ArcheryTrainingRecordViewModel
+                       {
+                           TrainingDate = x.TrainingDate ?? DateTime.Now,
+                           Coach = x.Coach,
+                           Athlete = x.Athlete,
+                           Poundage = x.Poundage ?? 0,
+                           ArrowCount = x.ArrowCount ?? 0,
+                           RPEscore = x.RPEscore ?? 0,
+                           EachTrainingLoad = x.EachTrainingLoad ?? 0
+                       }).ToList();
+                        }
+                        else
+                        {
+                            combinedViewModel.TrainingRecord.ArcheryRecords = _db.ArcheryRecord
                             .Where(x => x.AthleteID == AthleteID)
                             .OrderBy(x => x.TrainingDate)
                             .Select(x => new ArcheryTrainingRecordViewModel
@@ -131,10 +171,14 @@ namespace PhysicalFit.Controllers
                                 RPEscore = x.RPEscore ?? 0,
                                 EachTrainingLoad = x.EachTrainingLoad ?? 0
                             }).ToList();
+                        }
+
                         break;
 
                     case "射擊訓練衝量":
-                        combinedViewModel.TrainingRecord.ShootingRecords = _db.ShootingRecord
+                        if (userRole == "Athlete")
+                        {
+                            combinedViewModel.TrainingRecord.ShootingRecords = _db.AthleteShootingRecord
                             .Where(x => x.AthleteID == AthleteID)
                             .OrderBy(x => x.TrainingDate)
                             .Select(x => new ShootingTrainingRecordViewModel
@@ -147,6 +191,24 @@ namespace PhysicalFit.Controllers
                                 RPEscore = x.RPEscore ?? 0,
                                 EachTrainingLoad = x.EachTrainingLoad ?? 0
                             }).ToList();
+                        }
+                        else
+                        {
+                            combinedViewModel.TrainingRecord.ShootingRecords = _db.ShootingRecord
+                            .Where(x => x.AthleteID == AthleteID)
+                            .OrderBy(x => x.TrainingDate)
+                            .Select(x => new ShootingTrainingRecordViewModel
+                            {
+                                TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                Coach = x.Coach,
+                                Athlete = x.Athlete,
+                                ShootingTool = x.ShootingTool,
+                                BulletCount = x.BulletCount ?? 0,
+                                RPEscore = x.RPEscore ?? 0,
+                                EachTrainingLoad = x.EachTrainingLoad ?? 0
+                            }).ToList();
+                        }
+
                         break;
 
                     case "心理特質與食慾圖量表":
@@ -176,346 +238,120 @@ namespace PhysicalFit.Controllers
         }
 
         #endregion
-        
-        //#region 查詢訓練紀錄
-        //public ActionResult SessionRecord(string item, int? AthleteID, DateTime? date)
-        //{
-        //    var userRole = Session["UserRole"]?.ToString();
-        //    var loggedInAthleteID = AthleteID;
-
-        //    // 如果是運動員，強制使用自己的 AthleteID
-        //    if (userRole == "Athlete")
-        //    {
-        //        AthleteID = loggedInAthleteID;
-        //    }
-
-        //    // 如果是教練，且沒有選擇運動員，給予錯誤提示
-        //    if (userRole == "Coach" && AthleteID == null)
-        //    {
-        //        TempData["ErrorMessage"] = "請選擇運動員";
-        //        return RedirectToAction("dashboard", "PhyFit");
-        //    }
-
-        //    // 初始化 CombinedViewModel
-        //    var combinedViewModel = new CombinedViewModel();
-        //    combinedViewModel.TrainingRecord = new TrainingRecordViewModel { TrainingItem = item };
-
-        //    // 查詢訓練紀錄邏輯
-        //    switch (item)
-        //    {
-        //        case "一般訓練衝量監控 (session-RPE)":
-        //            combinedViewModel.TrainingRecord.RPERecords = (userRole == "Athlete")
-        //                ? _db.AthleteGeneralTrainingRecord
-        //                    .Where(x => x.AthleteID == AthleteID)
-        //                    .OrderBy(x => x.TrainingDate)
-        //                    .Select(x => new RPETrainingRecordViewModel
-        //                    {
-        //                        TrainingDate = x.TrainingDate ?? DateTime.Now,
-        //                        AthleteName = x.Athlete,
-        //                        TrainingClassName = x.TrainingClassName,
-        //                        TrainingItem = x.TrainingItem,
-        //                        ActionName = x.ActionName,
-        //                        TrainingTime = x.TrainingTime,
-        //                        RPEscore = x.RPEscore ?? 0,
-        //                        EachTrainingLoad = x.EachTrainingLoad ?? 0,
-        //                    }).ToList()
-        //                : _db.GeneralTrainingRecord
-        //                    .Where(x => x.AthleteID == AthleteID)
-        //                    .OrderBy(x => x.TrainingDate)
-        //                    .Select(x => new RPETrainingRecordViewModel
-        //                    {
-        //                        TrainingDate = x.TrainingDate ?? DateTime.Now,
-        //                        AthleteName = x.Athlete,
-        //                        TrainingClassName = x.TrainingClassName,
-        //                        TrainingItem = x.TrainingItem,
-        //                        ActionName = x.ActionName,
-        //                        TrainingTime = x.TrainingTime,
-        //                        RPEscore = x.RPEscore ?? 0,
-        //                        EachTrainingLoad = x.EachTrainingLoad ?? 0,
-        //                    }).ToList();
-        //            break;
-
-        //        case "射箭訓練衝量":
-        //            combinedViewModel.TrainingRecord.ArcheryRecords = (userRole == "Athlete")
-        //                ? _db.AthleteArcheryTrainingRecord
-        //                    .Where(x => x.AthleteID == AthleteID)
-        //                    .OrderBy(x => x.TrainingDate)
-        //                    .Select(x => new ArcheryTrainingRecordViewModel
-        //                    {
-        //                        TrainingDate = x.TrainingDate ?? DateTime.Now,
-        //                        Coach = x.Coach,
-        //                        Athlete = x.Athlete,
-        //                        Poundage = x.Poundage ?? 0,
-        //                        ArrowCount = x.ArrowCount ?? 0,
-        //                        RPEscore = x.RPEscore ?? 0,
-        //                        EachTrainingLoad = x.EachTrainingLoad ?? 0
-        //                    }).ToList()
-        //                : _db.ArcheryRecord
-        //                    .Where(x => x.AthleteID == AthleteID)
-        //                    .OrderBy(x => x.TrainingDate)
-        //                    .Select(x => new ArcheryTrainingRecordViewModel
-        //                    {
-        //                        TrainingDate = x.TrainingDate ?? DateTime.Now,
-        //                        Coach = x.Coach,
-        //                        Athlete = x.Athlete,
-        //                        Poundage = x.Poundage ?? 0,
-        //                        ArrowCount = x.ArrowCount ?? 0,
-        //                        RPEscore = x.RPEscore ?? 0,
-        //                        EachTrainingLoad = x.EachTrainingLoad ?? 0
-        //                    }).ToList();
-        //            break;
-
-        //        case "射擊訓練衝量":
-        //            combinedViewModel.TrainingRecord.ShootingRecords = (userRole == "Athlete")
-        //                ? _db.AthleteShootingRecord
-        //                    .Where(x => x.AthleteID == AthleteID)
-        //                    .OrderBy(x => x.TrainingDate)
-        //                    .Select(x => new ShootingTrainingRecordViewModel
-        //                    {
-        //                        TrainingDate = x.TrainingDate ?? DateTime.Now,
-        //                        Coach = x.Coach,
-        //                        Athlete = x.Athlete,
-        //                        ShootingTool = x.ShootingTool,
-        //                        BulletCount = x.BulletCount ?? 0,
-        //                        RPEscore = x.RPEscore ?? 0,
-        //                        EachTrainingLoad = x.EachTrainingLoad ?? 0,
-        //                    }).ToList()
-        //                : _db.ShootingRecord
-        //                    .Where(x => x.AthleteID == AthleteID)
-        //                    .OrderBy(x => x.TrainingDate)
-        //                    .Select(x => new ShootingTrainingRecordViewModel
-        //                    {
-        //                        TrainingDate = x.TrainingDate ?? DateTime.Now,
-        //                        Coach = x.Coach,
-        //                        Athlete = x.Athlete,
-        //                        ShootingTool = x.ShootingTool,
-        //                        BulletCount = x.BulletCount ?? 0,
-        //                        RPEscore = x.RPEscore ?? 0,
-        //                        EachTrainingLoad = x.EachTrainingLoad ?? 0,
-        //                    }).ToList();
-        //            break;
-
-        //        default:
-        //            TempData["ErrorMessage"] = "無效的訓練項目";
-        //            return RedirectToAction("dashboard", "PhyFit");
-        //    }
-
-        //    // 查詢心理特質與食慾量邏輯
-        //    var psychologicalData = _db.PsychologicalTraitsResults
-        //        .Where(r => r.UserID == AthleteID && r.PsychologicalDate <= date)
-        //        .OrderBy(r => r.PsychologicalDate)
-        //        .ToList();
-
-        //    combinedViewModel.PsychologicalRecord = new PsychologicalViewModel
-        //    {
-        //        Dates = psychologicalData.Select(r => r.PsychologicalDate.ToString("yyyy-MM-dd")).ToList(),
-        //        TraitsStatuses = psychologicalData.Select(r => r.Trait).ToList(),
-        //        AppetiteScores = psychologicalData.Select(r => r.Score).ToList()
-        //    };
-
-        //    return View(combinedViewModel);
-        //}
-
-        ////public ActionResult SessionRecord(string item, int? AthleteID)
-        ////{
-        ////    var userRole = Session["UserRole"]?.ToString();
-        ////    var loggedInAthleteID = AthleteID;
-
-        ////    // 如果是運動員，強制使用自己的 AthleteID
-        ////    if (userRole == "Athlete")
-        ////    {
-        ////        AthleteID = loggedInAthleteID;
-        ////    }
-
-        ////    // 如果是教練，且沒有選擇運動員，給予錯誤提示
-        ////    if (userRole == "Coach" && AthleteID == null)
-        ////    {
-        ////        TempData["ErrorMessage"] = "請選擇運動員";
-        ////        return RedirectToAction("dashboard", "PhyFit");
-        ////    }
-
-        ////    //初始化 CombinedViewModel
-        ////    var combinedViewModel = new CombinedViewModel();
-        ////    combinedViewModel.TrainingRecord = new TrainingRecordViewModel { TrainingItem = item };
-
-        ////    switch (item)
-        ////    {
-        ////        case "一般訓練衝量監控 (session-RPE)":
-        ////            if (userRole == "Athlete")
-        ////            {
-        ////                combinedViewModel.TrainingRecord.RPERecords = _db.AthleteGeneralTrainingRecord
-        ////            .Where(x => x.AthleteID == AthleteID)
-        ////            .OrderBy(x => x.TrainingDate)
-        ////            .Select(x => new RPETrainingRecordViewModel
-        ////            {
-        ////                TrainingDate = x.TrainingDate ?? DateTime.Now,
-        ////                AthleteName = x.Athlete,
-        ////                TrainingClassName = x.TrainingClassName,
-        ////                TrainingItem = x.TrainingItem,
-        ////                ActionName = x.ActionName,
-        ////                TrainingTime = x.TrainingTime,
-        ////                RPEscore = x.RPEscore ?? 0,
-        ////                EachTrainingLoad = x.EachTrainingLoad ?? 0,
-        ////            }).ToList();
-        ////            }
-        ////            else if (userRole == "Coach")
-        ////            {
-        ////                combinedViewModel.TrainingRecord.RPERecords = _db.GeneralTrainingRecord
-        ////            .Where(x => x.AthleteID == AthleteID)
-        ////            .OrderBy(x => x.TrainingDate)
-        ////            .Select(x => new RPETrainingRecordViewModel
-        ////            {
-        ////                TrainingDate = x.TrainingDate ?? DateTime.Now,
-        ////                AthleteName = x.Athlete,
-        ////                TrainingClassName = x.TrainingClassName,
-        ////                TrainingItem = x.TrainingItem,
-        ////                ActionName = x.ActionName,
-        ////                TrainingTime = x.TrainingTime,
-        ////                RPEscore = x.RPEscore ?? 0,
-        ////                EachTrainingLoad = x.EachTrainingLoad ?? 0,
-        ////            }).ToList();
-        ////            }
-        ////            break;
-
-        ////        case "射箭訓練衝量":
-        ////            if (userRole == "Athlete")
-        ////            {
-        ////                combinedViewModel.TrainingRecord.ArcheryRecords = _db.AthleteArcheryTrainingRecord
-        ////                                              .Where(x => x.AthleteID == AthleteID)
-        ////                                              .OrderBy(x => x.TrainingDate)
-        ////                                              .Select(x => new ArcheryTrainingRecordViewModel
-        ////                                              {
-        ////                                                  TrainingDate = x.TrainingDate ?? DateTime.Now,
-        ////                                                  Coach = x.Coach,
-        ////                                                  Athlete = x.Athlete,
-        ////                                                  Poundage = x.Poundage ?? 0,
-        ////                                                  ArrowCount = x.ArrowCount ?? 0,
-        ////                                                  RPEscore = x.RPEscore ?? 0,
-        ////                                                  EachTrainingLoad = x.EachTrainingLoad ?? 0
-        ////                                              })
-        ////                                              .ToList();
-        ////            }
-        ////            else if (userRole == "Coach")
-        ////            {
-        ////                combinedViewModel.TrainingRecord.ArcheryRecords = _db.ArcheryRecord
-        ////                                              .Where(x => x.AthleteID == AthleteID)
-        ////                                              .OrderBy(x => x.TrainingDate)
-        ////                                              .Select(x => new ArcheryTrainingRecordViewModel
-        ////                                              {
-        ////                                                  TrainingDate = x.TrainingDate ?? DateTime.Now,
-        ////                                                  Coach = x.Coach,
-        ////                                                  Athlete = x.Athlete,
-        ////                                                  Poundage = x.Poundage ?? 0,
-        ////                                                  ArrowCount = x.ArrowCount ?? 0,
-        ////                                                  RPEscore = x.RPEscore ?? 0,
-        ////                                                  EachTrainingLoad = x.EachTrainingLoad ?? 0
-        ////                                              })
-        ////                                              .ToList();
-        ////            }
-        ////            break;
-
-        ////        case "射擊訓練衝量":
-        ////            if (userRole == "Athlete")
-        ////            {
-        ////                combinedViewModel.TrainingRecord.ShootingRecords = _db.AthleteShootingRecord
-        ////                                               .Where(x => x.AthleteID == AthleteID) // 使用 AthleteID 篩選
-        ////                                               .OrderBy(x => x.TrainingDate)
-        ////                                               .Select(x => new ShootingTrainingRecordViewModel
-        ////                                               {
-        ////                                                   TrainingDate = x.TrainingDate ?? DateTime.Now,
-        ////                                                   Coach = x.Coach,
-        ////                                                   Athlete = x.Athlete,
-        ////                                                   ShootingTool = x.ShootingTool,
-        ////                                                   BulletCount = x.BulletCount ?? 0,
-        ////                                                   RPEscore = x.RPEscore ?? 0,
-        ////                                                   EachTrainingLoad = x.EachTrainingLoad ?? 0,
-        ////                                               })
-        ////                                               .ToList();
-        ////            }
-        ////            else if (userRole == "Coach")
-        ////            {
-        ////                combinedViewModel.TrainingRecord.ShootingRecords = _db.ShootingRecord
-        ////                                               .Where(x => x.AthleteID == AthleteID)
-        ////                                               .OrderBy(x => x.TrainingDate)
-        ////                                               .Select(x => new ShootingTrainingRecordViewModel
-        ////                                               {
-        ////                                                   TrainingDate = x.TrainingDate ?? DateTime.Now,
-        ////                                                   Coach = x.Coach,
-        ////                                                   Athlete = x.Athlete,
-        ////                                                   ShootingTool = x.ShootingTool,
-        ////                                                   BulletCount = x.BulletCount ?? 0,
-        ////                                                   RPEscore = x.RPEscore ?? 0,
-        ////                                                   EachTrainingLoad = x.EachTrainingLoad ?? 0,
-        ////                                               })
-        ////                                               .ToList();
-        ////            }
-        ////            break;
-
-        ////        default:
-        ////            TempData["ErrorMessage"] = "無效的訓練項目";
-        ////            return RedirectToAction("dashboard", "PhyFit");
-        ////    }
-
-        ////    return View(combinedViewModel);
-        ////}
-
-        //#endregion
 
         #region 讀取session訓練量結果
 
-        public ActionResult LoadSessionRPETrainingRecords(string item)
+        public ActionResult LoadSessionRPETrainingRecords(string item, bool isAthlete)
         {
-            // 建立 TrainingRecordViewModel 並傳入訓練項目名稱
-            var model = new TrainingRecordViewModel { TrainingItem = item };
-            // 從三個表中讀取資料
-            var sessionRPERecords = _db.GeneralTrainingRecord.ToList();
-            var archeryRecords = _db.ArcheryRecord.ToList();
-            var shootingRecords = _db.ShootingRecord.ToList();
+            try
+            {
+                // 建立 TrainingRecordViewModel 並傳入訓練項目名稱
+                var model = new TrainingRecordViewModel { TrainingItem = item };
 
-            // 整合所有的訓練數據，並存入viewModel
-            model.RPERecords = sessionRPERecords
-                .Select(record => new RPETrainingRecordViewModel
+                // 根據用戶角色選擇正確的表來讀取數據
+                if (isAthlete)
                 {
-                    TrainingDate = record.TrainingDate ?? DateTime.Now,
-                    AthleteName = record.Athlete,
-                    TrainingClassName = record.TrainingClassName,
-                    TrainingItem = record.TrainingItem,
-                    ActionName = record.ActionName,
-                    TrainingTime = record.TrainingTime,
-                    RPEscore = record.RPEscore ?? 0,
-                    EachTrainingLoad = record.EachTrainingLoad ?? 0,
-                    // 可以繼續添加其他字段
-                })
-                .ToList();
+                    var sessionRPERecords = _db.AthleteGeneralTrainingRecord.ToList();
+                    var archeryRecords = _db.AthleteArcheryTrainingRecord.ToList();
+                    var shootingRecords = _db.AthleteShootingRecord.ToList();
 
-            model.ArcheryRecords = archeryRecords
-                .Select(record => new ArcheryTrainingRecordViewModel
+                    // 整合運動員的訓練數據，並存入viewModel
+                    model.RPERecords = sessionRPERecords
+                        .Select(record => new RPETrainingRecordViewModel
+                        {
+                            TrainingDate = record.TrainingDate ?? DateTime.Now,
+                            AthleteName = record.Athlete,
+                            TrainingClassName = record.TrainingClassName,
+                            TrainingItem = record.TrainingItem,
+                            ActionName = record.ActionName,
+                            TrainingTime = record.TrainingTime,
+                            RPEscore = record.RPEscore ?? 0,
+                            EachTrainingLoad = record.EachTrainingLoad ?? 0,
+                            // 可以繼續添加其他字段
+                        })
+                        .ToList();
+
+                    model.ArcheryRecords = archeryRecords
+                        .Select(record => new ArcheryTrainingRecordViewModel
+                        {
+                            TrainingDate = record.TrainingDate ?? DateTime.Now,
+                            Coach = record.Coach,
+                            Athlete = record.Athlete,
+                            Poundage = record.Poundage ?? 0,
+                            ArrowCount = record.ArrowCount ?? 0,
+                            RPEscore = record.RPEscore ?? 0,
+                            EachTrainingLoad = record.EachTrainingLoad ?? 0,
+                        })
+                        .ToList();
+
+                    model.ShootingRecords = shootingRecords
+                        .Select(record => new ShootingTrainingRecordViewModel
+                        {
+                            TrainingDate = record.TrainingDate ?? DateTime.Now,
+                            Coach = record.Coach,
+                            Athlete = record.Athlete,
+                            ShootingTool = record.ShootingTool,
+                            BulletCount = record.BulletCount ?? 0,
+                            RPEscore = record.RPEscore ?? 0,
+                            EachTrainingLoad = record.EachTrainingLoad ?? 0,
+                        })
+                        .ToList();
+                }
+                else
                 {
-                    TrainingDate = record.TrainingDate ?? DateTime.Now,
-                    Coach = record.Coach,
-                    Athlete = record.Athlete,
-                    Poundage = record.Poundage ?? 0,
-                    ArrowCount = record.ArrowCount ?? 0,
-                    RPEscore = record.RPEscore ?? 0,
-                    EachTrainingLoad = record.EachTrainingLoad ?? 0,
-                })
-                .ToList();
+                    var sessionRPERecords = _db.GeneralTrainingRecord.ToList();
+                    var archeryRecords = _db.ArcheryRecord.ToList();
+                    var shootingRecords = _db.ShootingRecord.ToList();
 
-            model.ShootingRecords = shootingRecords
-                .Select(record => new ShootingTrainingRecordViewModel
-                {
-                    TrainingDate = record.TrainingDate ?? DateTime.Now,
-                    Coach = record.Coach,
-                    Athlete = record.Athlete,
-                    ShootingTool = record.ShootingTool,
-                    BulletCount = record.BulletCount ?? 0,
-                    RPEscore = record.RPEscore ?? 0,
-                    EachTrainingLoad = record.EachTrainingLoad ?? 0,
-                })
-                .ToList();
+                    // 整合教練的訓練數據，並存入viewModel
+                    model.RPERecords = sessionRPERecords
+                        .Select(record => new RPETrainingRecordViewModel
+                        {
+                            TrainingDate = record.TrainingDate ?? DateTime.Now,
+                            AthleteName = record.Athlete,
+                            TrainingClassName = record.TrainingClassName,
+                            TrainingItem = record.TrainingItem,
+                            ActionName = record.ActionName,
+                            TrainingTime = record.TrainingTime,
+                            RPEscore = record.RPEscore ?? 0,
+                            EachTrainingLoad = record.EachTrainingLoad ?? 0,
+                        })
+                        .ToList();
 
-            // 返回主視圖 (SessionRecord.cshtml)
-            return View("SessionRecord", model);
+                    model.ArcheryRecords = archeryRecords
+                        .Select(record => new ArcheryTrainingRecordViewModel
+                        {
+                            TrainingDate = record.TrainingDate ?? DateTime.Now,
+                            Coach = record.Coach,
+                            Athlete = record.Athlete,
+                            Poundage = record.Poundage ?? 0,
+                            ArrowCount = record.ArrowCount ?? 0,
+                            RPEscore = record.RPEscore ?? 0,
+                            EachTrainingLoad = record.EachTrainingLoad ?? 0,
+                        })
+                        .ToList();
+
+                    model.ShootingRecords = shootingRecords
+                        .Select(record => new ShootingTrainingRecordViewModel
+                        {
+                            TrainingDate = record.TrainingDate ?? DateTime.Now,
+                            Coach = record.Coach,
+                            Athlete = record.Athlete,
+                            ShootingTool = record.ShootingTool,
+                            BulletCount = record.BulletCount ?? 0,
+                            RPEscore = record.RPEscore ?? 0,
+                            EachTrainingLoad = record.EachTrainingLoad ?? 0,
+                        })
+                        .ToList();
+                }
+
+                // 返回主視圖 (SessionRecord.cshtml)
+                return View("SessionRecord", model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         #endregion
@@ -523,7 +359,7 @@ namespace PhysicalFit.Controllers
         #region 計算session RPE指標結果
 
         [HttpGet]
-        public JsonResult CalculateTrainingLoad(DateTime date, string trainingType)
+        public JsonResult CalculateTrainingLoad(DateTime date, string trainingType, bool isAthlete)
         {
             try
             {
@@ -538,52 +374,104 @@ namespace PhysicalFit.Controllers
                 double weekToWeekChange = 0;
                 double acwr = 0;
 
-                // 根據不同的訓練類型進行查詢和計算
-                if (trainingType == "RPE訓練紀錄")
+                // 根據不同的訓練類型和用戶角色進行查詢和計算
+                if (isAthlete)
                 {
-                    var sessionRPERecords = _db.SessionRPETrainingRecords
-                        .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
-                        .ToList();
+                    if (trainingType == "一般訓練衝量監控 (session-RPE)")
+                    {
+                        var sessionRPERecords = _db.AthleteGeneralTrainingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
+                            .ToList();
 
-                    totalTrainingLoad = sessionRPERecords.Sum(r => r.TrainingLoad ?? 0);
-                    dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType);
-                    weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType);
-                    trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType);
-                    trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType);
-                    weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType);
-                    acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType);
-                }
-                else if (trainingType == "射箭訓練衝量")
-                {
-                    var archeryRecords = _db.ArcheryRecord
-                        .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
-                        .ToList();
+                        totalTrainingLoad = sessionRPERecords.Sum(r => r.EachTrainingLoad ?? 0);
+                        dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType, isAthlete);
+                        trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType, isAthlete);
+                        weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType, isAthlete);
+                        acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType, isAthlete);
+                    }
+                    else if (trainingType == "射箭訓練衝量")
+                    {
+                        var archeryRecords = _db.AthleteArcheryTrainingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
+                            .ToList();
 
-                    totalTrainingLoad = archeryRecords.Sum(r => r.EachTrainingLoad ?? 0);
-                    dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType);
-                    weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType);
-                    trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType);
-                    trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType);
-                    weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType);
-                    acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType);
-                }
-                else if (trainingType == "射擊訓練衝量")
-                {
-                    var shootingRecords = _db.ShootingRecord
-                        .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
-                        .ToList();
+                        totalTrainingLoad = archeryRecords.Sum(r => r.EachTrainingLoad ?? 0);
+                        dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType, isAthlete);
+                        trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType, isAthlete);
+                        weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType, isAthlete);
+                        acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType, isAthlete);
+                    }
+                    else if (trainingType == "射擊訓練衝量")
+                    {
+                        var shootingRecords = _db.AthleteShootingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
+                            .ToList();
 
-                    totalTrainingLoad = shootingRecords.Sum(r => r.EachTrainingLoad ?? 0);
-                    dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType);
-                    weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType);
-                    trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType);
-                    trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType);
-                    weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType);
-                    acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType);
+                        totalTrainingLoad = shootingRecords.Sum(r => r.EachTrainingLoad ?? 0);
+                        dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType, isAthlete);
+                        trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType, isAthlete);
+                        weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType, isAthlete);
+                        acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType, isAthlete);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("未知的訓練類型");
+                    }
                 }
                 else
                 {
-                    throw new ArgumentException("未知的訓練類型");
+                    if (trainingType == "一般訓練衝量監控 (session-RPE)")
+                    {
+                        var sessionRPERecords = _db.GeneralTrainingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
+                            .ToList();
+
+                        totalTrainingLoad = sessionRPERecords.Sum(r => r.EachTrainingLoad ?? 0);
+                        dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType, isAthlete);
+                        trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType, isAthlete);
+                        weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType, isAthlete);
+                        acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType, isAthlete);
+                    }
+                    else if (trainingType == "射箭訓練衝量")
+                    {
+                        var archeryRecords = _db.ArcheryRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
+                            .ToList();
+
+                        totalTrainingLoad = archeryRecords.Sum(r => r.EachTrainingLoad ?? 0);
+                        dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType, isAthlete);
+                        trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType, isAthlete);
+                        weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType, isAthlete);
+                        acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType, isAthlete);
+                    }
+                    else if (trainingType == "射擊訓練衝量")
+                    {
+                        var shootingRecords = _db.ShootingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
+                            .ToList();
+
+                        totalTrainingLoad = shootingRecords.Sum(r => r.EachTrainingLoad ?? 0);
+                        dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
+                        trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType, isAthlete);
+                        trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType, isAthlete);
+                        weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType, isAthlete);
+                        acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType, isAthlete);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("未知的訓練類型");
+                    }
                 }
 
                 // 返回計算結果
@@ -606,7 +494,7 @@ namespace PhysicalFit.Controllers
 
         #endregion
 
-        #region 儲存sessionRPE訓練量結果
+        #region 教練儲存sessionRPE訓練量結果
 
         [HttpPost]
         public JsonResult SaveTrainingRecord(SessionRPETrainingRecordsModel model, int shootingRecordId)

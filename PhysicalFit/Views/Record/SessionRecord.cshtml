@@ -9,6 +9,9 @@
     <meta name="viewport" content="width=device-width" />
     <script src="~/js/chart.js"></script>
     <script src="~/js/PsychologicalTraitChart.js"></script>
+    <script src="~/SweetAlert2/sweetalert.min.js"></script>
+    <script src="~/SweetAlert2/sweetalert2.all.min.js"></script>
+    <script src="~/SweetAlert2/sweetalert2@11.js"></script>
 </head>
 <body>
     <div>
@@ -180,17 +183,22 @@
     var selectedDate = this.value;
     var trainingType = '@ViewBag.SelectedTrainingItem'; // 使用 ViewBag.SelectedTrainingItem 獲取所選的訓練項目
 
-    if (selectedDate && trainingType !== "請選擇訓練項目") {  // 確保日期和訓練類型都選擇了
+    if (selectedDate && trainingType !== "請選擇訓練項目") {  // 確保日期和訓練類型都選擇
         $.ajax({
             url: '/Record/CalculateTrainingLoad',
             type: 'GET',
             data: {
                 date: selectedDate,
-                trainingType: trainingType // 使用選擇的訓練類型
+                trainingType: trainingType, // 使用選擇的訓練類型
+                isAthlete: true
             },
             success: function (data) {
                 if (data.error) {
-                    alert('計算出現錯誤: ' + data.error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: '計算出現錯誤',
+                        text: data.error,
+                    });
                 } else {
                     // 更新 UI 顯示結果
                     $('#WeeklyResult').val(data.WeeklyTrainingLoadSum);
@@ -201,11 +209,19 @@
                 }
             },
             error: function () {
-                alert('計算失敗，請稍後再試。');
+                Swal.fire({
+                    icon: 'error',
+                    title: '計算失敗',
+                    text: '請確認後再試。',
+                });
             }
         });
     } else {
-        alert('請選擇有效的訓練項目和日期');
+        Swal.fire({
+            icon: 'warning',
+            title: '無效的輸入',
+            text: '請選擇有效的訓練項目和日期',
+        });
     }
 });
 </script>
