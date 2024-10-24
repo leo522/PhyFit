@@ -1,7 +1,11 @@
-﻿@model PhysicalFit.Models.CombinedViewModel
+﻿@*SessionRecord*@
+@model PhysicalFit.Models.CombinedViewModel
 @using Newtonsoft.Json
 @{
     Layout = "~/Views/Shared/_PhyFitness.cshtml";
+}
+@{
+    var selectedItem = Request.QueryString["item"] ?? "無選擇的訓練項目";
 }
 <!DOCTYPE html>
 <html>
@@ -9,9 +13,9 @@
     <meta name="viewport" content="width=device-width" />
     <script src="~/js/chart.js"></script>
     <script src="~/js/PsychologicalTraitChart.js"></script>
-    <script src="~/SweetAlert2/sweetalert.min.js"></script>
-    <script src="~/SweetAlert2/sweetalert2.all.min.js"></script>
-    <script src="~/SweetAlert2/sweetalert2@11.js"></script>
+    @*<script src="~/SweetAlert2/sweetalert.min.js"></script>
+        <script src="~/SweetAlert2/sweetalert2.all.min.js"></script>
+        <script src="~/SweetAlert2/sweetalert2@11.js"></script>*@
 </head>
 <body>
     <div>
@@ -23,7 +27,7 @@
             <div class="col-md-5">
                 <div class="card">
                     <div class="card-header">
-                        <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;"></span></h3>
+                        <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;">@Html.Encode(selectedItem)</span></h3>
                     </div>
                     <div class="card-body">
                         <form>
@@ -178,10 +182,21 @@
     </div>
     <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
 
-<script>
+    <script>
    document.getElementById("TrainingDate").addEventListener("change", function () {
     var selectedDate = this.value;
-    var trainingType = '@ViewBag.SelectedTrainingItem'; // 使用 ViewBag.SelectedTrainingItem 獲取所選的訓練項目
+      var trainingType = '@ViewBag.SelectedTrainingItem'; // 使用 ViewBag.SelectedTrainingItem 獲取所選的訓練項目
+
+       var urlParams = new URLSearchParams(window.location.search);
+       var selectedItem = urlParams.get('item');
+
+       console.log("Selected Item: ", selectedItem);
+       debugger;
+       if (selectedItem) {
+           document.getElementById('selectedItem').textContent = selectedItem;
+       } else {
+           document.getElementById('selectedItem').textContent = '無選擇的訓練項目';
+       }
 
     if (selectedDate && trainingType !== "請選擇訓練項目") {  // 確保日期和訓練類型都選擇
         $.ajax({
@@ -224,6 +239,6 @@
         });
     }
 });
-</script>
+    </script>
 </body>
 </html>
