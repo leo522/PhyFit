@@ -105,125 +105,160 @@ namespace PhysicalFit.Controllers
                     case "一般訓練衝量監控 (session-RPE)":
                         if (userRole == "Athlete")
                         {
-                            combinedViewModel.TrainingRecord.RPERecords = _db.AthleteGeneralTrainingRecord
-                        .Where(x => x.AthleteID == AthleteID)
-                        .OrderBy(x => x.TrainingDate)
-                        .Select(x => new RPETrainingRecordViewModel
-                        {
-                            TrainingDate = x.TrainingDate ?? DateTime.Now,
-                            AthleteName = x.Athlete,
-                            TrainingItem = x.TrainingItem,
-                            ActionName = x.ActionName,
-                            TrainingTime = x.TrainingTime,
-                            RPEscore = x.RPEscore ?? 0,
-                            EachTrainingLoad = x.EachTrainingLoad ?? 0,
-                        }).ToList();
+                            var generalTrainingRecords = _db.AthleteGeneralTrainingRecord
+                            .Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
+                            {
+                                generalTrainingRecords = generalTrainingRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            generalTrainingRecords = generalTrainingRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.GeneralTrainingRecord = generalTrainingRecords
+                                .Select(x => new GeneralTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    TrainingItem = x.TrainingItem,
+                                    ActionName = x.ActionName,
+                                    TrainingTime = x.TrainingTime,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
                         }
                         else
                         {
-                            combinedViewModel.TrainingRecord.RPERecords = _db.GeneralTrainingRecord
-                            .Where(x => x.AthleteID == AthleteID)
-                            .OrderBy(x => x.TrainingDate)
-                            .Select(x => new RPETrainingRecordViewModel
+                            var generalTrainingRecords = _db.GeneralTrainingRecord
+                                .Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
                             {
-                                TrainingDate = x.TrainingDate ?? DateTime.Now,
-                                AthleteName = x.Athlete,
-                                TrainingItem = x.TrainingItem,
-                                ActionName = x.ActionName,
-                                TrainingTime = x.TrainingTime,
-                                RPEscore = x.RPEscore ?? 0,
-                                EachTrainingLoad = x.EachTrainingLoad ?? 0,
-                            }).ToList();
+                                generalTrainingRecords = generalTrainingRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
 
+                            generalTrainingRecords = generalTrainingRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.GeneralTrainingRecord = generalTrainingRecords
+                                .Select(x => new GeneralTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    TrainingItem = x.TrainingItem,
+                                    ActionName = x.ActionName,
+                                    TrainingTime = x.TrainingTime,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
                         }
-
                         break;
 
                     case "射箭訓練衝量":
                         if (userRole == "Athlete")
                         {
-                            combinedViewModel.TrainingRecord.ArcheryRecords = _db.AthleteArcheryTrainingRecord
-                       .Where(x => x.AthleteID == AthleteID)
-                       .OrderBy(x => x.TrainingDate)
-                       .Select(x => new ArcheryTrainingRecordViewModel
-                       {
-                           TrainingDate = x.TrainingDate ?? DateTime.Now,
-                           Coach = x.Coach,
-                           Athlete = x.Athlete,
-                           Poundage = x.Poundage ?? 0,
-                           ArrowCount = x.ArrowCount ?? 0,
-                           RPEscore = x.RPEscore ?? 0,
-                           EachTrainingLoad = x.EachTrainingLoad ?? 0
-                       }).ToList();
+                            var archeryRecords = _db.AthleteArcheryTrainingRecord.Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
+                            {
+                                archeryRecords = archeryRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            archeryRecords = archeryRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.ArcheryRecords = archeryRecords
+                                .Select(x => new ArcheryTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    Poundage = x.Poundage ?? 0,
+                                    ArrowCount = x.ArrowCount ?? 0,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
                         }
                         else
                         {
-                            combinedViewModel.TrainingRecord.ArcheryRecords = _db.ArcheryRecord
-                            .Where(x => x.AthleteID == AthleteID)
-                            .OrderBy(x => x.TrainingDate)
-                            .Select(x => new ArcheryTrainingRecordViewModel
-                            {
-                                TrainingDate = x.TrainingDate ?? DateTime.Now,
-                                Coach = x.Coach,
-                                Athlete = x.Athlete,
-                                Poundage = x.Poundage ?? 0,
-                                ArrowCount = x.ArrowCount ?? 0,
-                                RPEscore = x.RPEscore ?? 0,
-                                EachTrainingLoad = x.EachTrainingLoad ?? 0
-                            }).ToList();
-                        }
+                            var archeryRecords = _db.ArcheryRecord.Where(x => x.AthleteID == AthleteID);
 
+                            if (date.HasValue)
+                            {
+                                archeryRecords = archeryRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            archeryRecords = archeryRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.ArcheryRecords = archeryRecords
+                                .Select(x => new ArcheryTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    Poundage = x.Poundage ?? 0,
+                                    ArrowCount = x.ArrowCount ?? 0,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
+                        }
                         break;
 
                     case "射擊訓練衝量":
                         if (userRole == "Athlete")
                         {
-                            combinedViewModel.TrainingRecord.ShootingRecords = _db.AthleteShootingRecord
-                            .Where(x => x.AthleteID == AthleteID)
-                            .OrderBy(x => x.TrainingDate)
-                            .Select(x => new ShootingTrainingRecordViewModel
+                            var shootingRecords = _db.AthleteShootingRecord.Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
                             {
-                                TrainingDate = x.TrainingDate ?? DateTime.Now,
-                                Coach = x.Coach,
-                                Athlete = x.Athlete,
-                                ShootingTool = x.ShootingTool,
-                                BulletCount = x.BulletCount ?? 0,
-                                RPEscore = x.RPEscore ?? 0,
-                                EachTrainingLoad = x.EachTrainingLoad ?? 0
-                            }).ToList();
+                                shootingRecords = shootingRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            shootingRecords = shootingRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.ShootingRecords = shootingRecords
+                                .Select(x => new ShootingTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    ShootingTool = x.ShootingTool,
+                                    BulletCount = x.BulletCount ?? 0,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
                         }
                         else
                         {
-                            combinedViewModel.TrainingRecord.ShootingRecords = _db.ShootingRecord
-                            .Where(x => x.AthleteID == AthleteID)
-                            .OrderBy(x => x.TrainingDate)
-                            .Select(x => new ShootingTrainingRecordViewModel
+                            var shootingRecords = _db.ShootingRecord.Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
                             {
-                                TrainingDate = x.TrainingDate ?? DateTime.Now,
-                                Coach = x.Coach,
-                                Athlete = x.Athlete,
-                                ShootingTool = x.ShootingTool,
-                                BulletCount = x.BulletCount ?? 0,
-                                RPEscore = x.RPEscore ?? 0,
-                                EachTrainingLoad = x.EachTrainingLoad ?? 0
-                            }).ToList();
+                                shootingRecords = shootingRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            shootingRecords = shootingRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.ShootingRecords = shootingRecords
+                                .Select(x => new ShootingTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    ShootingTool = x.ShootingTool,
+                                    BulletCount = x.BulletCount ?? 0,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
                         }
-
                         break;
 
-                    case "心理特質與食慾圖量表":
-                        combinedViewModel.PsychologicalRecord = new PsychologicalViewModel
-                        {
-                            Dates = dates,
-                            UserID = AthleteID.HasValue ? new List<int> { AthleteID.Value } : new List<int>(),
-                            TraitsStatuses = psychologicalData.Select(x => x.Trait).ToList(),
-                            AppetiteScores = appetiteScores,
-                            SleepQualityScores = sleepQualityScores,
-                            FatigueScores = fatigueScores,
-                            TrainingWillingnessScores = trainingWillingnessScores,
-                            CompetitionWillingnessScores = competitionWillingnessScores
-                        };
-                        break;
                     default:
                         TempData["ErrorMessage"] = "無效的訓練項目";
                         return RedirectToAction("dashboard", "PhyFit");
@@ -256,8 +291,8 @@ namespace PhysicalFit.Controllers
                     var shootingRecords = _db.AthleteShootingRecord.ToList();
 
                     // 整合運動員的訓練數據，並存入viewModel
-                    model.RPERecords = sessionRPERecords
-                        .Select(record => new RPETrainingRecordViewModel
+                    model.GeneralTrainingRecord = sessionRPERecords
+                        .Select(record => new GeneralTrainingRecordViewModel
                         {
                             TrainingDate = record.TrainingDate ?? DateTime.Now,
                             AthleteName = record.Athlete,
@@ -304,8 +339,8 @@ namespace PhysicalFit.Controllers
                     var shootingRecords = _db.ShootingRecord.ToList();
 
                     // 整合教練的訓練數據，並存入viewModel
-                    model.RPERecords = sessionRPERecords
-                        .Select(record => new RPETrainingRecordViewModel
+                    model.GeneralTrainingRecord = sessionRPERecords
+                        .Select(record => new GeneralTrainingRecordViewModel
                         {
                             TrainingDate = record.TrainingDate ?? DateTime.Now,
                             AthleteName = record.Athlete,

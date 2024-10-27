@@ -3,10 +3,9 @@
 @using Newtonsoft.Json
 @{
     Layout = "~/Views/Shared/_PhyFitness.cshtml";
-}
-@{
     var selectedItem = Request.QueryString["item"] ?? "無選擇的訓練項目";
 }
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,164 +18,175 @@
 </head>
 <body>
     <div>
-        <div>
+        <div style="margin-bottom: 20px; font-size: 25px;">
             <div class="row align-items-center">
-                <!-- 左侧信息 -->
-                <div class="col-md-8 d-flex">
-                    <div class="coach-student-info d-flex">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center">
                         @if (Model.TrainingRecord.TrainingItem == "射箭訓練衝量" && Model.TrainingRecord.ArcheryRecords != null && Model.TrainingRecord.ArcheryRecords.Any())
                         {
                             var coach = Model.TrainingRecord.ArcheryRecords.FirstOrDefault()?.Coach;
                             var athlete = Model.TrainingRecord.ArcheryRecords.FirstOrDefault()?.Athlete;
 
-                            <span class="me-4"><strong>教練：</strong>@coach</span>
-                            <span class="me-4"><strong>學生：</strong>@athlete</span>
+                            <span class="me-4">
+                                <strong>教練：</strong><span>@coach</span>
+                            </span>
+                            <span class="me-4">
+                                <strong>學生：</strong><span>@athlete</span>
+                            </span>
                         }
                         else if (Model.TrainingRecord.TrainingItem == "射擊訓練衝量" && Model.TrainingRecord.ShootingRecords != null && Model.TrainingRecord.ShootingRecords.Any())
                         {
                             var coach = Model.TrainingRecord.ShootingRecords.FirstOrDefault()?.Coach;
                             var athlete = Model.TrainingRecord.ShootingRecords.FirstOrDefault()?.Athlete;
 
-                            <span class="me-4"><strong>教練：</strong>@coach</span>
-                            <span class="me-4"><strong>學生：</strong>@athlete</span>
+                            <span class="me-4">
+                                <strong>教練：</strong><span>@coach</span>
+                            </span>
+                            <span class="me-4">
+                                <strong>學生：</strong><span>@athlete</span>
+                            </span>
                         }
-                        else if (Model.TrainingRecord.TrainingItem == "一般訓練衝量監控 (session-RPE)" && Model.TrainingRecord.RPERecords != null && Model.TrainingRecord.RPERecords.Any())
+                        else if (Model.TrainingRecord.TrainingItem == "一般訓練衝量監控 (session-RPE)" && Model.TrainingRecord.GeneralTrainingRecord != null && Model.TrainingRecord.GeneralTrainingRecord.Any())
                         {
-                            var coach = Model.TrainingRecord.ShootingRecords.FirstOrDefault()?.Coach;
-                            var athlete = Model.TrainingRecord.ShootingRecords.FirstOrDefault()?.Athlete;
+                            var coach = Model.TrainingRecord.GeneralTrainingRecord.FirstOrDefault()?.Coach;
+                            var athlete = Model.TrainingRecord.GeneralTrainingRecord.FirstOrDefault()?.Athlete;
 
-                            <span class="me-4"><strong>教練：</strong>@coach</span>
-                            <span class="me-4"><strong>學生：</strong>@athlete</span>
+                            <span class="me-4">
+                                <strong>教練：</strong><span>@coach</span>
+                            </span>
+                            <span class="me-4">
+                                <strong>學生：</strong><span>@athlete</span>
+                            </span>
                         }
                     </div>
                 </div>
-
-                <!-- 右侧日期选择框 -->
-                <div class="col-md-4 text-end">
-                    <div class="form-group">
-                        <label for="TrainingDate">選擇日期</label>
-                        <input type="date" class="form-control" id="TrainingDate" style="width: auto; max-width: 120px;" />
+                <div class="col-md-3">
+                    <div class="d-flex align-items-center">
+                        <label for="TrainingDate" class="me-1">選擇日期：</label>
+                        <input type="date" class="form-control" id="TrainingDate" style="width: auto; max-width: 140px; font-size:18px; padding:0.25rem;" />
                     </div>
+                </div>
+                <div class="col-md-3">
+                    <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
                 </div>
             </div>
         </div>
+    </div>
 
-
-        <div class="resultTable" id="sessionRPEresult">
-            <div class="col-md-5">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;">@Html.Encode(selectedItem)</span></h3>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group d-flex align-items-center justify-content-between">
-                                <label title="每週運動訓練量為每週(通常是7 天)所有的運動訓練量之加總">每週運動訓練量</label>
-                                <div class="form-group-inline d-flex align-items-center">
-                                    <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
-                                </div>
+    <div class="resultTable" id="sessionRPEresult">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;">@Html.Encode(selectedItem)</span></h3>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label title="每週運動訓練量為每週(通常是7 天)所有的運動訓練量之加總">每週運動訓練量</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
-                            <div class="form-group d-flex align-items-center justify-content-between">
-                                <label title="一週內每日訓練的一致性，其計算方式為當週運動訓練量的日平均(mean load)除以當週TL的標準差(standard deviation)">訓練同質性</label>
-                                <div class="form-group-inline d-flex align-items-center">
-                                    <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
-                                </div>
+                        </div>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label title="一週內每日訓練的一致性，其計算方式為當週運動訓練量的日平均(mean load)除以當週TL的標準差(standard deviation)">訓練同質性</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="TrainingHomogeneity" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
-                            <div class="form-group d-flex align-items-center justify-content-between">
-                                <label title="整週訓練的整體壓力，計算方式為當週TL乘上當週TM">訓練張力值</label>
-                                <div class="form-group-inline d-flex align-items-center">
-                                    <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
-                                </div>
+                        </div>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label title="整週訓練的整體壓力，計算方式為當週TL乘上當週TM">訓練張力值</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="TensionValue" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
-                            <div class="form-group d-flex align-items-center justify-content-between">
-                                <label title="當週與上一週之運動訓練量的絕對差異值">週間訓練變化</label>
-                                <div class="form-group-inline d-flex align-items-center">
-                                    <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
-                                </div>
+                        </div>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label title="當週與上一週之運動訓練量的絕對差異值">週間訓練變化</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="WeeklyTrainingChanges" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
-                            <div class="form-group d-flex align-items-center justify-content-between">
-                                <label title="ACWR，當週TL(acuteworkload) 除以過往連續四週TL平均值(chroni cworkload)所得之數值">短期：長期訓練量比值</label>
-                                <div class="form-group-inline d-flex align-items-center">
-                                    <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
-                                </div>
+                        </div>
+                        <div class="form-group d-flex align-items-center justify-content-between">
+                            <label title="ACWR，當週TL(acuteworkload) 除以過往連續四週TL平均值(chroni cworkload)所得之數值">短期：長期訓練量比值</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="ShortLongRatio" placeholder="計算結果將顯示在這裡" readonly>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div><br />
+        </div>
+    </div><br />
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>訓練日期</th>
-                    @if (Model.TrainingRecord.TrainingItem == "一般訓練衝量監控 (session-RPE)")
-                    {
-                        <th>運動種類</th>
-                        <th>訓練動作</th>
-                        <th>訓練時間</th>
-                        <th>自覺費力程度</th>
-                        <th>單次運動負荷量</th>
-                    }
-                    else if (Model.TrainingRecord.TrainingItem == "射箭訓練衝量")
-                    {
-                        <th>磅數</th>
-                        <th>箭數</th>
-                        <th>自覺費力程度</th>
-                        <th>單次運動負荷</th>
-                    }
-                    else if (Model.TrainingRecord.TrainingItem == "射擊訓練衝量")
-                    {
-                        <th>射擊工具</th>
-                        <th>子彈數</th>
-                        <th>自覺費力程度</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
+    <table class="table" style="display: none;" id="trainingRecordsTable">
+        <thead>
+            <tr>
+                <th>訓練日期</th>
                 @if (Model.TrainingRecord.TrainingItem == "一般訓練衝量監控 (session-RPE)")
                 {
-                    foreach (var record in Model.TrainingRecord.RPERecords)
-                    {
-                        <tr>
-                            <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
-                            <td>@record.TrainingItem</td>
-                            <td>@record.ActionName</td>
-                            <td>@record.TrainingTime</td>
-                            <td>@record.RPEscore</td>
-                            <td>@record.EachTrainingLoad</td>
-                        </tr>
-                    }
+                    <th>運動種類</th>
+                    <th>訓練動作</th>
+                    <th>訓練時間</th>
+                    <th>自覺費力程度</th>
+                    <th>單次運動負荷量</th>
                 }
                 else if (Model.TrainingRecord.TrainingItem == "射箭訓練衝量")
                 {
-                    foreach (var record in Model.TrainingRecord.ArcheryRecords)
-                    {
-                        <tr>
-                            <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
-                            <td>@record.Poundage</td>
-                            <td>@record.ArrowCount</td>
-                            <td>@record.RPEscore</td>
-                            <td>@record.EachTrainingLoad</td>
-                        </tr>
-                    }
+                    <th>磅數</th>
+                    <th>箭數</th>
+                    <th>自覺費力程度</th>
+                    <th>單次運動負荷</th>
                 }
                 else if (Model.TrainingRecord.TrainingItem == "射擊訓練衝量")
                 {
-                    foreach (var record in Model.TrainingRecord.ShootingRecords)
-                    {
-                        <tr>
-                            <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
-                            <td>@record.ShootingTool</td>
-                            <td>@record.BulletCount</td>
-                            <td>@record.RPEscore</td>
-                        </tr>
-                    }
+                    <th>射擊工具</th>
+                    <th>子彈數</th>
+                    <th>自覺費力程度</th>
                 }
-            </tbody>
-        </table>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.TrainingRecord.TrainingItem == "一般訓練衝量監控 (session-RPE)")
+            {
+                foreach (var record in Model.TrainingRecord.GeneralTrainingRecord)
+                {
+                    <tr>
+                        <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
+                        <td>@record.TrainingItem</td>
+                        <td>@record.ActionName</td>
+                        <td>@record.TrainingTime</td>
+                        <td>@record.RPEscore</td>
+                        <td>@record.EachTrainingLoad</td>
+                    </tr>
+                }
+            }
+            else if (Model.TrainingRecord.TrainingItem == "射箭訓練衝量")
+            {
+                foreach (var record in Model.TrainingRecord.ArcheryRecords)
+                {
+                    <tr>
+                        <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
+                        <td>@record.Poundage</td>
+                        <td>@record.ArrowCount</td>
+                        <td>@record.RPEscore</td>
+                        <td>@record.EachTrainingLoad</td>
+                    </tr>
+                }
+            }
+            else if (Model.TrainingRecord.TrainingItem == "射擊訓練衝量")
+            {
+                foreach (var record in Model.TrainingRecord.ShootingRecords)
+                {
+                    <tr>
+                        <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
+                        <td>@record.ShootingTool</td>
+                        <td>@record.BulletCount</td>
+                        <td>@record.RPEscore</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
 
-    </div>
     <!-- 顯示食慾感受分數的折線圖 -->
     <div>
         <input type="hidden" id="psychologicalDataExists" value="@((Model.PsychologicalRecord != null && Model.PsychologicalRecord.Dates.Any()) ? "true" : "false")" />
@@ -208,52 +218,82 @@
             <canvas id="competitionWillingnessChart" width="200" height="20"></canvas>
         </div>
     </div>
-    <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
 
     <script>
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
    document.getElementById("TrainingDate").addEventListener("change", function () {
     var selectedDate = this.value;
-      var trainingType = '@ViewBag.SelectedTrainingItem'; // 使用 ViewBag.SelectedTrainingItem 獲取所選的訓練項目
+    var trainingType = '@ViewBag.SelectedTrainingItem';
+    var athleteId = getQueryParam('AthleteID'); // 從 URL 中取得 AthleteID
 
-       var urlParams = new URLSearchParams(window.location.search);
-       var selectedItem = urlParams.get('item');
-
-       if (selectedItem) {
-           document.getElementById('selectedItem').textContent = selectedItem;
-       } else {
-           document.getElementById('selectedItem').textContent = '無選擇的訓練項目';
-       }
-
-    if (selectedDate && trainingType !== "請選擇訓練項目") {  // 確保日期和訓練類型都選擇
+    if (selectedDate && trainingType !== "請選擇訓練項目") {
+        // 第一步：呼叫 SessionRecord 以載入指定日期的訓練紀錄
         $.ajax({
-            url: '/Record/CalculateTrainingLoad',
+            url: '/Record/SessionRecord',
             type: 'GET',
             data: {
+                item: trainingType,
                 date: selectedDate,
-                trainingType: trainingType, // 使用選擇的訓練類型
-                isAthlete: true
+                AthleteID: athleteId
+                /*isAthlete: true */// 若需要傳 AthleteID 可以加入
             },
-            success: function (data) {
-                if (data.error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '計算出現錯誤',
-                        text: data.error,
-                    });
-                } else {
-                    // 更新 UI 顯示結果
-                    $('#WeeklyResult').val(data.WeeklyTrainingLoadSum);
-                    $('#TrainingHomogeneity').val(data.TrainingMonotony);
-                    $('#TensionValue').val(data.TrainingStrain);
-                    $('#WeeklyTrainingChanges').val(data.WeekToWeekChange);
-                    $('#ShortLongRatio').val(data.ACWR);
-                }
+            success: function (response) {
+                // 更新表格內容
+                $('#trainingRecordsTable').html($(response).find('#trainingRecordsTable').html());
+                // 顯示表格
+                document.getElementById("trainingRecordsTable").style.display = "table";
+                 var noDataMessage = '@ViewBag.NoDataMessage';
+
+    if (noDataMessage) {
+        $('#noDataMessage').show();
+        $('#trainingRecordsTable').hide();
+    } else {
+        $('#noDataMessage').hide();
+        $('#trainingRecordsTable').html($(response).find('#trainingRecordsTable').html()).show();
+    }
+                // 第二步：呼叫 CalculateTrainingLoad 進行數據計算
+                //$.ajax({
+                //    url: '/Record/CalculateTrainingLoad',
+                //    type: 'GET',
+                //    data: {
+                //        date: selectedDate,
+                //        trainingType: trainingType,
+                //        AthleteID: athleteId
+                //        //isAthlete: true
+                //    },
+                //    success: function (data) {
+                //        if (data.error) {
+                //            Swal.fire({
+                //                icon: 'error',
+                //                title: '計算出現錯誤',
+                //                text: data.error,
+                //            });
+                //        } else {
+                //            // 更新 UI 顯示計算結果
+                //            $('#WeeklyResult').val(data.WeeklyTrainingLoadSum);
+                //            $('#TrainingHomogeneity').val(data.TrainingMonotony);
+                //            $('#TensionValue').val(data.TrainingStrain);
+                //            $('#WeeklyTrainingChanges').val(data.WeekToWeekChange);
+                //            $('#ShortLongRatio').val(data.ACWR);
+                //        }
+                //    },
+                //    error: function () {
+                //        Swal.fire({
+                //            icon: 'error',
+                //            title: '計算失敗',
+                //            text: '請確認後再試。',
+                //        });
+                //    }
+                //});
             },
             error: function () {
                 Swal.fire({
                     icon: 'error',
-                    title: '計算失敗',
-                    text: '請確認後再試。',
+                    title: '載入失敗',
+                    text: '無法載入訓練紀錄，請稍後再試。',
                 });
             }
         });

@@ -5,8 +5,10 @@ using System.Web;
 
 namespace PhysicalFit.Models
 {
-    public class RPETrainingRecordViewModel
+    public class GeneralTrainingRecordViewModel
     {
+        public string Coach { get; set; }
+        public string Athlete { get; set; }
         public DateTime TrainingDate { get; set; }
         public string TrainingClassName { get; set; }
         public string AthleteName { get; set; }
@@ -45,7 +47,7 @@ namespace PhysicalFit.Models
     public class TrainingRecordViewModel
     {
         public string TrainingItem { get; set; }
-        public IEnumerable<RPETrainingRecordViewModel> RPERecords { get; set; }
+        public IEnumerable<GeneralTrainingRecordViewModel> GeneralTrainingRecord { get; set; }
         public IEnumerable<ArcheryTrainingRecordViewModel> ArcheryRecords { get; set; }
         public IEnumerable<ShootingTrainingRecordViewModel> ShootingRecords { get; set; }
     }
