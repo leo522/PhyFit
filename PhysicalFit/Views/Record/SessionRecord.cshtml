@@ -58,6 +58,18 @@
                                 <strong>學生：</strong><span>@athlete</span>
                             </span>
                         }
+                        else if (Model.TrainingRecord.TrainingItem == "檢測系統" && Model.TrainingRecord.DetectionRecords != null && Model.TrainingRecord.DetectionRecords.Any())
+                        {
+                            var coach = Model.TrainingRecord.DetectionRecords.FirstOrDefault()?.Coach;
+                            var athlete = Model.TrainingRecord.DetectionRecords.FirstOrDefault()?.Athlete;
+
+                            <span class="me-4">
+                                <strong>教練：</strong><span>@coach</span>
+                            </span>
+                            <span class="me-4">
+                                <strong>學生：</strong><span>@athlete</span>
+                            </span>
+                        }
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -65,10 +77,10 @@
                         <label for="TrainingDate" class="me-1">選擇查看訓練記錄日期：</label>
                         <input type="date" class="form-control" id="TrainingDate" style="width: auto; max-width: 140px; font-size:18px; padding:0.25rem;" />
                     </div>
-                    <div class="d-flex align-items-center">
+                    @*<div class="d-flex align-items-center">
                         <label for="TrainingDate" class="me-1">選擇週期性訓練記錄日期：</label>
                         <input type="date" class="form-control" id="TrainingDate" style="width: auto; max-width: 140px; font-size:18px; padding:0.25rem;" />
-                    </div>
+                    </div>*@
                 </div>
                 <div class="col-md-3">
                     <a href="/PhyFit/dashboard" class="btn btn-outline-primary">返回檢測頁</a>
@@ -77,6 +89,7 @@
         </div>
     </div>
 
+    @*session RPE指標計算結果*@
     <div class="resultTable" id="sessionRPEresult">
         <div class="col-md-5">
             <div class="card">
@@ -146,6 +159,12 @@
                     <th>子彈數</th>
                     <th>自覺費力程度</th>
                 }
+                else if(Model.TrainingRecord.TrainingItem == "檢測系統")
+                { 
+                    <th>運動項目</th>
+                    <th>臨界速度</th>
+                    <th>最大無氧做功</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -185,6 +204,18 @@
                         <td>@record.ShootingTool</td>
                         <td>@record.BulletCount</td>
                         <td>@record.RPEscore</td>
+                    </tr>
+                }
+            }
+            else if(Model.TrainingRecord.TrainingItem == "檢測系統")
+            {
+                foreach(var record in Model.TrainingRecord.DetectionRecords)
+                { 
+                    <tr>
+                        <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
+                        <td>@record.SportItem</td>
+                        <td>@record.CriticalSpeed</td>
+                        <td>@record.MaxAnaerobicWork</td>
                     </tr>
                 }
             }

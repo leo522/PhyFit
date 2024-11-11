@@ -259,6 +259,35 @@ namespace PhysicalFit.Controllers
                         }
                         break;
 
+                    case "檢測系統":
+                        // 加入檢測系統的處理邏輯
+                        var detectionRecords = _db.DetectionTrainingRecord
+                            .Where(x => x.AthleteID == AthleteID);
+
+                        if (date.HasValue)
+                        {
+                            detectionRecords = detectionRecords
+                                .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                        }
+
+                        detectionRecords = detectionRecords.OrderBy(x => x.TrainingDate);
+
+                        combinedViewModel.TrainingRecord.DetectionRecords = detectionRecords
+                            .Select(x => new DetectionTrainingRecordViewModel
+                            {
+                                TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                Coach = x.Coach,
+                                Athlete = x.Athlete,
+                                DetectionItem = x.DetectionItem,
+                                SportItem = x.SportItem,
+                                CriticalSpeed = x.CriticalSpeed ?? 0,
+                                MaxAnaerobicWork = x.MaxAnaerobicWork ?? 0,
+                                TrainingVolume = x.TrainingVolume ?? 0,
+                                TrainingPrescription = x.TrainingPrescription ?? 0,
+                                CoefficientOfDetermination = x.CoefficientOfDetermination ?? 0
+                            }).ToList();
+                        break;
+
                     default:
                         TempData["ErrorMessage"] = "無效的訓練項目";
                         return RedirectToAction("dashboard", "PhyFit");

@@ -381,6 +381,7 @@
     <Content Include="img\logo.svg" />
     <Content Include="img\maintance.jpg" />
     <Content Include="js\chart.js" />
+    <Content Include="js\DetectionSysRedirect.js" />
     <Content Include="js\PsychologicalTraitChart.js" />
     <Content Include="js\sessionRecordRedirect.js" />
     <Content Include="js\trainingRecordFilter.js" />

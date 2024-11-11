@@ -50,5 +50,21 @@ namespace PhysicalFit.Models
         public IEnumerable<GeneralTrainingRecordViewModel> GeneralTrainingRecord { get; set; }
         public IEnumerable<ArcheryTrainingRecordViewModel> ArcheryRecords { get; set; }
         public IEnumerable<ShootingTrainingRecordViewModel> ShootingRecords { get; set; }
+        public IEnumerable<DetectionTrainingRecordViewModel> DetectionRecords { get; set; }
     }
+
+    public class DetectionTrainingRecordViewModel
+    {
+        public DateTime TrainingDate { get; set; }
+        public string Coach { get; set; }
+        public string Athlete { get; set; }
+        public string DetectionItem { get; set; }
+        public string SportItem { get; set; }
+        public double CriticalSpeed { get; set; }
+        public double MaxAnaerobicWork { get; set; }
+        public double TrainingVolume { get; set; }
+        public double TrainingPrescription { get; set; }
+        public double CoefficientOfDetermination { get; set; }
+    }
+
 }

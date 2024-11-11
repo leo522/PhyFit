@@ -175,7 +175,7 @@
 //    }
 
 
-//RollerSkatingCaculate.js
+var FailureTime100 = 0; // 新增 100m 力竭時間
 var FailureTime200 = 0;
 var FailureTime500 = 0;
 var FailureTime1000 = 0;
@@ -186,24 +186,42 @@ var RollerMaxWork = 0;
 var RollerMaxR = 0;
 var RollerMaxR_a;
 var RollerMaxR_b;
-var RollerLimitSpeed = 0; //臨界速度
-var RollerMaxWork = 0; //最大無氧做功
-var RollermillTotT = 0; //訓練量
 
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');
     var distance = parseFloat(row.find('td').eq(0).text());
     var rollertime = parseFloat($(inputElement).val());
 
-    if (!isNaN(distance) && !isNaN(rollertime) && rollertime > 0) {
-        var speed = (distance / rollertime) * 3.6;
-
-        row.find('.roller-result').val(speed.toFixed(2)); //更新速度結果
-    } else {
-        row.find('.roller-result').val(''); //清空速度
+    // 如果距離是 200m, 500m, 1000m, 2000m，先減去 100m 的力竭時間
+    if (distance === 200 || distance === 500 || distance === 1000 || distance === 2000) {
+        rollertime -= getFailureTime(100);  // 使用 getFailureTime 函數取得 100m 的力竭時間
     }
 
-    rollerCalculateLinearRegression();  //每次更新速度時也呼叫線性回歸計算
+    if (!isNaN(distance) && !isNaN(rollertime) && rollertime > 0) {
+        var speed = (distance / rollertime) * 3.6;
+        row.find('.roller-result').val(speed.toFixed(2)); // 更新速度結果
+    } else {
+        row.find('.roller-result').val(''); // 清空速度
+    }
+
+    rollerCalculateLinearRegression();  // 每次更新速度時也呼叫線性回歸計算
+}
+
+function getFailureTime(distance) {
+    switch (distance) {
+        case 100:
+            return FailureTime100;
+        case 200:
+            return FailureTime200;
+        case 500:
+            return FailureTime500;
+        case 1000:
+            return FailureTime1000;
+        case 2000:
+            return FailureTime2000;
+        default:
+            return 0;
+    }
 }
 
 function rollerCalculateLinearRegression() {
@@ -301,27 +319,22 @@ function rollerCalculateLinearRegression() {
         }
     }
 
-    $('#calculationResult').val(Math.floor(maxR * 100) / 100); //r^2，決定係數
+    $('#calculationResult').val(Math.floor(maxR * 100) / 100); // r^2，決定係數
 
     RollerMaxR_a = maxRA;
     RollerMaxR_b = maxRB;
 
-    RollerLimitSpeed = ((RollerMaxR_b * 3600) / 1000).toFixed(1); //臨界速度
-    document.getElementById("CriticalSpeed").value = RollerLimitSpeed; //臨界速度
+    RollerLimitSpeed = ((RollerMaxR_b * 3600) / 1000).toFixed(1); // 臨界速度
+    document.getElementById("CriticalSpeed").value = RollerLimitSpeed;
 
-    RollerMaxWork = RollerMaxR_a.toFixed(2); //最大無氧做功
-    $('#AnaerobicPower').val(RollerMaxWork); //最大無氧做功
-
-    //RollerMaxWork = RollerMaxR_a.toFixed(2); //最大無氧做功
-    //document.getElementById("AnaerobicPower").value = RollerMaxWork; //最大無氧做功
+    RollerMaxWork = RollerMaxR_a.toFixed(2); // 最大無氧做功
+    $('#AnaerobicPower').val(RollerMaxWork);
 }
 
 function RollerSkatingTotalT() {
     var TotalTraining = 0;
-
     for (var i = 1; i <= TreadmillCurrentSets; i++) {
         TotalTraining = TotalTraining + 1;
     }
-
     document.getElementById("TrainingVol").value = TotT.toFixed(2);
 }

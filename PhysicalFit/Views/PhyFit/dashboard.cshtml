@@ -23,6 +23,7 @@
     <script src="~/Scripts/datepickr.js"></script> @*初始化日期選擇器*@
     <script src="~/Scripts/psychologicalTraits.js"></script> @*心理特質及食慾圖量表*@
     <script src="~/js/sessionRecordRedirect.js"></script> @*計算週期運動負荷量*@
+    <script src="~/js/DetectionSysRedirect.js"></script> @*查詢檢測記錄*@
 </head>
 <body>
     <div>
@@ -297,9 +298,9 @@
                         </div>
                         <!-- 速耐力間歇跑訓練處方區域 -->
                         @*<div class="speed-prescription-section">
-            <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
-            <input type="text" class="form-control" id="SpeedPres" placeholder="">
-        </div>*@
+                                <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
+                                <input type="text" class="form-control" id="SpeedPres" placeholder="">
+                            </div>*@
                         <input type="hidden" id="CriticalSpeed" name="criticalSpeed" />
                         <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />
 
@@ -322,28 +323,26 @@
     $(document).ready(function () {
         $.ajax({
             type: 'GET',
-            url: '/Account/Login',
-            success: function (response) {
-                var userRole = response.userRole;
-            },
-            error: function (xhr, status, error) {
-                console.error('獲取用戶角色失敗：', error);
-            }
+            url: '/Account/Login'
+        }).done(function (response) {
+            var userRole = response.userRole;
+        }).fail(function (xhr, status, error) {
+            console.error('獲取用戶角色失敗：', error);
         });
     });
 
-// 更新動作名稱選單的技術項目
-function updateTechnicalActions(selectElement) {
-    const selectedTechnical = selectElement.value;
-    const actionDropdown = selectElement.closest('tr').querySelector('[name="SpecialTechName"]');
+    // 更新動作名稱選單的技術項目
+    function updateTechnicalActions(selectElement) {
+        const selectedTechnical = selectElement.value;
+        const actionDropdown = selectElement.closest('tr').querySelector('[name="SpecialTechName"]');
 
-    $.ajax({
-        url: '@Url.Action("GetSpecialTechnicalActions", "PhyFit")',
-        type: 'GET',
-        data: { technicalItem: selectedTechnical },
-        success: function (data) {
+        $.ajax({
+            url: '@Url.Action("GetSpecialTechnicalActions", "PhyFit")',
+            type: 'GET',
+            data: { technicalItem: selectedTechnical }
+        }).done(function (data) {
             actionDropdown.innerHTML = ''; //清空原選單
-        
+
             const defaultOption = document.createElement("option"); //添加默認選項
             defaultOption.text = "請選擇動作名稱";
             actionDropdown.add(defaultOption);
@@ -355,175 +354,148 @@ function updateTechnicalActions(selectElement) {
                 option.text = item;
                 actionDropdown.add(option);
             });
-        },
-        error: function () {
+        }).fail(function () {
             alert('請稍後再試。');
+        });
+    }
+
+    //檢查日期是否選擇
+    function checkDateInput(dateInput) {
+        if (!dateInput || !dateInput.value) {
+            Swal.fire({
+                icon: 'warning',
+                title: '請先選擇日期',
+                text: '計算前請選擇日期，否則無法進行計算。',
+                confirmButtonText: '了解'
+            });
+            return false;
         }
-    });
-}
-
-// 檢查日期是否選擇
-function checkDateInput(dateInput) {
-    if (!dateInput || !dateInput.value) {
-        Swal.fire({
-            icon: 'warning',
-            title: '請先選擇日期',
-            text: '計算前請選擇日期，否則無法進行計算。',
-            confirmButtonText: '了解'
-        });
-        return false;
-    }
-    return true;
-}
-
-// 切換到檢測系統視圖
-function switchToDetectionSystem() {
-    document.getElementById('Detection_Sys').style.display = "block"; //顯示檢測系統
-    document.getElementById('trainingMonitoring').style.display = "none"; //隱藏其他訓練區塊
-    toggleButtonVisibility(); //更新按鈕顯示狀態
-
-    // 更新 #selectedSportItem 的內容
-    const selectedSport = document.getElementById('Item').value;
-    document.getElementById('selectedSportItem').textContent = selectedSport !== "請選擇訓練項目" ? selectedSport : "";
-
-    // 確保檢測系統的子項目出現
-    const detectionItem = document.getElementById('DeteItem');
-    if (detectionItem) {
-        detectionItem.style.display = "block"; // 顯示檢測子項目選單
-    }
-}
-
-// 查看訓練紀錄按鈕顯示與隱藏
-function toggleButtonVisibility() {
-    const selectElement = document.getElementById('Item');
-    const button = document.getElementById('recordCheck');
-    const detectionSection = document.getElementById('Detection_Sys');
-
-    // 根據檢測系統是否顯示來決定按鈕是否可見
-    if (detectionSection.style.display === "block") {
-        button.style.display = "none"; // 檢測系統顯示時隱藏按鈕
-    } else {
-        button.style.display = (selectElement.value !== "請選擇訓練項目") ? "inline-block" : "none";
-    }
-}
-
-// 在 DOM 完全加載後初始化
-document.addEventListener('DOMContentLoaded', function () {
-    toggleButtonVisibility(); // 初始設置按鈕顯示狀態
-
-    //設置初始的 selectedSportItem 內容
-    const initialSelectedSport = document.getElementById('Item').value;
-    document.getElementById('selectedSportItem').textContent = initialSelectedSport !== "請選擇訓練項目" ? initialSelectedSport : "";
-
-    //訓練計算按鈕的點擊事件綁定
-    const calculateButtons = [
-        { id: 'btn_calculate', dateInputName: 'TrainingDate' },
-        { id: 'btn_calculate_archery', dateInputName: 'archeryDate' },
-        { id: 'btn_calculate_shooting', dateInputName: 'shootingDate' }
-    ];
-
-    calculateButtons.forEach(button => {
-        document.getElementById(button.id).addEventListener('click', function (event) {
-            const dateInput = document.querySelector(`input[name="${button.dateInputName}"]`);
-            if (!checkDateInput(dateInput)) {
-                event.preventDefault(); //阻止計算操作
-            }
-        });
-    });
-
-    //訓練紀錄按鈕點擊事件，將選擇的項目和運動員 ID 帶入到檢測頁
-    const link = document.querySelector('a.btn.btn-outline-primary');
-    if (link) {
-        link.addEventListener('click', function (event) {
-            event.preventDefault();
-
-            //取得選中的訓練項目
-            const selectedItem = document.getElementById('Item').value;
-
-            //根據 userRole 判斷是否是運動員或教練
-            const userRole = document.getElementById('userRole').value;
-
-            let athleteID;
-
-            //如果是運動員，使用隱藏的 AthleteID
-            if (userRole === "Athlete") {
-                athleteID = document.querySelector('input[name="AthleteID"]').value;
-            } else if (userRole === "Coach") {
-                //如果是教練，使用下拉選單的 AthleteID
-                athleteID = document.getElementById('AthletesID').value;
-            }
-
-            //驗證選擇的項目和運動員ID是否有效
-            //if (selectedItem === "請選擇訓練項目") {
-            //    alert("請先選擇訓練項目");
-            //} else if (!athleteID) {
-            //    alert("請先選擇運動員");
-            //} else {
-            //    //重定向到 SessionRecord，帶上選定的項目和運動員ID
-            //    window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
-            //}
-        });
+        return true;
     }
 
-    //根據用戶身份隱藏運動員欄位
-    const userRole = '@Session["UserRole"]';
-    const athleteDiv = document.getElementById("identity_Athletes");
-    if (userRole === "Athlete") {
-        athleteDiv.style.display = "none"; // 隱藏運動員欄位
+    //切換到檢測系統視圖
+    function switchToDetectionSystem() {
+        document.getElementById('Detection_Sys').style.display = "block"; //顯示檢測系統
+        document.getElementById('trainingMonitoring').style.display = "none"; //隱藏其他訓練區塊
+        toggleButtonVisibility(); //更新按鈕顯示狀態
+
+        const selectedSport = document.getElementById('Item').value;
+        document.getElementById('selectedSportItem').textContent = selectedSport !== "請選擇訓練項目" ? selectedSport : "";
+
+        const detectionItem = document.getElementById('DeteItem');
+        if (detectionItem) {
+            detectionItem.style.display = "block"; // 顯示檢測子項目選單
+        }
     }
 
-    //監聽訓練項目的選擇變更
-    const selectElement = document.getElementById('Item');
-    selectElement.addEventListener('change', function () {
-        if (this.value === "檢測系統") {
-            switchToDetectionSystem();
+    //查看訓練紀錄按鈕顯示與隱藏
+    function toggleButtonVisibility() {
+        const selectElement = document.getElementById('Item');
+        const button = document.getElementById('recordCheck');
+        const detectionSection = document.getElementById('Detection_Sys');
+
+        if (detectionSection.style.display === "block") {
+            button.style.display = "none";
         } else {
-            document.getElementById('Detection_Sys').style.display = "none"; //隱藏檢測系統
-            document.getElementById('trainingMonitoring').style.display = "block"; //顯示訓練監控
-            toggleButtonVisibility(); //更新按鈕顯示狀態
+            button.style.display = (selectElement.value !== "請選擇訓練項目") ? "inline-block" : "none";
+        }
+    }
 
-            //隱藏檢測子項目
-            const detectionItem = document.getElementById('DeteItem');
-            if (detectionItem) {
-                detectionItem.style.display = "none";
-            }
+    // 在 DOM 完全加載後初始化
+    document.addEventListener('DOMContentLoaded', function () {
+        toggleButtonVisibility(); //初始設置按鈕顯示狀態
+
+        const initialSelectedSport = document.getElementById('Item').value;
+        document.getElementById('selectedSportItem').textContent = initialSelectedSport !== "請選擇訓練項目" ? initialSelectedSport : "";
+
+        const calculateButtons = [
+            { id: 'btn_calculate', dateInputName: 'TrainingDate' },
+            { id: 'btn_calculate_archery', dateInputName: 'archeryDate' },
+            { id: 'btn_calculate_shooting', dateInputName: 'shootingDate' }
+        ];
+
+        calculateButtons.forEach(button => {
+            document.getElementById(button.id).addEventListener('click', function (event) {
+                const dateInput = document.querySelector(`input[name="${button.dateInputName}"]`);
+                if (!checkDateInput(dateInput)) {
+                    event.preventDefault(); //阻止計算操作
+                }
+            });
+        });
+
+        const link = document.querySelector('a.btn.btn-outline-primary');
+        if (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const selectedItem = document.getElementById('Item').value;
+                const userRole = document.getElementById('userRole').value;
+
+                let athleteID;
+                if (userRole === "Athlete") {
+                    athleteID = document.querySelector('input[name="AthleteID"]').value;
+                } else if (userRole === "Coach") {
+                    athleteID = document.getElementById('AthletesID').value;
+                }
+
+                //重定向到 SessionRecord，帶上選定的項目和運動員ID
+                if (selectedItem !== "請選擇訓練項目" && athleteID) {
+                    window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
+                }
+            });
         }
 
-        //更新 selectedSportItem 內容
-        document.getElementById('selectedSportItem').textContent = this.value !== "請選擇訓練項目" ? this.value : "";
+        const userRole = '@Session["UserRole"]';
+        const athleteDiv = document.getElementById("identity_Athletes");
+        if (userRole === "Athlete") {
+            athleteDiv.style.display = "none";
+        }
+
+        const selectElement = document.getElementById('Item');
+        selectElement.addEventListener('change', function () {
+            if (this.value === "檢測系統") {
+                switchToDetectionSystem();
+            } else {
+                document.getElementById('Detection_Sys').style.display = "none";
+                document.getElementById('trainingMonitoring').style.display = "block";
+                toggleButtonVisibility();
+
+                const detectionItem = document.getElementById('DeteItem');
+                if (detectionItem) {
+                    detectionItem.style.display = "none";
+                }
+            }
+
+            document.getElementById('selectedSportItem').textContent = this.value !== "請選擇訓練項目" ? this.value : "";
+        });
     });
-});
 
-    /*心理特質與食慾圖量表*/
+    // 心理特質與食慾圖量表
     function updateStatusActions(selectElement) {
-    const selectedStatus = selectElement.value;
-    const StatusDropdown = selectElement.closest('tr').querySelector('[name="psychologicalStatus"]');
+        const selectedStatus = selectElement.value;
+        const StatusDropdown = selectElement.closest('tr').querySelector('[name="psychologicalStatus"]');
 
-    $.ajax({
-        url: '@Url.Action("GetFellStatuS", "PhyFit")',
-        type: 'GET',
-        data: { StatusItem: selectedStatus },
-        success: function (data) {
+        $.ajax({
+            url: '@Url.Action("GetFellStatuS", "PhyFit")',
+            type: 'GET',
+            data: { StatusItem: selectedStatus }
+        }).done(function (data) {
             StatusDropdown.innerHTML = ''; //清空原選單
 
-            //添加默認選項
             const defaultStatusOption = document.createElement("option");
             defaultStatusOption.text = "請選擇感受";
             StatusDropdown.add(defaultStatusOption);
 
-            //將返回的感受名稱加入選單
             data.forEach(function (item) {
                 const option = document.createElement("option");
                 option.value = item;
                 option.text = item;
                 StatusDropdown.add(option);
             });
-        },
-        error: function () {
+        }).fail(function () {
             alert('請稍後再試。');
-        }
-    });
-}
+        });
+    }
 </script>
 </body>
 </html>
