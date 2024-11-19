@@ -23,5 +23,6 @@ namespace PhysicalFit.Models
         public Nullable<System.DateTime> CreatedAt { get; set; }
     
         public virtual Users Users { get; set; }
+        public virtual Athletes Athletes { get; set; }
     }
 }

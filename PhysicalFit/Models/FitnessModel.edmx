@@ -729,7 +729,7 @@
           <Property Name="AthleteID" Type="int" />
           <Property Name="IsTemporaryPassword" Type="bit" />
         </EntityType>
-        <Association Name="FK__Appetite__Psycho__5B638405">
+        <Association Name="FK__Appetite__Psycho__6CC31A31">
           <End Role="PsychologicalTraitsChart" Type="Self.PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -791,7 +791,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Competiti__Psych__5E3FF0B0">
+        <Association Name="FK__Competiti__Psych__6F9F86DC">
           <End Role="PsychologicalTraitsChart" Type="Self.PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -805,7 +805,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FatigueLe__Psych__55AAAAAF">
+        <Association Name="FK__FatigueLe__Psych__670A40DB">
           <End Role="PsychologicalTraitsChart" Type="Self.PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -816,18 +816,6 @@
             </Principal>
             <Dependent Role="FatigueLevel">
               <PropertyRef Name="PsychologicalTraitID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Psycholog__UserI__6304A5CD">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="PsychologicalTraitsResults" Type="Self.PsychologicalTraitsResults" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UID" />
-            </Principal>
-            <Dependent Role="PsychologicalTraitsResults">
-              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -867,7 +855,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SleepQual__Psych__52CE3E04">
+        <Association Name="FK__SleepQual__Psych__642DD430">
           <End Role="PsychologicalTraitsChart" Type="Self.PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -905,7 +893,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TrainingM__Psych__5887175A">
+        <Association Name="FK__TrainingM__Psych__69E6AD86">
           <End Role="PsychologicalTraitsChart" Type="Self.PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -1103,6 +1091,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PsychologicalTraitsResults_Athletes">
+          <End Role="Athletes" Type="Self.Athletes" Multiplicity="1" />
+          <End Role="PsychologicalTraitsResults" Type="Self.PsychologicalTraitsResults" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PsychologicalTraitsResults">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ShootingRecord_Athletes">
           <End Role="Athletes" Type="Self.Athletes" Multiplicity="0..1" />
           <End Role="ShootingRecord" Type="Self.ShootingRecord" Multiplicity="*" />
@@ -1233,7 +1233,7 @@
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Appetite__Psycho__5B638405" Association="Self.FK__Appetite__Psycho__5B638405">
+          <AssociationSet Name="FK__Appetite__Psycho__6CC31A31" Association="Self.FK__Appetite__Psycho__6CC31A31">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="Appetite" EntitySet="Appetite" />
           </AssociationSet>
@@ -1253,17 +1253,13 @@
             <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
             <End Role="BikeRecordDetails" EntitySet="BikeRecordDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__Competiti__Psych__5E3FF0B0" Association="Self.FK__Competiti__Psych__5E3FF0B0">
+          <AssociationSet Name="FK__Competiti__Psych__6F9F86DC" Association="Self.FK__Competiti__Psych__6F9F86DC">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="CompetitionMotivation" EntitySet="CompetitionMotivation" />
           </AssociationSet>
-          <AssociationSet Name="FK__FatigueLe__Psych__55AAAAAF" Association="Self.FK__FatigueLe__Psych__55AAAAAF">
+          <AssociationSet Name="FK__FatigueLe__Psych__670A40DB" Association="Self.FK__FatigueLe__Psych__670A40DB">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="FatigueLevel" EntitySet="FatigueLevel" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Psycholog__UserI__6304A5CD" Association="Self.FK__Psycholog__UserI__6304A5CD">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="PsychologicalTraitsResults" EntitySet="PsychologicalTraitsResults" />
           </AssociationSet>
           <AssociationSet Name="FK__RollerSka__Detec__190BB0C3" Association="Self.FK__RollerSka__Detec__190BB0C3">
             <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
@@ -1277,7 +1273,7 @@
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="SessionTrainingRecords" EntitySet="SessionTrainingRecords" />
           </AssociationSet>
-          <AssociationSet Name="FK__SleepQual__Psych__52CE3E04" Association="Self.FK__SleepQual__Psych__52CE3E04">
+          <AssociationSet Name="FK__SleepQual__Psych__642DD430" Association="Self.FK__SleepQual__Psych__642DD430">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="SleepQuality" EntitySet="SleepQuality" />
           </AssociationSet>
@@ -1289,7 +1285,7 @@
             <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
             <End Role="SwimmingRecordDetails" EntitySet="SwimmingRecordDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__TrainingM__Psych__5887175A" Association="Self.FK__TrainingM__Psych__5887175A">
+          <AssociationSet Name="FK__TrainingM__Psych__69E6AD86" Association="Self.FK__TrainingM__Psych__69E6AD86">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="TrainingMotivation" EntitySet="TrainingMotivation" />
           </AssociationSet>
@@ -1352,6 +1348,10 @@
           <AssociationSet Name="FK_GeneralTrainingRecord_Coaches" Association="Self.FK_GeneralTrainingRecord_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="GeneralTrainingRecord" EntitySet="GeneralTrainingRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PsychologicalTraitsResults_Athletes" Association="Self.FK_PsychologicalTraitsResults_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="PsychologicalTraitsResults" EntitySet="PsychologicalTraitsResults" />
           </AssociationSet>
           <AssociationSet Name="FK_ShootingRecord_Athletes" Association="Self.FK_ShootingRecord_Athletes">
             <End Role="Athletes" EntitySet="Athletes" />
@@ -1584,6 +1584,10 @@
             <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
             <End Role="TrackFieldRecordDetails" EntitySet="TrackFieldRecordDetails" />
           </AssociationSet>
+          <AssociationSet Name="FK_PsychologicalTraitsResults_Athletes" Association="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="PsychologicalTraitsResults" EntitySet="PsychologicalTraitsResults" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AbilityDetermination">
           <Key>
@@ -1741,6 +1745,7 @@
           <NavigationProperty Name="GeneralTrainingRecord" Relationship="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" FromRole="Athletes" ToRole="GeneralTrainingRecord" />
           <NavigationProperty Name="ShootingRecord" Relationship="PhFitnessModel.FK_ShootingRecord_Athletes" FromRole="Athletes" ToRole="ShootingRecord" />
           <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK_Users_Athletes" FromRole="Athletes" ToRole="Users" />
+          <NavigationProperty Name="PsychologicalTraitsResults" Relationship="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes" FromRole="Athletes" ToRole="PsychologicalTraitsResults" />
         </EntityType>
         <EntityType Name="AthleteShootingRecord">
           <Key>
@@ -2624,6 +2629,7 @@
           <Property Name="Score" Type="Int32" Nullable="false" />
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK__Psycholog__UserI__6304A5CD" FromRole="PsychologicalTraitsResults" ToRole="Users" />
+          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes" FromRole="PsychologicalTraitsResults" ToRole="Athletes" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -2824,6 +2830,18 @@
             </Principal>
             <Dependent Role="TrackFieldRecordDetails">
               <PropertyRef Name="DetectionTrainingRecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PsychologicalTraitsResults_Athletes">
+          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="1" />
+          <End Type="PhFitnessModel.PsychologicalTraitsResults" Role="PsychologicalTraitsResults" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PsychologicalTraitsResults">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

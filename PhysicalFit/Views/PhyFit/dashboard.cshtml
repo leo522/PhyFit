@@ -7,23 +7,24 @@
 <head>
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
     <link href="~/css/dashboardStyle.css" rel="stylesheet" />
-    <script src="~/Scripts/SessionMonitoring.js"></script>
-    <script src="~/Scripts/RPE_Modal.js"></script> @*自覺量表彈跳視窗*@
-    <script src="~/Scripts/TLCaculate.js"></script> @*運動訓練量計算*@
-    <script src="~/Scripts/DistanceSys.js"></script> @*檢測系統*@
-    <script src="~/Scripts/SaveGeneralRecord.js"></script> @*一般訓練記錄存檔*@
-    <script src="~/Scripts/SaveArcheryRecord.js"></script> @*射箭訓練記錄存檔*@
-    <script src="~/Scripts/SaveShootingRecord.js"></script> @*射擊訓練記錄存檔*@
-    <script src="~/Scripts/SaveDetecTrackRecord.js"></script> @*田徑場檢測記錄存檔*@
-    <script src="~/Scripts/SaveDetecTreadmillRecord.js"></script> @*跑步機檢測記錄存檔*@
-    <script src="~/Scripts/SaveDetecSwimmingRecord.js"></script> @*游泳檢測記錄存檔*@
-    <script src="~/Scripts/SaveDetecBikeRecord.js"></script> @*自由車檢測記錄存檔*@
-    <script src="~/Scripts/SaveDetecRollerSkatingRecord.js"></script> @*滑輪溜冰檢測記錄存檔*@
-    <script src="~/Scripts/LinearEquation.js"></script> @*產生斜率圖表*@
-    <script src="~/Scripts/datepickr.js"></script> @*初始化日期選擇器*@
-    <script src="~/Scripts/psychologicalTraits.js"></script> @*心理特質及食慾圖量表*@
+    <script src="~/js/SessionMonitoring.js"></script>
+    <script src="~/js/RPE_Modal.js"></script> @*自覺量表彈跳視窗*@
+    <script src="~/js/TLCaculate.js"></script> @*運動訓練量計算*@
+    <script src="~/js/DistanceSys.js"></script> @*檢測系統*@
+    <script src="~/js/SaveGeneralRecord.js"></script> @*一般訓練記錄存檔*@
+    <script src="~/js/SaveArcheryRecord.js"></script> @*射箭訓練記錄存檔*@
+    <script src="~/js/SaveShootingRecord.js"></script> @*射擊訓練記錄存檔*@
+    <script src="~/js/SaveDetecTrackRecord.js"></script> @*田徑場檢測記錄存檔*@
+    <script src="~/js/SaveDetecTreadmillRecord.js"></script> @*跑步機檢測記錄存檔*@
+    <script src="~/js/SaveDetecSwimmingRecord.js"></script> @*游泳檢測記錄存檔*@
+    <script src="~/js/SaveDetecBikeRecord.js"></script> @*自由車檢測記錄存檔*@
+    <script src="~/js/SaveDetecRollerSkatingRecord.js"></script> @*滑輪溜冰檢測記錄存檔*@
+    <script src="~/js/LinearEquation.js"></script> @*產生斜率圖表*@
+    <script src="~/js/datepickr.js"></script> @*初始化日期選擇器*@
+    <script src="~/js/psychologicalTraits.js"></script> @*心理特質及食慾圖量表*@
     <script src="~/js/sessionRecordRedirect.js"></script> @*計算週期運動負荷量*@
     <script src="~/js/DetectionSysRedirect.js"></script> @*查詢檢測記錄*@
+    <script src="~/js/DectecRollerHide.js"></script> @*隱藏直排輪的前次訓練效果欄位*@
 </head>
 <body>
     <div>
@@ -390,14 +391,32 @@
 
     //查看訓練紀錄按鈕顯示與隱藏
     function toggleButtonVisibility() {
-        const selectElement = document.getElementById('Item');
-        const button = document.getElementById('recordCheck');
-        const detectionSection = document.getElementById('Detection_Sys');
+        const selectElement = document.getElementById('Item'); //下拉選單
+        const recordbutton = document.getElementById('recordCheck'); //查看訓練紀錄
+        const detectionSection = document.getElementById('Detection_Sys'); //檢測系統
+        //const saveButton = document.querySelector('#btn-TrainingMonitoring'); // 存檔按鈕
+        const psyArea = document.getElementById('PsychologicalTraitsArea'); // 心理特質區域
 
-        if (detectionSection.style.display === "block") {
-            button.style.display = "none";
+
+        // 判斷選中的值
+        if (selectElement.value === "心理特質與食慾圖量表") {
+            // 顯示心理特質區域和存檔按鈕，隱藏其他區域
+            recordbutton.style.display = "none";
+/*            saveButton.style.display = "inline-block";*/
+            psyArea.style.display = "block";
+            detectionSection.style.display = "none"; // 確保檢測系統隱藏
+        } else if (selectElement.value !== "請選擇訓練項目") {
+            // 顯示查看訓練紀錄，隱藏心理特質區域
+            recordbutton.style.display = "inline-block";
+            //saveButton.style.display = "none";
+            psyArea.style.display = "none";
+            detectionSection.style.display = "block"; // 顯示檢測系統
         } else {
-            button.style.display = (selectElement.value !== "請選擇訓練項目") ? "inline-block" : "none";
+            // 未選擇任何訓練項目
+            recordbutton.style.display = "none";
+            //saveButton.style.display = "none";
+            psyArea.style.display = "none";
+            detectionSection.style.display = "none"; // 隱藏檢測系統
         }
     }
 

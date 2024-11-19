@@ -98,6 +98,7 @@
         <AssociationConnector Association="PhFitnessModel.FK__Treadmill__Detec__10766AC2" />
         <EntityTypeShape EntityType="PhFitnessModel.TrackFieldRecordDetails" Width="1.5" PointX="13.625" PointY="28.875" />
         <AssociationConnector Association="PhFitnessModel.FK_TrackFieldRecordDetails_DetectionTrainingRecord" />
+        <AssociationConnector Association="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

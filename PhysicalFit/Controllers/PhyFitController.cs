@@ -958,13 +958,20 @@ namespace PhysicalFit.Controllers
 
                 foreach (var trait in traits)
                 {
-                   
+
                     var user = _db.Users.FirstOrDefault(u => u.UID == trait.UserID); //檢查UserID 是否存在於Users表中的 UID 欄位
 
                     if (user == null)
                     {
                         return Json(new { success = false, message = $"UserID {trait.UserID} 用戶不存在，請確認用戶資料。" });
                     }
+
+                    //// 檢查 AthleteID 是否存在於 Athletes 表中的 ID 欄位
+                    //var athlete = _db.Athletes.FirstOrDefault(a => a.ID == trait.UserID);
+                    //if (athlete == null)
+                    //{
+                    //    return Json(new { success = false, message = $"AthleteID {trait.UserID} 運動員不存在，請確認運動員資料。" });
+                    //}
 
                     var psychologicalResult = new PsychologicalTraitsResults
                     {

@@ -2,8 +2,7 @@
 
 function collectPsychologicalTraits(dateValue, userId) {
     var traitsData = [];
-    console.log(userId);
-    debugger;
+
     // 獲取所有心理特質的感受
     $('#psychologicalRows tr').each(function () {
         var traitName = $(this).find('td:first-child label').text().trim(); // 確保只抓取第一列中的label內容

@@ -141,6 +141,7 @@
                 @if (Model.TrainingRecord.TrainingItem == "一般訓練衝量監控 (session-RPE)")
                 {
                     <th>運動種類</th>
+                    <th>訓練類型</th>
                     <th>訓練動作</th>
                     <th>訓練時間</th>
                     <th>自覺費力程度</th>
@@ -175,6 +176,7 @@
                     <tr>
                         <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
                         <td>@record.TrainingItem</td>
+                        <td>@record.TrainingType</td>
                         <td>@record.ActionName</td>
                         <td>@record.TrainingTime</td>
                         <td>@record.RPEscore</td>

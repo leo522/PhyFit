@@ -288,6 +288,53 @@ namespace PhysicalFit.Controllers
                             }).ToList();
                         break;
 
+                    case "心理特質和食慾圖量表":
+                       
+                        // 迭代資料並根據 Trait 將不同的數據分到對應的 List 中
+                        foreach (var record in psychologicalData)
+                        {
+                            var dateString = record.PsychologicalDate.ToString("yyyy-MM-dd");
+
+                            if (!dates.Contains(dateString))
+                            {
+                                dates.Add(dateString);
+                            }
+
+                            switch (record.Trait)
+                            {
+                                case "睡眠品質":
+                                    sleepQualityScores.Add(record.Score);
+                                    break;
+                                case "疲憊程度":
+                                    fatigueScores.Add(record.Score);
+                                    break;
+                                case "訓練意願":
+                                    trainingWillingnessScores.Add(record.Score);
+                                    break;
+                                case "胃口":
+                                    appetiteScores.Add(record.Score);
+                                    break;
+                                case "比賽意願":
+                                    competitionWillingnessScores.Add(record.Score);
+                                    break;
+                            }
+                        }
+
+                        // 將心理特質與食慾數據添加到 ViewModel
+                        combinedViewModel.TrainingRecord.Psychological = new List<PsychologicalViewModel>
+    {
+        new PsychologicalViewModel
+        {
+            Dates = dates,
+            SleepQualityScores = sleepQualityScores,
+            FatigueScores = fatigueScores,
+            TrainingWillingnessScores = trainingWillingnessScores,
+            AppetiteScores = appetiteScores,
+            CompetitionWillingnessScores = competitionWillingnessScores
+        }
+    };
+                        break;
+
                     default:
                         TempData["ErrorMessage"] = "無效的訓練項目";
                         return RedirectToAction("dashboard", "PhyFit");

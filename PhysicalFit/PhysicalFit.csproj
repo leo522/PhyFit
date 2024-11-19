@@ -258,7 +258,6 @@
     </Compile>
     <Compile Include="Models\PsychologicalTraitsViewModel.cs" />
     <Compile Include="Models\PsychologicalTraitViewModel.cs" />
-    <Compile Include="Models\PsychologicalViewModel.cs" />
     <Compile Include="Models\RegisterCoachViewModel.cs" />
     <Compile Include="Models\ResetPwdViewModel.cs" />
     <Compile Include="Models\RollerSkatingRecordDetails.cs">
@@ -381,6 +380,7 @@
     <Content Include="img\logo.svg" />
     <Content Include="img\maintance.jpg" />
     <Content Include="js\chart.js" />
+    <Content Include="js\DectecRollerHide.js" />
     <Content Include="js\DetectionSysRedirect.js" />
     <Content Include="js\PsychologicalTraitChart.js" />
     <Content Include="js\sessionRecordRedirect.js" />
@@ -395,8 +395,8 @@
       <DependentUpon>FitnessModel.edmx</DependentUpon>
       <LastGenOutput>FitnessModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Scripts\AthleticCaculate.js" />
-    <Content Include="Scripts\BikeCalculate.js" />
+    <Content Include="js\AthleticCaculate.js" />
+    <Content Include="js\BikeCalculate.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -411,11 +411,11 @@
       <DependentUpon>FitnessModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
-    <Content Include="Scripts\DashBoardmodal.js" />
-    <Content Include="Scripts\dashDate.js" />
-    <Content Include="Scripts\datepickr.js" />
-    <Content Include="Scripts\DistanceSys.js" />
-    <Content Include="Scripts\EWMA.js" />
+    <Content Include="js\DashBoardmodal.js" />
+    <Content Include="js\dashDate.js" />
+    <Content Include="js\datepickr.js" />
+    <Content Include="js\DistanceSys.js" />
+    <Content Include="js\EWMA.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
@@ -425,26 +425,26 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\LinearEquation.js" />
+    <Content Include="js\LinearEquation.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\psychologicalTraits.js" />
+    <Content Include="js\psychologicalTraits.js" />
     <Content Include="Scripts\RegisterSet.js" />
-    <Content Include="Scripts\RollerSkatingCaculate.js" />
-    <Content Include="Scripts\RPE_Modal.js" />
-    <Content Include="Scripts\SaveArcheryRecord.js" />
-    <Content Include="Scripts\SaveDetecBikeRecord.js" />
-    <Content Include="Scripts\SaveDetecRollerSkatingRecord.js" />
-    <Content Include="Scripts\SaveDetecSwimmingRecord.js" />
-    <Content Include="Scripts\SaveDetecTrackRecord.js" />
-    <Content Include="Scripts\SaveDetecTreadmillRecord.js" />
-    <Content Include="Scripts\SaveGeneralRecord.js" />
-    <Content Include="Scripts\SaveShootingRecord.js" />
-    <Content Include="Scripts\SessionMonitoring.js" />
-    <Content Include="Scripts\SessionTraining.js" />
-    <Content Include="Scripts\SwimmingPoolCaculate.js" />
-    <Content Include="Scripts\TL.js" />
-    <Content Include="Scripts\TLCaculate.js" />
-    <Content Include="Scripts\TreadmillCaculate.js" />
+    <Content Include="js\RollerSkatingCaculate.js" />
+    <Content Include="js\RPE_Modal.js" />
+    <Content Include="js\SaveArcheryRecord.js" />
+    <Content Include="js\SaveDetecBikeRecord.js" />
+    <Content Include="js\SaveDetecRollerSkatingRecord.js" />
+    <Content Include="js\SaveDetecSwimmingRecord.js" />
+    <Content Include="js\SaveDetecTrackRecord.js" />
+    <Content Include="js\SaveDetecTreadmillRecord.js" />
+    <Content Include="js\SaveGeneralRecord.js" />
+    <Content Include="js\SaveShootingRecord.js" />
+    <Content Include="js\SessionMonitoring.js" />
+    <Content Include="js\SessionTraining.js" />
+    <Content Include="js\SwimmingPoolCaculate.js" />
+    <Content Include="js\TL.js" />
+    <Content Include="js\TLCaculate.js" />
+    <Content Include="js\TreadmillCaculate.js" />
     <Content Include="SweetAlert2\sweetalert.min.js" />
     <Content Include="SweetAlert2\sweetalert2%4011.js" />
     <Content Include="SweetAlert2\sweetalert2.all.min.js" />
