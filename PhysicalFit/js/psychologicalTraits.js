@@ -41,7 +41,7 @@ function collectPsychologicalTraits(dateValue, userId) {
 
 function sendTraitsToServer(traitsData) {
     $.ajax({
-        url: '/PhyFit/SubmitTraits', // 後端API路徑
+        url: '/PhyFit/SubmitTraits',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(traitsData),

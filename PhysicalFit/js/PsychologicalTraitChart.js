@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         createChart('competitionWillingnessChart', '比賽意願', { dates: data.dates, scores: data.competitionWillingnessScores }, 'rgba(255, 206, 86, 1)');
     }
 
-    // 假設你會從伺服器端傳遞心理數據
+    //從伺服器端傳遞心理數據
     var psychologicalDataExists = document.getElementById('psychologicalDataExists').value === "true";
 
     if (psychologicalDataExists) {

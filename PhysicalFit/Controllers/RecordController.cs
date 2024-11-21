@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using Microsoft.Ajax.Utilities;
+using System.Net;
 
 namespace PhysicalFit.Controllers
 {
@@ -40,6 +41,7 @@ namespace PhysicalFit.Controllers
                 // 初始化視圖模型
                 var combinedViewModel = new CombinedViewModel();
                 combinedViewModel.TrainingRecord = new TrainingRecordViewModel { TrainingItem = item };
+
 
                 // 查詢心理特質與食慾的數據
                 var psychologicalData = _db.PsychologicalTraitsResults
@@ -289,7 +291,7 @@ namespace PhysicalFit.Controllers
                         break;
 
                     case "心理特質和食慾圖量表":
-                       
+
                         // 迭代資料並根據 Trait 將不同的數據分到對應的 List 中
                         foreach (var record in psychologicalData)
                         {
@@ -322,17 +324,17 @@ namespace PhysicalFit.Controllers
 
                         // 將心理特質與食慾數據添加到 ViewModel
                         combinedViewModel.TrainingRecord.Psychological = new List<PsychologicalViewModel>
-    {
-        new PsychologicalViewModel
-        {
-            Dates = dates,
-            SleepQualityScores = sleepQualityScores,
-            FatigueScores = fatigueScores,
-            TrainingWillingnessScores = trainingWillingnessScores,
-            AppetiteScores = appetiteScores,
-            CompetitionWillingnessScores = competitionWillingnessScores
-        }
-    };
+                        {
+                            new PsychologicalViewModel
+                            {
+                                Dates = dates,
+                                SleepQualityScores = sleepQualityScores,
+                                FatigueScores = fatigueScores,
+                                TrainingWillingnessScores = trainingWillingnessScores,
+                                AppetiteScores = appetiteScores,
+                                CompetitionWillingnessScores = competitionWillingnessScores
+                            }
+                        };
                         break;
 
                     default:
@@ -979,6 +981,62 @@ namespace PhysicalFit.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+        #region 處理月份篩選
+        public ActionResult SessionRecordByMonth(int? AthleteID, int year, int month)
+        {
+            try
+            {
+                //篩選符合年份和月份的心理特質與食慾數據
+                var dtos = _db.PsychologicalTraitsResults.Where(dt => dt.UserID == AthleteID && dt.PsychologicalDate.Year == year && dt.PsychologicalDate.Month == month).OrderBy(dt => dt.PsychologicalDate).ToList();
+
+                // 初始化數據集合
+                var dates = dtos.Select(dt => dt.PsychologicalDate.ToString("yyyy-MM-dd")).Distinct().ToList();
+                var sleepQualityScores = new List<int>();
+                var fatigueScores = new List<int>();
+                var trainingWillingnessScores = new List<int>();
+                var appetiteScores = new List<int>();
+                var competitionWillingnessScores = new List<int>();
+
+                // 根據 Trait 將數據分配到對應的 List
+                foreach (var record in dtos)
+                {
+                    switch (record.Trait)
+                    {
+                        case "睡眠品質":
+                            sleepQualityScores.Add(record.Score);
+                            break;
+                        case "疲憊程度":
+                            fatigueScores.Add(record.Score);
+                            break;
+                        case "訓練意願":
+                            trainingWillingnessScores.Add(record.Score);
+                            break;
+                        case "胃口":
+                            appetiteScores.Add(record.Score);
+                            break;
+                        case "比賽意願":
+                            competitionWillingnessScores.Add(record.Score);
+                            break;
+                    }
+                }
+
+                return Json(new
+                {
+                    dates = dates,
+                    sleepQualityScores = sleepQualityScores,
+                    fatigueScores = fatigueScores,
+                    trainingWillingnessScores = trainingWillingnessScores,
+                    appetiteScores = appetiteScores,
+                    competitionWillingnessScores = competitionWillingnessScores
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
         #endregion

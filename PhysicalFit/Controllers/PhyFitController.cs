@@ -935,11 +935,30 @@ namespace PhysicalFit.Controllers
                 var competitionMotivation = (from co in _db.CompetitionMotivation select co.CompetitionWillingness).ToList();
                 psychologicalWithFeelings.Add("比賽意願", competitionMotivation);
 
+                //var psychologicalWithFeelings = new Dictionary<string, List<string>>();
+
+
+                //var sleepQuality = _db.SleepQuality.Select(sl => sl.Quality).ToList() ?? new List<string>();
+                //psychologicalWithFeelings.Add("睡眠品質", sleepQuality);
+
+                //var fatigueLevel = _db.FatigueLevel.Select(fa => fa.Fatigue).ToList() ?? new List<string>();
+                //psychologicalWithFeelings.Add("疲憊程度", fatigueLevel);
+
+                //var trainingMotivation = _db.TrainingMotivation.Select(tr => tr.TrainingWillingness).ToList() ?? new List<string>();
+                //psychologicalWithFeelings.Add("訓練意願", trainingMotivation);
+
+                //var appetite = _db.Appetite.Select(ap => ap.AppetiteStatus).ToList() ?? new List<string>();
+                //psychologicalWithFeelings.Add("胃口", appetite);
+
+                //var competitionMotivation = _db.CompetitionMotivation.Select(co => co.CompetitionWillingness).ToList() ?? new List<string>();
+                //psychologicalWithFeelings.Add("比賽意願", competitionMotivation);
+
                 return psychologicalWithFeelings;
             }
             catch (Exception ex)
             {
-                throw ex;
+                Console.WriteLine(ex.Message);
+                return new Dictionary<string, List<string>>();
             }
         }
 

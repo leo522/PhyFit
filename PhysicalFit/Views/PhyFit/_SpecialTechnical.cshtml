@@ -1,175 +1,185 @@
 ﻿@model string
-<link href="~/FlatPickr/flatpickr.min.css" rel="stylesheet" />
-<script src="~/FlatPickr/flatpickr.js"></script>
-<script src="~/FlatPickr/zh-tw.js"></script>
-<table id="trainingMonitoringTable" class="table table-bordered">
-    <thead>
-        <tr>
-            <th>課程名稱</th>
-            <th>日期</th>
-            <th>項目</th>
-            <th>動作名稱</th>
-            <th>訓練部位</th>
-            <th>訓練類型</th>
-            <th>其他</th>
-            <th>時間</th>
-            <th>自覺費力程度</th>
-            <th>單次運動負荷(TL)</th>
-            <th>欄位增減</th>
-        </tr>
-    </thead>
-    <tbody id="trainingMonitoringRows">
-        <tr class="training-group">
-            <td>
-                <div class="form-group" style="display: inline-block; max-width: 100%;">
-                    <select class="form-control" id="SpecialTechnicalTrainingItem" name="SpecialTechnicalTrainingItem" onchange="updateTableContent(this)" style="width: auto; min-width: 200px; display: inline-block;">
-                        <option value="">請選擇課程名稱</option>
-                        @foreach (var item in ViewBag.Description)
-                        {
-                            <option value="@item" style="width: 50px;">@item</option>
-                        }
-                    </select>
-                </div>
-            </td>
-            <td>
-                <input class="TrainingDate form-control" name="TrainingDate"/>
-            </td>
-            <td>
-                <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)" disabled>
-                    <option>請選擇項目</option>
-                    @foreach (var ST in ViewBag.SpecialTechnical)
-                    {
-                        <option value="@ST">@ST</option>
-                    }
-                </select>
-            </td>
-            <td>
-                <select class="form-control" name="SpecialTechName" disabled style="width:550px;">
-                    <option style="width:250px;">請選擇項目</option>
-                </select>
-            </td>
-            <td>
-                <select class="form-control" name="TrainingMuscle" disabled>
-                    <option>請選擇訓練部位</option>
-                    @foreach (var MS in ViewBag.MuscleStrength)
-                    {
-                        <option>@MS</option>
-                    }
-                </select>
-            </td>
-            <td>
-                <select class="form-control" name="TrainingType" style="width:150px;" disabled>
-                    <option>請選擇訓練類型</option>
-                    @foreach (var PF in ViewBag.PhysicalFitness)
-                    {
-                        <option>@PF</option>
-                    }
-                </select>
-            </td>
-            <td>
-                <input class="SpecialTechOther" name="SpecialTechOther" placeholder="請自行填選其他動作名稱" disabled />
-            </td>
-            <td>
-                <select class="form-control" name="TrainingTime" style="width:150px;">
-                    <option>請選擇訓練時間</option>
-                    @foreach (var time in ViewBag.TrainingTimes)
-                    {
-                        <option>@time</option>
-                    }
-                </select>
-            </td>
-            <td>
-                <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:200px;" readonly />
-                <input type="hidden" name="RPE" />
-                <button type="button" class="btn btn-info openRPEModal">運動自覺量表</button>
-            </td>
-            <td>
-                <input type="text" align="left" style="width:200px;" id="dailyTL" class="form-control" name="DailyTL" placeholder="每日運動負荷(TL)" readonly>
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary add-row">+</button>
-                <button type="button" class="btn btn-danger remove-row">-</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<script>
-    $(document).ready(function () {
-        // 初始化 flatpickr 日期選擇器
-        function initializeFlatpickr() {
-            flatpickr(".TrainingDate", {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i",
-                time_24hr: true,
-                "locale": "zh_tw",
-            });
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/FlatPickr/flatpickr.min.css" rel="stylesheet" />
+    <script src="~/FlatPickr/flatpickr.js"></script>
+    <script src="~/FlatPickr/zh-tw.js"></script>
+    <style>
+        /* 表格樣式 */
+        #trainingMonitoringTable {
+            width: 100%; /* 表格寬度填滿容器 */
+            border-collapse: collapse; /* 合併邊框 */
+            table-layout: auto; /* 讓欄位根據內容自適應 */
         }
 
-        // 初始加載時初始化 flatpickr
-        initializeFlatpickr();
+            #trainingMonitoringTable th {
+                background-color: #f9f9f9;
+            }
 
-        // 新增行處理
-        function addRow(selector, maxRows) {
-            var rowCount = $(selector).find('tr').length;
-            if (rowCount < maxRows) {
-                var newRow = $(selector).find('tr:last').clone(); // 克隆最後一行
-                newRow.find('input, select').each(function () {
-                    $(this).val('');
+        /* 按鈕樣式 */
+        .btn {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .add-row,
+        .remove-row {
+            width: 35px; /* 固定按鈕寬度 */
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table id="trainingMonitoringTable" class="table">
+            <thead>
+                <tr>
+                    <th>課程名稱</th>
+                    <th>日期</th>
+                    <th>項目</th>
+                    <th>動作名稱</th>
+                    <th>訓練部位</th>
+                    <th>訓練類型</th>
+                    <th>其他</th>
+                    <th>時間</th>
+                    <th>自覺費力程度</th>
+                    <th>單次運動負荷 (TL)</th>
+                    <th>欄位增減</th>
+                </tr>
+            </thead>
+            <tbody id="trainingMonitoringRows">
+                <tr class="training-group">
+                    <td>
+                        <select class="form-control">
+                            <option>請選擇課程名稱</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control TrainingDate" />
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option>請選擇項目</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option>請選擇動作名稱</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option>請選擇訓練部位</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option>請選擇訓練類型</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" placeholder="其他動作" />
+                    </td>
+                    <td>
+                        <select class="form-control" style="width: 100%; max-width: 300px;">
+                            <option>請選擇訓練時間</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control rpeInput" name="RPE_Description" style="width:100px;" readonly />
+                        <input type="hidden" name="RPE" />
+                        <button style="margin-top:10px;" type="button" class="btn btn-info openRPEModal">運動自覺量表</button>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" placeholder="每日運動負荷 (TL)" readonly />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary add-row">+</button>
+                        <button type="button" class="btn btn-danger remove-row">-</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // 初始化 flatpickr 日期選擇器
+            function initializeFlatpickr() {
+                flatpickr(".TrainingDate", {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    time_24hr: true,
+                    "locale": "zh_tw",
                 });
-                $(selector).append(newRow);
-                initializeFlatpickr(); //新增行後重新初始化 flatpickr
-            } else {
-                alert("已達到最大行數，無法新增更多。");
+            }
+
+            // 初始加載時初始化 flatpickr
+            initializeFlatpickr();
+
+            // 新增行處理
+            function addRow(selector, maxRows) {
+                var rowCount = $(selector).find('tr').length;
+                if (rowCount < maxRows) {
+                    var newRow = $(selector).find('tr:last').clone(); // 克隆最後一行
+                    newRow.find('input, select').each(function () {
+                        $(this).val('');
+                    });
+                    $(selector).append(newRow);
+                    initializeFlatpickr(); //新增行後重新初始化 flatpickr
+                } else {
+                    alert("已達到最大行數，無法新增更多。");
+                }
+            }
+
+            // 監聽新增行的按鈕
+            $(document).off('click', '.add-row').on('click', '.add-row', function () {
+                addRow('#trainingMonitoringRows', 7);
+            });
+
+            // 監聽刪除行的按鈕
+            $(document).off('click', '.remove-row').on('click', '.remove-row', function () {
+                var $row = $(this).closest('tr');
+                var rowCount = $('#trainingMonitoringRows').find('tr').length;
+                if (rowCount > 1) {
+                    $row.remove();
+                } else {
+                    alert("至少需要一個訓練項目。");
+                }
+            });
+        });
+        // 更新表格內容的函數
+        function updateTableContent(selectElement) {
+            var selectedItem = selectElement.value; // 取得選擇的課程名稱
+            var row = selectElement.closest('tr'); // 使用 closest('tr') 限定只影響當前行的欄位
+            var specialTechField = row.querySelector('select[name="SpecialTech"]'); // 項目
+            var specialTechNameField = row.querySelector('select[name="SpecialTechName"]'); // 動作名稱
+            var trainingMuscleField = row.querySelector('select[name="TrainingMuscle"]'); // 訓練部位
+            var trainingTypeField = row.querySelector('select[name="TrainingType"]'); // 訓練類型
+            var otherField = row.querySelector('input[name="SpecialTechOther"]'); // 其他
+
+            // 先禁用所有欄位
+            [specialTechField, specialTechNameField, otherField, trainingMuscleField, trainingTypeField].forEach(function (field) {
+                if (field) field.disabled = true;
+            });
+
+            // 根據選項來控制欄位啟用與否
+            switch (selectedItem) {
+                case "專項技術類":
+                    specialTechField.disabled = false;
+                    specialTechNameField.disabled = false;
+                    otherField.disabled = false;
+                    break;
+                case "肌力類":
+                    trainingMuscleField.disabled = false;
+                    break;
+                case "體能類":
+                    trainingTypeField.disabled = false;
+                    break;
+                default:
+                    break;
             }
         }
-
-        // 監聽新增行的按鈕
-        $(document).off('click', '.add-row').on('click', '.add-row', function () {
-            addRow('#trainingMonitoringRows', 7);
-        });
-
-        // 監聽刪除行的按鈕
-        $(document).off('click', '.remove-row').on('click', '.remove-row', function () {
-            var $row = $(this).closest('tr');
-            var rowCount = $('#trainingMonitoringRows').find('tr').length;
-            if (rowCount > 1) {
-                $row.remove();
-            } else {
-                alert("至少需要一個訓練項目。");
-            }
-        });
-    });
-    // 更新表格內容的函數
-    function updateTableContent(selectElement) {
-        var selectedItem = selectElement.value; // 取得選擇的課程名稱
-        var row = selectElement.closest('tr'); // 使用 closest('tr') 限定只影響當前行的欄位
-        var specialTechField = row.querySelector('select[name="SpecialTech"]'); // 項目
-        var specialTechNameField = row.querySelector('select[name="SpecialTechName"]'); // 動作名稱
-        var trainingMuscleField = row.querySelector('select[name="TrainingMuscle"]'); // 訓練部位
-        var trainingTypeField = row.querySelector('select[name="TrainingType"]'); // 訓練類型
-        var otherField = row.querySelector('input[name="SpecialTechOther"]'); // 其他
-
-        // 先禁用所有欄位
-        [specialTechField, specialTechNameField, otherField, trainingMuscleField, trainingTypeField].forEach(function (field) {
-            if (field) field.disabled = true;
-        });
-
-        // 根據選項來控制欄位啟用與否
-        switch (selectedItem) {
-            case "專項技術類":
-                specialTechField.disabled = false;
-                specialTechNameField.disabled = false;
-                otherField.disabled = false;
-                break;
-            case "肌力類":
-                trainingMuscleField.disabled = false;
-                break;
-            case "體能類":
-                trainingTypeField.disabled = false;
-                break;
-            default:
-                break;
-        }
-    }
-</script>
+    </script>
+</body>
+</html>
