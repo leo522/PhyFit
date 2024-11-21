@@ -268,7 +268,7 @@
 
         //日期選擇變化
    document.getElementById("TrainingDate").addEventListener("change", function () {
-       /*var selectedDate = this.value;*/
+       //var selectedDate = this.value;
         var selectedDate = new Date(this.value);
         var month = selectedDate.getMonth() + 1; // JavaScript 的月份從 0 開始
         var year = selectedDate.getFullYear();
@@ -314,14 +314,18 @@
            });
        }
 
-    if (selectedDate && trainingType !== "請選擇訓練項目") {
+       if (selectedDate && trainingType !== "請選擇訓練項目") {
+
+           // 將 selectedDate 轉換為 YYYY-MM-DD 格式的字符串
+           var formattedDate = selectedDate.toISOString().split('T')[0]; // 取得 YYYY-MM-DD
+
         // 第一步：呼叫 SessionRecord 以載入指定日期的訓練紀錄
         $.ajax({
             url: '/Record/SessionRecord',
             type: 'GET',
             data: {
                 item: trainingType,
-                date: selectedDate,
+                date: formattedDate,
                 AthleteID: athleteId
                 /*isAthlete: true */// 若需要傳 AthleteID 可以加入
             },
@@ -340,39 +344,39 @@
         $('#trainingRecordsTable').html($(response).find('#trainingRecordsTable').html()).show();
     }
                 // 第二步：呼叫 CalculateTrainingLoad 進行數據計算
-                //$.ajax({
-                //    url: '/Record/CalculateTrainingLoad',
-                //    type: 'GET',
-                //    data: {
-                //        date: selectedDate,
-                //        trainingType: trainingType,
-                //        AthleteID: athleteId
-                //        //isAthlete: true
-                //    },
-                //    success: function (data) {
-                //        if (data.error) {
-                //            Swal.fire({
-                //                icon: 'error',
-                //                title: '計算出現錯誤',
-                //                text: data.error,
-                //            });
-                //        } else {
-                //            // 更新 UI 顯示計算結果
-                //            $('#WeeklyResult').val(data.WeeklyTrainingLoadSum);
-                //            $('#TrainingHomogeneity').val(data.TrainingMonotony);
-                //            $('#TensionValue').val(data.TrainingStrain);
-                //            $('#WeeklyTrainingChanges').val(data.WeekToWeekChange);
-                //            $('#ShortLongRatio').val(data.ACWR);
-                //        }
-                //    },
-                //    error: function () {
-                //        Swal.fire({
-                //            icon: 'error',
-                //            title: '計算失敗',
-                //            text: '請確認後再試。',
-                //        });
-                //    }
-                //});
+                $.ajax({
+                    url: '/Record/CalculateTrainingLoad',
+                    type: 'GET',
+                    data: {
+                        date: formattedDate,
+                        trainingType: trainingType,
+                        AthleteID: athleteId,
+                        isAthlete: true
+                    },
+                    success: function (data) {
+                        if (data.error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '計算出現錯誤',
+                                text: data.error,
+                            });
+                        } else {
+                            // 更新 UI 顯示計算結果
+                            $('#WeeklyResult').val(data.WeeklyTrainingLoadSum);
+                            $('#TrainingHomogeneity').val(data.TrainingMonotony);
+                            $('#TensionValue').val(data.TrainingStrain);
+                            $('#WeeklyTrainingChanges').val(data.WeekToWeekChange);
+                            $('#ShortLongRatio').val(data.ACWR);
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '計算失敗',
+                            text: '請確認後再試。',
+                        });
+                    }
+                });
             },
             error: function () {
                 Swal.fire({
@@ -393,12 +397,11 @@
     });
 
         // 隱藏所有折線圖
-    function hideCharts() {
-        document.querySelectorAll("canvas").forEach(function (chart) {
+        function hideCharts() {
+            document.querySelectorAll("canvas").forEach(function (chart) {
             chart.parentElement.style.display = "none"; // 隱藏包含 canvas 的 div
-        });
-    }
-
+            });
+        }
 
         // 顯示所有折線圖
         function showCharts() {
