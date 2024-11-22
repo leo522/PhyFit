@@ -399,28 +399,30 @@
 
 
         // 判斷選中的值
-        if (selectElement.value === "心理特質與食慾圖量表") {
-            // 顯示心理特質區域和存檔按鈕，隱藏其他區域
+        if (selectElement.value === "檢測系統") {
+            // 如果選擇 "檢測系統"，隱藏查看訓練紀錄按鈕
             recordbutton.style.display = "none";
-/*            saveButton.style.display = "inline-block";*/
-            psyArea.style.display = "block";
-            detectionSection.style.display = "none"; // 確保檢測系統隱藏
+            psyArea.style.display = "none"; // 隱藏心理特質區域
+            detectionSection.style.display = "block"; // 顯示檢測系統區域
+        } else if (selectElement.value === "心理特質與食慾圖量表") {
+            // 如果選擇心理特質與食慾圖量表
+            recordbutton.style.display = "none"; // 隱藏查看訓練紀錄按鈕
+            psyArea.style.display = "block"; // 顯示心理特質區域
+            detectionSection.style.display = "none"; // 隱藏檢測系統區域
         } else if (selectElement.value !== "請選擇訓練項目") {
-            // 顯示查看訓練紀錄，隱藏心理特質區域
-            recordbutton.style.display = "inline-block";
-            //saveButton.style.display = "none";
-            psyArea.style.display = "none";
-            detectionSection.style.display = "block"; // 顯示檢測系統
+            // 若選擇其他項目
+            recordbutton.style.display = "inline-block"; // 顯示查看訓練紀錄按鈕
+            psyArea.style.display = "none"; // 隱藏心理特質區域
+            detectionSection.style.display = "none"; // 隱藏檢測系統區域
         } else {
-            // 未選擇任何訓練項目
-            recordbutton.style.display = "none";
-            //saveButton.style.display = "none";
-            psyArea.style.display = "none";
-            detectionSection.style.display = "none"; // 隱藏檢測系統
+            // 未選擇任何項目
+            recordbutton.style.display = "none"; // 隱藏查看訓練紀錄按鈕
+            psyArea.style.display = "none"; // 隱藏心理特質區域
+            detectionSection.style.display = "none"; // 隱藏檢測系統區域
         }
     }
 
-    // 在 DOM 完全加載後初始化
+    //在 DOM 完全加載後初始化
     document.addEventListener('DOMContentLoaded', function () {
         toggleButtonVisibility(); //初始設置按鈕顯示狀態
 
@@ -489,7 +491,7 @@
         });
     });
 
-    // 心理特質與食慾圖量表
+    //心理特質與食慾圖量表
     function updateStatusActions(selectElement) {
         const selectedStatus = selectElement.value;
         const StatusDropdown = selectElement.closest('tr').querySelector('[name="psychologicalStatus"]');
