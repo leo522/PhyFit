@@ -16,6 +16,7 @@ namespace PhysicalFit.Controllers
         private PhFitnessEntities _db = new PhFitnessEntities(); //資料庫
 
         #region 查詢訓練紀錄
+        [HttpPost]
         public ActionResult SessionRecord(string item, int? AthleteID, DateTime? date)
         {
             try
@@ -41,7 +42,6 @@ namespace PhysicalFit.Controllers
                 // 初始化視圖模型
                 var combinedViewModel = new CombinedViewModel();
                 combinedViewModel.TrainingRecord = new TrainingRecordViewModel { TrainingItem = item };
-
 
                 // 查詢心理特質與食慾的數據
                 var psychologicalData = _db.PsychologicalTraitsResults

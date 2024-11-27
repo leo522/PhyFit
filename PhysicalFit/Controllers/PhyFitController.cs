@@ -10,6 +10,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.IO;
 
 namespace PhysicalFit.Controllers
 {
@@ -966,6 +967,58 @@ namespace PhysicalFit.Controllers
                 return Json(new { success = false, message = "儲存過程中發生錯誤", error = ex.Message });
             }
         }
+        #endregion
+
+        #region 功能測試
+        private static string EncryptString(string plainText, string key)
+        {
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.GenerateIV();
+
+                using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        ms.Write(aes.IV, 0, aes.IV.Length);
+                        using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                        {
+                            using (var sw = new StreamWriter(cs))
+                            {
+                                sw.Write(plainText);
+                            }
+                        }
+                        return Convert.ToBase64String(ms.ToArray());
+                    }
+                }
+            }
+        }
+
+        private static string DecryptString(string cipherText, string key)
+        {
+            var fullCipher = Convert.FromBase64String(cipherText);
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                byte[] iv = new byte[aes.BlockSize / 8];
+                Array.Copy(fullCipher, iv, iv.Length);
+                using (var decryptor = aes.CreateDecryptor(aes.Key, iv))
+                {
+                    using (var ms = new MemoryStream(fullCipher, iv.Length, fullCipher.Length - iv.Length))
+                    {
+                        using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                        {
+                            using (var sr = new StreamReader(cs))
+                            {
+                                return sr.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 }

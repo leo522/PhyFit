@@ -8,7 +8,6 @@ using System.Web;
 
 namespace PhysicalFit
 {
-
     #region 身份證字號AES對稱加密
     public static class EncryptionHelper
     {
