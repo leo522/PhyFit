@@ -50,39 +50,61 @@
             <tbody id="trainingMonitoringRows">
                 <tr class="training-group">
                     <td>
-                        <select class="form-control">
-                            <option>請選擇課程名稱</option>
-                        </select>
+                        <div class="form-group" style="display: inline-block; max-width: 100%;">
+                            <select class="form-control" id="SpecialTechnicalTrainingItem" name="SpecialTechnicalTrainingItem" onchange="updateTableContent(this)" style="width: auto; min-width: 200px; display: inline-block;">
+                                <option value="">請選擇課程名稱</option>
+                                @foreach (var item in ViewBag.Description)
+                                {
+                                    <option value="@item" style="width: 50px;">@item</option>
+                                }
+                            </select>
+                        </div>
                     </td>
                     <td>
                         <input type="text" class="form-control TrainingDate" />
                     </td>
                     <td>
-                        <select class="form-control">
+                        <select class="form-control" name="SpecialTech" onchange="updateTechnicalActions(this)" disabled>
                             <option>請選擇項目</option>
+                            @foreach (var ST in ViewBag.SpecialTechnical)
+                            {
+                                <option value="@ST">@ST</option>
+                            }
                         </select>
                     </td>
                     <td>
-                        <select class="form-control">
+                        <select class="form-control" name="SpecialTechName" disabled>
                             <option>請選擇動作名稱</option>
                         </select>
                     </td>
                     <td>
-                        <select class="form-control">
+                        <select class="form-control" name="TrainingMuscle" disabled>
                             <option>請選擇訓練部位</option>
+                            @foreach (var MS in ViewBag.MuscleStrength)
+                            {
+                                <option>@MS</option>
+                            }
                         </select>
                     </td>
                     <td>
-                        <select class="form-control">
+                        <select class="form-control" name="TrainingType" disabled>
                             <option>請選擇訓練類型</option>
+                            @foreach (var PF in ViewBag.PhysicalFitness)
+                            {
+                                <option>@PF</option>
+                            }
                         </select>
                     </td>
                     <td>
-                        <input type="text" class="form-control" placeholder="其他動作" />
+                        <input type="text" class="form-control" name="SpecialTechOther" placeholder="其他動作" />
                     </td>
                     <td>
-                        <select class="form-control" style="width: 100%; max-width: 300px;">
+                        <select class="form-control" name="TrainingTime" style="width: 100%; max-width: 300px;">
                             <option>請選擇訓練時間</option>
+                            @foreach (var time in ViewBag.TrainingTimes)
+                            {
+                                <option>@time</option>
+                            }
                         </select>
                     </td>
                     <td>
@@ -102,7 +124,7 @@
         </table>
     </div>
 
-    <script>
+<script>
         $(document).ready(function () {
             // 初始化 flatpickr 日期選擇器
             function initializeFlatpickr() {

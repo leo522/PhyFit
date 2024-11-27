@@ -15,6 +15,5 @@ namespace PhysicalFit.Controllers
         {
             return PartialView("_TreadmillPrescription");
         }
-
     }
 }

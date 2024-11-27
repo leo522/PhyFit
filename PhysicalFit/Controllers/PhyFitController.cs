@@ -17,123 +17,94 @@ namespace PhysicalFit.Controllers
     {
         private PhFitnessEntities _db = new PhFitnessEntities(); //資料庫
 
-        #region 首頁-測試
-        //public ActionResult Home()
-        //{
-        //    Session["ReturnUrl"] = Request.Url.ToString();
-
-        //    ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
-        //    ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
-        //    ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
-        //    ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
-        //    ViewBag.RPEScore = GetRPE();//RPE量表
-        //    ViewBag.GunItem = GetGunsItems(); //射擊用具項目
-        //    ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-        //    //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
-        //    ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
-
-        //    var records = _db.SessionRPETrainingRecords.ToList();
-
-        //    var model = records.Select(r => new SessionRPETrainingRecordsModel
-        //    {
-        //        TrainingItem = r.TrainingItem, //訓練名稱
-        //        RPEscore = r.RPEscore.GetValueOrDefault(), //RPE分數
-        //        //TrainingTime = r.TrainingTime, //訓練時間
-        //        TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
-        //        DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
-        //        WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
-        //        TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
-        //        TrainingTension = r.TrainingTension ?? 0, //張力值
-        //        ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
-        //    }).ToList();
-
-        //    ViewBag.SessionTrainingRecords = model;
-
-        //    return View();
-        //}
-        #endregion
-
         #region 訓練監控主視圖
         public ActionResult dashboard()
         {
-            if (!User.Identity.IsAuthenticated || Session["UserID"] == null)
+            try
             {
-                return RedirectToAction("Login", "Account"); // 如果未登入，重定向到登入頁
-            }
-
-            if (User.Identity.IsAuthenticated)
-            {
-                // 檢查用戶角色
-                var userRole = Session["UserRole"]?.ToString();
-                ViewBag.UserRole = userRole; // 儲存用戶角色以便在視圖中使用
-
-                string userName = User.Identity.Name; // 獲取當前登入用戶的名稱或其他唯一識別信息
-                var user = _db.Users.FirstOrDefault(u => u.Name == userName);
-
-                if (user != null)
+                if (!User.Identity.IsAuthenticated || Session["UserID"] == null)
                 {
-                    // 根據用戶角色查詢運動員或教練資料
-                    if (userRole == "Athlete" && user.AthleteID.HasValue)
+                    return RedirectToAction("Login", "Account"); // 如果未登入，重定向到登入頁
+                }
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    // 檢查用戶角色
+                    var userRole = Session["UserRole"]?.ToString();
+                    ViewBag.UserRole = userRole; // 儲存用戶角色以便在視圖中使用
+
+                    string userName = User.Identity.Name; // 獲取當前登入用戶的名稱或其他唯一識別信息
+                    var user = _db.Users.FirstOrDefault(u => u.Name == userName);
+
+                    if (user != null)
                     {
-                        var athlete = _db.Athletes.FirstOrDefault(a => a.ID == user.AthleteID.Value);
-                        if (athlete != null)
+                        // 根據用戶角色查詢運動員或教練資料
+                        if (userRole == "Athlete" && user.AthleteID.HasValue)
                         {
-                            ViewBag.AthleteName = athlete.AthleteName;
-                            ViewBag.AthleteID = athlete.ID.ToString();
-                            var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID);
+                            var athlete = _db.Athletes.FirstOrDefault(a => a.ID == user.AthleteID.Value);
+                            if (athlete != null)
+                            {
+                                ViewBag.AthleteName = athlete.AthleteName;
+                                ViewBag.AthleteID = athlete.ID.ToString();
+                                var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID);
+                                ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
+                                ViewBag.CoachID = coach?.ID.ToString() ?? string.Empty;
+                            }
+                        }
+                        else if (userRole == "Coach" && user.CoachID.HasValue)
+                        {
+                            var coach = _db.Coaches.FirstOrDefault(c => c.ID == user.CoachID.Value);
                             ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
                             ViewBag.CoachID = coach?.ID.ToString() ?? string.Empty;
+                            ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == user.CoachID.Value).ToList();
                         }
+
+                        ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
+                        ViewBag.Description = GetTrainingItem(); //訓練衝量監控
+                        ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
+                        ViewBag.TrainingTimes = GetTrainingTimes(); //訓練時間
+                        ViewBag.RPEScore = GetRPE(); //RPE量表
+                        ViewBag.GunItem = GetGunsItems(); //射擊用具項目
+                        ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
+                        ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
+                        ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
+                        ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
+                        ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
+                        ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
+                        ViewBag.Psychological = PsychologicalTraits(); //心理特質與食慾圖-項目
+                        ViewBag.PsychologicalFeelings = GetPsyFeelings();
+
+                        var records = _db.SessionRPETrainingRecords.ToList();
+
+                        var model = records.Select(r => new SessionRPETrainingRecordsModel
+                        {
+                            TrainingItem = r.TrainingItem, //訓練名稱
+                            RPEscore = r.RPEscore.GetValueOrDefault(), //RPE分數
+                            TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
+                            DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
+                            WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
+                            TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
+                            TrainingTension = r.TrainingTension ?? 0, //張力值
+                            ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
+                        }).ToList();
+
+                        ViewBag.SessionTrainingRecords = model;
+
+                        return View();
                     }
-                    else if (userRole == "Coach" && user.CoachID.HasValue)
+                    else
                     {
-                        var coach = _db.Coaches.FirstOrDefault(c => c.ID == user.CoachID.Value);
-                        ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
-                        ViewBag.CoachID = coach?.ID.ToString() ?? string.Empty;
-                        ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == user.CoachID.Value).ToList();
+                        return RedirectToAction("Login", "Account");
                     }
-
-                    ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
-                    ViewBag.Description = GetTrainingItem(); //訓練衝量監控
-                    ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
-                    ViewBag.TrainingTimes = GetTrainingTimes(); //訓練時間
-                    ViewBag.RPEScore = GetRPE(); //RPE量表
-                    ViewBag.GunItem = GetGunsItems(); //射擊用具項目
-                    ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-                    ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
-                    ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
-                    ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
-                    ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
-                    ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
-                    ViewBag.Psychological = PsychologicalTraits(); //心理特質與食慾圖-項目
-                    ViewBag.PsychologicalFeelings = GetPsyFeelings();
-
-                    var records = _db.SessionRPETrainingRecords.ToList();
-
-                    var model = records.Select(r => new SessionRPETrainingRecordsModel
-                    {
-                        TrainingItem = r.TrainingItem, //訓練名稱
-                        RPEscore = r.RPEscore.GetValueOrDefault(), //RPE分數
-                        TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
-                        DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
-                        WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
-                        TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
-                        TrainingTension = r.TrainingTension ?? 0, //張力值
-                        ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
-                    }).ToList();
-
-                    ViewBag.SessionTrainingRecords = model;
-
-                    return View();
                 }
                 else
                 {
-                    return RedirectToAction("Login","Account");
+                    return RedirectToAction("Login", "Account");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction("Login", "Account");
+                throw ex;
             }
         }
         #endregion
@@ -151,7 +122,7 @@ namespace PhysicalFit.Controllers
                 ViewBag.RPEScore = GetRPE();//RPE量表
                 ViewBag.GunItem = GetGunsItems(); //射擊用具項目
                 ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-                                                          //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
+                //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
                 ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
                 ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
                 ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
@@ -934,24 +905,6 @@ namespace PhysicalFit.Controllers
 
                 var competitionMotivation = (from co in _db.CompetitionMotivation select co.CompetitionWillingness).ToList();
                 psychologicalWithFeelings.Add("比賽意願", competitionMotivation);
-
-                //var psychologicalWithFeelings = new Dictionary<string, List<string>>();
-
-
-                //var sleepQuality = _db.SleepQuality.Select(sl => sl.Quality).ToList() ?? new List<string>();
-                //psychologicalWithFeelings.Add("睡眠品質", sleepQuality);
-
-                //var fatigueLevel = _db.FatigueLevel.Select(fa => fa.Fatigue).ToList() ?? new List<string>();
-                //psychologicalWithFeelings.Add("疲憊程度", fatigueLevel);
-
-                //var trainingMotivation = _db.TrainingMotivation.Select(tr => tr.TrainingWillingness).ToList() ?? new List<string>();
-                //psychologicalWithFeelings.Add("訓練意願", trainingMotivation);
-
-                //var appetite = _db.Appetite.Select(ap => ap.AppetiteStatus).ToList() ?? new List<string>();
-                //psychologicalWithFeelings.Add("胃口", appetite);
-
-                //var competitionMotivation = _db.CompetitionMotivation.Select(co => co.CompetitionWillingness).ToList() ?? new List<string>();
-                //psychologicalWithFeelings.Add("比賽意願", competitionMotivation);
 
                 return psychologicalWithFeelings;
             }
