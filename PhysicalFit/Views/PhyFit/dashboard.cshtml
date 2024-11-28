@@ -28,7 +28,7 @@
 </head>
 <body>
     <div>
-        <form action="/Record/SessionRecord" method="get" id="generalTrainingForm">
+        <form action="/Record/SessionRecord" method="post" id="generalTrainingForm">
             <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                 @*訓練監控項目*@
                 <div style="margin-bottom: 20px; flex: 1;">
@@ -238,7 +238,7 @@
                     <button class="btn btn-success" id="btn-shootingMonitoring" title="存檔">存檔</button>
                 </div>
             </div>
-
+            <input type="hidden" name="TrainingItem" id="TrainingItem" value="" />
             <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看訓練紀錄</a>
         </form>
     </div>

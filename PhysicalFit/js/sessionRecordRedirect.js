@@ -24,8 +24,25 @@
             } else if (!athleteID) {
                 alert("請先選擇運動員!!");
             } else {
-                // 重定向到 SessionRecord 頁面，帶上選定的訓練項目和運動員ID
-                window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
+                // 動態建立表單並提交
+                var form = document.createElement("form");
+                form.method = "POST";
+                form.action = "/Record/SessionRecord"; // 目標 URL
+
+                var itemInput = document.createElement("input");
+                itemInput.type = "hidden";
+                itemInput.name = "item";
+                itemInput.value = selectedItem;
+                form.appendChild(itemInput);
+
+                var athleteIDInput = document.createElement("input");
+                athleteIDInput.type = "hidden";
+                athleteIDInput.name = "AthleteID";
+                athleteIDInput.value = athleteID;
+                form.appendChild(athleteIDInput);
+
+                document.body.appendChild(form);
+                form.submit();
             }
         });
     }
