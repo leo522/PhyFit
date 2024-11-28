@@ -11,9 +11,11 @@
 
             // 根據 userRole 判斷運動員或教練來取得 AthleteID
             if (userRole === "Athlete") {
-                athleteID = document.querySelector('input[name="AthleteID"]').value; // 運動員
+                // 如果是運動員，使用隱藏的 AthleteID
+                athleteID = document.querySelector('input[name="AthleteID"]').value;
             } else if (userRole === "Coach") {
-                athleteID = document.getElementById("AthletesID").value; // 教練
+                // 如果是教練，使用下拉選單選擇的 AthleteID
+                athleteID = document.getElementById("AthletesID").value;
             }
 
             // 驗證選擇的訓練項目和運動員 ID 是否有效
@@ -22,26 +24,8 @@
             } else if (!athleteID) {
                 alert("請先選擇運動員!!");
             } else {
-                // 發送 AJAX 請求到控制器，獲取加密後的 URL
-                fetch('/Record/GetEncryptedUrl', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ item: selectedItem, athleteID: athleteID })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            window.location.href = data.encryptedUrl; // 重導向到加密後的 URL
-                        } else {
-                            alert(data.error || "無法生成加密的 URL");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        alert("發生錯誤，請稍後再試！");
-                    });
+                // 重定向到 SessionRecord 頁面，帶上選定的訓練項目和運動員ID
+                window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
             }
         });
     }

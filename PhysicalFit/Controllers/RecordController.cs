@@ -16,47 +16,23 @@ namespace PhysicalFit.Controllers
         private PhFitnessEntities _db = new PhFitnessEntities(); //資料庫
 
         #region 查詢訓練紀錄
-        public ActionResult SessionRecord(string data, DateTime? date)
+        public ActionResult SessionRecord(string item, int? AthleteID, DateTime? date)
         {
             try
             {
-                // 驗證加密參數是否存在
-                if (string.IsNullOrEmpty(data))
-                {
-                    TempData["ErrorMessage"] = "無效的請求參數";
-                    return RedirectToAction("dashboard", "PhyFit");
-                }
-
-                // 解密 data 並解析參數
-                string decryptedData = EncryptionHelper.Decrypt(data);
-                string[] parts = decryptedData.Split('|'); // 假設分隔符號為 '|'
-                if (parts.Length != 2)
-                {
-                    TempData["ErrorMessage"] = "解密後的參數格式無效";
-                    return RedirectToAction("dashboard", "PhyFit");
-                }
-
-                // 提取解密後的參數
-                string item = parts[0];
-                if (!int.TryParse(parts[1], out int athleteID))
-                {
-                    TempData["ErrorMessage"] = "運動員ID格式錯誤";
-                    return RedirectToAction("dashboard", "PhyFit");
-                }
-
-                ViewBag.SelectedTrainingItem = item; // 傳遞到 ViewBag
+                ViewBag.SelectedTrainingItem = item; //把item傳遞到ViewBag
 
                 var userRole = Session["UserRole"]?.ToString();
-                var loggedInAthleteID = athleteID;
+                var loggedInAthleteID = AthleteID;
 
                 // 如果是運動員，強制使用自己的 AthleteID
                 if (userRole == "Athlete")
                 {
-                    athleteID = loggedInAthleteID;
+                    AthleteID = loggedInAthleteID;
                 }
 
                 // 如果是教練，但沒有選擇運動員，顯示錯誤信息
-                if (userRole == "Coach" && athleteID == 0)
+                if (userRole == "Coach" && AthleteID == null)
                 {
                     TempData["ErrorMessage"] = "請選擇運動員";
                     return RedirectToAction("dashboard", "PhyFit");
@@ -68,11 +44,11 @@ namespace PhysicalFit.Controllers
 
                 // 查詢心理特質與食慾的數據
                 var psychologicalData = _db.PsychologicalTraitsResults
-                    .Where(x => x.UserID == athleteID)
+                    .Where(x => x.UserID == AthleteID)
                     .OrderBy(x => x.PsychologicalDate)
                     .ToList();
 
-                // 初始化 ViewModel 中的各個 List
+                // 初始化ViewModel中的各個List
                 var dates = new List<string>();
                 var sleepQualityScores = new List<int>();
                 var fatigueScores = new List<int>();
@@ -80,7 +56,7 @@ namespace PhysicalFit.Controllers
                 var appetiteScores = new List<int>();
                 var competitionWillingnessScores = new List<int>();
 
-                // 迭代資料並根據 Trait 將不同的數據分到對應的 List 中
+                //迭代資料並根據 Trait 將不同的數據分到對應的 List 中
                 foreach (var record in psychologicalData)
                 {
                     var dateString = record.PsychologicalDate.ToString("yyyy-MM-dd");
@@ -123,6 +99,7 @@ namespace PhysicalFit.Controllers
                     CompetitionWillingnessScores = competitionWillingnessScores
                 };
 
+
                 // 根據選擇的訓練項目查詢對應的數據
                 switch (item)
                 {
@@ -130,7 +107,7 @@ namespace PhysicalFit.Controllers
                         if (userRole == "Athlete")
                         {
                             var generalTrainingRecords = _db.AthleteGeneralTrainingRecord
-                                .Where(x => x.AthleteID == athleteID);
+                            .Where(x => x.AthleteID == AthleteID);
 
                             if (date.HasValue)
                             {
@@ -138,8 +115,9 @@ namespace PhysicalFit.Controllers
                                     .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
                             }
 
+                            generalTrainingRecords = generalTrainingRecords.OrderBy(x => x.TrainingDate);
+
                             combinedViewModel.TrainingRecord.GeneralTrainingRecord = generalTrainingRecords
-                                .OrderBy(x => x.TrainingDate)
                                 .Select(x => new GeneralTrainingRecordViewModel
                                 {
                                     TrainingDate = x.TrainingDate ?? DateTime.Now,
@@ -155,7 +133,7 @@ namespace PhysicalFit.Controllers
                         else
                         {
                             var generalTrainingRecords = _db.GeneralTrainingRecord
-                                .Where(x => x.AthleteID == athleteID);
+                                .Where(x => x.AthleteID == AthleteID);
 
                             if (date.HasValue)
                             {
@@ -163,8 +141,9 @@ namespace PhysicalFit.Controllers
                                     .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
                             }
 
+                            generalTrainingRecords = generalTrainingRecords.OrderBy(x => x.TrainingDate);
+
                             combinedViewModel.TrainingRecord.GeneralTrainingRecord = generalTrainingRecords
-                                .OrderBy(x => x.TrainingDate)
                                 .Select(x => new GeneralTrainingRecordViewModel
                                 {
                                     TrainingDate = x.TrainingDate ?? DateTime.Now,
@@ -180,15 +159,181 @@ namespace PhysicalFit.Controllers
                         break;
 
                     case "射箭訓練衝量":
-                        // 同樣邏輯處理（略，與其他項目一致）
+                        if (userRole == "Athlete")
+                        {
+                            var archeryRecords = _db.AthleteArcheryTrainingRecord.Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
+                            {
+                                archeryRecords = archeryRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            archeryRecords = archeryRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.ArcheryRecords = archeryRecords
+                                .Select(x => new ArcheryTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    Poundage = x.Poundage ?? 0,
+                                    ArrowCount = x.ArrowCount ?? 0,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
+                        }
+                        else
+                        {
+                            var archeryRecords = _db.ArcheryRecord.Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
+                            {
+                                archeryRecords = archeryRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            archeryRecords = archeryRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.ArcheryRecords = archeryRecords
+                                .Select(x => new ArcheryTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    Poundage = x.Poundage ?? 0,
+                                    ArrowCount = x.ArrowCount ?? 0,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
+                        }
                         break;
 
                     case "射擊訓練衝量":
-                        // 同樣邏輯處理（略，與其他項目一致）
+                        if (userRole == "Athlete")
+                        {
+                            var shootingRecords = _db.AthleteShootingRecord.Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
+                            {
+                                shootingRecords = shootingRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            shootingRecords = shootingRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.ShootingRecords = shootingRecords
+                                .Select(x => new ShootingTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    ShootingTool = x.ShootingTool,
+                                    BulletCount = x.BulletCount ?? 0,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
+                        }
+                        else
+                        {
+                            var shootingRecords = _db.ShootingRecord.Where(x => x.AthleteID == AthleteID);
+
+                            if (date.HasValue)
+                            {
+                                shootingRecords = shootingRecords
+                                    .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                            }
+
+                            shootingRecords = shootingRecords.OrderBy(x => x.TrainingDate);
+
+                            combinedViewModel.TrainingRecord.ShootingRecords = shootingRecords
+                                .Select(x => new ShootingTrainingRecordViewModel
+                                {
+                                    TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                    Coach = x.Coach,
+                                    Athlete = x.Athlete,
+                                    ShootingTool = x.ShootingTool,
+                                    BulletCount = x.BulletCount ?? 0,
+                                    RPEscore = x.RPEscore ?? 0,
+                                    EachTrainingLoad = x.EachTrainingLoad ?? 0,
+                                }).ToList();
+                        }
                         break;
 
                     case "檢測系統":
-                        // 同樣邏輯處理（略，與其他項目一致）
+                        // 加入檢測系統的處理邏輯
+                        var detectionRecords = _db.DetectionTrainingRecord
+                            .Where(x => x.AthleteID == AthleteID);
+
+                        if (date.HasValue)
+                        {
+                            detectionRecords = detectionRecords
+                                .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+                        }
+
+                        detectionRecords = detectionRecords.OrderBy(x => x.TrainingDate);
+
+                        combinedViewModel.TrainingRecord.DetectionRecords = detectionRecords
+                            .Select(x => new DetectionTrainingRecordViewModel
+                            {
+                                TrainingDate = x.TrainingDate ?? DateTime.Now,
+                                Coach = x.Coach,
+                                Athlete = x.Athlete,
+                                DetectionItem = x.DetectionItem,
+                                SportItem = x.SportItem,
+                                CriticalSpeed = x.CriticalSpeed ?? 0,
+                                MaxAnaerobicWork = x.MaxAnaerobicWork ?? 0,
+                                TrainingVolume = x.TrainingVolume ?? 0,
+                                TrainingPrescription = x.TrainingPrescription ?? 0,
+                                CoefficientOfDetermination = x.CoefficientOfDetermination ?? 0
+                            }).ToList();
+                        break;
+
+                    case "心理特質和食慾圖量表":
+
+                        // 迭代資料並根據 Trait 將不同的數據分到對應的 List 中
+                        foreach (var record in psychologicalData)
+                        {
+                            var dateString = record.PsychologicalDate.ToString("yyyy-MM-dd");
+
+                            if (!dates.Contains(dateString))
+                            {
+                                dates.Add(dateString);
+                            }
+
+                            switch (record.Trait)
+                            {
+                                case "睡眠品質":
+                                    sleepQualityScores.Add(record.Score);
+                                    break;
+                                case "疲憊程度":
+                                    fatigueScores.Add(record.Score);
+                                    break;
+                                case "訓練意願":
+                                    trainingWillingnessScores.Add(record.Score);
+                                    break;
+                                case "胃口":
+                                    appetiteScores.Add(record.Score);
+                                    break;
+                                case "比賽意願":
+                                    competitionWillingnessScores.Add(record.Score);
+                                    break;
+                            }
+                        }
+
+                        // 將心理特質與食慾數據添加到 ViewModel
+                        combinedViewModel.TrainingRecord.Psychological = new List<PsychologicalViewModel>
+                        {
+                            new PsychologicalViewModel
+                            {
+                                Dates = dates,
+                                SleepQualityScores = sleepQualityScores,
+                                FatigueScores = fatigueScores,
+                                TrainingWillingnessScores = trainingWillingnessScores,
+                                AppetiteScores = appetiteScores,
+                                CompetitionWillingnessScores = competitionWillingnessScores
+                            }
+                        };
                         break;
 
                     default:
@@ -200,37 +345,203 @@ namespace PhysicalFit.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"發生錯誤：{ex.Message}";
-                return RedirectToAction("dashboard", "PhyFit");
+                throw ex;
             }
         }
 
         #endregion
 
-        #region URL加密
-        [HttpPost]
-        public JsonResult GetEncryptedUrl(string item, int athleteID)
-        {
-            try
-            {
-                // 將參數拼接為一個字串
-                string rawData = $"{item}|{athleteID}";
+        //#region 查詢訓練紀錄
+        //public ActionResult SessionRecord(string data, DateTime? date)
+        //{
+        //    try
+        //    {
+        //        // 驗證加密參數是否存在
+        //        if (string.IsNullOrEmpty(data))
+        //        {
+        //            TempData["ErrorMessage"] = "無效的請求參數";
+        //            return RedirectToAction("dashboard", "PhyFit");
+        //        }
 
-                // 使用 EncryptionHelper 加密
-                string encryptedData = EncryptionHelper.Encrypt(rawData);
+        //        // 解密 data 並解析參數
+        //        string decryptedData = EncryptionHelper.Decrypt(data);
+        //        string[] parts = decryptedData.Split('|'); // 假設分隔符號為 '|'
+        //        if (parts.Length != 2)
+        //        {
+        //            TempData["ErrorMessage"] = "解密後的參數格式無效";
+        //            return RedirectToAction("dashboard", "PhyFit");
+        //        }
 
-                // 生成加密後的 URL
-                string encryptedUrl = Url.Action("SessionRecord", "Record", new { data = encryptedData });
+        //        // 提取解密後的參數
+        //        string item = parts[0];
+        //        if (!int.TryParse(parts[1], out int athleteID))
+        //        {
+        //            TempData["ErrorMessage"] = "運動員ID格式錯誤";
+        //            return RedirectToAction("dashboard", "PhyFit");
+        //        }
 
-                return Json(new { success = true, encryptedUrl = encryptedUrl });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, error = ex.Message });
-            }
-        }
+        //        ViewBag.SelectedTrainingItem = item; // 傳遞到 ViewBag
 
-        #endregion
+        //        var userRole = Session["UserRole"]?.ToString();
+        //        var loggedInAthleteID = athleteID;
+
+        //        // 如果是運動員，強制使用自己的 AthleteID
+        //        if (userRole == "Athlete")
+        //        {
+        //            athleteID = loggedInAthleteID;
+        //        }
+
+        //        // 如果是教練，但沒有選擇運動員，顯示錯誤信息
+        //        if (userRole == "Coach" && athleteID == 0)
+        //        {
+        //            TempData["ErrorMessage"] = "請選擇運動員";
+        //            return RedirectToAction("dashboard", "PhyFit");
+        //        }
+
+        //        // 初始化視圖模型
+        //        var combinedViewModel = new CombinedViewModel();
+        //        combinedViewModel.TrainingRecord = new TrainingRecordViewModel { TrainingItem = item };
+
+        //        // 查詢心理特質與食慾的數據
+        //        var psychologicalData = _db.PsychologicalTraitsResults
+        //            .Where(x => x.UserID == athleteID)
+        //            .OrderBy(x => x.PsychologicalDate)
+        //            .ToList();
+
+        //        // 初始化 ViewModel 中的各個 List
+        //        var dates = new List<string>();
+        //        var sleepQualityScores = new List<int>();
+        //        var fatigueScores = new List<int>();
+        //        var trainingWillingnessScores = new List<int>();
+        //        var appetiteScores = new List<int>();
+        //        var competitionWillingnessScores = new List<int>();
+
+        //        // 迭代資料並根據 Trait 將不同的數據分到對應的 List 中
+        //        foreach (var record in psychologicalData)
+        //        {
+        //            var dateString = record.PsychologicalDate.ToString("yyyy-MM-dd");
+
+        //            // 如果當前日期還沒有被添加，先添加日期
+        //            if (!dates.Contains(dateString))
+        //            {
+        //                dates.Add(dateString);
+        //            }
+
+        //            // 根據不同的心理特質與食慾圖量表來填充對應的分數 List
+        //            switch (record.Trait)
+        //            {
+        //                case "睡眠品質":
+        //                    sleepQualityScores.Add(record.Score);
+        //                    break;
+        //                case "疲憊程度":
+        //                    fatigueScores.Add(record.Score);
+        //                    break;
+        //                case "訓練意願":
+        //                    trainingWillingnessScores.Add(record.Score);
+        //                    break;
+        //                case "胃口":
+        //                    appetiteScores.Add(record.Score);
+        //                    break;
+        //                case "比賽意願":
+        //                    competitionWillingnessScores.Add(record.Score);
+        //                    break;
+        //            }
+        //        }
+
+        //        // 填充心理特質與食慾圖量表 ViewModel
+        //        combinedViewModel.PsychologicalRecord = new PsychologicalViewModel
+        //        {
+        //            Dates = dates,
+        //            SleepQualityScores = sleepQualityScores,
+        //            FatigueScores = fatigueScores,
+        //            TrainingWillingnessScores = trainingWillingnessScores,
+        //            AppetiteScores = appetiteScores,
+        //            CompetitionWillingnessScores = competitionWillingnessScores
+        //        };
+
+        //        // 根據選擇的訓練項目查詢對應的數據
+        //        switch (item)
+        //        {
+        //            case "一般訓練衝量監控 (session-RPE)":
+        //                if (userRole == "Athlete")
+        //                {
+        //                    var generalTrainingRecords = _db.AthleteGeneralTrainingRecord
+        //                        .Where(x => x.AthleteID == athleteID);
+
+        //                    if (date.HasValue)
+        //                    {
+        //                        generalTrainingRecords = generalTrainingRecords
+        //                            .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+        //                    }
+
+        //                    combinedViewModel.TrainingRecord.GeneralTrainingRecord = generalTrainingRecords
+        //                        .OrderBy(x => x.TrainingDate)
+        //                        .Select(x => new GeneralTrainingRecordViewModel
+        //                        {
+        //                            TrainingDate = x.TrainingDate ?? DateTime.Now,
+        //                            Coach = x.Coach,
+        //                            Athlete = x.Athlete,
+        //                            TrainingItem = x.TrainingItem,
+        //                            ActionName = x.ActionName,
+        //                            TrainingTime = x.TrainingTime,
+        //                            RPEscore = x.RPEscore ?? 0,
+        //                            EachTrainingLoad = x.EachTrainingLoad ?? 0,
+        //                        }).ToList();
+        //                }
+        //                else
+        //                {
+        //                    var generalTrainingRecords = _db.GeneralTrainingRecord
+        //                        .Where(x => x.AthleteID == athleteID);
+
+        //                    if (date.HasValue)
+        //                    {
+        //                        generalTrainingRecords = generalTrainingRecords
+        //                            .Where(x => DbFunctions.TruncateTime(x.TrainingDate) == DbFunctions.TruncateTime(date.Value));
+        //                    }
+
+        //                    combinedViewModel.TrainingRecord.GeneralTrainingRecord = generalTrainingRecords
+        //                        .OrderBy(x => x.TrainingDate)
+        //                        .Select(x => new GeneralTrainingRecordViewModel
+        //                        {
+        //                            TrainingDate = x.TrainingDate ?? DateTime.Now,
+        //                            Coach = x.Coach,
+        //                            Athlete = x.Athlete,
+        //                            TrainingItem = x.TrainingItem,
+        //                            ActionName = x.ActionName,
+        //                            TrainingTime = x.TrainingTime,
+        //                            RPEscore = x.RPEscore ?? 0,
+        //                            EachTrainingLoad = x.EachTrainingLoad ?? 0,
+        //                        }).ToList();
+        //                }
+        //                break;
+
+        //            case "射箭訓練衝量":
+        //                // 同樣邏輯處理（略，與其他項目一致）
+        //                break;
+
+        //            case "射擊訓練衝量":
+        //                // 同樣邏輯處理（略，與其他項目一致）
+        //                break;
+
+        //            case "檢測系統":
+        //                // 同樣邏輯處理（略，與其他項目一致）
+        //                break;
+
+        //            default:
+        //                TempData["ErrorMessage"] = "無效的訓練項目";
+        //                return RedirectToAction("dashboard", "PhyFit");
+        //        }
+
+        //        return View(combinedViewModel);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        TempData["ErrorMessage"] = $"發生錯誤：{ex.Message}";
+        //        return RedirectToAction("dashboard", "PhyFit");
+        //    }
+        //}
+        //#endregion
+
 
         #region 讀取session訓練量結果
 
