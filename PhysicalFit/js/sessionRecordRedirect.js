@@ -1,64 +1,46 @@
-﻿//document.addEventListener("DOMContentLoaded", function () {
-//    var recordCheckButton = document.getElementById("recordCheck");
-//    if (recordCheckButton) {
-//        recordCheckButton.addEventListener("click", function (event) {
-//            event.preventDefault();
-
-//            // 獲取選中的訓練項目
-//            var selectedItem = document.getElementById("Item").value;
-//            var userRole = document.getElementById("userRole").value; // 取得使用者角色
-//            var athleteID = null;
-
-//            // 根據 userRole 判斷運動員或教練來取得 AthleteID
-//            if (userRole === "Athlete") {
-//                // 如果是運動員，使用隱藏的 AthleteID
-//                athleteID = document.querySelector('input[name="AthleteID"]').value;
-//            } else if (userRole === "Coach") {
-//                // 如果是教練，使用下拉選單選擇的 AthleteID
-//                athleteID = document.getElementById("AthletesID").value;
-//            }
-
-//            // 驗證選擇的訓練項目和運動員 ID 是否有效
-//            if (selectedItem === "請選擇訓練項目") {
-//                alert("請先選擇訓練項目");
-//            } else if (!athleteID) {
-//                alert("請先選擇運動員!!");
-//            } else {
-//                // 重定向到 SessionRecord 頁面，帶上選定的訓練項目和運動員ID
-//                window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
-//            }
-//        });
-//    }
-//});
-
-document.addEventListener("DOMContentLoaded", function () {
-    var decCheckButton = document.getElementById("recordCheck");
-    if (decCheckButton) {
-        decCheckButton.addEventListener("click", function (event) {
+﻿document.addEventListener("DOMContentLoaded", function () {
+    var recordCheckButton = document.getElementById("recordCheck");
+    if (recordCheckButton) {
+        recordCheckButton.addEventListener("click", function (event) {
             event.preventDefault();
+
+            // 獲取選中的訓練項目
             var selectedItem = document.getElementById("Item").value;
-            var userRole = document.getElementById("userRole").value;
+            var userRole = document.getElementById("userRole").value; // 取得使用者角色
             var athleteID = null;
 
+            // 根據 userRole 判斷運動員或教練來取得 AthleteID
             if (userRole === "Athlete") {
-                athleteID = document.querySelector('input[name="AthleteID"]').value;
+                athleteID = document.querySelector('input[name="AthleteID"]').value; // 運動員
             } else if (userRole === "Coach") {
-                athleteID = document.getElementById("AthletesID").value;
+                athleteID = document.getElementById("AthletesID").value; // 教練
             }
 
+            // 驗證選擇的訓練項目和運動員 ID 是否有效
             if (selectedItem === "請選擇訓練項目") {
                 alert("請先選擇訓練項目");
             } else if (!athleteID) {
                 alert("請先選擇運動員!!");
             } else {
-                // 使用AJAX發送POST請求
-                $.post('/Record/SessionRecord', { item: selectedItem, AthleteID: athleteID })
-                    .done(function () {
-                        // 成功後重定向
-                        window.location.href = '/Record/SessionRecord';
+                // 發送 AJAX 請求到控制器，獲取加密後的 URL
+                fetch('/Record/GetEncryptedUrl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ item: selectedItem, athleteID: athleteID })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = data.encryptedUrl; // 重導向到加密後的 URL
+                        } else {
+                            alert(data.error || "無法生成加密的 URL");
+                        }
                     })
-                    .fail(function () {
-                        alert('請求失敗，請稍後再試。');
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("發生錯誤，請稍後再試！");
                     });
             }
         });
