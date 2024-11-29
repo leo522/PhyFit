@@ -8,6 +8,8 @@ using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using Microsoft.Ajax.Utilities;
 using System.Net;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace PhysicalFit.Controllers
 {
@@ -17,12 +19,32 @@ namespace PhysicalFit.Controllers
 
         #region 查詢訓練紀錄
 
-        public ActionResult SessionRecord(string item, int? AthleteID, DateTime? date)
+        public ActionResult SessionRecord(string item, int? AthleteID, DateTime? date, string data)
         {
             try
             {
-                ViewBag.SelectedTrainingItem = item; //把item傳遞到ViewBag
+                // 如果傳遞的是加密的 data，進行解碼並解析
+                if (!string.IsNullOrEmpty(data))
+                {
+                    try
+                    {
+                        string decodedData = Encoding.UTF8.GetString(Convert.FromBase64String(data));
+                        var parameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(decodedData);
 
+                        // 使用解碼的值覆蓋現有參數
+                        item = parameters.ContainsKey("item") ? parameters["item"] : item;
+                        AthleteID = parameters.ContainsKey("AthleteID") ? int.Parse(parameters["AthleteID"]) : AthleteID;
+                        date = parameters.ContainsKey("date") ? DateTime.Parse(parameters["date"]) : date;
+                    }
+                    catch (Exception)
+                    {
+                        TempData["ErrorMessage"] = "請確認資料格式正確";
+                        return RedirectToAction("dashboard", "PhyFit");
+                    }
+                }
+
+                ViewBag.SelectedTrainingItem = item; //把item傳遞到ViewBag
+                ViewBag.AthleteID = AthleteID;
                 var userRole = Session["UserRole"]?.ToString();
                 var loggedInAthleteID = AthleteID;
 

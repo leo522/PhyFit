@@ -94,7 +94,7 @@
         <div class="col-md-5">
             <div class="card">
                 <div class="card-header">
-                    <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;">@Html.Encode(selectedItem)</span></h3>
+                    <h3>session RPE指標計算結果: <span id="selectedItem" style="font-size: 24px; text-decoration: underline;">@Html.Encode(ViewBag.SelectedTrainingItem)</span></h3>
                 </div>
                 <div class="card-body">
                     <form>
@@ -267,52 +267,92 @@
         hideCharts(); //初始化時隱藏所有折線圖
 
         //日期選擇變化
-   document.getElementById("TrainingDate").addEventListener("change", function () {
-       //var selectedDate = this.value;
+    document.getElementById("TrainingDate").addEventListener("change", function () {
+        //var selectedDate = this.value; // 獲取選擇的日期
         var selectedDate = new Date(this.value);
         var month = selectedDate.getMonth() + 1; // JavaScript 的月份從 0 開始
         var year = selectedDate.getFullYear();
         var trainingType = '@ViewBag.SelectedTrainingItem';
-        var athleteId = getQueryParam('AthleteID'); // 從 URL 中取得 AthleteID
+        var athleteId = '@ViewBag.AthleteID'; // 從 URL 中取得 AthleteID
+        if (selectedDate) {
+            $.ajax({
+                url: '/Record/SessionRecordByMonth',
+                type: 'GET',
+                data: {
+                    AthleteID: athleteId,
+                    year: year,
+                    month: month
+                },
+                success: function (response) {
 
-       if (selectedDate) {
-           $.ajax({
-               url: '/Record/SessionRecordByMonth',
-               type: 'GET',
-               data: {
-                   AthleteID: athleteId,
-                   year: year,
-                   month: month
-               },
-               success: function (response) {
+                    showCharts(); //顯示折線圖
 
-                   showCharts(); //顯示折線圖
+                    // 更新食慾折線圖的數據
+                    /*updateAppetiteChart(response.appetiteScores, response.dates);*/
 
-                   // 更新食慾折線圖的數據
-                   /*updateAppetiteChart(response.appetiteScores, response.dates);*/
+                    // 更新所有折線圖
+                    updateChart("sleepQualityChart", response.sleepQualityScores, response.dates);
+                    updateChart("fatigueChart", response.fatigueScores, response.dates);
+                    updateChart("trainingWillingnessChart", response.trainingWillingnessScores, response.dates);
+                    updateChart("appetiteChart", response.appetiteScores, response.dates);
+                    updateChart("competitionWillingnessChart", response.competitionWillingnessScores, response.dates);
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '載入失敗',
+                        text: '無法載入心理特質數據，請稍後再試。'
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: '無效的輸入',
+                text: '請選擇有效的日期。',
+            });
+        }
+    if (selectedDate) {
+        // 透過 AJAX 請求根據日期篩選對應資料
+        $.ajax({
+            url: '/Record/SessionRecord',
+            type: 'GET',
+            data: {
+                date: selectedDate,
+                item: '@ViewBag.SelectedTrainingItem',
+                AthleteID: '@ViewBag.AthleteID',
+                //AthleteID: athleteId,
+                year: year,
+                month: month
+            },
+            success: function (response) {
+                var tableBody = $('#trainingRecordsTable tbody');
+                tableBody.html(''); // 清空現有內容
 
-                   // 更新所有折線圖
-                   updateChart("sleepQualityChart", response.sleepQualityScores, response.dates);
-                   updateChart("fatigueChart", response.fatigueScores, response.dates);
-                   updateChart("trainingWillingnessChart", response.trainingWillingnessScores, response.dates);
-                   updateChart("appetiteChart", response.appetiteScores, response.dates);
-                   updateChart("competitionWillingnessChart", response.competitionWillingnessScores, response.dates);
-               },
-               error: function () {
-                   Swal.fire({
-                       icon: 'error',
-                       title: '載入失敗',
-                       text: '無法載入心理特質數據，請稍後再試。'
-                   });
-               }
-           });
-       } else {
-           Swal.fire({
-               icon: 'warning',
-               title: '無效的輸入',
-               text: '請選擇有效的日期。',
-           });
-       }
+                // 更新表格內容
+                $(response).find('#trainingRecordsTable tbody tr').each(function () {
+                    tableBody.append($(this));
+                });
+
+                // 確保表格可見
+                document.getElementById("trainingRecordsTable").style.display = "table";
+
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: '載入失敗',
+                    text: '無法載入訓練紀錄，請稍後再試。'
+                });
+            }
+        });
+    } else {
+        Swal.fire({
+            icon: 'warning',
+            title: '無效的輸入',
+            text: '請選擇有效的日期。',
+        });
+        }
 
        if (selectedDate && trainingType !== "請選擇訓練項目") {
 
