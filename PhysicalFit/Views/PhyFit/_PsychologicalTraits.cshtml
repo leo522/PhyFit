@@ -1,5 +1,7 @@
 ﻿@model PhysicalFit.Models.PsychologicalTraitsViewModel
 <script src="~/js/psychologicalTraits.js"></script>
+<input type="hidden" id="userId" value="@ViewBag.AthleteId" /> <!-- 隱藏欄位傳遞 UserID -->
+
 <div id="PsyDate" class="form-group" style="margin-top:30px; width:200px;">
     <label for="date">日期</label>
     <input class="form-control" type="date" name="PsychologicalDate" id="date" />
@@ -48,7 +50,7 @@
             e.preventDefault(); // 防止表單默認提交
 
             var dateValue = $('#date').val(); //獲取日期值
-            var userId = '@Session["UserID"]';
+            const userId = $('#userId').val();
 
             // 檢查日期是否選擇
             if (!dateValue) {

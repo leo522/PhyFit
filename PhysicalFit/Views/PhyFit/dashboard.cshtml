@@ -29,6 +29,7 @@
 <body>
     <div>
         <form action="/Record/SessionRecord" method="post" id="generalTrainingForm">
+            <input type="hidden" id="athleteId" value="@ViewBag.AthleteID" />
             <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                 @*訓練監控項目*@
                 <div style="margin-bottom: 20px; flex: 1;">

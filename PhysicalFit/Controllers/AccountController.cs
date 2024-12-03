@@ -278,11 +278,11 @@ namespace PhysicalFit.Controllers
 
                     user.LastLoginDate = DateTime.Now; // 更新用戶的最後登入時間
                     _db.SaveChanges();
-
-                    // 保存 UID 到 Session，而不是 CoachID 或 AthleteID
+                    ViewBag.UserID = user.UID; // 輸出 UID
                     Session["UserID"] = user.UID; // 將Users表的UID保存到Session
 
                     Session["UserRole"] = user.CoachID.HasValue ? "Coach" : "Athlete"; //設定用戶角色
+                    
                     //if (user.CoachID.HasValue) // 保存 UserID 到 Session
                     //{
                     //    Session["UserID"] = user.CoachID.Value; // 如果是教練，保存 CoachID

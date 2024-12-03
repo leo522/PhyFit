@@ -1,6 +1,7 @@
 ﻿// psychologicalTraits.js
 
 function collectPsychologicalTraits(dateValue, userId) {
+    var athleteId = document.getElementById("athleteId").value; //好像沒使用到
     var traitsData = [];
 
     // 獲取所有心理特質的感受

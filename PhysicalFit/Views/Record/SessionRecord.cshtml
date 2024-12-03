@@ -99,6 +99,12 @@
                 <div class="card-body">
                     <form>
                         <div class="form-group d-flex align-items-center justify-content-between">
+                            <label title="每日運動訓練量">每日運動訓練量</label>
+                            <div class="form-group-inline d-flex align-items-center">
+                                <input type="text" class="form-control" id="DailyResult" placeholder="計算結果將顯示在這裡" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group d-flex align-items-center justify-content-between">
                             <label title="每週運動訓練量為每週(通常是7 天)所有的運動訓練量之加總">每週運動訓練量</label>
                             <div class="form-group-inline d-flex align-items-center">
                                 <input type="text" class="form-control" id="WeeklyResult" placeholder="計算結果將顯示在這裡" readonly>
@@ -234,23 +240,20 @@
         <input type="hidden" id="psychologicalAppetiteScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.AppetiteScores))' />
         <input type="hidden" id="psychologicalCompetitionWillingnessScores" value='@Html.Raw(JsonConvert.SerializeObject(Model.PsychologicalRecord.CompetitionWillingnessScores))' />
         <hr />
-        <div>
+
+        <div id="noDataMessage" style="display: none; text-align: center; color: red; font-size: 18px; margin-top: 20px;">
+            @ViewBag.NoDataMessage
+        </div>
+
+        <div id="chartsContainer" style="display: none;">
             <h4>睡眠品質</h4>
             <canvas id="sleepQualityChart" width="200" height="20"></canvas>
-        </div>
-        <div>
             <h4>疲憊程度</h4>
             <canvas id="fatigueChart" width="200" height="20"></canvas>
-        </div>
-        <div>
             <h4>訓練意願</h4>
             <canvas id="trainingWillingnessChart" width="200" height="20"></canvas>
-        </div>
-        <div>
             <h4>胃口</h4>
             <canvas id="appetiteChart" width="200" height="20"></canvas>
-        </div>
-        <div>
             <h4>比賽意願</h4>
             <canvas id="competitionWillingnessChart" width="200" height="20"></canvas>
         </div>
@@ -285,17 +288,23 @@
                 },
                 success: function (response) {
 
-                    showCharts(); //顯示折線圖
+                    if (response.dates && response.dates.length > 0) {
+                        // 有數據，顯示折線圖
+                        showCharts();
+                        document.getElementById("noDataMessage").style.display = "none";
 
-                    // 更新食慾折線圖的數據
-                    /*updateAppetiteChart(response.appetiteScores, response.dates);*/
-
-                    // 更新所有折線圖
-                    updateChart("sleepQualityChart", response.sleepQualityScores, response.dates);
-                    updateChart("fatigueChart", response.fatigueScores, response.dates);
-                    updateChart("trainingWillingnessChart", response.trainingWillingnessScores, response.dates);
-                    updateChart("appetiteChart", response.appetiteScores, response.dates);
-                    updateChart("competitionWillingnessChart", response.competitionWillingnessScores, response.dates);
+                        // 更新所有折線圖
+                        updateChart("sleepQualityChart", response.sleepQualityScores, response.dates);
+                        updateChart("fatigueChart", response.fatigueScores, response.dates);
+                        updateChart("trainingWillingnessChart", response.trainingWillingnessScores, response.dates);
+                        updateChart("appetiteChart", response.appetiteScores, response.dates);
+                        updateChart("competitionWillingnessChart", response.competitionWillingnessScores, response.dates);
+                    } else {
+                        // 無數據，顯示提示訊息
+                        hideCharts();
+                        document.getElementById("noDataMessage").style.display = "block";
+                        document.getElementById("noDataMessage").textContent = "目前無心理特質與食慾相關數據。";
+                    }
                 },
                 error: function () {
                     Swal.fire({
@@ -403,6 +412,7 @@
                             });
                         } else {
                             // 更新 UI 顯示計算結果
+                            $('#DailyResult').val(data.DailyTrainingLoadSum);
                             $('#WeeklyResult').val(data.WeeklyTrainingLoadSum);
                             $('#TrainingHomogeneity').val(data.TrainingMonotony);
                             $('#TensionValue').val(data.TrainingStrain);
@@ -438,28 +448,29 @@
     });
 
         // 隱藏所有折線圖
-        function hideCharts() {
-            document.querySelectorAll("canvas").forEach(function (chart) {
+    function hideCharts() {
+        document.querySelectorAll("canvas").forEach(function (chart) {
             chart.parentElement.style.display = "none"; // 隱藏包含 canvas 的 div
-            });
-        }
+        });
+        document.getElementById("noDataMessage").style.display = "none"; // 隱藏提示訊息
+    }
 
         // 顯示所有折線圖
-        function showCharts() {
-            document.querySelectorAll("canvas").forEach(function (chart) {
-                chart.parentElement.style.display = "block"; // 顯示包含 canvas 的 div
-            });
-        }
+    function showCharts() {
+        document.querySelectorAll("canvas").forEach(function (chart) {
+            chart.parentElement.style.display = "block"; // 顯示包含 canvas 的 div
+        });
+    }
 
         // 更新折線圖數據的函數
-        function updateChart(chartId, newData, labels) {
-            var chart = Chart.getChart(chartId); // 獲取現有的 Chart.js 實例
-            if (chart) {
-                chart.data.labels = labels;
-                chart.data.datasets[0].data = newData;
-                chart.update(); // 更新圖表
-            }
+    function updateChart(chartId, newData, labels) {
+        var chart = Chart.getChart(chartId); // 獲取現有的 Chart.js 實例
+        if (chart) {
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = newData;
+            chart.update(); // 更新圖表
         }
+    }
     </script>
 </body>
 </html>
