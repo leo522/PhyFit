@@ -151,6 +151,7 @@ namespace PhysicalFit.Controllers
                             combinedViewModel.TrainingRecord.GeneralTrainingRecord = generalTrainingRecords
                                 .Select(x => new GeneralTrainingRecordViewModel
                                 {
+                                    TrainingName = x.TrainingClassName,
                                     TrainingDate = x.TrainingDate ?? DateTime.Now,
                                     Coach = x.Coach,
                                     Athlete = x.Athlete,
@@ -177,6 +178,7 @@ namespace PhysicalFit.Controllers
                             combinedViewModel.TrainingRecord.GeneralTrainingRecord = generalTrainingRecords
                                 .Select(x => new GeneralTrainingRecordViewModel
                                 {
+                                    TrainingName = x.TrainingClassName,
                                     TrainingDate = x.TrainingDate ?? DateTime.Now,
                                     Coach = x.Coach,
                                     Athlete = x.Athlete,

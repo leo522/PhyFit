@@ -7,6 +7,7 @@ namespace PhysicalFit.Models
 {
     public class GeneralTrainingRecordViewModel
     {
+        public string TrainingName { get; set; }
         public string Coach { get; set; }
         public string Athlete { get; set; }
         public DateTime TrainingDate { get; set; }

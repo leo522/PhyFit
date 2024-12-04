@@ -199,125 +199,126 @@ namespace PhysicalFit
         #endregion
 
         #region 計算每日訓練量
-        public static int CalculateDailyTrainingLoadSum(PhFitnessEntities dbContext, DateTime date, string trainingType, bool isAthlete)
-        {
-            try
-            {
-                var records = GetTrainingRecords<dynamic>(dbContext, date.Date, date.Date.AddDays(1), isAthlete, trainingType)
-                .AsEnumerable()
-                .Select(record => new
-                {
-                    TrainingTime = record.TrainingTime ?? "0",
-                    RpeScore = record.RPEscore ?? 0,
-                    ArrowCount = record.ArrowCount ?? 0,
-                    BulletCount = record.BulletCount ?? 0
-                }).ToList();
 
-                return records.Any()
-                    ? records.Sum(record => CalculateTrainingLoad(
-                        !string.IsNullOrEmpty(record.TrainingTime) ? record.TrainingTime :
-                        (record.ArrowCount > 0 ? record.ArrowCount.ToString() : record.BulletCount.ToString()),
-                        record.RpeScore,
-                        trainingType))
-                    : 0;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
         //public static int CalculateDailyTrainingLoadSum(PhFitnessEntities dbContext, DateTime date, string trainingType, bool isAthlete)
         //{
         //    try
         //    {
-        //        if (isAthlete)
+        //        var records = GetTrainingRecords<dynamic>(dbContext, date.Date, date.Date.AddDays(1), isAthlete, trainingType)
+        //        .AsEnumerable()
+        //        .Select(record => new
         //        {
-        //            if (trainingType == "一般訓練衝量監控 (session-RPE)")
-        //            {
-        //                // 運動員的 RPE 訓練紀錄的加總
-        //                var records = dbContext.AthleteGeneralTrainingRecord
-        //                    .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
-        //                    .ToList();
-        //                return records.Any()
-        //            ? records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, trainingType))
-        //            : 0;
-        //                //return records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, trainingType));
-        //            }
+        //            TrainingTime = record.TrainingTime ?? "0",
+        //            RpeScore = record.RPEscore ?? 0,
+        //            ArrowCount = record.ArrowCount ?? 0,
+        //            BulletCount = record.BulletCount ?? 0
+        //        }).ToList();
 
-        //            else if (trainingType == "射箭訓練衝量")
-        //            {
-        //                // 運動員的射箭訓練紀錄的加總
-        //                var records = dbContext.AthleteArcheryTrainingRecord
-        //                    .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
-        //                    .ToList();
-        //                return records.Any()
-        //           ? records.Sum(record => CalculateTrainingLoad(record.ArrowCount?.ToString() ?? "0", record.RPEscore ?? 0, trainingType))
-        //           : 0;
-        //                //return records.Sum(record => CalculateTrainingLoad(record.ArrowCount.ToString(), record.RPEscore ?? 0, trainingType));
-        //            }
-        //            else if (trainingType == "射擊訓練衝量")
-        //            {
-        //                // 運動員的射擊訓練紀錄的加總
-        //                var records = dbContext.AthleteShootingRecord
-        //                    .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
-        //                    .ToList();
-        //                return records.Any()
-        //            ? records.Sum(record => CalculateTrainingLoad(record.BulletCount?.ToString() ?? "0", record.RPEscore ?? 0, trainingType))
+        //        return records.Any()
+        //            ? records.Sum(record => CalculateTrainingLoad(
+        //                !string.IsNullOrEmpty(record.TrainingTime) ? record.TrainingTime :
+        //                (record.ArrowCount > 0 ? record.ArrowCount.ToString() : record.BulletCount.ToString()),
+        //                record.RpeScore,
+        //                trainingType))
         //            : 0;
-        //                //return records.Sum(record => CalculateTrainingLoad(record.BulletCount.ToString(), record.RPEscore ?? 0, trainingType));
-        //            }
-        //            else
-        //            {
-        //                throw new ArgumentException("運動員的每日訓練量計算錯誤");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if ((trainingType == "一般訓練衝量監控 (session-RPE)"))
-        //            {
-        //                // 教練的 RPE 訓練紀錄的加總
-        //                var records = dbContext.GeneralTrainingRecord
-        //                    .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
-        //                    .ToList();
-        //                return records.Any()
-        //            ? records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, trainingType))
-        //            : 0;
-        //                //return records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, trainingType));
-        //            }
-
-        //            else if (trainingType == "射箭訓練衝量")
-        //            {
-        //                // 教練的射箭訓練紀錄的加總
-        //                var records = dbContext.ArcheryRecord
-        //                    .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
-        //                    .ToList();
-        //                return records.Any()
-        //            ? records.Sum(record => CalculateTrainingLoad(record.ArrowCount?.ToString() ?? "0", record.RPEscore ?? 0, trainingType))
-        //            : 0;
-        //                //return records.Sum(record => CalculateTrainingLoad(record.ArrowCount.ToString(), record.RPEscore ?? 0, trainingType));
-        //            }
-        //            else if (trainingType == "射擊訓練衝量")
-        //            {
-        //                // 教練的射擊訓練紀錄的加總
-        //                var records = dbContext.ShootingRecord
-        //                    .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
-        //                    .ToList();
-        //                return records.Any()
-        //            ? records.Sum(record => CalculateTrainingLoad(record.BulletCount?.ToString() ?? "0", record.RPEscore ?? 0, trainingType))
-        //            : 0;
-        //                //return records.Sum(record => CalculateTrainingLoad(record.BulletCount.ToString(), record.RPEscore ?? 0, trainingType));
-        //            }
-        //            else
-        //            {
-        //                throw new ArgumentException("教練的每日訓練量計算錯誤");
-        //            }
-        //        }
         //    }
         //    catch (Exception ex)
         //    {
         //        throw ex;
         //    }
         //}
+        public static int CalculateDailyTrainingLoadSum(PhFitnessEntities dbContext, DateTime date, string trainingType, bool isAthlete)
+        {
+            try
+            {
+                if (isAthlete)
+                {
+                    if (trainingType == "一般訓練衝量監控 (session-RPE)")
+                    {
+                        // 運動員的 RPE 訓練紀錄的加總
+                        var records = dbContext.AthleteGeneralTrainingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
+                            .ToList();
+                        return records.Any()
+                    ? records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, trainingType))
+                    : 0;
+                        //return records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, trainingType));
+                    }
+
+                    else if (trainingType == "射箭訓練衝量")
+                    {
+                        // 運動員的射箭訓練紀錄的加總
+                        var records = dbContext.AthleteArcheryTrainingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
+                            .ToList();
+                        return records.Any()
+                   ? records.Sum(record => CalculateTrainingLoad(record.ArrowCount?.ToString() ?? "0", record.RPEscore ?? 0, trainingType))
+                   : 0;
+                        //return records.Sum(record => CalculateTrainingLoad(record.ArrowCount.ToString(), record.RPEscore ?? 0, trainingType));
+                    }
+                    else if (trainingType == "射擊訓練衝量")
+                    {
+                        // 運動員的射擊訓練紀錄的加總
+                        var records = dbContext.AthleteShootingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
+                            .ToList();
+                        return records.Any()
+                    ? records.Sum(record => CalculateTrainingLoad(record.BulletCount?.ToString() ?? "0", record.RPEscore ?? 0, trainingType))
+                    : 0;
+                        //return records.Sum(record => CalculateTrainingLoad(record.BulletCount.ToString(), record.RPEscore ?? 0, trainingType));
+                    }
+                    else
+                    {
+                        throw new ArgumentException("運動員的每日訓練量計算錯誤");
+                    }
+                }
+                else
+                {
+                    if ((trainingType == "一般訓練衝量監控 (session-RPE)"))
+                    {
+                        // 教練的 RPE 訓練紀錄的加總
+                        var records = dbContext.GeneralTrainingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
+                            .ToList();
+                        return records.Any()
+                    ? records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, trainingType))
+                    : 0;
+                        //return records.Sum(record => CalculateTrainingLoad(record.TrainingTime, record.RPEscore ?? 0, trainingType));
+                    }
+
+                    else if (trainingType == "射箭訓練衝量")
+                    {
+                        // 教練的射箭訓練紀錄的加總
+                        var records = dbContext.ArcheryRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
+                            .ToList();
+                        return records.Any()
+                    ? records.Sum(record => CalculateTrainingLoad(record.ArrowCount?.ToString() ?? "0", record.RPEscore ?? 0, trainingType))
+                    : 0;
+                        //return records.Sum(record => CalculateTrainingLoad(record.ArrowCount.ToString(), record.RPEscore ?? 0, trainingType));
+                    }
+                    else if (trainingType == "射擊訓練衝量")
+                    {
+                        // 教練的射擊訓練紀錄的加總
+                        var records = dbContext.ShootingRecord
+                            .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == DbFunctions.TruncateTime(date))
+                            .ToList();
+                        return records.Any()
+                    ? records.Sum(record => CalculateTrainingLoad(record.BulletCount?.ToString() ?? "0", record.RPEscore ?? 0, trainingType))
+                    : 0;
+                        //return records.Sum(record => CalculateTrainingLoad(record.BulletCount.ToString(), record.RPEscore ?? 0, trainingType));
+                    }
+                    else
+                    {
+                        throw new ArgumentException("教練的每日訓練量計算錯誤");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         #endregion
 

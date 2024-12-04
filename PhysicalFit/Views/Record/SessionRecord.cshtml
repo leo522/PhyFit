@@ -12,9 +12,6 @@
     <meta name="viewport" content="width=device-width" />
     <script src="~/js/chart.js"></script>
     <script src="~/js/PsychologicalTraitChart.js"></script>
-    @*<script src="~/SweetAlert2/sweetalert.min.js"></script>
-        <script src="~/SweetAlert2/sweetalert2.all.min.js"></script>
-        <script src="~/SweetAlert2/sweetalert2@11.js"></script>*@
 </head>
 <body>
     <div>
@@ -140,12 +137,14 @@
         </div>
     </div><br />
 
+    @*訓練紀錄表格*@
     <table class="table" style="display: none;" id="trainingRecordsTable">
         <thead>
             <tr>
                 <th>訓練日期</th>
                 @if (Model.TrainingRecord.TrainingItem == "一般訓練衝量監控 (session-RPE)")
                 {
+                    <th>課程名稱</th>
                     <th>運動種類</th>
                     <th>訓練類型</th>
                     <th>訓練動作</th>
@@ -181,6 +180,7 @@
                 {
                     <tr>
                         <td>@record.TrainingDate.ToString("yyyy-MM-dd")</td>
+                        <td>@record.TrainingName</td>
                         <td>@record.TrainingItem</td>
                         <td>@record.TrainingType</td>
                         <td>@record.ActionName</td>
@@ -275,6 +275,7 @@
         var selectedDate = new Date(this.value);
         var month = selectedDate.getMonth() + 1; // JavaScript 的月份從 0 開始
         var year = selectedDate.getFullYear();
+        const formattedDate = selectedDate.toISOString().split("T")[0]; // 格式化日期 YYYY-MM-DD
         var trainingType = '@ViewBag.SelectedTrainingItem';
         var athleteId = '@ViewBag.AthleteID'; // 從 URL 中取得 AthleteID
         if (selectedDate) {
@@ -366,7 +367,7 @@
        if (selectedDate && trainingType !== "請選擇訓練項目") {
 
            // 將 selectedDate 轉換為 YYYY-MM-DD 格式的字符串
-           var formattedDate = selectedDate.toISOString().split('T')[0]; // 取得 YYYY-MM-DD
+           //var formattedDate = selectedDate.toISOString().split('T')[0]; // 取得 YYYY-MM-DD
 
         // 第一步：呼叫 SessionRecord 以載入指定日期的訓練紀錄
         $.ajax({
