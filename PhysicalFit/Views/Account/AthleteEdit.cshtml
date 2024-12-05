@@ -33,8 +33,11 @@
 
             <!-- 生日 -->
             <div class="form-group">
+                @*@Html.LabelFor(model => model.Birthday, "生日")
+                    <input type="date" class="form-control" value="@ViewBag.Birthday" />
+                    @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })*@
                 @Html.LabelFor(model => model.Birthday, "生日")
-                <input type="date" class="form-control" value="@ViewBag.Birthday" />
+                @Html.TextBoxFor(model => model.Birthday, new { @class = "form-control", @type = "date" })
                 @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
             </div>
 

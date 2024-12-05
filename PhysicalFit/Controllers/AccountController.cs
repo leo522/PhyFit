@@ -730,7 +730,7 @@ namespace PhysicalFit.Controllers
             }
 
             // 確保日期格式符合 yyyy-MM-dd
-            ViewBag.Birthday = dto.Birthday.ToString("yyyy-MM-dd");
+            //ViewBag.Birthday = dto.Birthday.ToString("yyyy-MM-dd");
 
             // 模糊查詢教練名單，根據運動員學校名稱的部分內容進行匹配
             var coaches = _db.Coaches
