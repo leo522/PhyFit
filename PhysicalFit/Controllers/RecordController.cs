@@ -737,7 +737,7 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 讀取session訓練量結果
-        public ActionResult LoadSessionRPETrainingRecords(string item, bool isAthlete)
+        public ActionResult LoadSessionRPETrainingRecords(string item, bool isAthlete, int? AthleteID)
         {
             try
             {
@@ -746,6 +746,7 @@ namespace PhysicalFit.Controllers
                 if (isAthlete)
                 {
                     model.GeneralTrainingRecord = _db.AthleteGeneralTrainingRecord
+                        .Where(record => record.AthleteID == AthleteID)
                         .Select(record => new GeneralTrainingRecordViewModel
                         {
                             TrainingDate = record.TrainingDate ?? DateTime.Now,
@@ -760,6 +761,7 @@ namespace PhysicalFit.Controllers
                         .ToList();
 
                     model.ArcheryRecords = _db.AthleteArcheryTrainingRecord
+                        .Where(record => record.AthleteID == AthleteID)
                         .Select(record => new ArcheryTrainingRecordViewModel
                         {
                             TrainingDate = record.TrainingDate ?? DateTime.Now,
@@ -773,6 +775,7 @@ namespace PhysicalFit.Controllers
                         .ToList();
 
                     model.ShootingRecords = _db.AthleteShootingRecord
+                        .Where(record => record.AthleteID == AthleteID)
                         .Select(record => new ShootingTrainingRecordViewModel
                         {
                             TrainingDate = record.TrainingDate ?? DateTime.Now,
@@ -787,7 +790,7 @@ namespace PhysicalFit.Controllers
                 }
                 else
                 {
-                    model.GeneralTrainingRecord = _db.GeneralTrainingRecord
+                    model.GeneralTrainingRecord = _db.GeneralTrainingRecord.Where(record => record.AthleteID == AthleteID)
                         .Select(record => new GeneralTrainingRecordViewModel
                         {
                             TrainingDate = record.TrainingDate ?? DateTime.Now,
@@ -801,7 +804,7 @@ namespace PhysicalFit.Controllers
                         })
                         .ToList();
 
-                    model.ArcheryRecords = _db.ArcheryRecord
+                    model.ArcheryRecords = _db.ArcheryRecord.Where(record => record.AthleteID == AthleteID)
                         .Select(record => new ArcheryTrainingRecordViewModel
                         {
                             TrainingDate = record.TrainingDate ?? DateTime.Now,
@@ -814,7 +817,7 @@ namespace PhysicalFit.Controllers
                         })
                         .ToList();
 
-                    model.ShootingRecords = _db.ShootingRecord
+                    model.ShootingRecords = _db.ShootingRecord.Where(record => record.AthleteID == AthleteID)
                         .Select(record => new ShootingTrainingRecordViewModel
                         {
                             TrainingDate = record.TrainingDate ?? DateTime.Now,
@@ -954,11 +957,16 @@ namespace PhysicalFit.Controllers
 
         #region 計算session RPE指標結果
         [HttpGet]
-        public JsonResult CalculateTrainingLoad(DateTime date, string trainingType, bool isAthlete)
+        public JsonResult CalculateTrainingLoad(string date, string trainingType, bool isAthlete, int? AthleteID)
         {
             try
             {
-                DateTime selectedDate = date.Date;
+                if (!DateTime.TryParse(date, out DateTime selectedDate))
+                {
+                    return Json(new { error = "無效的日期格式" }, JsonRequestBehavior.AllowGet);
+                }
+
+                selectedDate = selectedDate.Date;
 
                 int totalTrainingLoad = 0;
                 int dailyTrainingLoadSum = 0;
@@ -973,6 +981,7 @@ namespace PhysicalFit.Controllers
                     if (trainingType == "一般訓練衝量監控 (session-RPE)")
                     {
                         var sessionRPERecords = _db.AthleteGeneralTrainingRecord
+                            .Where(record => record.AthleteID == AthleteID)
                             .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
                             .Select(record => new
                             {
@@ -985,6 +994,7 @@ namespace PhysicalFit.Controllers
                     else if (trainingType == "射箭訓練衝量")
                     {
                         var archeryRecords = _db.AthleteArcheryTrainingRecord
+                            .Where(record => record.AthleteID == AthleteID)
                             .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
                             .Select(record => new
                             {
@@ -997,6 +1007,7 @@ namespace PhysicalFit.Controllers
                     else if (trainingType == "射擊訓練衝量")
                     {
                         var shootingRecords = _db.AthleteShootingRecord
+                            .Where(record => record.AthleteID == AthleteID)
                             .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
                             .Select(record => new
                             {
@@ -1016,6 +1027,7 @@ namespace PhysicalFit.Controllers
                     if (trainingType == "一般訓練衝量監控 (session-RPE)")
                     {
                         var sessionRPERecords = _db.GeneralTrainingRecord
+                            .Where(record => record.AthleteID == AthleteID)
                             .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
                             .Select(record => new
                             {
@@ -1028,6 +1040,7 @@ namespace PhysicalFit.Controllers
                     else if (trainingType == "射箭訓練衝量")
                     {
                         var archeryRecords = _db.ArcheryRecord
+                            .Where(record => record.AthleteID == AthleteID)
                             .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
                             .Select(record => new
                             {
@@ -1040,6 +1053,7 @@ namespace PhysicalFit.Controllers
                     else if (trainingType == "射擊訓練衝量")
                     {
                         var shootingRecords = _db.ShootingRecord
+                            .Where(record => record.AthleteID == AthleteID)
                             .Where(record => DbFunctions.TruncateTime(record.TrainingDate) == selectedDate)
                             .Select(record => new
                             {
@@ -1055,13 +1069,13 @@ namespace PhysicalFit.Controllers
                     }
                 }
 
-                // 計算其他數據
-                dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
-                weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete);
-                trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType, isAthlete);
-                trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType, isAthlete);
-                weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType, isAthlete);
-                acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType, isAthlete);
+                // 計算Session數據
+                dailyTrainingLoadSum = TrainingRecordHelper.CalculateDailyTrainingLoadSum(_db, date, trainingType, isAthlete, AthleteID);
+                weeklyTrainingLoadSum = TrainingRecordHelper.CalculateWeeklyTrainingLoadSum(_db, selectedDate, trainingType, isAthlete, AthleteID);
+                trainingMonotony = TrainingRecordHelper.CalculateTrainingMonotony(_db, selectedDate, trainingType, isAthlete, AthleteID);
+                trainingStrain = TrainingRecordHelper.CalculateTrainingStrain(_db, selectedDate, trainingType, isAthlete, AthleteID);
+                weekToWeekChange = TrainingRecordHelper.CalculateWeekToWeekChange(_db, selectedDate, trainingType, isAthlete, AthleteID);
+                acwr = TrainingRecordHelper.CalculateACWR(_db, selectedDate, trainingType, isAthlete, AthleteID);
 
                 return Json(new
                 {

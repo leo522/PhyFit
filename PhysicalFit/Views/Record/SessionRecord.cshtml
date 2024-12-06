@@ -146,14 +146,14 @@
                     <th>訓練動作</th>
                     <th>訓練時間</th>
                     <th>自覺費力程度</th>
-                    <th>單次運動負荷量</th>
+                    <th>單次運動負荷量(TL)</th>
                 }
                 else if (Model.TrainingRecord.TrainingItem == "射箭訓練衝量")
                 {
                     <th>磅數</th>
                     <th>箭數</th>
                     <th>自覺費力程度</th>
-                    <th>單次運動負荷</th>
+                    <th>單次運動負荷(TL)</th>
                 }
                 else if (Model.TrainingRecord.TrainingItem == "射擊訓練衝量")
                 {
@@ -267,14 +267,15 @@
 
         //日期選擇變化
     document.getElementById("TrainingDate").addEventListener("change", function () {
-        //var selectedDate = this.value; // 獲取選擇的日期
         var selectedDate = new Date(this.value);
         var month = selectedDate.getMonth() + 1; // JavaScript 的月份從 0 開始
         var year = selectedDate.getFullYear();
-        const formattedDate = selectedDate.toISOString().split("T")[0]; // 格式化日期 YYYY-MM-DD
+        //const formattedDate = selectedDate.toISOString().split("T")[0]; // 格式化日期 YYYY-MM-DD
+        const formattedDate = selectedDate.toISOString(); // 格式化日期 YYYY-MM-DD
         var trainingType = '@ViewBag.SelectedTrainingItem';
         var athleteId = '@ViewBag.AthleteID'; // 從 URL 中取得 AthleteID
-        if (selectedDate) {
+
+        if (formattedDate) {
             $.ajax({
                 url: '/Record/SessionRecordByMonth',
                 type: 'GET',
@@ -318,13 +319,13 @@
                 text: '請選擇有效的日期。',
             });
         }
-    if (selectedDate) {
+        if (formattedDate) {
         // 透過 AJAX 請求根據日期篩選對應資料
         $.ajax({
             url: '/Record/SessionRecord',
             type: 'GET',
             data: {
-                date: selectedDate,
+                date: formattedDate,
                 item: '@ViewBag.SelectedTrainingItem',
                 AthleteID: '@ViewBag.AthleteID',
                 //AthleteID: athleteId,
@@ -360,10 +361,7 @@
         });
         }
 
-       if (selectedDate && trainingType !== "請選擇訓練項目") {
-
-           // 將 selectedDate 轉換為 YYYY-MM-DD 格式的字符串
-           //var formattedDate = selectedDate.toISOString().split('T')[0]; // 取得 YYYY-MM-DD
+        if (formattedDate && trainingType !== "請選擇訓練項目") {
 
         // 第一步：呼叫 SessionRecord 以載入指定日期的訓練紀錄
         $.ajax({
@@ -408,8 +406,8 @@
                                 //text: '資料數據錯誤', //有bug待查驗
                             });
                         } else {
-                            // 更新 UI 顯示計算結果
-                            $('#DailyResult').val(data.DailyTrainingLoadSum);
+                            // 更新Session 顯示計算結果
+                            $('#DailyResult').val(data.DailyTrainingLoadSum); 
                             $('#WeeklyResult').val(data.WeeklyTrainingLoadSum);
                             $('#TrainingHomogeneity').val(data.TrainingMonotony);
                             $('#TensionValue').val(data.TrainingStrain);
