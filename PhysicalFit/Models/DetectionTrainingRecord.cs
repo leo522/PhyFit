@@ -17,8 +17,8 @@ namespace PhysicalFit.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DetectionTrainingRecord()
         {
-            this.RollerSkatingRecordDetails = new HashSet<RollerSkatingRecordDetails>();
             this.BikeRecordDetails = new HashSet<BikeRecordDetails>();
+            this.RollerSkatingRecordDetails = new HashSet<RollerSkatingRecordDetails>();
             this.SwimmingRecordDetails = new HashSet<SwimmingRecordDetails>();
             this.TreadmillRecordDetails = new HashSet<TreadmillRecordDetails>();
             this.TrackFieldRecordDetails = new HashSet<TrackFieldRecordDetails>();
@@ -42,9 +42,9 @@ namespace PhysicalFit.Models
         public Nullable<System.DateTime> TrainingDateTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RollerSkatingRecordDetails> RollerSkatingRecordDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BikeRecordDetails> BikeRecordDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RollerSkatingRecordDetails> RollerSkatingRecordDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SwimmingRecordDetails> SwimmingRecordDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

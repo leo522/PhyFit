@@ -23,9 +23,9 @@ namespace PhysicalFit.Models
             this.SessionTrainingRecords = new HashSet<SessionTrainingRecords>();
             this.AthleteShootingRecord = new HashSet<AthleteShootingRecord>();
             this.GeneralTrainingRecord = new HashSet<GeneralTrainingRecord>();
+            this.PsychologicalTraitsResults = new HashSet<PsychologicalTraitsResults>();
             this.ShootingRecord = new HashSet<ShootingRecord>();
             this.Users = new HashSet<Users>();
-            this.PsychologicalTraitsResults = new HashSet<PsychologicalTraitsResults>();
         }
     
         public int ID { get; set; }
@@ -55,10 +55,10 @@ namespace PhysicalFit.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GeneralTrainingRecord> GeneralTrainingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PsychologicalTraitsResults> PsychologicalTraitsResults { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PsychologicalTraitsResults> PsychologicalTraitsResults { get; set; }
     }
 }

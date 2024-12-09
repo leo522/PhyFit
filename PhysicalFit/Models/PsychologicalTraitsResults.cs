@@ -22,7 +22,6 @@ namespace PhysicalFit.Models
         public int Score { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
     
-        public virtual Users Users { get; set; }
         public virtual Athletes Athletes { get; set; }
     }
 }

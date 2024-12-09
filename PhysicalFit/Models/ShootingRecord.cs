@@ -21,7 +21,7 @@ namespace PhysicalFit.Models
         public string ShootingTool { get; set; }
         public Nullable<int> BulletCount { get; set; }
         public Nullable<int> RPEscore { get; set; }
-        public Nullable<int> EachTrainingLoad { get; set; }
+        public Nullable<decimal> EachTrainingLoad { get; set; }
         public string Coach { get; set; }
         public string Athlete { get; set; }
         public Nullable<int> SessionRPEShottingRecordID { get; set; }

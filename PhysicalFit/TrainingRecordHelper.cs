@@ -13,11 +13,14 @@ namespace PhysicalFit
     {
         public static DateTime StartOfWeek(this DateTime date)
         {
-            while (date.DayOfWeek != DayOfWeek.Monday)
-            {
-                date = date.AddDays(-1);
-            }
-            return date;
+            int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7; // 計算距離週一的天數
+            return date.AddDays(-diff).Date;
+            // 回到該週的週一
+            //while (date.DayOfWeek != DayOfWeek.Monday)
+            //{
+            //    date = date.AddDays(-1);
+            //}
+            //return date;
         }
     }
 
@@ -27,7 +30,7 @@ namespace PhysicalFit
     {
         #region 計算每日訓練量
 
-        public static int CalculateDailyTrainingLoadSum(PhFitnessEntities dbContext, string date, string trainingType, bool isAthlete, int? athleteID)
+        public static double CalculateDailyTrainingLoadSum(PhFitnessEntities dbContext, string date, string trainingType, bool isAthlete, int? athleteID)
         {
             try
             {
@@ -37,59 +40,60 @@ namespace PhysicalFit
                 if (!DateTime.TryParse(date, out DateTime parsedDate))
                     throw new ArgumentException($"無效的日期格式: {date}");
 
-                DateTime startOfDay = parsedDate.Date;
-                DateTime endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+                if (athleteID == null)
+                    throw new ArgumentNullException(nameof(athleteID), "AthleteID 不能為空");
 
-                IQueryable<int?> trainingLoadQuery;
+                IQueryable<decimal?> trainingLoadQuery;
 
-                if (isAthlete)
+                switch (trainingType)
                 {
-                    switch (trainingType)
-                    {
-                        case "一般訓練衝量監控 (session-RPE)":
-                            trainingLoadQuery = dbContext.AthleteGeneralTrainingRecord
-                                .Where(record => record.AthleteID == athleteID && record.TrainingDate >= startOfDay && record.TrainingDate < endOfDay)
-                                .Select(record => (int?)record.EachTrainingLoad);
-                            break;
-                        case "射箭訓練衝量":
-                            trainingLoadQuery = dbContext.AthleteArcheryTrainingRecord
-                                .Where(record => record.AthleteID == athleteID && record.TrainingDate >= startOfDay && record.TrainingDate < endOfDay)
-                                .Select(record => (int?)record.EachTrainingLoad);
-                            break;
-                        case "射擊訓練衝量":
-                            trainingLoadQuery = dbContext.AthleteShootingRecord
-                                .Where(record => record.AthleteID == athleteID && record.TrainingDate >= startOfDay && record.TrainingDate < endOfDay)
-                                .Select(record => (int?)record.EachTrainingLoad);
-                            break;
-                        default:
-                            throw new ArgumentException("未知的訓練類型");
-                    }
-                }
-                else
-                {
-                    switch (trainingType)
-                    {
-                        case "一般訓練衝量監控 (session-RPE)":
-                            trainingLoadQuery = dbContext.GeneralTrainingRecord
-                                .Where(record => record.AthleteID == athleteID && record.TrainingDate >= startOfDay && record.TrainingDate < endOfDay)
-                                .Select(record => (int?)record.EachTrainingLoad);
-                            break;
-                        case "射箭訓練衝量":
-                            trainingLoadQuery = dbContext.ArcheryRecord
-                                .Where(record => record.AthleteID == athleteID && record.TrainingDate >= startOfDay && record.TrainingDate < endOfDay)
-                                .Select(record => (int?)record.EachTrainingLoad);
-                            break;
-                        case "射擊訓練衝量":
-                            trainingLoadQuery = dbContext.ShootingRecord
-                                .Where(record => record.AthleteID == athleteID && record.TrainingDate >= startOfDay && record.TrainingDate < endOfDay)
-                                .Select(record => (int?)record.EachTrainingLoad);
-                            break;
-                        default:
-                            throw new ArgumentException("未知的訓練類型");
-                    }
+                    case "一般訓練衝量監控 (session-RPE)":
+                        trainingLoadQuery = isAthlete
+                            ? dbContext.AthleteGeneralTrainingRecord
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) == parsedDate.Date)
+                                .Select(record => record.EachTrainingLoad)
+                            : dbContext.GeneralTrainingRecord
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) == parsedDate.Date)
+                                .Select(record => record.EachTrainingLoad);
+                        break;
+
+                    case "射箭訓練衝量":
+                        trainingLoadQuery = isAthlete
+                            ? dbContext.AthleteArcheryTrainingRecord
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) == parsedDate.Date)
+                                .Select(record => record.EachTrainingLoad)
+                            : dbContext.ArcheryRecord
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) == parsedDate.Date)
+                                .Select(record => record.EachTrainingLoad);
+                        break;
+
+                    case "射擊訓練衝量":
+                        trainingLoadQuery = isAthlete
+                            ? dbContext.AthleteShootingRecord
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) == parsedDate.Date)
+                                .Select(record => record.EachTrainingLoad)
+                            : dbContext.ShootingRecord
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) == parsedDate.Date)
+                                .Select(record => record.EachTrainingLoad);
+                        break;
+
+                    default:
+                        throw new ArgumentException("未知的訓練類型");
                 }
 
-                return trainingLoadQuery?.Sum() ?? 0;
+                var loads = trainingLoadQuery.ToList();
+                Console.WriteLine($"查詢結果: {string.Join(", ", loads)}");
+
+                decimal dailySum = trainingLoadQuery.Sum() ?? 0.0m;
+                Console.WriteLine($"每日總訓練量: {dailySum}");
+
+                return (double)Math.Round(dailySum, 2); // 保留兩位小數
             }
             catch (Exception ex)
             {
@@ -101,49 +105,71 @@ namespace PhysicalFit
         #endregion
 
         #region 計算每週訓練量
-        public static int CalculateWeeklyTrainingLoadSum(PhFitnessEntities dbContext, DateTime date, string trainingType, bool isAthlete, int? athleteID)
+        public static double CalculateWeeklyTrainingLoadSum(PhFitnessEntities dbContext, DateTime startOfWeek, DateTime endOfWeek, string trainingType, bool isAthlete, int? athleteID)
         {
             try
             {
-                DateTime startOfWeek = date.AddDays(-(int)date.DayOfWeek);
-                DateTime endOfWeek = startOfWeek.AddDays(7);
+                DateTime StartDate = startOfWeek.Date; // 保留開始日期的 00:00
+                DateTime EndDate = endOfWeek.Date.AddDays(1).AddTicks(-1);
+                // 驗證傳入範圍
+                if (startOfWeek == default(DateTime) || endOfWeek == default(DateTime))
+                {
+                    throw new ArgumentException("傳入的日期範圍無效，請提供正確的日期範圍。");
+                }
 
-                IQueryable<int?> query;
+                IQueryable<double?> query;
 
+                // 根據 trainingType 查詢相應資料
                 switch (trainingType)
                 {
                     case "一般訓練衝量監控 (session-RPE)":
                         query = isAthlete
                             ? dbContext.AthleteGeneralTrainingRecord
-                                .Where(record => record.AthleteID == athleteID && DbFunctions.TruncateTime(record.TrainingDate) >= startOfWeek && DbFunctions.TruncateTime(record.TrainingDate) < endOfWeek)
-                                .Select(record => record.EachTrainingLoad)
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= StartDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) <= EndDate)
+                                .Select(record => (double?)record.EachTrainingLoad)
                             : dbContext.GeneralTrainingRecord
-                                .Where(record => record.AthleteID == athleteID && DbFunctions.TruncateTime(record.TrainingDate) >= startOfWeek && DbFunctions.TruncateTime(record.TrainingDate) < endOfWeek)
-                                .Select(record => record.EachTrainingLoad);
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= StartDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) <= EndDate)
+                                .Select(record => (double?)record.EachTrainingLoad);
                         break;
+
                     case "射箭訓練衝量":
                         query = isAthlete
                             ? dbContext.AthleteArcheryTrainingRecord
-                                .Where(record => record.AthleteID == athleteID && DbFunctions.TruncateTime(record.TrainingDate) >= startOfWeek && DbFunctions.TruncateTime(record.TrainingDate) < endOfWeek)
-                                .Select(record => record.EachTrainingLoad)
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= StartDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) <= EndDate)
+                                .Select(record => (double?)record.EachTrainingLoad)
                             : dbContext.ArcheryRecord
-                                .Where(record => record.AthleteID == athleteID && DbFunctions.TruncateTime(record.TrainingDate) >= startOfWeek && DbFunctions.TruncateTime(record.TrainingDate) < endOfWeek)
-                                .Select(record => record.EachTrainingLoad);
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= StartDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) <= EndDate)
+                                .Select(record => (double?)record.EachTrainingLoad);
                         break;
+
                     case "射擊訓練衝量":
                         query = isAthlete
                             ? dbContext.AthleteShootingRecord
-                                .Where(record => record.AthleteID == athleteID && DbFunctions.TruncateTime(record.TrainingDate) >= startOfWeek && DbFunctions.TruncateTime(record.TrainingDate) < endOfWeek)
-                                .Select(record => record.EachTrainingLoad)
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= StartDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) <= EndDate)
+                                .Select(record => (double?)record.EachTrainingLoad)
                             : dbContext.ShootingRecord
-                                .Where(record => record.AthleteID == athleteID && DbFunctions.TruncateTime(record.TrainingDate) >= startOfWeek && DbFunctions.TruncateTime(record.TrainingDate) < endOfWeek)
-                                .Select(record => record.EachTrainingLoad);
+                                .Where(record => record.AthleteID == athleteID &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= StartDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) <= EndDate)
+                                .Select(record => (double?)record.EachTrainingLoad);
                         break;
+
                     default:
                         throw new ArgumentException("無效的訓練類型");
                 }
 
-                return query.Any() ? query.Sum(load => load ?? 0) : 0;
+                // 返回計算結果
+                return query.Any() ? query.Sum(load => load ?? 0f) : 0f;
             }
             catch (Exception ex)
             {
@@ -162,7 +188,7 @@ namespace PhysicalFit
                 var startOfWeek = date.AddDays(-(int)date.DayOfWeek);
                 var endOfWeek = startOfWeek.AddDays(7);
 
-                List<int> loads;
+                List<decimal?> loads;
 
                 switch (trainingType)
                 {
@@ -173,14 +199,14 @@ namespace PhysicalFit
                                     record.AthleteID == athleteID && // 加入 AthleteID 篩選條件
                                     DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfWeek) &&
                                     DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endOfWeek))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList()
                             : dbContext.GeneralTrainingRecord
                                 .Where(record =>
                                     record.AthleteID == athleteID && // 加入 AthleteID 篩選條件
                                     DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfWeek) &&
                                     DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endOfWeek))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList();
                         break;
 
@@ -191,14 +217,14 @@ namespace PhysicalFit
                                     record.AthleteID == athleteID && // 加入 AthleteID 篩選條件
                                     DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfWeek) &&
                                     DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endOfWeek))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList()
                             : dbContext.ArcheryRecord
                                 .Where(record =>
                                     record.AthleteID == athleteID && // 加入 AthleteID 篩選條件
                                     DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfWeek) &&
                                     DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endOfWeek))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList();
                         break;
 
@@ -209,14 +235,14 @@ namespace PhysicalFit
                                     record.AthleteID == athleteID && // 加入 AthleteID 篩選條件
                                     DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfWeek) &&
                                     DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endOfWeek))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList()
                             : dbContext.ShootingRecord
                                 .Where(record =>
                                     record.AthleteID == athleteID && // 加入 AthleteID 篩選條件
                                     DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startOfWeek) &&
                                     DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endOfWeek))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList();
                         break;
 
@@ -227,30 +253,29 @@ namespace PhysicalFit
 
                 if (!loads.Any()) return 0;
 
-                var average = loads.Average();
-                var variance = loads.Sum(load => Math.Pow(load - average, 2)) / (loads.Count - 1);
+                var average = loads.Average(); //計算平均值
 
-                return Math.Sqrt(variance);
+                //var variance = loads.Sum(load => (load - average)) / (loads.Count - 1);  //計算方差
+                var variance = loads.Sum(load => (load - average) * (load - average)) / (loads.Count - 1);
+
+                return Math.Sqrt((double)variance);
+                //return Math.Sqrt(variance);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
-        
+
         #endregion
 
         #region 計算訓練同質性(TM)
-        public static double CalculateTrainingMonotony(PhFitnessEntities dbContext, DateTime date, string trainingType, bool isAthlete, int? athleteID)
+        public static double CalculateTrainingMonotony(PhFitnessEntities dbContext, DateTime startDate, DateTime endDate, string trainingType, bool isAthlete, int? athleteID)
         {
             try
             {
-                // 計算當天的開始與結束時間
-                var startDate = date.Date;
-                var endDate = startDate.AddDays(1);
-
                 // 根據訓練類型和角色選擇正確的記錄集合
-                List<int> trainingRecords;
+                List<decimal?> trainingRecords;
 
                 switch (trainingType)
                 {
@@ -258,15 +283,15 @@ namespace PhysicalFit
                         trainingRecords = isAthlete
                             ? dbContext.AthleteGeneralTrainingRecord
                                 .Where(record => record.AthleteID == athleteID &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startDate) &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endDate))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= startDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) < endDate)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList()
                             : dbContext.GeneralTrainingRecord
                                 .Where(record => record.AthleteID == athleteID &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startDate) &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endDate))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= startDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) < endDate)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList();
                         break;
 
@@ -274,15 +299,15 @@ namespace PhysicalFit
                         trainingRecords = isAthlete
                             ? dbContext.AthleteArcheryTrainingRecord
                                 .Where(record => record.AthleteID == athleteID &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startDate) &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endDate))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= startDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) < endDate)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList()
                             : dbContext.ArcheryRecord
                                 .Where(record => record.AthleteID == athleteID &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startDate) &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endDate))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= startDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) < endDate)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList();
                         break;
 
@@ -290,15 +315,15 @@ namespace PhysicalFit
                         trainingRecords = isAthlete
                             ? dbContext.AthleteShootingRecord
                                 .Where(record => record.AthleteID == athleteID &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startDate) &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endDate))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= startDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) < endDate)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList()
                             : dbContext.ShootingRecord
                                 .Where(record => record.AthleteID == athleteID &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) >= DbFunctions.TruncateTime(startDate) &&
-                                                 DbFunctions.TruncateTime(record.TrainingDate) < DbFunctions.TruncateTime(endDate))
-                                .Select(record => record.EachTrainingLoad ?? 0)
+                                                 DbFunctions.TruncateTime(record.TrainingDate) >= startDate &&
+                                                 DbFunctions.TruncateTime(record.TrainingDate) < endDate)
+                                .Select(record => record.EachTrainingLoad)
                                 .ToList();
                         break;
 
@@ -313,13 +338,21 @@ namespace PhysicalFit
                 }
 
                 // 計算平均值
-                double mean = trainingRecords.Average();
+                decimal? mean = trainingRecords.Average();
 
                 // 計算標準差
-                double standardDeviation = Math.Sqrt(trainingRecords.Sum(x => Math.Pow(x - mean, 2)) / trainingRecords.Count);
+                decimal? variance = trainingRecords.Sum(x => (x - mean) * (x - mean)) / trainingRecords.Count;
+                double standardDeviation = Math.Sqrt((double)variance);
 
-                // 避免標準差為零的情況
-                return standardDeviation == 0 ? 1 : Math.Round(mean / standardDeviation, 2);
+                // 避免標準差為零
+                return standardDeviation == 0 ? 1 : Math.Round((double)(mean / (decimal)standardDeviation), 2);
+
+                // 計算平均值和標準差
+                //double mean = trainingRecords.Average();
+                //double standardDeviation = Math.Sqrt(trainingRecords.Sum(x => Math.Pow(x - mean, 2)) / trainingRecords.Count);
+
+                // 避免標準差為零
+                //return standardDeviation == 0 ? 1 : Math.Round(mean / standardDeviation, 2);
             }
             catch (Exception ex)
             {
@@ -327,18 +360,19 @@ namespace PhysicalFit
                 throw;
             }
         }
+
         #endregion
 
         #region 計算訓練張力值(TS)
-        public static double CalculateTrainingStrain(PhFitnessEntities dbContext, DateTime date, string trainingType, bool isAthlete, int? athleteID)
+        public static double CalculateTrainingStrain(PhFitnessEntities dbContext, DateTime startOfWeek, DateTime endOfWeek, string trainingType, bool isAthlete, int? athleteID)
         {
             try
             {
                 // 每週總訓練量
-                int weeklyTrainingLoadSum = CalculateWeeklyTrainingLoadSum(dbContext, date, trainingType, isAthlete, athleteID);
+                double weeklyTrainingLoadSum = CalculateWeeklyTrainingLoadSum(dbContext, startOfWeek, endOfWeek, trainingType, isAthlete, athleteID);
 
                 // 訓練同質性
-                double trainingMonotony = CalculateTrainingMonotony(dbContext, date, trainingType, isAthlete, athleteID);
+                double trainingMonotony = CalculateTrainingMonotony(dbContext, startOfWeek, endOfWeek, trainingType, isAthlete, athleteID);
 
                 // 計算張力值
                 return Math.Round(weeklyTrainingLoadSum * trainingMonotony, 2);
@@ -349,19 +383,17 @@ namespace PhysicalFit
                 throw;
             }
         }
+
         #endregion
 
         #region 計算週間訓練變化
-        public static double CalculateWeekToWeekChange(PhFitnessEntities dbContext, DateTime date, string trainingType, bool isAthlete, int? athleteID)
+        public static double CalculateWeekToWeekChange(PhFitnessEntities dbContext, DateTime startOfCurrentWeek, DateTime endOfCurrentWeek, DateTime startOfPreviousWeek, DateTime endOfPreviousWeek, string trainingType, bool isAthlete, int? athleteID)
         {
             try
             {
                 // 當週與上週的日期範圍
-                int currentWeekLoad = CalculateWeeklyTrainingLoadSum(dbContext, date, trainingType, isAthlete, athleteID);
-
-                var startOfPreviousWeek = date.AddDays(-7 * 2).StartOfWeek();
-                var endOfPreviousWeek = startOfPreviousWeek.AddDays(7);
-                int previousWeekLoad = CalculateWeeklyTrainingLoadSum(dbContext, startOfPreviousWeek, trainingType, isAthlete, athleteID);
+                double currentWeekLoad = CalculateWeeklyTrainingLoadSum(dbContext, startOfCurrentWeek, endOfCurrentWeek, trainingType, isAthlete, athleteID);
+                double previousWeekLoad = CalculateWeeklyTrainingLoadSum(dbContext, startOfPreviousWeek, endOfPreviousWeek, trainingType, isAthlete, athleteID);
 
                 // 返回絕對差異值
                 return Math.Abs(currentWeekLoad - previousWeekLoad);
@@ -372,26 +404,22 @@ namespace PhysicalFit
                 throw;
             }
         }
+
         #endregion
 
         #region 計算短長期訓練量比值_ACWR
-        public static double CalculateACWR(PhFitnessEntities dbContext, DateTime date, string trainingType, bool isAthlete, int? athleteID)
+        public static double CalculateACWR(PhFitnessEntities dbContext, List<(DateTime startOfWeek, DateTime endOfWeek)> weekRanges, string trainingType, bool isAthlete, int? athleteID)
         {
             try
             {
                 // 當週總訓練量
-                int currentWeekLoad = CalculateWeeklyTrainingLoadSum(dbContext, date, trainingType, isAthlete, athleteID);
+                double currentWeekLoad = CalculateWeeklyTrainingLoadSum(dbContext, weekRanges[0].startOfWeek, weekRanges[0].endOfWeek, trainingType, isAthlete, athleteID);
 
                 // 計算過往四週總訓練量
                 double pastFourWeeksLoad = 0;
-
                 for (int i = 0; i < 4; i++)
                 {
-                    // 計算每週起始日期
-                    var weekDate = date.AddDays(-7 * i);
-
-                    // 累加每週訓練量
-                    pastFourWeeksLoad += CalculateWeeklyTrainingLoadSum(dbContext, weekDate, trainingType, isAthlete, athleteID);
+                    pastFourWeeksLoad += CalculateWeeklyTrainingLoadSum(dbContext, weekRanges[i].startOfWeek, weekRanges[i].endOfWeek, trainingType, isAthlete, athleteID);
                 }
 
                 // 避免分母為零
@@ -411,6 +439,7 @@ namespace PhysicalFit
                 throw;
             }
         }
+
         #endregion
     }
 }

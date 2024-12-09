@@ -36,6 +36,7 @@ namespace PhysicalFit.Models
         public virtual DbSet<Athletes> Athletes { get; set; }
         public virtual DbSet<AthleteShootingRecord> AthleteShootingRecord { get; set; }
         public virtual DbSet<AthleteShootingSessionRPERecord> AthleteShootingSessionRPERecord { get; set; }
+        public virtual DbSet<BikeRecordDetails> BikeRecordDetails { get; set; }
         public virtual DbSet<Coaches> Coaches { get; set; }
         public virtual DbSet<CompetitionMotivation> CompetitionMotivation { get; set; }
         public virtual DbSet<ComprehensiveHighSchoolList> ComprehensiveHighSchoolList { get; set; }
@@ -55,6 +56,8 @@ namespace PhysicalFit.Models
         public virtual DbSet<PhysicalFitness> PhysicalFitness { get; set; }
         public virtual DbSet<PrimarySchoolList> PrimarySchoolList { get; set; }
         public virtual DbSet<PsychologicalTraitsChart> PsychologicalTraitsChart { get; set; }
+        public virtual DbSet<PsychologicalTraitsResults> PsychologicalTraitsResults { get; set; }
+        public virtual DbSet<RollerSkatingRecordDetails> RollerSkatingRecordDetails { get; set; }
         public virtual DbSet<RPE> RPE { get; set; }
         public virtual DbSet<SessionRPETrainingRecords> SessionRPETrainingRecords { get; set; }
         public virtual DbSet<SessionTrainingRecords> SessionTrainingRecords { get; set; }
@@ -66,21 +69,18 @@ namespace PhysicalFit.Models
         public virtual DbSet<SpecializedTraining> SpecializedTraining { get; set; }
         public virtual DbSet<SpecialTechnical> SpecialTechnical { get; set; }
         public virtual DbSet<SpecialTechnicalAction> SpecialTechnicalAction { get; set; }
+        public virtual DbSet<SwimmingRecordDetails> SwimmingRecordDetails { get; set; }
         public virtual DbSet<TechnologyCategory> TechnologyCategory { get; set; }
+        public virtual DbSet<TrackFieldRecordDetails> TrackFieldRecordDetails { get; set; }
         public virtual DbSet<TrainingItems> TrainingItems { get; set; }
         public virtual DbSet<TrainingMonitoringItems> TrainingMonitoringItems { get; set; }
         public virtual DbSet<TrainingMotivation> TrainingMotivation { get; set; }
         public virtual DbSet<TrainingPurpose> TrainingPurpose { get; set; }
         public virtual DbSet<TrainingTimes> TrainingTimes { get; set; }
+        public virtual DbSet<TreadmillRecordDetails> TreadmillRecordDetails { get; set; }
         public virtual DbSet<UniversitySchoolList> UniversitySchoolList { get; set; }
         public virtual DbSet<UserPermissions> UserPermissions { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
-        public virtual DbSet<PsychologicalTraitsResults> PsychologicalTraitsResults { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<RollerSkatingRecordDetails> RollerSkatingRecordDetails { get; set; }
-        public virtual DbSet<BikeRecordDetails> BikeRecordDetails { get; set; }
-        public virtual DbSet<SwimmingRecordDetails> SwimmingRecordDetails { get; set; }
-        public virtual DbSet<TreadmillRecordDetails> TreadmillRecordDetails { get; set; }
-        public virtual DbSet<TrackFieldRecordDetails> TrackFieldRecordDetails { get; set; }
     }
 }

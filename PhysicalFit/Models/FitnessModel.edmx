@@ -37,7 +37,7 @@
           <Property Name="Poundage" Type="int" />
           <Property Name="ArrowCount" Type="int" />
           <Property Name="RPEscore" Type="int" />
-          <Property Name="EachTrainingLoad" Type="int" />
+          <Property Name="EachTrainingLoad" Type="decimal" Precision="10" Scale="2" />
           <Property Name="DailyTrainingLoad" Type="int" />
           <Property Name="SessionRPEArcheryRecordID" Type="int" />
         </EntityType>
@@ -100,7 +100,7 @@
           <Property Name="Poundage" Type="int" />
           <Property Name="ArrowCount" Type="int" />
           <Property Name="RPEscore" Type="int" />
-          <Property Name="EachTrainingLoad" Type="int" />
+          <Property Name="EachTrainingLoad" Type="decimal" Precision="10" Scale="2" />
           <Property Name="DailyTrainingLoad" Type="int" />
           <Property Name="SessionRPEAthleteRecordID" Type="int" />
         </EntityType>
@@ -120,7 +120,7 @@
           <Property Name="TrainingOther" Type="nvarchar" MaxLength="30" />
           <Property Name="TrainingTime" Type="nvarchar" MaxLength="10" />
           <Property Name="RPEscore" Type="int" />
-          <Property Name="EachTrainingLoad" Type="int" />
+          <Property Name="EachTrainingLoad" Type="decimal" Precision="10" Scale="2" />
           <Property Name="DailyTrainingLoad" Type="int" />
           <Property Name="Coach" Type="nvarchar" MaxLength="10" />
           <Property Name="Athlete" Type="nvarchar" MaxLength="10" />
@@ -153,7 +153,7 @@
           <Property Name="ShootingTool" Type="nvarchar" MaxLength="10" />
           <Property Name="BulletCount" Type="int" />
           <Property Name="RPEscore" Type="int" />
-          <Property Name="EachTrainingLoad" Type="int" />
+          <Property Name="EachTrainingLoad" Type="decimal" Precision="10" Scale="2" />
           <Property Name="Coach" Type="nvarchar" MaxLength="10" />
           <Property Name="Athlete" Type="nvarchar" MaxLength="10" />
           <Property Name="SessionRPEShottingRecordID" Type="int" />
@@ -311,7 +311,7 @@
           <Property Name="TrainingOther" Type="nvarchar" MaxLength="30" />
           <Property Name="TrainingTime" Type="nvarchar" MaxLength="10" />
           <Property Name="RPEscore" Type="int" />
-          <Property Name="EachTrainingLoad" Type="int" />
+          <Property Name="EachTrainingLoad" Type="decimal" Precision="10" Scale="2" />
           <Property Name="DailyTrainingLoad" Type="int" />
           <Property Name="Coach" Type="nvarchar" MaxLength="10" />
           <Property Name="Athlete" Type="nvarchar" MaxLength="10" />
@@ -500,7 +500,7 @@
           <Property Name="ShootingTool" Type="nvarchar" MaxLength="10" />
           <Property Name="BulletCount" Type="int" />
           <Property Name="RPEscore" Type="int" />
-          <Property Name="EachTrainingLoad" Type="int" />
+          <Property Name="EachTrainingLoad" Type="decimal" Precision="10" Scale="2" />
           <Property Name="Coach" Type="nvarchar" MaxLength="10" />
           <Property Name="Athlete" Type="nvarchar" MaxLength="10" />
           <Property Name="SessionRPEShottingRecordID" Type="int" />
@@ -1394,6 +1394,7 @@
           <EntitySet Name="Athletes" EntityType="PhFitnessModel.Athletes" />
           <EntitySet Name="AthleteShootingRecord" EntityType="PhFitnessModel.AthleteShootingRecord" />
           <EntitySet Name="AthleteShootingSessionRPERecord" EntityType="PhFitnessModel.AthleteShootingSessionRPERecord" />
+          <EntitySet Name="BikeRecordDetails" EntityType="PhFitnessModel.BikeRecordDetails" />
           <EntitySet Name="Coaches" EntityType="PhFitnessModel.Coaches" />
           <EntitySet Name="CompetitionMotivation" EntityType="PhFitnessModel.CompetitionMotivation" />
           <EntitySet Name="ComprehensiveHighSchoolList" EntityType="PhFitnessModel.ComprehensiveHighSchoolList" />
@@ -1413,6 +1414,8 @@
           <EntitySet Name="PhysicalFitness" EntityType="PhFitnessModel.PhysicalFitness" />
           <EntitySet Name="PrimarySchoolList" EntityType="PhFitnessModel.PrimarySchoolList" />
           <EntitySet Name="PsychologicalTraitsChart" EntityType="PhFitnessModel.PsychologicalTraitsChart" />
+          <EntitySet Name="PsychologicalTraitsResults" EntityType="PhFitnessModel.PsychologicalTraitsResults" />
+          <EntitySet Name="RollerSkatingRecordDetails" EntityType="PhFitnessModel.RollerSkatingRecordDetails" />
           <EntitySet Name="RPE" EntityType="PhFitnessModel.RPE" />
           <EntitySet Name="SessionRPETrainingRecords" EntityType="PhFitnessModel.SessionRPETrainingRecords" />
           <EntitySet Name="SessionTrainingRecords" EntityType="PhFitnessModel.SessionTrainingRecords" />
@@ -1424,16 +1427,20 @@
           <EntitySet Name="SpecializedTraining" EntityType="PhFitnessModel.SpecializedTraining" />
           <EntitySet Name="SpecialTechnical" EntityType="PhFitnessModel.SpecialTechnical" />
           <EntitySet Name="SpecialTechnicalAction" EntityType="PhFitnessModel.SpecialTechnicalAction" />
+          <EntitySet Name="SwimmingRecordDetails" EntityType="PhFitnessModel.SwimmingRecordDetails" />
           <EntitySet Name="TechnologyCategory" EntityType="PhFitnessModel.TechnologyCategory" />
+          <EntitySet Name="TrackFieldRecordDetails" EntityType="PhFitnessModel.TrackFieldRecordDetails" />
           <EntitySet Name="TrainingItems" EntityType="PhFitnessModel.TrainingItems" />
           <EntitySet Name="TrainingMonitoringItems" EntityType="PhFitnessModel.TrainingMonitoringItems" />
           <EntitySet Name="TrainingMotivation" EntityType="PhFitnessModel.TrainingMotivation" />
           <EntitySet Name="TrainingPurpose" EntityType="PhFitnessModel.TrainingPurpose" />
           <EntitySet Name="TrainingTimes" EntityType="PhFitnessModel.TrainingTimes" />
+          <EntitySet Name="TreadmillRecordDetails" EntityType="PhFitnessModel.TreadmillRecordDetails" />
           <EntitySet Name="UniversitySchoolList" EntityType="PhFitnessModel.UniversitySchoolList" />
           <EntitySet Name="UserPermissions" EntityType="PhFitnessModel.UserPermissions" />
           <EntitySet Name="UserRoles" EntityType="PhFitnessModel.UserRoles" />
-          <AssociationSet Name="FK__Appetite__Psycho__5B638405" Association="PhFitnessModel.FK__Appetite__Psycho__5B638405">
+          <EntitySet Name="Users" EntityType="PhFitnessModel.Users" />
+          <AssociationSet Name="FK__Appetite__Psycho__6CC31A31" Association="PhFitnessModel.FK__Appetite__Psycho__6CC31A31">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="Appetite" EntitySet="Appetite" />
           </AssociationSet>
@@ -1485,9 +1492,17 @@
             <End Role="Athletes" EntitySet="Athletes" />
             <End Role="GeneralTrainingRecord" EntitySet="GeneralTrainingRecord" />
           </AssociationSet>
+          <AssociationSet Name="FK_PsychologicalTraitsResults_Athletes" Association="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="PsychologicalTraitsResults" EntitySet="PsychologicalTraitsResults" />
+          </AssociationSet>
           <AssociationSet Name="FK_ShootingRecord_Athletes" Association="PhFitnessModel.FK_ShootingRecord_Athletes">
             <End Role="Athletes" EntitySet="Athletes" />
             <End Role="ShootingRecord" EntitySet="ShootingRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Athletes" Association="PhFitnessModel.FK_Users_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="Users" EntitySet="Users" />
           </AssociationSet>
           <AssociationSet Name="FK_AthleteShootingRecord_Coaches" Association="PhFitnessModel.FK_AthleteShootingRecord_Coaches">
             <End Role="Coaches" EntitySet="Coaches" />
@@ -1496,6 +1511,10 @@
           <AssociationSet Name="FK_AthleteShootingRecord_SessionRPEShottingRecord" Association="PhFitnessModel.FK_AthleteShootingRecord_SessionRPEShottingRecord">
             <End Role="AthleteShootingSessionRPERecord" EntitySet="AthleteShootingSessionRPERecord" />
             <End Role="AthleteShootingRecord" EntitySet="AthleteShootingRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK__BikeRecor__Detec__162F4418" Association="PhFitnessModel.FK__BikeRecor__Detec__162F4418">
+            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
+            <End Role="BikeRecordDetails" EntitySet="BikeRecordDetails" />
           </AssociationSet>
           <AssociationSet Name="FK__SessionTr__Coach__59E54FE7" Association="PhFitnessModel.FK__SessionTr__Coach__59E54FE7">
             <End Role="Coaches" EntitySet="Coaches" />
@@ -1509,11 +1528,31 @@
             <End Role="Coaches" EntitySet="Coaches" />
             <End Role="ShootingRecord" EntitySet="ShootingRecord" />
           </AssociationSet>
-          <AssociationSet Name="FK__Competiti__Psych__5E3FF0B0" Association="PhFitnessModel.FK__Competiti__Psych__5E3FF0B0">
+          <AssociationSet Name="FK_Users_Coaches" Association="PhFitnessModel.FK_Users_Coaches">
+            <End Role="Coaches" EntitySet="Coaches" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Competiti__Psych__6F9F86DC" Association="PhFitnessModel.FK__Competiti__Psych__6F9F86DC">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="CompetitionMotivation" EntitySet="CompetitionMotivation" />
           </AssociationSet>
-          <AssociationSet Name="FK__FatigueLe__Psych__55AAAAAF" Association="PhFitnessModel.FK__FatigueLe__Psych__55AAAAAF">
+          <AssociationSet Name="FK__RollerSka__Detec__190BB0C3" Association="PhFitnessModel.FK__RollerSka__Detec__190BB0C3">
+            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
+            <End Role="RollerSkatingRecordDetails" EntitySet="RollerSkatingRecordDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SwimmingR__Detec__1352D76D" Association="PhFitnessModel.FK__SwimmingR__Detec__1352D76D">
+            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
+            <End Role="SwimmingRecordDetails" EntitySet="SwimmingRecordDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Treadmill__Detec__10766AC2" Association="PhFitnessModel.FK__Treadmill__Detec__10766AC2">
+            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
+            <End Role="TreadmillRecordDetails" EntitySet="TreadmillRecordDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TrackFieldRecordDetails_DetectionTrainingRecord" Association="PhFitnessModel.FK_TrackFieldRecordDetails_DetectionTrainingRecord">
+            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
+            <End Role="TrackFieldRecordDetails" EntitySet="TrackFieldRecordDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FatigueLe__Psych__670A40DB" Association="PhFitnessModel.FK__FatigueLe__Psych__670A40DB">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="FatigueLevel" EntitySet="FatigueLevel" />
           </AssociationSet>
@@ -1521,11 +1560,11 @@
             <End Role="Permissions" EntitySet="Permissions" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
-          <AssociationSet Name="FK__SleepQual__Psych__52CE3E04" Association="PhFitnessModel.FK__SleepQual__Psych__52CE3E04">
+          <AssociationSet Name="FK__SleepQual__Psych__642DD430" Association="PhFitnessModel.FK__SleepQual__Psych__642DD430">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="SleepQuality" EntitySet="SleepQuality" />
           </AssociationSet>
-          <AssociationSet Name="FK__TrainingM__Psych__5887175A" Association="PhFitnessModel.FK__TrainingM__Psych__5887175A">
+          <AssociationSet Name="FK__TrainingM__Psych__69E6AD86" Association="PhFitnessModel.FK__TrainingM__Psych__69E6AD86">
             <End Role="PsychologicalTraitsChart" EntitySet="PsychologicalTraitsChart" />
             <End Role="TrainingMotivation" EntitySet="TrainingMotivation" />
           </AssociationSet>
@@ -1541,52 +1580,9 @@
             <End Role="UserRoles" EntitySet="UserRoles" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
-          <EntitySet Name="PsychologicalTraitsResults" EntityType="PhFitnessModel.PsychologicalTraitsResults" />
-          <EntitySet Name="Users" EntityType="PhFitnessModel.Users" />
-          <AssociationSet Name="FK_Users_Athletes" Association="PhFitnessModel.FK_Users_Athletes">
-            <End Role="Athletes" EntitySet="Athletes" />
-            <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Coaches" Association="PhFitnessModel.FK_Users_Coaches">
-            <End Role="Coaches" EntitySet="Coaches" />
-            <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Psycholog__UserI__6304A5CD" Association="PhFitnessModel.FK__Psycholog__UserI__6304A5CD">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="PsychologicalTraitsResults" EntitySet="PsychologicalTraitsResults" />
-          </AssociationSet>
           <AssociationSet Name="FK__UserPermi__UserI__2C3393D0" Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserPermissions" EntitySet="UserPermissions" />
-          </AssociationSet>
-          <EntitySet Name="RollerSkatingRecordDetails" EntityType="PhFitnessModel.RollerSkatingRecordDetails" />
-          <AssociationSet Name="FK__RollerSka__Detec__190BB0C3" Association="PhFitnessModel.FK__RollerSka__Detec__190BB0C3">
-            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
-            <End Role="RollerSkatingRecordDetails" EntitySet="RollerSkatingRecordDetails" />
-          </AssociationSet>
-          <EntitySet Name="BikeRecordDetails" EntityType="PhFitnessModel.BikeRecordDetails" />
-          <EntitySet Name="SwimmingRecordDetails" EntityType="PhFitnessModel.SwimmingRecordDetails" />
-          <EntitySet Name="TreadmillRecordDetails" EntityType="PhFitnessModel.TreadmillRecordDetails" />
-          <AssociationSet Name="FK__BikeRecor__Detec__162F4418" Association="PhFitnessModel.FK__BikeRecor__Detec__162F4418">
-            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
-            <End Role="BikeRecordDetails" EntitySet="BikeRecordDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK__SwimmingR__Detec__1352D76D" Association="PhFitnessModel.FK__SwimmingR__Detec__1352D76D">
-            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
-            <End Role="SwimmingRecordDetails" EntitySet="SwimmingRecordDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Treadmill__Detec__10766AC2" Association="PhFitnessModel.FK__Treadmill__Detec__10766AC2">
-            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
-            <End Role="TreadmillRecordDetails" EntitySet="TreadmillRecordDetails" />
-          </AssociationSet>
-          <EntitySet Name="TrackFieldRecordDetails" EntityType="PhFitnessModel.TrackFieldRecordDetails" />
-          <AssociationSet Name="FK_TrackFieldRecordDetails_DetectionTrainingRecord" Association="PhFitnessModel.FK_TrackFieldRecordDetails_DetectionTrainingRecord">
-            <End Role="DetectionTrainingRecord" EntitySet="DetectionTrainingRecord" />
-            <End Role="TrackFieldRecordDetails" EntitySet="TrackFieldRecordDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PsychologicalTraitsResults_Athletes" Association="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes">
-            <End Role="Athletes" EntitySet="Athletes" />
-            <End Role="PsychologicalTraitsResults" EntitySet="PsychologicalTraitsResults" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AbilityDetermination">
@@ -1607,7 +1603,7 @@
           <Property Name="AppetiteStatus" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AppetiteScore" Type="Int32" Nullable="false" />
           <Property Name="PsychologicalTraitID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__Appetite__Psycho__5B638405" FromRole="Appetite" ToRole="PsychologicalTraitsChart" />
+          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__Appetite__Psycho__6CC31A31" FromRole="Appetite" ToRole="PsychologicalTraitsChart" />
         </EntityType>
         <EntityType Name="ArcheryRecord">
           <Key>
@@ -1622,7 +1618,7 @@
           <Property Name="Poundage" Type="Int32" />
           <Property Name="ArrowCount" Type="Int32" />
           <Property Name="RPEscore" Type="Int32" />
-          <Property Name="EachTrainingLoad" Type="Int32" />
+          <Property Name="EachTrainingLoad" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="DailyTrainingLoad" Type="Int32" />
           <Property Name="SessionRPEArcheryRecordID" Type="Int32" />
           <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK__ArcheryRe__Athle__5B438874" FromRole="ArcheryRecord" ToRole="Athletes" />
@@ -1690,7 +1686,7 @@
           <Property Name="Poundage" Type="Int32" />
           <Property Name="ArrowCount" Type="Int32" />
           <Property Name="RPEscore" Type="Int32" />
-          <Property Name="EachTrainingLoad" Type="Int32" />
+          <Property Name="EachTrainingLoad" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="DailyTrainingLoad" Type="Int32" />
           <Property Name="SessionRPEAthleteRecordID" Type="Int32" />
           <NavigationProperty Name="AthleteArcheryRPERecord" Relationship="PhFitnessModel.FK_AthleteArcheryTrainingRecord_SessionRPE" FromRole="AthleteArcheryTrainingRecord" ToRole="AthleteArcheryRPERecord" />
@@ -1713,7 +1709,7 @@
           <Property Name="TrainingOther" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="TrainingTime" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="RPEscore" Type="Int32" />
-          <Property Name="EachTrainingLoad" Type="Int32" />
+          <Property Name="EachTrainingLoad" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="DailyTrainingLoad" Type="Int32" />
           <Property Name="Coach" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Athlete" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
@@ -1743,9 +1739,9 @@
           <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Athletes_Coaches" FromRole="Athletes" ToRole="Coaches" />
           <NavigationProperty Name="AthleteShootingRecord" Relationship="PhFitnessModel.FK_AthleteShootingRecord_Athletes" FromRole="Athletes" ToRole="AthleteShootingRecord" />
           <NavigationProperty Name="GeneralTrainingRecord" Relationship="PhFitnessModel.FK_GeneralTrainingRecord_Athletes" FromRole="Athletes" ToRole="GeneralTrainingRecord" />
+          <NavigationProperty Name="PsychologicalTraitsResults" Relationship="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes" FromRole="Athletes" ToRole="PsychologicalTraitsResults" />
           <NavigationProperty Name="ShootingRecord" Relationship="PhFitnessModel.FK_ShootingRecord_Athletes" FromRole="Athletes" ToRole="ShootingRecord" />
           <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK_Users_Athletes" FromRole="Athletes" ToRole="Users" />
-          <NavigationProperty Name="PsychologicalTraitsResults" Relationship="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes" FromRole="Athletes" ToRole="PsychologicalTraitsResults" />
         </EntityType>
         <EntityType Name="AthleteShootingRecord">
           <Key>
@@ -1758,7 +1754,7 @@
           <Property Name="ShootingTool" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="BulletCount" Type="Int32" />
           <Property Name="RPEscore" Type="Int32" />
-          <Property Name="EachTrainingLoad" Type="Int32" />
+          <Property Name="EachTrainingLoad" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="Coach" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Athlete" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="SessionRPEShottingRecordID" Type="Int32" />
@@ -1783,6 +1779,21 @@
           <Property Name="DailyTrainingLoad" Type="Int32" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="AthleteShootingRecord" Relationship="PhFitnessModel.FK_AthleteShootingRecord_SessionRPEShottingRecord" FromRole="AthleteShootingSessionRPERecord" ToRole="AthleteShootingRecord" />
+        </EntityType>
+        <EntityType Name="BikeRecordDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
+          <Property Name="MaxPower" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="IntenPercen" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ForceDuration" Type="Double" Nullable="false" />
+          <Property Name="Speed" Type="Double" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__BikeRecor__Detec__162F4418" FromRole="BikeRecordDetails" ToRole="DetectionTrainingRecord" />
         </EntityType>
         <EntityType Name="Coaches">
           <Key>
@@ -1820,7 +1831,7 @@
           <Property Name="CompetitionWillingness" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CompetitionScore" Type="Int32" Nullable="false" />
           <Property Name="PsychologicalTraitID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__Competiti__Psych__5E3FF0B0" FromRole="CompetitionMotivation" ToRole="PsychologicalTraitsChart" />
+          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__Competiti__Psych__6F9F86DC" FromRole="CompetitionMotivation" ToRole="PsychologicalTraitsChart" />
         </EntityType>
         <EntityType Name="ComprehensiveHighSchoolList">
           <Key>
@@ -1874,8 +1885,8 @@
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="RollerSkatingRecordDetails" Relationship="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" FromRole="DetectionTrainingRecord" ToRole="RollerSkatingRecordDetails" />
           <NavigationProperty Name="BikeRecordDetails" Relationship="PhFitnessModel.FK__BikeRecor__Detec__162F4418" FromRole="DetectionTrainingRecord" ToRole="BikeRecordDetails" />
+          <NavigationProperty Name="RollerSkatingRecordDetails" Relationship="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" FromRole="DetectionTrainingRecord" ToRole="RollerSkatingRecordDetails" />
           <NavigationProperty Name="SwimmingRecordDetails" Relationship="PhFitnessModel.FK__SwimmingR__Detec__1352D76D" FromRole="DetectionTrainingRecord" ToRole="SwimmingRecordDetails" />
           <NavigationProperty Name="TreadmillRecordDetails" Relationship="PhFitnessModel.FK__Treadmill__Detec__10766AC2" FromRole="DetectionTrainingRecord" ToRole="TreadmillRecordDetails" />
           <NavigationProperty Name="TrackFieldRecordDetails" Relationship="PhFitnessModel.FK_TrackFieldRecordDetails_DetectionTrainingRecord" FromRole="DetectionTrainingRecord" ToRole="TrackFieldRecordDetails" />
@@ -1888,7 +1899,7 @@
           <Property Name="Fatigue" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="FatigueScore" Type="Int32" Nullable="false" />
           <Property Name="PsychologicalTraitID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__FatigueLe__Psych__55AAAAAF" FromRole="FatigueLevel" ToRole="PsychologicalTraitsChart" />
+          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__FatigueLe__Psych__670A40DB" FromRole="FatigueLevel" ToRole="PsychologicalTraitsChart" />
         </EntityType>
         <EntityType Name="GeneralHighSchoolList">
           <Key>
@@ -1922,7 +1933,7 @@
           <Property Name="TrainingOther" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="TrainingTime" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="RPEscore" Type="Int32" />
-          <Property Name="EachTrainingLoad" Type="Int32" />
+          <Property Name="EachTrainingLoad" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="DailyTrainingLoad" Type="Int32" />
           <Property Name="Coach" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Athlete" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
@@ -2025,11 +2036,38 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Item" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Appetite" Relationship="PhFitnessModel.FK__Appetite__Psycho__5B638405" FromRole="PsychologicalTraitsChart" ToRole="Appetite" />
-          <NavigationProperty Name="CompetitionMotivation" Relationship="PhFitnessModel.FK__Competiti__Psych__5E3FF0B0" FromRole="PsychologicalTraitsChart" ToRole="CompetitionMotivation" />
-          <NavigationProperty Name="FatigueLevel" Relationship="PhFitnessModel.FK__FatigueLe__Psych__55AAAAAF" FromRole="PsychologicalTraitsChart" ToRole="FatigueLevel" />
-          <NavigationProperty Name="SleepQuality" Relationship="PhFitnessModel.FK__SleepQual__Psych__52CE3E04" FromRole="PsychologicalTraitsChart" ToRole="SleepQuality" />
-          <NavigationProperty Name="TrainingMotivation" Relationship="PhFitnessModel.FK__TrainingM__Psych__5887175A" FromRole="PsychologicalTraitsChart" ToRole="TrainingMotivation" />
+          <NavigationProperty Name="Appetite" Relationship="PhFitnessModel.FK__Appetite__Psycho__6CC31A31" FromRole="PsychologicalTraitsChart" ToRole="Appetite" />
+          <NavigationProperty Name="CompetitionMotivation" Relationship="PhFitnessModel.FK__Competiti__Psych__6F9F86DC" FromRole="PsychologicalTraitsChart" ToRole="CompetitionMotivation" />
+          <NavigationProperty Name="FatigueLevel" Relationship="PhFitnessModel.FK__FatigueLe__Psych__670A40DB" FromRole="PsychologicalTraitsChart" ToRole="FatigueLevel" />
+          <NavigationProperty Name="SleepQuality" Relationship="PhFitnessModel.FK__SleepQual__Psych__642DD430" FromRole="PsychologicalTraitsChart" ToRole="SleepQuality" />
+          <NavigationProperty Name="TrainingMotivation" Relationship="PhFitnessModel.FK__TrainingM__Psych__69E6AD86" FromRole="PsychologicalTraitsChart" ToRole="TrainingMotivation" />
+        </EntityType>
+        <EntityType Name="PsychologicalTraitsResults">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="PsychologicalDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Trait" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Feeling" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Score" Type="Int32" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes" FromRole="PsychologicalTraitsResults" ToRole="Athletes" />
+        </EntityType>
+        <EntityType Name="RollerSkatingRecordDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
+          <Property Name="Distance" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ForceDuration" Type="Double" Nullable="false" />
+          <Property Name="Speed" Type="Double" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" FromRole="RollerSkatingRecordDetails" ToRole="DetectionTrainingRecord" />
         </EntityType>
         <EntityType Name="RPE">
           <Key>
@@ -2096,7 +2134,7 @@
           <Property Name="ShootingTool" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="BulletCount" Type="Int32" />
           <Property Name="RPEscore" Type="Int32" />
-          <Property Name="EachTrainingLoad" Type="Int32" />
+          <Property Name="EachTrainingLoad" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="Coach" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Athlete" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="SessionRPEShottingRecordID" Type="Int32" />
@@ -2151,7 +2189,7 @@
           <Property Name="Quality" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SleepScore" Type="Int32" Nullable="false" />
           <Property Name="PsychologicalTraitID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__SleepQual__Psych__52CE3E04" FromRole="SleepQuality" ToRole="PsychologicalTraitsChart" />
+          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__SleepQual__Psych__642DD430" FromRole="SleepQuality" ToRole="PsychologicalTraitsChart" />
         </EntityType>
         <EntityType Name="SpecializedTraining">
           <Key>
@@ -2183,6 +2221,20 @@
           <Property Name="SpecialTechnicalID" Type="Int32" />
           <NavigationProperty Name="SpecialTechnical" Relationship="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" FromRole="SpecialTechnicalAction" ToRole="SpecialTechnical" />
         </EntityType>
+        <EntityType Name="SwimmingRecordDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
+          <Property Name="Distance" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ForceDuration" Type="Double" Nullable="false" />
+          <Property Name="Speed" Type="Double" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__SwimmingR__Detec__1352D76D" FromRole="SwimmingRecordDetails" ToRole="DetectionTrainingRecord" />
+        </EntityType>
         <EntityType Name="TechnologyCategory">
           <Key>
             <PropertyRef Name="Id" />
@@ -2196,6 +2248,20 @@
           <Property Name="RPEScore" Type="Int32" Nullable="false" />
           <Property Name="CreatedTime" Type="DateTime" Precision="3" />
           <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TrackFieldRecordDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
+          <Property Name="Distance" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ForceDuration" Type="Double" Nullable="false" />
+          <Property Name="Speed" Type="Double" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK_TrackFieldRecordDetails_DetectionTrainingRecord" FromRole="TrackFieldRecordDetails" ToRole="DetectionTrainingRecord" />
         </EntityType>
         <EntityType Name="TrainingItems">
           <Key>
@@ -2223,7 +2289,7 @@
           <Property Name="TrainingWillingness" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TrainingScore" Type="Int32" Nullable="false" />
           <Property Name="PsychologicalTraitID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__TrainingM__Psych__5887175A" FromRole="TrainingMotivation" ToRole="PsychologicalTraitsChart" />
+          <NavigationProperty Name="PsychologicalTraitsChart" Relationship="PhFitnessModel.FK__TrainingM__Psych__69E6AD86" FromRole="TrainingMotivation" ToRole="PsychologicalTraitsChart" />
         </EntityType>
         <EntityType Name="TrainingPurpose">
           <Key>
@@ -2245,6 +2311,21 @@
           <Property Name="TrainingTime" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="CreatedTime" Type="DateTime" Precision="3" />
           <Property Name="CreateUser" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TreadmillRecordDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
+          <Property Name="IntenPercen" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="MaxRunningSpeed" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ForceDuration" Type="Double" Nullable="false" />
+          <Property Name="Speed" Type="Double" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__Treadmill__Detec__10766AC2" FromRole="TreadmillRecordDetails" ToRole="DetectionTrainingRecord" />
         </EntityType>
         <EntityType Name="UniversitySchoolList">
           <Key>
@@ -2279,7 +2360,28 @@
           <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="UserPermissions" Relationship="PhFitnessModel.FK__UserPermi__RoleI__2D27B809" FromRole="UserRoles" ToRole="UserPermissions" />
         </EntityType>
-        <Association Name="FK__Appetite__Psycho__5B638405">
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Account" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CoachID" Type="Int32" />
+          <Property Name="AthleteID" Type="Int32" />
+          <Property Name="IsTemporaryPassword" Type="Boolean" />
+          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Users_Athletes" FromRole="Users" ToRole="Athletes" />
+          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Users_Coaches" FromRole="Users" ToRole="Coaches" />
+          <NavigationProperty Name="UserPermissions" Relationship="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" FromRole="Users" ToRole="UserPermissions" />
+        </EntityType>
+        <Association Name="FK__Appetite__Psycho__6CC31A31">
           <End Type="PhFitnessModel.PsychologicalTraitsChart" Role="PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -2441,6 +2543,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PsychologicalTraitsResults_Athletes">
+          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="1" />
+          <End Type="PhFitnessModel.PsychologicalTraitsResults" Role="PsychologicalTraitsResults" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PsychologicalTraitsResults">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ShootingRecord_Athletes">
           <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="0..1" />
           <End Type="PhFitnessModel.ShootingRecord" Role="ShootingRecord" Multiplicity="*" />
@@ -2449,6 +2563,18 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="ShootingRecord">
+              <PropertyRef Name="AthleteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Athletes">
+          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Users">
               <PropertyRef Name="AthleteID" />
             </Dependent>
           </ReferentialConstraint>
@@ -2474,6 +2600,18 @@
             </Principal>
             <Dependent Role="AthleteShootingRecord">
               <PropertyRef Name="SessionRPEShottingRecordID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__BikeRecor__Detec__162F4418">
+          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
+          <End Type="PhFitnessModel.BikeRecordDetails" Role="BikeRecordDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetectionTrainingRecord">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="BikeRecordDetails">
+              <PropertyRef Name="DetectionTrainingRecordId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2513,7 +2651,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Competiti__Psych__5E3FF0B0">
+        <Association Name="FK_Users_Coaches">
+          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
+          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coaches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="CoachID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Competiti__Psych__6F9F86DC">
           <End Type="PhFitnessModel.PsychologicalTraitsChart" Role="PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -2527,7 +2677,55 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FatigueLe__Psych__55AAAAAF">
+        <Association Name="FK__RollerSka__Detec__190BB0C3">
+          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
+          <End Type="PhFitnessModel.RollerSkatingRecordDetails" Role="RollerSkatingRecordDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetectionTrainingRecord">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="RollerSkatingRecordDetails">
+              <PropertyRef Name="DetectionTrainingRecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SwimmingR__Detec__1352D76D">
+          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
+          <End Type="PhFitnessModel.SwimmingRecordDetails" Role="SwimmingRecordDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetectionTrainingRecord">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SwimmingRecordDetails">
+              <PropertyRef Name="DetectionTrainingRecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Treadmill__Detec__10766AC2">
+          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
+          <End Type="PhFitnessModel.TreadmillRecordDetails" Role="TreadmillRecordDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetectionTrainingRecord">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TreadmillRecordDetails">
+              <PropertyRef Name="DetectionTrainingRecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TrackFieldRecordDetails_DetectionTrainingRecord">
+          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
+          <End Type="PhFitnessModel.TrackFieldRecordDetails" Role="TrackFieldRecordDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DetectionTrainingRecord">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TrackFieldRecordDetails">
+              <PropertyRef Name="DetectionTrainingRecordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FatigueLe__Psych__670A40DB">
           <End Type="PhFitnessModel.PsychologicalTraitsChart" Role="PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -2553,7 +2751,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SleepQual__Psych__52CE3E04">
+        <Association Name="FK__SleepQual__Psych__642DD430">
           <End Type="PhFitnessModel.PsychologicalTraitsChart" Role="PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -2567,7 +2765,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TrainingM__Psych__5887175A">
+        <Association Name="FK__TrainingM__Psych__69E6AD86">
           <End Type="PhFitnessModel.PsychologicalTraitsChart" Role="PsychologicalTraitsChart" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -2617,78 +2815,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="PsychologicalTraitsResults">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="PsychologicalDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Trait" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Feeling" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Score" Type="Int32" Nullable="false" />
-          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Users" Relationship="PhFitnessModel.FK__Psycholog__UserI__6304A5CD" FromRole="PsychologicalTraitsResults" ToRole="Users" />
-          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_PsychologicalTraitsResults_Athletes" FromRole="PsychologicalTraitsResults" ToRole="Athletes" />
-        </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="UID" />
-          </Key>
-          <Property Name="UID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Account" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CoachID" Type="Int32" />
-          <Property Name="AthleteID" Type="Int32" />
-          <NavigationProperty Name="Athletes" Relationship="PhFitnessModel.FK_Users_Athletes" FromRole="Users" ToRole="Athletes" />
-          <NavigationProperty Name="Coaches" Relationship="PhFitnessModel.FK_Users_Coaches" FromRole="Users" ToRole="Coaches" />
-          <NavigationProperty Name="PsychologicalTraitsResults" Relationship="PhFitnessModel.FK__Psycholog__UserI__6304A5CD" FromRole="Users" ToRole="PsychologicalTraitsResults" />
-          <NavigationProperty Name="UserPermissions" Relationship="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" FromRole="Users" ToRole="UserPermissions" />
-          <Property Name="IsTemporaryPassword" Type="Boolean" />
-        </EntityType>
-        <Association Name="FK_Users_Athletes">
-          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Athletes">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Users">
-              <PropertyRef Name="AthleteID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Users_Coaches">
-          <End Type="PhFitnessModel.Coaches" Role="Coaches" Multiplicity="0..1" />
-          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Coaches">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Users">
-              <PropertyRef Name="CoachID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Psycholog__UserI__6304A5CD">
-          <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="1" />
-          <End Type="PhFitnessModel.PsychologicalTraitsResults" Role="PsychologicalTraitsResults" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UID" />
-            </Principal>
-            <Dependent Role="PsychologicalTraitsResults">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__UserPermi__UserI__2C3393D0">
           <End Type="PhFitnessModel.Users" Role="Users" Multiplicity="1" />
           <End Type="PhFitnessModel.UserPermissions" Role="UserPermissions" Multiplicity="*" />
@@ -2697,150 +2823,6 @@
               <PropertyRef Name="UID" />
             </Principal>
             <Dependent Role="UserPermissions">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="RollerSkatingRecordDetails">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
-          <Property Name="Distance" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ForceDuration" Type="Double" Nullable="false" />
-          <Property Name="Speed" Type="Double" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__RollerSka__Detec__190BB0C3" FromRole="RollerSkatingRecordDetails" ToRole="DetectionTrainingRecord" />
-        </EntityType>
-        <Association Name="FK__RollerSka__Detec__190BB0C3">
-          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
-          <End Type="PhFitnessModel.RollerSkatingRecordDetails" Role="RollerSkatingRecordDetails" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DetectionTrainingRecord">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="RollerSkatingRecordDetails">
-              <PropertyRef Name="DetectionTrainingRecordId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="BikeRecordDetails">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
-          <Property Name="MaxPower" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="IntenPercen" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ForceDuration" Type="Double" Nullable="false" />
-          <Property Name="Speed" Type="Double" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__BikeRecor__Detec__162F4418" FromRole="BikeRecordDetails" ToRole="DetectionTrainingRecord" />
-        </EntityType>
-        <EntityType Name="SwimmingRecordDetails">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
-          <Property Name="Distance" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ForceDuration" Type="Double" Nullable="false" />
-          <Property Name="Speed" Type="Double" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__SwimmingR__Detec__1352D76D" FromRole="SwimmingRecordDetails" ToRole="DetectionTrainingRecord" />
-        </EntityType>
-        <EntityType Name="TreadmillRecordDetails">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
-          <Property Name="IntenPercen" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="MaxRunningSpeed" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="ForceDuration" Type="Double" Nullable="false" />
-          <Property Name="Speed" Type="Double" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK__Treadmill__Detec__10766AC2" FromRole="TreadmillRecordDetails" ToRole="DetectionTrainingRecord" />
-        </EntityType>
-        <Association Name="FK__BikeRecor__Detec__162F4418">
-          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
-          <End Type="PhFitnessModel.BikeRecordDetails" Role="BikeRecordDetails" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DetectionTrainingRecord">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="BikeRecordDetails">
-              <PropertyRef Name="DetectionTrainingRecordId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SwimmingR__Detec__1352D76D">
-          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
-          <End Type="PhFitnessModel.SwimmingRecordDetails" Role="SwimmingRecordDetails" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DetectionTrainingRecord">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="SwimmingRecordDetails">
-              <PropertyRef Name="DetectionTrainingRecordId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Treadmill__Detec__10766AC2">
-          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
-          <End Type="PhFitnessModel.TreadmillRecordDetails" Role="TreadmillRecordDetails" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DetectionTrainingRecord">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TreadmillRecordDetails">
-              <PropertyRef Name="DetectionTrainingRecordId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="TrackFieldRecordDetails">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DetectionTrainingRecordId" Type="Int32" Nullable="false" />
-          <Property Name="Distance" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="ForceDuration" Type="Double" Nullable="false" />
-          <Property Name="Speed" Type="Double" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="TrainingDateTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="DetectionTrainingRecord" Relationship="PhFitnessModel.FK_TrackFieldRecordDetails_DetectionTrainingRecord" FromRole="TrackFieldRecordDetails" ToRole="DetectionTrainingRecord" />
-        </EntityType>
-        <Association Name="FK_TrackFieldRecordDetails_DetectionTrainingRecord">
-          <End Type="PhFitnessModel.DetectionTrainingRecord" Role="DetectionTrainingRecord" Multiplicity="1" />
-          <End Type="PhFitnessModel.TrackFieldRecordDetails" Role="TrackFieldRecordDetails" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DetectionTrainingRecord">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="TrackFieldRecordDetails">
-              <PropertyRef Name="DetectionTrainingRecordId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PsychologicalTraitsResults_Athletes">
-          <End Type="PhFitnessModel.Athletes" Role="Athletes" Multiplicity="1" />
-          <End Type="PhFitnessModel.PsychologicalTraitsResults" Role="PsychologicalTraitsResults" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Athletes">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="PsychologicalTraitsResults">
               <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
@@ -3029,6 +3011,21 @@
                 <ScalarProperty Name="CoachID" ColumnName="CoachID" />
                 <ScalarProperty Name="Coach" ColumnName="Coach" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BikeRecordDetails">
+            <EntityTypeMapping TypeName="PhFitnessModel.BikeRecordDetails">
+              <MappingFragment StoreEntitySet="BikeRecordDetails">
+                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Speed" ColumnName="Speed" />
+                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
+                <ScalarProperty Name="IntenPercen" ColumnName="IntenPercen" />
+                <ScalarProperty Name="MaxPower" ColumnName="MaxPower" />
+                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3274,6 +3271,33 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PsychologicalTraitsResults">
+            <EntityTypeMapping TypeName="PhFitnessModel.PsychologicalTraitsResults">
+              <MappingFragment StoreEntitySet="PsychologicalTraitsResults">
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Feeling" ColumnName="Feeling" />
+                <ScalarProperty Name="Trait" ColumnName="Trait" />
+                <ScalarProperty Name="PsychologicalDate" ColumnName="PsychologicalDate" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RollerSkatingRecordDetails">
+            <EntityTypeMapping TypeName="PhFitnessModel.RollerSkatingRecordDetails">
+              <MappingFragment StoreEntitySet="RollerSkatingRecordDetails">
+                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Speed" ColumnName="Speed" />
+                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="RPE">
             <EntityTypeMapping TypeName="PhFitnessModel.RPE">
               <MappingFragment StoreEntitySet="RPE">
@@ -3428,6 +3452,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="SwimmingRecordDetails">
+            <EntityTypeMapping TypeName="PhFitnessModel.SwimmingRecordDetails">
+              <MappingFragment StoreEntitySet="SwimmingRecordDetails">
+                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Speed" ColumnName="Speed" />
+                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="TechnologyCategory">
             <EntityTypeMapping TypeName="PhFitnessModel.TechnologyCategory">
               <MappingFragment StoreEntitySet="TechnologyCategory">
@@ -3439,6 +3477,20 @@
                 <ScalarProperty Name="DifficultyClassification" ColumnName="DifficultyClassification" />
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemNumber" ColumnName="ItemNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrackFieldRecordDetails">
+            <EntityTypeMapping TypeName="PhFitnessModel.TrackFieldRecordDetails">
+              <MappingFragment StoreEntitySet="TrackFieldRecordDetails">
+                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Speed" ColumnName="Speed" />
+                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3496,6 +3548,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TreadmillRecordDetails">
+            <EntityTypeMapping TypeName="PhFitnessModel.TreadmillRecordDetails">
+              <MappingFragment StoreEntitySet="TreadmillRecordDetails">
+                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Speed" ColumnName="Speed" />
+                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
+                <ScalarProperty Name="MaxRunningSpeed" ColumnName="MaxRunningSpeed" />
+                <ScalarProperty Name="IntenPercen" ColumnName="IntenPercen" />
+                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="UniversitySchoolList">
             <EntityTypeMapping TypeName="PhFitnessModel.UniversitySchoolList">
               <MappingFragment StoreEntitySet="UniversitySchoolList">
@@ -3526,19 +3593,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PsychologicalTraitsResults">
-            <EntityTypeMapping TypeName="PhFitnessModel.PsychologicalTraitsResults">
-              <MappingFragment StoreEntitySet="PsychologicalTraitsResults">
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="Score" ColumnName="Score" />
-                <ScalarProperty Name="Feeling" ColumnName="Feeling" />
-                <ScalarProperty Name="Trait" ColumnName="Trait" />
-                <ScalarProperty Name="PsychologicalDate" ColumnName="PsychologicalDate" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="PhFitnessModel.Users">
               <MappingFragment StoreEntitySet="Users">
@@ -3555,78 +3609,6 @@
                 <ScalarProperty Name="Account" ColumnName="Account" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="UID" ColumnName="UID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RollerSkatingRecordDetails">
-            <EntityTypeMapping TypeName="PhFitnessModel.RollerSkatingRecordDetails">
-              <MappingFragment StoreEntitySet="RollerSkatingRecordDetails">
-                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Speed" ColumnName="Speed" />
-                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
-                <ScalarProperty Name="Distance" ColumnName="Distance" />
-                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BikeRecordDetails">
-            <EntityTypeMapping TypeName="PhFitnessModel.BikeRecordDetails">
-              <MappingFragment StoreEntitySet="BikeRecordDetails">
-                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Speed" ColumnName="Speed" />
-                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
-                <ScalarProperty Name="IntenPercen" ColumnName="IntenPercen" />
-                <ScalarProperty Name="MaxPower" ColumnName="MaxPower" />
-                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SwimmingRecordDetails">
-            <EntityTypeMapping TypeName="PhFitnessModel.SwimmingRecordDetails">
-              <MappingFragment StoreEntitySet="SwimmingRecordDetails">
-                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Speed" ColumnName="Speed" />
-                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
-                <ScalarProperty Name="Distance" ColumnName="Distance" />
-                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TreadmillRecordDetails">
-            <EntityTypeMapping TypeName="PhFitnessModel.TreadmillRecordDetails">
-              <MappingFragment StoreEntitySet="TreadmillRecordDetails">
-                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Speed" ColumnName="Speed" />
-                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
-                <ScalarProperty Name="MaxRunningSpeed" ColumnName="MaxRunningSpeed" />
-                <ScalarProperty Name="IntenPercen" ColumnName="IntenPercen" />
-                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TrackFieldRecordDetails">
-            <EntityTypeMapping TypeName="PhFitnessModel.TrackFieldRecordDetails">
-              <MappingFragment StoreEntitySet="TrackFieldRecordDetails">
-                <ScalarProperty Name="TrainingDateTime" ColumnName="TrainingDateTime" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Speed" ColumnName="Speed" />
-                <ScalarProperty Name="ForceDuration" ColumnName="ForceDuration" />
-                <ScalarProperty Name="Distance" ColumnName="Distance" />
-                <ScalarProperty Name="DetectionTrainingRecordId" ColumnName="DetectionTrainingRecordId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

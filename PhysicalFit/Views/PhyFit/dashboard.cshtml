@@ -298,11 +298,6 @@
                             <label for="TrainingVol" style="font-size: 20px;">前次訓練效果_無氧能力</label>
                             <input type="text" class="form-control" id="AnaerobicTrainingVol" placeholder="">
                         </div>
-                        <!-- 速耐力間歇跑訓練處方區域 -->
-                        @*<div class="speed-prescription-section">
-                                <label for="SpeedPres" style="font-size: 20px;">速耐力間歇跑訓練處方</label>
-                                <input type="text" class="form-control" id="SpeedPres" placeholder="">
-                            </div>*@
                         <input type="hidden" id="CriticalSpeed" name="criticalSpeed" />
                         <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />
 
@@ -314,10 +309,6 @@
                 </div>
             </div>
             <div id="distanceDetails" style="margin-top: -500px;"></div>
-            @*@using (Html.BeginForm("RedirectToPrescription", "PhyFit", FormMethod.Post))
-                {
-                    <button type="submit" class="btn btn-primary" style="margin-top: 100px;" id="btn_Prescription">訓練處方系統</button>
-                }*@
         </div>
     }
 

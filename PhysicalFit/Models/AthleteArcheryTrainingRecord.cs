@@ -23,7 +23,7 @@ namespace PhysicalFit.Models
         public Nullable<int> Poundage { get; set; }
         public Nullable<int> ArrowCount { get; set; }
         public Nullable<int> RPEscore { get; set; }
-        public Nullable<int> EachTrainingLoad { get; set; }
+        public Nullable<decimal> EachTrainingLoad { get; set; }
         public Nullable<int> DailyTrainingLoad { get; set; }
         public Nullable<int> SessionRPEAthleteRecordID { get; set; }
     

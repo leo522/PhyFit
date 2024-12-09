@@ -20,7 +20,7 @@ namespace PhysicalFit.Models
         public string TrainingOther { get; set; }
         public string TrainingTime { get; set; }
         public int RPEscore { get; set; }
-        public int EachTrainingLoad { get; set; }
+        public decimal EachTrainingLoad { get; set; }
     }
 
     public class ArcheryTrainingRecordViewModel
@@ -31,7 +31,7 @@ namespace PhysicalFit.Models
         public int Poundage { get; set; }
         public int ArrowCount { get; set; }
         public int RPEscore { get; set; }
-        public int EachTrainingLoad { get; set; }
+        public decimal EachTrainingLoad { get; set; }
     }
 
     public class ShootingTrainingRecordViewModel
@@ -42,7 +42,7 @@ namespace PhysicalFit.Models
         public string ShootingTool { get; set; }
         public int BulletCount { get; set; }
         public int RPEscore { get; set; }
-        public int EachTrainingLoad { get; set; }
+        public decimal EachTrainingLoad { get; set; }
     }
 
     public class TrainingRecordViewModel

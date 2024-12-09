@@ -26,7 +26,7 @@ namespace PhysicalFit.Models
         public string TrainingOther { get; set; }
         public string TrainingTime { get; set; }
         public Nullable<int> RPEscore { get; set; }
-        public Nullable<int> EachTrainingLoad { get; set; }
+        public Nullable<decimal> EachTrainingLoad { get; set; }
         public Nullable<int> DailyTrainingLoad { get; set; }
         public string Coach { get; set; }
         public string Athlete { get; set; }

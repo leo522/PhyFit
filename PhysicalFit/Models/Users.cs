@@ -17,7 +17,6 @@ namespace PhysicalFit.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Users()
         {
-            this.PsychologicalTraitsResults = new HashSet<PsychologicalTraitsResults>();
             this.UserPermissions = new HashSet<UserPermissions>();
         }
     
@@ -37,8 +36,6 @@ namespace PhysicalFit.Models
     
         public virtual Athletes Athletes { get; set; }
         public virtual Coaches Coaches { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PsychologicalTraitsResults> PsychologicalTraitsResults { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPermissions> UserPermissions { get; set; }
     }
