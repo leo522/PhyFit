@@ -5,29 +5,7 @@
     <link href="~/FlatPickr/flatpickr.min.css" rel="stylesheet" />
     <script src="~/FlatPickr/flatpickr.js"></script>
     <script src="~/FlatPickr/zh-tw.js"></script>
-    <style>
-        /* 表格樣式 */
-        #trainingMonitoringTable {
-            width: 100%; /* 表格寬度填滿容器 */
-            border-collapse: collapse; /* 合併邊框 */
-            table-layout: auto; /* 讓欄位根據內容自適應 */
-        }
-
-            #trainingMonitoringTable th {
-                background-color: #f9f9f9;
-            }
-
-        /* 按鈕樣式 */
-        .btn {
-            padding: 5px 10px;
-            font-size: 14px;
-        }
-
-        .add-row,
-        .remove-row {
-            width: 35px; /* 固定按鈕寬度 */
-        }
-    </style>
+    <link href="~/css/TrainingMonitorStyle.css" rel="stylesheet" /> @*Table樣式*@
 </head>
 <body>
     <div>
@@ -124,7 +102,7 @@
         </table>
     </div>
 
-<script>
+    <script>
         $(document).ready(function () {
             // 初始化 flatpickr 日期選擇器
             function initializeFlatpickr() {

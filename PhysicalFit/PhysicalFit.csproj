@@ -366,6 +366,7 @@
     <Content Include="css\MainBkStyle.css" />
     <Content Include="css\registerStyle.css" />
     <Content Include="css\RPE_Modal.css" />
+    <Content Include="css\TrainingMonitorStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="FlatPickr\flatpickr.js" />
     <Content Include="FlatPickr\flatpickr.min.css" />
