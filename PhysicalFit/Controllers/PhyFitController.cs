@@ -135,8 +135,6 @@ namespace PhysicalFit.Controllers
             }
             catch (Exception ex)
             {
-                // 記錄錯誤信息或將錯誤返回到前端
-                // Logger.Log(ex);
                 return new HttpStatusCodeResult(500, ex.Message);
             }
         }
