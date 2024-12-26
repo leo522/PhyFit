@@ -6,8 +6,8 @@ var PoolMaxR = 0;
 var PoolMaxR_a = 0;
 var PoolMaxR_b = 0;
 var PoolTotT = 0;
-var PoolLimitSpeed = 0;
-var PoolMaxWork = 0;
+var PoolLimitSpeed = 0; //臨界速度
+var PoolMaxWork = 0; //最大無氧做功
 
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');
@@ -47,12 +47,10 @@ function CaculatePoolSpeed(distance, failureTime) {
             return;
         }
         var speed = (distance / timeValue * 3.6).toFixed(1); // 轉換為 km/h
-        debugger;
         // 找到對應的速度<td>元素並更新內容
         var speedElement = timeElement.parentElement.nextElementSibling;
         if (speedElement && speedElement.classList.contains('speed')) {
             speedElement.textContent = speed;
-            debugger;
         }
     }
 
@@ -135,5 +133,6 @@ function PoolCaculateLinearRegression() {
     PoolMaxWork = PoolMaxR_a.toFixed(2); //臨界速度
     document.getElementById("AnaerobicPower").value = PoolMaxWork; //最大無氧做功
 
-    document.getElementById("calculationResult").value = (Math.floor(MaxR * 100) / 100).toFixed(2); //r^2，決定係數
+    //document.getElementById("calculationResult").value = (Math.floor(MaxR * 100) / 100).toFixed(2); //r^2，決定係數
+    $('#calculationResult').val(Math.floor(MaxR * 100) / 100);
 }

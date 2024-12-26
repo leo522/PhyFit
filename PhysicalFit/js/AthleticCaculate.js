@@ -1,38 +1,21 @@
-﻿//AthleticCaculate.js 田徑
+﻿/*田徑計算公式.js*/
+var TrackLimitSpeed = 0; //臨界速度
+var TrackMaxWork = 0; //最大無氧做功
 var FailureTime200 = 0;
 var FailureTime400 = 0;
 var FailureTime800 = 0;
 var FailureTime1200 = 0;
 var TrackTotT = 0;
-var TrackLimitSpeed = 0;
-var TrackMaxWork = 0;
 var TrackMaxR = 0;
 var TrackMaxR_a;
 var TrackMaxR_b;
-var TrackLimitSpeed = 0; //臨界速度
-var TrackMaxWork = 0; //最大無氧做功
 var TreadmillTotT = 0; //訓練量
 var TreadmillCurrentSets = 1; //設定組數
-//var TreadmillCurrentMode = "SingleSet"; //處方訓練模式，單組模式
 
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');
     var distance = parseFloat(row.find('td').eq(0).text());
     var exhaustionTime = parseFloat($(inputElement).val());
-
-    //if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
-    //    var speed = (distance / exhaustionTime) * 3.6;
-    //    row.find('td').eq(2).text(speed.toFixed(2));
-    //} else {
-    //    row.find('td').eq(2).text('');
-    //}
-    if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
-        var speed = (distance / exhaustionTime) * 3.6;
-        // 使用 id 來選擇元素
-        row.find('#speed-result').val(speed.toFixed(2)); // 更新速度結果
-    } else {
-        row.find('#speed-result').val(''); // 清空速度
-    }
 
     trackCalculateLinearRegression();
 }
@@ -140,33 +123,7 @@ function trackCalculateLinearRegression() {
     TrackMaxWork = TrackMaxR_a.toFixed(2); //最大無氧做功
     document.getElementById("AnaerobicPower").value = TrackMaxWork; //最大無氧做功
 
-
     $('#calculationResult').val(Math.floor(maxR * 100) / 100);
-}
-
-//計算運動量
-
-
-function TreadmillPrescriptionTable(Mode, SetNum) {
-    TreadmillCurrentMode = Mode;
-    TreadmillCurrentSets = SetNum;
-    var xmlhttp;
-    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-    }
-    else {// code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            document.getElementById("div_PrescriptionInfo").innerHTML = xmlhttp.responseText;
-            TreadmillFactor = document.getElementById("select_TM_Factor").value;
-            TreadmillPrescriptionAttribute();
-            TreadmillInitialPrescription();
-        }
-    }
-    xmlhttp.open("GET", "Treadmill/Prescription.php?Mode=" + TreadmillCurrentMode + "&SetNum=" + TreadmillCurrentSets, true);
-    xmlhttp.send();
 }
 
 //訓練量
@@ -178,6 +135,5 @@ function TreadmillTotalT() {
         /*TotalTraining = TotalTraining + 1 ;*/
         TotalTraining = TotalTraining + 1 * (+ i).value;
     }
-    
     document.getElementById("TrainingVol").value = TotT.toFixed(2);
 }

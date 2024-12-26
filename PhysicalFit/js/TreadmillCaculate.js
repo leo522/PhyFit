@@ -1,4 +1,5 @@
-﻿var MaxSpeed = 0;
+﻿/*跑步機計算公式*/
+var MaxSpeed = 0;
 var TreadmillLimitSpeed = 0; //臨界速度
 var TreadmillMaxWork = 0 //最大無氧做功
 var FailureTime95 = 0, FailureTime90 = 0, FailureTime85 = 0, FailureTime80 = 0;
@@ -10,22 +11,33 @@ var TreadmillDistance85 = 0;
 var TreadmillDistance80 = 0;
 
 function CaculateTreadmillSpeed() {
+    var maxSpeedInput = document.getElementById("MaxSpeed"); //取得 MaxSpeed 輸入框元素
 
-    var maxSpeed = parseFloat(document.getElementById("MaxSpeed").value);
+    // 檢查元素是否存在且有值
+    if (!maxSpeedInput || maxSpeedInput.value.trim() === "") {
+        return;
+    }
 
+    // 取得輸入的最大跑速值
+    var maxSpeed = parseFloat(maxSpeedInput.value);
+
+    // 檢查是否為有效數字
     if (isNaN(maxSpeed)) {
         return;
     }
 
+    // 取得數據表格
     var table = document.getElementById("dataTable");
+    if (!table) {
+        return;
+    }
+
+    // 逐行計算速度
     var rows = table.getElementsByTagName("tr");
-
     for (var i = 0; i < rows.length; i++) {
-
         var cells = rows[i].getElementsByTagName("td");
 
         if (cells.length > 0) {
-
             var intensityPercentage = parseFloat(cells[0].innerText.replace('%', '')); // 移除百分號
             var speed = (maxSpeed * (intensityPercentage / 100)).toFixed(1);
             cells[2].innerText = speed;
@@ -34,10 +46,8 @@ function CaculateTreadmillSpeed() {
 }
 
 function calculateSpeed(input) {
-
     MaxSpeed = parseFloat(document.getElementById("MaxSpeed").value);
     var time = parseFloat(input.value);
-
     var intensity = parseFloat(input.getAttribute("data-distance")); // 動態獲取強度百分比
 
     TreadMillMaxR = 0;

@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿/*檢測系統*/
+$(document).ready(function () {
     initializeModal("RPEModalTraining", "openRPEModal");
     initializeModal("RPEModalArchery", "openRPEModalArchery");
     initializeModal("RPEModalShooting", "openRPEModalShooting");

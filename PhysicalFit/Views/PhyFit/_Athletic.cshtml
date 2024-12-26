@@ -37,24 +37,25 @@
                                 @foreach (var distance in Model)
                                 {
                                     <tr>
-                                        <td>
-                                            @distance
-                                        </td>
+                                        <td>@distance</td>
                                         <td>
                                             <input type="text" class="form-control exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" />
                                         </td>
-                                        <td>
+                                        <td class="speed-result"></td>
+                                        @*<td>
                                             <input type="text" class="speed-result" readonly style="width: 100%;"/>
-                                        </td>
+                                        </td>*@
                                     </tr>
                                 }
                             </tbody>
-                            <tfoot>
+                            @*<tfoot>*@
                                 <tr>
                                     <td><i>r</i><sup>2</sup></td>
-                                    <td colspan="2"><input type="text" id="calculationResult" class="form-control" readonly /></td>
+                                    <td colspan="2">
+                                    <input type="text" id="calculationResult" class="form-control" readonly />
+                                    </td>
                                 </tr>
-                            </tfoot>
+                            @*</tfoot>*@
                         </table>
                     </div>
                 </div>
@@ -97,10 +98,10 @@
             var exhaustionTime = parseFloat($(inputElement).val());
 
             if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
-                var speed = (distance / exhaustionTime) * 3.6;
-                row.find('.speed-result').val(speed.toFixed(2)); // 更新速度結果
+                var speed = (distance / exhaustionTime) * 3.6; // 計算速度
+                row.find('.speed-result').text(speed.toFixed(2)); // 更新速度結果到 <td>
             } else {
-                row.find('.speed-result').val(''); // 清空速度
+                row.find('.speed-result').text(''); // 清空速度結果
             }
 
             trackCalculateLinearRegression();

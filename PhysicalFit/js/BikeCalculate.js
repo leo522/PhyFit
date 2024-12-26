@@ -1,59 +1,84 @@
-﻿var BickmillFailureTime95 = 0;
-var BickmillFailureTime90 = 0;
-var BickmillFailureTime85 = 0;
-var BickmillFailureTime80 = 0;
-var BickmillMaxSpeed = 0;
-var BickmillCurrentSets = 1;
-var BickmillTotT = 0;
-var BickmillLimitSpeed = 0;
-var BickmillMaxWork = 0;
+﻿/*自由車計算公式*/
+var MaxSpeed = 0;
+var BickmillLimitSpeed = 0; //臨界速度
+var BickmillMaxWork = 0; //最大無氧做功
 var BickMillMaxR_a;
 var BickMillMaxR_b;
+var BickmillFailureTime95 = 0, BickmillFailureTime90 = 0, BickmillFailureTime85 = 0, BickmillFailureTime80 = 0;
+var BickmillDistance95 = 0;
+var BickmillDistance90 = 0;
+var BickmillDistance85 = 0;
+var BickmillDistance80 = 0;
+var BickmillCurrentSets = 1;
+var BickmillTotT = 0;
 
 function CaculatePowerSpeed() {
-    var MaxSpeed = parseFloat(document.getElementById("MaxSpeed").value);
 
-    if (isNaN(MaxSpeed) || MaxSpeed === '') {
-        Swal.fire({
-            title: '輸入錯誤',
-            text: '請先輸入最大功率瓦數。',
-            icon: 'warning',
-            confirmButtonText: '確定'
-        });
-        return; // 終止函式的執行
+    // 取得 MaxSpeed 輸入框元素
+    var maxSpeedInput = document.getElementById("MaxSpeed");
+
+    // 檢查元素是否存在且有值
+    if (!maxSpeedInput || maxSpeedInput.value.trim() === "") {
+        console.warn("MaxSpeed 尚未輸入，無法進行計算");
+        return;
     }
 
-    var table = document.getElementById("dataTable");
-    var rows = table.getElementsByTagName("tr");
+    // 取得輸入的最大跑速值
+    var maxSpeed = parseFloat(maxSpeedInput.value);
 
+    // 檢查是否為有效數字
+    if (isNaN(maxSpeed)) {
+        console.warn("MaxSpeed 的值無效");
+        return;
+    }
+
+    // 取得數據表格
+    var table = document.getElementById("dataTable");
+    if (!table) {
+        console.warn("資料表格不存在");
+        return;
+    }
+
+    // 逐行計算速度
+    var rows = table.getElementsByTagName("tr");
     for (var i = 0; i < rows.length; i++) {
         var cells = rows[i].getElementsByTagName("td");
+
         if (cells.length > 0) {
             var intensityPercentage = parseFloat(cells[0].innerText.replace('%', '')); // 移除百分號
-            var speed = (MaxSpeed * (intensityPercentage / 100)).toFixed(1);
+            var speed = (maxSpeed * (intensityPercentage / 100)).toFixed(1);
             cells[2].innerText = speed;
         }
     }
 }
 
 function calculateBikeSpeed(input) {
-    var MaxSpeed = parseFloat(document.getElementById("MaxSpeed").value);
+    // 確保 MaxSpeed 元素存在
+    var maxSpeedInput = document.getElementById("MaxSpeed");
 
-    // 檢查 MaxSpeed 是否已設定
-    if (isNaN(MaxSpeed) || MaxSpeed === '') {
-        Swal.fire({
-            title: '輸入錯誤',
-            text: '請先執行最大速度計算。',
-            icon: 'warning',
-            confirmButtonText: '確定'
-        });
-        return; // 如果 MaxSpeed 尚未設定，則不執行後續代碼
+    if (!maxSpeedInput || maxSpeedInput.value.trim() === "") {
+        console.warn("MaxSpeed 尚未輸入，無法進行計算");
+        return;
+    }
+
+    // 確保 MaxSpeed 是有效的數字
+    MaxSpeed = parseFloat(maxSpeedInput.value);
+    if (isNaN(MaxSpeed)) {
+        console.warn("MaxSpeed 的值無效");
+        return;
     }
 
     var time = parseFloat(input.value);
-    var Strong = parseFloat(input.getAttribute("data-distance")); // 動態獲取強度百分比
+    if (isNaN(time)) {
+        console.warn("時間輸入無效");
+        return;
+    }
 
-    BickMillMaxR = 0;
+    var Strong = parseFloat(input.getAttribute("data-distance")); // 動態獲取強度百分比
+    if (isNaN(Strong)) {
+        console.warn("強度百分比無效");
+        return;
+    }
 
     switch (Strong) {
         case 95:
@@ -123,14 +148,14 @@ function calculateBikeSpeed(input) {
 
         mxy = 3 * (X_1 * Y_1 + X_2 * Y_2 + X_3 * Y_3);
         xx = X_1 + X_2 + X_3;
-        yy = parseFloat(Y_1) + parseFloat(Y_2) + parseFloat(Y_3); //轉型
+        yy = parseFloat(Y_1) + parseFloat(Y_2) + parseFloat(Y_3);
         x2 = 3 * (X_1 * X_1 + X_2 * X_2 + X_3 * X_3);
         x22 = X_1 + X_2 + X_3;
 
         b = (mxy - xx * yy) / (x2 - x22 * x22);
         a = yy / 3 - b * xx / 3;
 
-        var Y_Average = (parseFloat(Y_1) + parseFloat(Y_2) + parseFloat(Y_3)) / 3; //轉型
+        var Y_Average = (parseFloat(Y_1) + parseFloat(Y_2) + parseFloat(Y_3)) / 3;
         var Y_DistanceWithBar = (Y_1 - Y_Average) * (Y_1 - Y_Average) + (Y_2 - Y_Average) * (Y_2 - Y_Average) + (Y_3 - Y_Average) * (Y_3 - Y_Average);
         var Y_DistanceWithLine = (Y_1 - (b * X_1 + a)) * (Y_1 - (b * X_1 + a)) + (Y_2 - (b * X_2 + a)) * (Y_2 - (b * X_2 + a)) + (Y_3 - (b * X_3 + a)) * (Y_3 - (b * X_3 + a));
         var R2 = 1 - (Y_DistanceWithLine / Y_DistanceWithBar);
@@ -146,17 +171,10 @@ function calculateBikeSpeed(input) {
     BickMillMaxR_b = MaxR_b;
 
     BickmillLimitSpeed = BickMillMaxR_b.toFixed(1);
-    document.getElementById("CriticalSpeed").value = BickmillLimitSpeed; //臨界速度
+    document.getElementById("CriticalSpeed").value = BickmillLimitSpeed; // 臨界速度
 
     BickmillMaxWork = (BickMillMaxR_a / 1000).toFixed(2);
-    document.getElementById("AnaerobicPower").value = BickmillMaxWork; //最大無氧做功
+    document.getElementById("AnaerobicPower").value = BickmillMaxWork; // 最大無氧做功
 
     $('#calculationResult').val(Math.floor(MaxR * 100) / 100);
-
-    //BickMillMaxR = Math.floor(MaxR * 100) / 100;
-    //if (document.getElementById("calculationResult")) {
-    //    document.getElementById("calculationResult").value = BickMillMaxR;
-    //} else {
-    //    console.error("Element with id 'calculationResult' not found.");
-    //}
 }

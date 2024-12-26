@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="~/Scripts/SwimmingPoolCaculate.js"></script> @*游泳計算公式*@
     <script src="~/Scripts/jquery-3.7.0.min.js"></script>
+    <script src="~/js/SwimmingPoolCaculate.js"></script> @*游泳計算公式*@
 </head>
 <body>
     <div class="container">
@@ -39,9 +39,11 @@
                                     <tr>
                                         <td>@distance</td>
                                         <td>
-                                            <input type="text" class="swim-time" data-distance="@distance" oninput="calculateSpeed(this)" />
+                                            <input type="text" class="form-control exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" />
                                         </td>
-                                        <td class="swim-speed"></td>
+                                        <td>
+                                            <input type="text" class="speed-result" readonly style="width: 100%;" />
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

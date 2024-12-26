@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="~/Scripts/TreadmillCaculate.js"></script> @*跑步機計算公式*@
+    <script src="~/js/TreadmillCaculate.js"></script> @*跑步機計算公式*@
     <script src="~/Scripts/jquery-3.7.0.min.js"></script>
 </head>
 <body>
@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="row justify-content-end" style="margin-top:20px;">
+            <div class="row justify-content-end">
                 <div class="col-md-7">
                     <div class="card">
                         <div class="card-body">
@@ -42,11 +42,9 @@
                                     @foreach (var distance in Model)
                                     {
                                         <tr>
+                                            <td>@distance</td>
                                             <td>
-                                                @distance
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control Tread-time" data-distance="@distance" oninput="calculateSpeed(this)" />
+                                                <input type="text" class=" Tread-time" data-distance="@distance" oninput="calculateSpeed(this)" />
                                             </td>
                                             <td class="tread-speed"></td>
                                         </tr>
@@ -54,7 +52,9 @@
                                 </tbody>
                                 <tr>
                                     <td><i>r</i> <sup>2</sup></td>
-                                    <td><input type="text" id="calculationResult" class="form-control" readonly /></td>
+                                    <td colspan="2">
+                                        <input type="text" id="calculationResult" class="form-control" readonly />
+                                    </td>
                                 </tr>
                             </table>
                         </div>
