@@ -174,7 +174,6 @@
 //        document.getElementById("TrainingVol").value = TotT.toFixed(2);
 //    }
 
-
 var FailureTime100 = 0; // 新增 100m 力竭時間
 var FailureTime200 = 0;
 var FailureTime500 = 0;
@@ -199,12 +198,12 @@ function calculateSpeed(inputElement) {
 
     if (!isNaN(distance) && !isNaN(rollertime) && rollertime > 0) {
         var speed = (distance / rollertime) * 3.6;
-        row.find('.roller-result').val(speed.toFixed(2)); // 更新速度結果
+        row.find('.roller-result').text(speed.toFixed(2)); //更新速度結果
     } else {
-        row.find('.roller-result').val(''); // 清空速度
+        row.find('.roller-result').text(''); //清空速度
     }
 
-    rollerCalculateLinearRegression();  // 每次更新速度時也呼叫線性回歸計算
+    rollerCalculateLinearRegression();  //每次更新速度時也呼叫線性回歸計算
 }
 
 function getFailureTime(distance) {

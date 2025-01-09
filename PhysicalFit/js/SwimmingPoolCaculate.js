@@ -1,4 +1,5 @@
-﻿var PoolFailureTime100 = 0;
+﻿/*游泳計算公式*/
+var PoolFailureTime100 = 0;
 var PoolFailureTime200 = 0;
 var PoolFailureTime400 = 0;
 var PoolFailureTime800 = 0;
@@ -16,9 +17,10 @@ function calculateSpeed(inputElement) {
 
     if (!isNaN(distance) && !isNaN(failureTime) && failureTime > 0) {
         var speed = (distance / failureTime);
-        row.find('td').eq(2).text(speed.toFixed(1));
+        row.find('.speed-result').text(speed.toFixed(1)); //正確地更新速度顯示
+
     } else {
-        row.find('td').eq(2).text('');
+        row.find('.speed-result').text(''); //清空顯示
     }
 
     CaculatePoolSpeed(distance, failureTime);

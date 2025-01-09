@@ -320,7 +320,6 @@ namespace PhysicalFit.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("其他錯誤: " + ex.Message);
                 return RedirectToAction("Error404", "Error");
             }
         }

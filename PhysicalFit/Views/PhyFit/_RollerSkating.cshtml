@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!--<script src="~/js/RollerSkatingCaculate.js"></script>--> @*滑輪溜冰計算公式*@
+    <script src="~/js/RollerSkatingCaculate.js"></script> @*滑輪溜冰計算公式*@
     <script src="~/Scripts/jquery-3.7.0.min.js"></script>
 </head>
 <body>
@@ -41,9 +41,8 @@
                                         <td>
                                             <input type="text" class="roller-time" data-distance="@distance" oninput="calculateSpeed(this)" />
                                         </td>
-                                        <td>
-                                            <input type="text" class="roller-result" readonly style="width: 100%;" />
-                                        </td>
+
+                                        <td class="roller-result"></td>
                                     </tr>
                                 }
                             </tbody>
