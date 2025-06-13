@@ -10,6 +10,7 @@ namespace PhysicalFit.Controllers
     {
         public ActionResult Error404()
         {
+            ViewBag.ErrorMessage = TempData["ErrorMsg"];
             return View("Error404");
         }
 

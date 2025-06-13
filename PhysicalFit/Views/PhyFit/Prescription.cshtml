@@ -12,7 +12,6 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <!-- 卡片：檢測系統詳情 -->
                 <div class="card mb-4">
                     <div class="card-header">
                         <h4>有/無氧代謝能力測定：<span id="selectedSportItem"></span></h4>
@@ -24,7 +23,6 @@
 
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <!-- 卡片：數據表格 -->
                 <div class="card">
                     <div class="card-body">
                         <table class="table">
@@ -37,14 +35,6 @@
                                 </tr>
                             </thead>
                             <tbody id="dataTable">
-                                @*@foreach (var distance in Model)
-                                    {
-                                        <tr>
-                                            <td>@distance</td>
-                                            <td><input type="text" class="form-control exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" /></td>
-                                            <td><span class="speed-result"></span></td>
-                                        </tr>
-                                    }*@
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -71,7 +61,6 @@
 
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <!-- 卡片：檢測系統詳情 -->
                 <div class="card mb-4">
                     <div class="card-header">
                         <h4>速耐力間歇訓練處方：<span id="selectedSportItem"></span></h4>
@@ -98,23 +87,15 @@
     <div>第一組</div>
     <table></table>
 </div>
-
-
-
-
-
-
-
-
-    <script>
+<script>
         const selectElement = document.getElementById('trainingGroups');
 
         for (let i = 1; i <= 20; i++) {
             const option = document.createElement('option');
-            option.value = i; // 設定值
-            option.textContent = `第 ${i} 組`; // 顯示文本
+            option.value = i;
+            option.textContent = `第 ${i} 組`;
             selectElement.appendChild(option);
         }
-    </script>
+</script>
 </body>
 </html>

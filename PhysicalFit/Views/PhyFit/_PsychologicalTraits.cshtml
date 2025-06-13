@@ -1,6 +1,6 @@
 ﻿@model PhysicalFit.Models.PsychologicalTraitsViewModel
 <script src="~/js/psychologicalTraits.js"></script>
-<input type="hidden" id="userId" value="@ViewBag.AthleteId" /> <!-- 隱藏欄位傳遞 UserID -->
+<input type="hidden" id="userId" value="@ViewBag.AthleteId" />
 
 <div id="PsyDate" class="form-group" style="margin-top:30px; width:200px;">
     <label for="date">日期</label>
@@ -18,12 +18,12 @@
             @foreach (var trait in ViewBag.PsychologicalFeelings.Keys)
             {
                 <tr>
-                    <td><label>@trait</label></td> <!-- 狀態項目 -->
+                    <td><label>@trait</label></td>
                     <td>
                         @foreach (var feeling in ViewBag.PsychologicalFeelings[trait])
                         {
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="@trait" id="@trait-@feeling" value="@feeling" required>
+                                <input class="form-check-input" type="radio" name="@trait" id="@trait-@feeling" value="@feeling" style="min-width: 1em;" required>
                                 <label class="form-check-label" for="@trait-@feeling">@feeling</label>
                             </div>
                         }
@@ -38,21 +38,18 @@
 
 <script>
     $(document).ready(function () {
-        // 初始化 flatpickr 日期選擇器
         flatpickr("#date", {
             enableTime: false,
             dateFormat: "Y-m-d",
             time_24hr: true
         });
 
-        // 提交按鈕事件
         $('#submitBtn').on('click', function (e) {
-            e.preventDefault(); // 防止表單默認提交
+            e.preventDefault();
 
-            var dateValue = $('#date').val(); //獲取日期值
+            var dateValue = $('#date').val();
             const userId = $('#userId').val();
 
-            // 檢查日期是否選擇
             if (!dateValue) {
                 Swal.fire({
                     title: '錯誤',
@@ -63,10 +60,8 @@
                 return;
             }
 
-            // 收集心理特質資料
             var traitsData = collectPsychologicalTraits(dateValue, userId);
 
-            // 發送資料到後端
             if (traitsData.length > 0) {
                 sendTraitsToServer(traitsData);
             } else {

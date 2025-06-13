@@ -1,0 +1,205 @@
+@model PhysicalFit.Models.GeneralTrainingRecordViewModel
+<head>
+    <link href="~/FlatPickr/flatpickr.min.css" rel="stylesheet" />
+    <script src="~/FlatPickr/flatpickr.js"></script>
+    <script src="~/FlatPickr/zh-tw.js"></script>
+    <link href="~/css/TrainingMonitorStyle.css" rel="stylesheet" />
+</head>
+<form id="editTrainingForm" method="post" action="/Record/Edit">
+    @Html.HiddenFor(m => m.ID)
+    @Html.HiddenFor(m => m.Source)
+    @Html.HiddenFor(m => m.AthleteID)
+
+
+    <div class="form-group mb-3">
+        <label>課程名稱</label>
+        @Html.DropDownListFor(m => m.TrainingName,
+            new SelectList(ViewBag.Description as List<string>, Model.TrainingName),
+            "請選擇課程",
+            new { @class = "form-control", id = "editTrainingName" })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>訓練日期</label>
+        @Html.TextBoxFor(m => m.TrainingDate, "{0:yyyy-MM-dd HH:mm}", new
+        {
+            @class = "form-control TrainingDate",
+            @type = "text",
+            @autocomplete = "off"
+        })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>訓練項目</label>
+        @Html.DropDownList("TrainingItemDisplay",
+            new SelectList(ViewBag.SpecialTechnical as List<string>, Model.TrainingItem),
+            "請選擇訓練項目",
+            new { @class = "form-control", id = "specialTechField", disabled = "disabled" })
+        <input type="hidden" id="TrainingItemHidden" name="TrainingItem" value="@Model.TrainingItem" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>訓練動作</label>
+        <select id="specialTechNameField" class="form-control">
+            <option value="">請選擇訓練動作</option>
+        </select>
+        <input type="hidden" id="ActionNameHidden" name="ActionName" value="@Model.ActionName" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>其他動作</label>
+        <input type="text" class="form-control" name="TrainingOther" placeholder="其他動作" value="@Model.TrainingOther"/>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>訓練部位</label>
+        @Html.DropDownList("TrainingPartsDisplay",
+            new SelectList(ViewBag.MuscleStrength as List<string>, Model.TrainingParts),
+            "請選擇訓練部位",
+            new { @class = "form-control", id = "trainingMuscleField", disabled = "disabled" })
+        <input type="hidden" id="TrainingPartsHidden" name="TrainingParts" value="@Model.TrainingParts" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>訓練類型</label>
+        @Html.DropDownList("TrainingTypeDisplay",
+            new SelectList(ViewBag.PhysicalFitness as List<string>, Model.TrainingType),
+            "請選擇訓練類型",
+            new { @class = "form-control", id = "trainingTypeField", disabled = "disabled" })
+        <input type="hidden" id="TrainingTypeHidden" name="TrainingType" value="@Model.TrainingType" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>訓練時間</label>
+        @Html.DropDownListFor(m => m.TrainingTime, new SelectList(ViewBag.TrainingTimes as List<string>, Model.TrainingTime), "請選擇訓練時間", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>自覺費力程度</label>
+        <input type="text" id="rpeDescription" name="RpeDescription" class="form-control" readonly />
+        <button type="button" class="btn btn-info" id="showRpeModal" style="white-space: nowrap; margin-left: 10px">運動自覺量表</button>
+        <input type="hidden" id="RPE" name="RPEscore" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>單次運動負荷量 (TL)</label>
+        <input type="text" class="form-control" name="EachTrainingLoad" id="SessionTL" readonly />
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        function initializeFlatpickr() {
+            flatpickr(".TrainingDate", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                "locale": "zh_tw",
+            });
+        }
+
+        initializeFlatpickr();
+        // 控制欄位啟用
+        function toggleTrainingFields() {
+            const selectedItem = $('#editTrainingName').val();
+
+            // 一律禁用所有 dropdown，但不要清空
+            $('#specialTechField, #specialTechNameField, #trainingMuscleField, #trainingTypeField').prop('disabled', true);
+
+            switch (selectedItem) {
+                case "專項技術類":
+                    $('#specialTechField, #specialTechNameField').prop('disabled', false);
+                    break;
+                case "肌力類":
+                    $('#trainingMuscleField').prop('disabled', false);
+                    break;
+                case "體能類":
+                    $('#trainingTypeField').prop('disabled', false);
+                    break;
+            }
+        }
+
+        function loadActionNameOptionsFromTrainingItem() {
+            const selectedItem = $('#specialTechField').val();
+            const itemIndex = $('#specialTechField option:selected').index();
+
+            $('#TrainingItemHidden').val(selectedItem);
+            $('#specialTechNameField').html('<option value="">請選擇訓練動作</option>');
+
+            const currentActionName = $('#ActionNameHidden').val(); // 目前的預設值（原資料）
+
+            if (selectedItem) {
+                $.get('/Record/GetActionNamesByItem', { itemIndex: itemIndex }, function (data) {
+                    data.forEach(function (name) {
+                        const isSelected = name === currentActionName ? 'selected' : '';
+                        $('#specialTechNameField').append(`<option value="${name}" ${isSelected}>${name}</option>`);
+                    });
+                });
+            }
+        }
+
+        // 綁定同步每個選單的值到 hidden 欄位
+
+        $('#specialTechField').on('change', function () {
+            // 同步選擇到 hidden
+            $('#TrainingItemHidden').val(selectedItem);
+            loadActionNameOptionsFromTrainingItem()
+        });
+
+        // 當使用者選擇動作時，同步 hidden
+        $('#specialTechNameField').on('change', function () {
+            $('#ActionNameHidden').val($(this).val());
+        });
+
+        $('#trainingMuscleField').on('change', function () {
+            $('#TrainingPartsHidden').val($(this).val());
+        });
+
+        $('#trainingTypeField').on('change', function () {
+            $('#TrainingTypeHidden').val($(this).val());
+        });
+
+        function calculateSessionTL() {
+            var rpe = parseFloat($('#RPE').val());
+            var trainingTime = parseFloat($('#TrainingTime').val());
+            if (!isNaN(rpe) && !isNaN(trainingTime)) {
+                const sessionTL = rpe * trainingTime;
+                $('#SessionTL').val(sessionTL.toFixed(2));
+            } else {
+                $('#SessionTL').val('');
+            }
+        }
+
+        // 初始化
+        toggleTrainingFields();
+        calculateSessionTL();
+
+        // 綁定變化事件
+        $('#editTrainingName').on('change', toggleTrainingFields);
+        $('#TrainingTime').on('change', calculateSessionTL);
+
+        $('#showRpeModal').click(function () {
+            $('#RPEModalTraining').fadeIn();
+            $('#RPEsurveyContent').html("載入中...").load('/Record/LoadRPESurvey');
+        });
+
+
+        // 關閉 modal
+        $('.close').click(function () {
+            $('#RPEModalTraining').fadeOut();
+        });
+
+        $(document).on('click', '.rpe-item', function () {
+            const score = $(this).data('score');
+            const description = $(this).data('description');
+            const explanation = $(this).data('explanation');
+
+            // 顯示在欄位上
+            $('#rpeDescription').val(`${description}`);
+            $('#RPE').val(score);
+            $('#RPEModalTraining').fadeOut(); // 關閉 modal
+            calculateSessionTL();
+        });
+    });
+</script>
+

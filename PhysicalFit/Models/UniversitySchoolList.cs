@@ -16,10 +16,13 @@ namespace PhysicalFit.Models
     {
         public int ID { get; set; }
         public Nullable<int> AcademicYear { get; set; }
-        public Nullable<int> CityCode { get; set; }
-        public string CityName { get; set; }
         public Nullable<int> SchoolCode { get; set; }
         public string SchoolName { get; set; }
-        public Nullable<bool> IsRecruiting { get; set; }
+        public string SchoolType { get; set; }
+        public string CityName { get; set; }
+        public string SchoolAddress { get; set; }
+        public string Phone { get; set; }
+        public string SchoolURL { get; set; }
+        public string SystemType { get; set; }
     }
 }

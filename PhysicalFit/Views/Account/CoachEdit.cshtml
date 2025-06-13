@@ -4,42 +4,73 @@
     Layout = "~/Views/Shared/_PhyFitness.cshtml";
 }
 
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教練資料編輯</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>教練編輯資料</h2>
+        @using (Html.BeginForm("CoachEdit", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
 
-<div class="container mt-5">
-    <h2>教練編輯資料</h2>
-    <form id="coachEditForm" method="post" action="/Coach/CoachEdit">
-        <input type="hidden" name="ID" value="@Model.ID" />
+            @Html.HiddenFor(model => model.ID)
 
-        <div class="form-group">
-            <label for="name">姓名</label>
-            <input type="text" class="form-control" id="name" name="CoachName" value="@Model.CoachName" />
+            <div class="form-group">
+                <label for="name">姓名</label>
+                <input type="text" class="form-control" id="name" name="CoachName" value="@Model.CoachName" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">電子郵件</label>
+                <input type="email" class="form-control" id="email" name="Email" value="@Model.Email" />
+            </div>
+
+            <div class="form-group">
+                <label for="phone">電話號碼</label>
+                <input type="text" class="form-control" id="phone" name="PhoneNumber" value="@Model.PhoneNumber" />
+            </div>
+
+            <div id="schoolNameBlock" class="form-group" @(Model.Organize != null ? "style=\"display:none;\"" : "")>
+                <label for="SchoolName">學校名稱</label>
+                <input type="text" class="form-control" id="SchoolName" name="SchoolName" value="@Model.SchoolName" readonly />
+            </div>
+
+            <div id="orgNameBlock" class="form-group" @(Model.Organize == null ? "style=\"display:none;\"" : "")>
+                <label for="Organize">單位名稱</label>
+                <input type="text" class="form-control" id="Organize" name="Organize" value="@Model.Organize" readonly />
+            </div>
+
+            <div class="form-group">
+                <label for="TeamName">隊伍名稱</label>
+                <input type="text" class="form-control" id="TeamName" name="TeamName" value="@Model.TeamName" />
+            </div>
+            <div class="form-group">
+                <label for="SportsSpecific">專項</label>
+                <input type="text" class="form-control" id="SportsSpecific" name="SportsSpecific" value="@Model.SportsSpecific" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">儲存</button>
+            <a href="/PhyFit/dashboard" class="btn btn-secondary">取消</a>
+        }
         </div>
+</body>
+</html>
 
-        <div class="form-group">
-            <label for="email">電子郵件</label>
-            <input type="email" class="form-control" id="email" name="Email" value="@Model.Email" />
-        </div>
 
-        <div class="form-group">
-            <label for="phone">電話號碼</label>
-            <input type="text" class="form-control" id="phone" name="PhoneNumber" value="@Model.PhoneNumber" />
-        </div>
-
-        <div class="form-group">
-            <label for="school">學校名稱</label>
-            <input type="text" class="form-control" id="school" name="SchoolName" value="@Model.SchoolName" />
-        </div>
-
-        <div class="form-group">
-            <label for="title">職稱</label>
-            <input type="text" class="form-control" id="title" name="Title" value="@Model.Title" />
-        </div>
-        <div class="form-group">
-            <label for="title">專項</label>
-            <input type="text" class="form-control" id="title" name="Title" value="@Model.SportsSpecific" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">儲存</button>
-        <a href="/PhyFit/dashboard" class="btn btn-secondary">取消</a>
-    </form>
-</div>
+<script>
+    $(document).ready(function () {
+        if ($('#Organize').val()) {
+            $('#schoolNameBlock').hide();
+            $('#orgNameBlock').show();
+        } else {
+            $('#schoolNameBlock').show();
+            $('#orgNameBlock').hide();
+        }
+    });
+</script>

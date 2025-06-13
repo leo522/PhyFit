@@ -52,5 +52,12 @@
         <p>很抱歉，我們無法找到您要訪問的頁面。</p>
         <img src="~/img/404圖片.jpg" alt="404 Not Found" />
     </div>
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
 </body>
 </html>

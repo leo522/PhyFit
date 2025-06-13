@@ -13,8 +13,8 @@ namespace PhysicalFit
     {
         private static readonly byte[] Key;
         private static readonly byte[] IV;
-        private const string KeyFilePath = @"D:\key\key.txt"; // 儲存金鑰的文件
-        private const string IvFilePath = @"D:\key\iv.txt";   // 儲存 IV 的文件
+        private const string KeyFilePath = @"D:\key\key.txt"; 
+        private const string IvFilePath = @"D:\key\iv.txt";
 
         static EncryptionHelper()
         {

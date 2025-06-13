@@ -1,5 +1,4 @@
-﻿/*游泳計算公式*/
-var PoolFailureTime100 = 0;
+﻿var PoolFailureTime100 = 0;
 var PoolFailureTime200 = 0;
 var PoolFailureTime400 = 0;
 var PoolFailureTime800 = 0;
@@ -7,8 +6,8 @@ var PoolMaxR = 0;
 var PoolMaxR_a = 0;
 var PoolMaxR_b = 0;
 var PoolTotT = 0;
-var PoolLimitSpeed = 0; //臨界速度
-var PoolMaxWork = 0; //最大無氧做功
+var PoolLimitSpeed = 0;
+var PoolMaxWork = 0;
 
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');
@@ -16,17 +15,16 @@ function calculateSpeed(inputElement) {
     var failureTime = parseFloat($(inputElement).val());
 
     if (!isNaN(distance) && !isNaN(failureTime) && failureTime > 0) {
-        var speed = (distance / failureTime);
-        row.find('.speed-result').text(speed.toFixed(1)); //正確地更新速度顯示
+        var speed = (distance / failureTime) * 3.6;
+        row.find('.speed-result').text(speed.toFixed(1));
 
     } else {
-        row.find('.speed-result').text(''); //清空顯示
+        row.find('.speed-result').text('');
     }
 
     CaculatePoolSpeed(distance, failureTime);
 }
 function CaculatePoolSpeed(distance, failureTime) {
-    // 更新對應距離的力竭時間
     switch (distance) {
         case 100:
             PoolFailureTime100 = failureTime;
@@ -48,8 +46,7 @@ function CaculatePoolSpeed(distance, failureTime) {
         if (isNaN(timeValue) || timeValue === 0) {
             return;
         }
-        var speed = (distance / timeValue * 3.6).toFixed(1); // 轉換為 km/h
-        // 找到對應的速度<td>元素並更新內容
+        var speed = (distance / timeValue * 3.6).toFixed(1);
         var speedElement = timeElement.parentElement.nextElementSibling;
         if (speedElement && speedElement.classList.contains('speed')) {
             speedElement.textContent = speed;
@@ -129,12 +126,16 @@ function PoolCaculateLinearRegression() {
     PoolMaxR_a = MaxR_a;
     PoolMaxR_b = MaxR_b;
 
-    PoolLimitSpeed = PoolMaxR_b.toFixed(1); //臨界速度
-    document.getElementById("CriticalSpeed").value = PoolLimitSpeed; //臨界速度
+    PoolLimitSpeed = ((PoolMaxR_b * 3600) / 1000).toFixed(1);
+    document.getElementById("CriticalSpeed").value = PoolLimitSpeed;
 
-    PoolMaxWork = PoolMaxR_a.toFixed(2); //臨界速度
-    document.getElementById("AnaerobicPower").value = PoolMaxWork; //最大無氧做功
+    PoolMaxWork = formatFiveDigits(PoolMaxR_a);
+    document.getElementById("AnaerobicPower").value = PoolMaxWork;
 
-    //document.getElementById("calculationResult").value = (Math.floor(MaxR * 100) / 100).toFixed(2); //r^2，決定係數
-    $('#calculationResult').val(Math.floor(MaxR * 100) / 100);
+    MaxR = Math.round(MaxR * 10000) / 10000;
+    $('#calculationResult').val(MaxR);
+}
+
+function formatFiveDigits(value) {
+    return Number.parseFloat(value).toPrecision(5);
 }

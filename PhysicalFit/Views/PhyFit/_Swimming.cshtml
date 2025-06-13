@@ -6,7 +6,7 @@
 <html>
 <head>
     <script src="~/Scripts/jquery-3.7.0.min.js"></script>
-    <script src="~/js/SwimmingPoolCaculate.js"></script> @*游泳計算公式*@
+    <script src="~/js/SwimmingPoolCaculate.js"></script>
 </head>
 <body>
     <div class="container">
@@ -39,12 +39,9 @@
                                     <tr>
                                         <td>@distance</td>
                                         <td>
-                                            <input type="text" class="form-control exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" />
+                                            <input type="text" class="form-control exhaustion-time swim-time" data-distance="@distance" oninput="calculateSpeed(this)" />
                                         </td>
-                                        @*<td>
-                                                <input type="text" class="speed-result" readonly style="width: 100%;" />
-                                            </td>*@
-                                        <td class="speed-result"></td>
+                                        <td class="speed-result swim-speed"></td>
                                     </tr>
                                 }
                             </tbody>
@@ -62,9 +59,8 @@
     </div>
     <script>
         $(document).ready(function () {
-            // 清空初始值
-            $("#CriticalSpeed").val(""); //清空臨界速度欄位
-            $("#AnaerobicPower").val(""); //清空最大無氧做功欄位
+            $("#CriticalSpeed").val("");
+            $("#AnaerobicPower").val("");
         });
     </script>
 </body>

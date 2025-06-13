@@ -7,33 +7,30 @@
 <head>
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
     <link href="~/css/dashboardStyle.css" rel="stylesheet" />
-    <script src="~/js/SessionMonitoring.js"></script>
-    <script src="~/js/RPE_Modal.js"></script> @*自覺量表彈跳視窗*@
-    <script src="~/js/TLCaculate.js"></script> @*運動訓練量計算*@
-    <script src="~/js/DistanceSys.js"></script> @*檢測系統*@
-    <script src="~/js/SaveGeneralRecord.js"></script> @*一般訓練記錄存檔*@
-    <script src="~/js/SaveArcheryRecord.js"></script> @*射箭訓練記錄存檔*@
-    <script src="~/js/SaveShootingRecord.js"></script> @*射擊訓練記錄存檔*@
-    <script src="~/js/SaveDetecTrackRecord.js"></script> @*田徑場檢測記錄存檔*@
-    <script src="~/js/SaveDetecTreadmillRecord.js"></script> @*跑步機檢測記錄存檔*@
-    <script src="~/js/SaveDetecSwimmingRecord.js"></script> @*游泳檢測記錄存檔*@
-    <script src="~/js/SaveDetecBikeRecord.js"></script> @*自由車檢測記錄存檔*@
-    <script src="~/js/SaveDetecRollerSkatingRecord.js"></script> @*滑輪溜冰檢測記錄存檔*@
-    <!--<script src="~/js/LinearEquation.js"></script>--> @*產生斜率圖表*@
-    <script src="~/js/datepickr.js"></script> @*初始化日期選擇器*@
-    <script src="~/js/psychologicalTraits.js"></script> @*心理特質及食慾圖量表*@
-    <script src="~/js/sessionRecordRedirect.js"></script> @*計算週期運動負荷量*@
-    <!--<script src="~/js/DetectionSysRedirect.js"></script>--> @*查詢檢測記錄*@
-    <script src="~/js/DectecRollerHide.js"></script> @*隱藏直排輪的前次訓練效果欄位*@
+    <script src="~/js/SessionMonitoring.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/RPE_Modal.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/TLCaculate.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/DistanceSys.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/SaveGeneralRecord.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/SaveArcheryRecord.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/SaveShootingRecord.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/SaveDetecTrackRecord.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/SaveDetecTreadmillRecord.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/SaveDetecSwimmingRecord.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/SaveDetecBikeRecord.js?v=@DateTime.Now.Ticks"></script> 
+    <script src="~/js/SaveDetecRollerSkatingRecord.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/datepickr.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/psychologicalTraits.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/sessionRecordRedirect.js?v=@DateTime.Now.Ticks"></script>
+    <script src="~/js/DectecRollerHide.js?v=@DateTime.Now.Ticks"></script>
 </head>
-<body>
+<body style="padding: 20px;">
     <div>
         <form action="/Record/SessionRecord" method="post" id="generalTrainingForm">
             <input type="hidden" id="athleteId" value="@ViewBag.AthleteID" />
             <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-                @*訓練監控項目*@
                 <div style="margin-bottom: 20px; flex: 1;">
-                    <label for="Item">訓練監控項目</label>
+                    <label for="Item">訓練監控項目：</label>
                     <select id="Item" name="TrainingItem" style="border: 2px solid #000;" onchange="toggleButtonVisibility()">
                         <option>請選擇訓練項目</option>
                         @foreach (var item in ViewBag.MonitoringItems)
@@ -43,7 +40,6 @@
                     </select>
                 </div>
 
-                @*角色身分*@
                 <div id="identityCoach" style="display: flex; align-items: center; flex: 1;">
                     <label>教練：<span id="CoachName">@ViewBag.CoachName</span></label>
                     <input type="hidden" id="CoachID" value="@ViewBag.CoachID" />
@@ -52,8 +48,8 @@
                     <label for="AthletesName">運動員：</label>
                     @if (ViewBag.UserRole == "Athlete")
                     {
-                        <span>@ViewBag.AthleteName</span> <!-- 顯示運動員的名稱 -->
-                        <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" /> <!-- 隱藏運動員ID -->
+                        <span>@ViewBag.AthleteName</span>
+                        <input type="hidden" name="AthleteID" value="@ViewBag.AthleteID" />
                     }
                     else if (ViewBag.UserRole == "Coach")
                     {
@@ -72,8 +68,6 @@
                     <input type="hidden" id="userRole" value="@ViewBag.UserRole" />
                 </div>
             </div>
-
-            <!-- 一般訓練衝量監控區塊 -->
             <div class="content" id="trainingMonitoring">
                 <input type="hidden" name="trainingType" value="RPE" />
                 <h2>一般訓練衝量監控</h2>
@@ -98,15 +92,12 @@
                     <div id="recordModalGeneral" class="modal">
                         <div class="modal-content">
                             <span class="close" id="closeRecordModal">&times;</span>
-                            <div id="recordModalBody">
-                                <!-- 這裡會被 AJAX 載入內容 -->
-                            </div>
+                            <div id="recordModalBody"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 心理特質與食慾圖量表 -->
             <div class="content" id="PsychologicalTraitsArea">
                 <input type="hidden" name="trainingType" value="RPE" />
                 <h2>心理特質和食慾感受</h2>
@@ -119,7 +110,6 @@
                 </table>
             </div>
 
-            <!-- 射箭訓練衝量監控區塊 -->
             <div class="content" id="archeryMonitoring">
                 <h2>射箭訓練衝量監控</h2>
                 <input type="hidden" name="trainingType" value="Archery" />
@@ -130,8 +120,7 @@
                             <th>磅數</th>
                             <th>箭數</th>
                             <th>自覺費力程度</th>
-                            <th>每次運動負荷</th>
-                            <th>每日運動負荷(TL)</th>
+                            <th>每次運動負荷(TL)</th>
                             <th>增減欄位</th>
                         </tr>
                     </thead>
@@ -147,15 +136,12 @@
                                 <input type="text" class="form-control" name="Arrows" placeholder="箭數">
                             </td>
                             <td>
-                                <input type="text" class="form-control rpeInput" name="RPE_ArcheryDescription" style="width:200px;" readonly />
+                                <input type="text" class="form-control rpeInput" name="RPE_ArcheryDescription" readonly />
                                 <input type="hidden" name="RPEArchery" />
                                 <button type="button" class="btn btn-info openRPEModalArchery">運動自覺量表</button>
                             </td>
                             <td>
-                                <input type="text" class="form-control" name="SessionArcheryTL" placeholder="單次運動負荷" readonly>
-                            </td>
-                            <td>
-                                <input type="text" align="left" style="width:200px;" id="dailyTLArchery" class="form-control" name="ArcheryDailyTL" placeholder="每日運動負荷(TL)" readonly>
+                                <input type="text" class="form-control" name="SessionArcheryTL" placeholder="單次運動負荷(TL)" readonly>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-primary add-row-archery">+</button>
@@ -178,7 +164,6 @@
                 </div>
             </div>
 
-            <!-- 射擊訓練衝量監控區塊 -->
             <div class="content" id="shootingMonitoring">
                 <h2>射擊訓練衝量監控</h2>
                 <input type="hidden" name="trainingType" value="Shooting" />
@@ -211,12 +196,12 @@
                                 <input type="text" class="form-control" name="Bullet" placeholder="子彈數">
                             </td>
                             <td>
-                                <input type="text" class="form-control rpeInput" name="RPE_shootingDescription" style="width:200px;" readonly />
+                                <input type="text" class="form-control rpeInput" name="RPE_shootingDescription" readonly />
                                 <input type="hidden" name="RPEshooting" />
                                 <button type="button" class="btn btn-info openRPEModalShooting">運動自覺量表</button>
                             </td>
                             <td>
-                                <input type="text" align="left" style="width:200px;" id="dailyTLShooting" class="form-control" name="ShootingDailyTL" placeholder="單次運動負荷(TL)" readonly>
+                                <input type="text" class="form-control" name="SessionShootingTL" placeholder="單次運動負荷(TL)" readonly>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-primary add-row-shooting">+</button>
@@ -240,57 +225,53 @@
                 </div>
             </div>
             <input type="hidden" name="TrainingItem" id="TrainingItem" value="" />
-            <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看訓練紀錄</a>
-        </form>
-    </div>
-    @*<a href="/EWMAweighting/IndicatorsMain" class="btn btn-outline-primary" id="IndicatorCheck">查看心理特質與食慾圖量表</a>*@
+            <a href="/Record/SessionRecord" class="btn btn-outline-primary" style="display: none;" id="recordCheck">查看紀錄</a>
+            <div class="training-section" id="Detection_Sys">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>檢測系統訓練詳情:<span id="selectedSportItem" style="font-size:1.75rem; text-decoration:underline"></span></h2>
+                        </div>
+                        <div class="card-body">
 
-    @*檢測系統*@
-    @using (Html.BeginForm("SaveTrackFieldRecord", "PhyFit", FormMethod.Post))
-    {
-        <div class="training-section" id="Detection_Sys">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>檢測系統訓練詳情:<span id="selectedSportItem" style="font-size:1.5rem;"></span></h2>
-                    </div>
-                    <div class="card-body">
-
-                        <div class="form-group">
-                            <label>日期：</label>
-                            <input id="DetectionDateTime" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label for="Dete">項目：</label>
-                            <select class="form-control" id="Dete">
-                                <option>有/無氧代謝能力測定</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="DeteItem">運動項目：</label>
-                            <select class="form-control" id="DeteItem">
-                                <option value="">請選擇運動項目</option>
-                                @foreach (var SI in ViewBag.DetectionSport)
-                                {
-                                    <option>@SI</option>
-                                }
-                            </select>
-                        </div>
-                        <hr />
-                        <div class="result-section">
-                            <label for="Result">檢測結果：</label>
-                            <div class="mb-3">
-                                <label for="CriticalSpeed" style="font-size: 20px; display: block;" title="代表無氧臨界閾值(有氧代謝能力)，和耐力運動表現高相關">臨界速度(km/h)_有氧能力</label>
-                                <input type="text" class="form-control form-control-sm" id="CriticalSpeed" value="">
+                            <div class="form-group detect">
+                                <label>日期：</label>
+                                <input id="DetectionDateTime" class="form-control" />
                             </div>
-                            <div class="mb-3">
-                                <label for="AnaerobicPower" style="font-size: 20px; display: block;" title="代表最大無氧能力">最大無氧做功(m)_無氧能力</label>
-                                <input type="text" class="form-control form-control-sm" id="AnaerobicPower" value="">
+                            <div class="form-group detect">
+                                <label for="Dete">項目：</label>
+                                <select class="form-control" id="Dete">
+                                    <option>有/無氧代謝能力測定</option>
+                                </select>
                             </div>
-                        </div>
+                            <div class="form-group detect">
+                                <label for="DeteItem">運動項目：</label>
+                                <select class="form-control" id="DeteItem">
+                                    <option value="">請選擇運動項目</option>
+                                    @foreach (var SI in ViewBag.DetectionSport)
+                                    {
+                                        <option>@SI</option>
+                                    }
+                                </select>
+                            </div>
+                            <hr />
+                            <div class="result-section">
+                                <label for="Result">檢測結果：</label>
+                                <div class="mb-3">
+                                    <label for="CriticalSpeed" style="font-size: 20px; display: block;" title="代表無氧臨界閾值(有氧代謝能力)，和耐力運動表現高相關">臨界速度(km/h)_有氧能力</label>
+                                    <input type="text" class="form-control form-control-sm" id="CriticalSpeed" value="" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="AnaerobicPower" style="font-size: 20px; display: block;" title="代表最大無氧能力">最大無氧做功(m)_無氧能力</label>
+                                    <input type="text" class="form-control form-control-sm" id="AnaerobicPower" value="" readonly>
+                                </div>
+                                <div class="mb-3" id="RollerSkillSection" style="display: none;">
+                                    <label for="RollerSkill" style="font-size: 20px; display: block;">滑溜技術(%)</label>
+                                    <input type="text" class="form-control form-control-sm" id="RollerSkill" value="" readonly>
+                                </div>
+                            </div>
 
-                        <!-- 訓練量區域 -->
-                        <div class="Criticaltraining-volume-section">
+                            @*<div class="Criticaltraining-volume-section">
                             <label for="TrainingVol" style="font-size: 20px;">前次訓練效果_有氧能力</label>
                             <input type="text" class="form-control" id="CriticalTrainingVol" placeholder="">
                         </div>
@@ -299,18 +280,19 @@
                             <input type="text" class="form-control" id="AnaerobicTrainingVol" placeholder="">
                         </div>
                         <input type="hidden" id="CriticalSpeed" name="criticalSpeed" />
-                        <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />
+                        <input type="hidden" id="AnaerobicPower" name="anaerobicPower" />*@
 
+                        </div>
+                    </div>
+                    <div style="margin-top:50px;">
+                        <button class="btn btn-success" name="btn_Detec" id="btn_Detec">存檔</button>
+                        <a href="/Record/SessionRecord" class="btn btn-outline-primary" id="DecCheck">查看檢測訓練紀錄</a>
                     </div>
                 </div>
-                <div style="margin-top:50px;">
-                    <button class="btn btn-success" name="btn_Detec" id="btn_Detec">存檔</button>
-                    <a href="/Record/SessionRecord" class="btn btn-outline-primary" id="DecCheck">查看檢測訓練紀錄</a>
-                </div>
+                <div id="distanceDetails" style="margin-top: -550px;"></div>
             </div>
-            <div id="distanceDetails" style="margin-top: -500px;"></div>
-        </div>
-    }
+        </form>
+    </div>
 
 <script>
     $(document).ready(function () {
@@ -324,7 +306,6 @@
         });
     });
 
-    // 更新動作名稱選單的技術項目
     function updateTechnicalActions(selectElement) {
         const selectedTechnical = selectElement.value;
         const actionDropdown = selectElement.closest('tr').querySelector('[name="SpecialTechName"]');
@@ -334,13 +315,12 @@
             type: 'GET',
             data: { technicalItem: selectedTechnical }
         }).done(function (data) {
-            actionDropdown.innerHTML = ''; //清空原選單
+            actionDropdown.innerHTML = '';
 
-            const defaultOption = document.createElement("option"); //添加默認選項
+            const defaultOption = document.createElement("option");
             defaultOption.text = "請選擇動作名稱";
             actionDropdown.add(defaultOption);
 
-            //將返回的動作名稱加入選單
             data.forEach(function (item) {
                 const option = document.createElement("option");
                 option.value = item;
@@ -352,7 +332,6 @@
         });
     }
 
-    //檢查日期是否選擇
     function checkDateInput(dateInput) {
         if (!dateInput || !dateInput.value) {
             Swal.fire({
@@ -366,57 +345,99 @@
         return true;
     }
 
-    //切換到檢測系統視圖
     function switchToDetectionSystem() {
-        document.getElementById('Detection_Sys').style.display = "block"; //顯示檢測系統
-        document.getElementById('trainingMonitoring').style.display = "none"; //隱藏其他訓練區塊
-        toggleButtonVisibility(); //更新按鈕顯示狀態
+        document.getElementById('Detection_Sys').style.display = "block";
+        document.getElementById('trainingMonitoring').style.display = "none";
+        toggleButtonVisibility();
 
         const selectedSport = document.getElementById('Item').value;
         document.getElementById('selectedSportItem').textContent = selectedSport !== "請選擇訓練項目" ? selectedSport : "";
 
         const detectionItem = document.getElementById('DeteItem');
         if (detectionItem) {
-            detectionItem.style.display = "block"; // 顯示檢測子項目選單
+            detectionItem.style.display = "block";
         }
     }
 
-    //查看訓練紀錄按鈕顯示與隱藏
     function toggleButtonVisibility() {
-        const selectElement = document.getElementById('Item'); //下拉選單
-        const recordbutton = document.getElementById('recordCheck'); //查看訓練紀錄
-        const detectionSection = document.getElementById('Detection_Sys'); //檢測系統
-        //const saveButton = document.querySelector('#btn-TrainingMonitoring'); // 存檔按鈕
-        const psyArea = document.getElementById('PsychologicalTraitsArea'); // 心理特質區域
+        const selectElement = document.getElementById('Item');
+        const recordbutton = document.getElementById('recordCheck');
+        const detectionSection = document.getElementById('Detection_Sys');
+        const psyArea = document.getElementById('PsychologicalTraitsArea');
 
-
-        // 判斷選中的值
         if (selectElement.value === "檢測系統") {
-            // 如果選擇 "檢測系統"，隱藏查看訓練紀錄按鈕
             recordbutton.style.display = "none";
-            psyArea.style.display = "none"; // 隱藏心理特質區域
-            detectionSection.style.display = "block"; // 顯示檢測系統區域
+            psyArea.style.display = "none";
+            detectionSection.style.display = "block";
         } else if (selectElement.value === "心理特質與食慾圖量表") {
-            // 如果選擇心理特質與食慾圖量表
-            recordbutton.style.display = "none"; // 隱藏查看訓練紀錄按鈕
-            psyArea.style.display = "block"; // 顯示心理特質區域
-            detectionSection.style.display = "none"; // 隱藏檢測系統區域
+            recordbutton.style.display = "inline-block";
+            psyArea.style.display = "block";
+            detectionSection.style.display = "none";
         } else if (selectElement.value !== "請選擇訓練項目") {
-            // 若選擇其他項目
-            recordbutton.style.display = "inline-block"; // 顯示查看訓練紀錄按鈕
-            psyArea.style.display = "none"; // 隱藏心理特質區域
-            detectionSection.style.display = "none"; // 隱藏檢測系統區域
+            recordbutton.style.display = "inline-block";
+            psyArea.style.display = "none";
+            detectionSection.style.display = "none";
         } else {
-            // 未選擇任何項目
-            recordbutton.style.display = "none"; // 隱藏查看訓練紀錄按鈕
-            psyArea.style.display = "none"; // 隱藏心理特質區域
-            detectionSection.style.display = "none"; // 隱藏檢測系統區域
+            recordbutton.style.display = "none";
+            psyArea.style.display = "none";
+            detectionSection.style.display = "none";
         }
     }
 
-    //在 DOM 完全加載後初始化
+    document.addEventListener("DOMContentLoaded", function () {
+        var recordCheckButton = document.getElementById("recordCheck");
+        var detectionCheckButton = document.getElementById("DecCheck");
+
+        if (recordCheckButton) {
+            recordCheckButton.addEventListener("click", handleRedirect);
+        }
+
+        if (detectionCheckButton) {
+            detectionCheckButton.addEventListener("click", handleRedirect);
+        }
+
+        function handleRedirect(event) {
+            event.preventDefault();
+
+            var selectedItem = document.getElementById("Item").value;
+            var userRole = document.getElementById("userRole").value;
+            var athleteID = 10;
+
+            if (userRole === "Athlete") {
+                athleteID = document.querySelector('input[name="AthleteID"]').value;
+            } else if (userRole === "Coach") {
+                athleteID = document.getElementById("AthletesID").value;
+            }
+
+            if (!selectedItem || selectedItem === "請選擇訓練項目") {
+                alert("請先選擇訓練項目");
+                return;
+            }
+
+            if (!athleteID) {
+                alert("請先選擇運動員!!");
+                return;
+            }
+
+            var today = new Date().toISOString().split('T')[0];
+
+            var data = utf8ToBase64(JSON.stringify({
+                item: selectedItem,
+                AthleteID: athleteID,
+                date: today
+            }));
+
+            window.location.href = "/Record/SessionRecord?data=" + encodeURIComponent(data);
+        }
+
+        function utf8ToBase64(str) {
+            var utf8Bytes = new TextEncoder().encode(str);
+            return btoa(String.fromCharCode.apply(null, utf8Bytes));
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
-        toggleButtonVisibility(); //初始設置按鈕顯示狀態
+        toggleButtonVisibility();
 
         const initialSelectedSport = document.getElementById('Item').value;
         document.getElementById('selectedSportItem').textContent = initialSelectedSport !== "請選擇訓練項目" ? initialSelectedSport : "";
@@ -431,11 +452,11 @@
             document.getElementById(button.id).addEventListener('click', function (event) {
                 const dateInput = document.querySelector(`input[name="${button.dateInputName}"]`);
                 if (!checkDateInput(dateInput)) {
-                    event.preventDefault(); //阻止計算操作
+                    event.preventDefault();
                 }
             });
         });
-
+            
         const link = document.querySelector('a.btn.btn-outline-primary');
         if (link) {
             link.addEventListener('click', function (event) {
@@ -450,11 +471,6 @@
                 } else if (userRole === "Coach") {
                     athleteID = document.getElementById('AthletesID').value;
                 }
-
-                //重定向到 SessionRecord，帶上選定的項目和運動員ID
-                //if (selectedItem !== "請選擇訓練項目" && athleteID) {
-                //    window.location.href = "/Record/SessionRecord?item=" + encodeURIComponent(selectedItem) + "&AthleteID=" + encodeURIComponent(athleteID);
-                //}
             });
         }
 
@@ -483,7 +499,20 @@
         });
     });
 
-    //心理特質與食慾圖量表
+    document.addEventListener('DOMContentLoaded', function () {
+        const sportItemSelect = document.getElementById('DeteItem');
+        const rollerSkillSection = document.getElementById('RollerSkillSection');
+
+        sportItemSelect.addEventListener('change', function () {
+            const selectedValue = this.value.trim();
+            if (selectedValue === '滑輪溜冰') {
+                rollerSkillSection.style.display = 'block';
+            } else {
+                rollerSkillSection.style.display = 'none';
+            }
+        });
+    });
+
     function updateStatusActions(selectElement) {
         const selectedStatus = selectElement.value;
         const StatusDropdown = selectElement.closest('tr').querySelector('[name="psychologicalStatus"]');
@@ -493,7 +522,7 @@
             type: 'GET',
             data: { StatusItem: selectedStatus }
         }).done(function (data) {
-            StatusDropdown.innerHTML = ''; //清空原選單
+            StatusDropdown.innerHTML = '';
 
             const defaultStatusOption = document.createElement("option");
             defaultStatusOption.text = "請選擇感受";

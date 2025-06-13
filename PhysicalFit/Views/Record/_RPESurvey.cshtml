@@ -1,0 +1,97 @@
+@{
+    var rpeList = ViewBag.RPEScore as IEnumerable<dynamic>;
+}
+
+<div>
+    <div>
+        <label>請選擇您的自覺分數：</label>
+        <table>
+            <thead>
+                <tr>
+                    <th style="min-width: 100px">強度區分</th>
+                    <th style="min-width: 10px">分數</th>
+                    <th>說明</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rpe in rpeList)
+                {
+                    <tr>
+                        <td class="rpe-item color-block"
+                            data-score="@rpe.Score"
+                            data-explanation="@rpe.Explanation"
+                            data-description="@rpe.Description"
+                            style="background-color: @GetColorForScore(rpe.Score); min-width: 100px;"
+                            title="@rpe.Explanation">
+                            @rpe.Description
+                        </td>
+                        <td class="rpe-item color-block"
+                            data-score="@rpe.Score"
+                            data-explanation="@rpe.Explanation"
+                            data-description="@rpe.Description"
+                            style="background-color: @GetColorForScore(rpe.Score); min-width: 10px;">
+                            @rpe.Score
+                        </td>
+                        <td class="rpe-item color-block"
+                            data-score="@rpe.Score"
+                            data-explanation="@rpe.Explanation"
+                            data-description="@rpe.Description"
+                            style="background-color: @GetColorForScore(rpe.Score);">
+                            @rpe.Explanation
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @functions {
+        // 根據 RPE 分數返回顏色
+        private string GetColorForScore(int score)
+        {
+            string color;
+
+            switch (score)
+            {
+                case 0:
+                    color = "#BBFFEE";
+                    break;
+                case 1:
+                    color = "#66FF66";
+                    break;
+                case 2:
+                    color = "#66DD00";
+                    break;
+                case 3:
+                    color = "#00AA00";
+                    break;
+                case 4:
+                    color = "#FFDD55";
+                    break;
+                case 5:
+                    color = "#FFBB00";
+                    break;
+                case 6:
+                    color = "#DDAA00";
+                    break;
+                case 7:
+                    color = "#FF8888";
+                    break;
+                case 8:
+                    color = "#FF0000";
+                    break;
+                case 9:
+                    color = "#CC0000";
+                    break;
+                case 10:
+                    color = "#880000 ";
+                    break;
+                default:
+                    color = "white"; // 預設顏色
+                    break;
+            }
+
+            return color;
+        }
+    }
+</div>

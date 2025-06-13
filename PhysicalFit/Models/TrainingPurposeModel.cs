@@ -16,7 +16,7 @@ namespace PhysicalFit.Models
         public bool IsActive { get; set; }
     }
 
-    public class RPEModel //RPE項目
+    public class RPEModel
     {
         public int Id { get; set; }
         public string ItemNumber { get; set; }
@@ -27,7 +27,7 @@ namespace PhysicalFit.Models
         public string CreatedUser { get; set; }
     }
 
-    public class TrainingMonitoringItem //訓練監控項目
+    public class TrainingMonitoringItem
     {
         public int Id { get; set; }
         public string TrainingItem { get; set; }
@@ -35,7 +35,7 @@ namespace PhysicalFit.Models
         public DateTime UpdatedAt { get; set; }
     }
 
-    public class ShottingItem //射擊用具項目
+    public class ShottingItem
     {
         public int Id { get; set; }
         public string GunsItem { get; set; }
@@ -43,7 +43,7 @@ namespace PhysicalFit.Models
         public DateTime UpdatedAt { get; set; }
     }
 
-    public class DetectionSysItem //檢測系統項目
+    public class DetectionSysItem
     {
         public int Id { get; set; }
         public string DetectionItem { get; set; }
@@ -51,18 +51,18 @@ namespace PhysicalFit.Models
         public DateTime UpdatedAt { get; set; }
     }
 
-    public class TrainingData //訓練量
+    public class TrainingData
     {
         public double TrainingTime { get; set; }
         public double RPEScore { get; set; }
-        public DateTime Date { get; set; } //日期屬性
+        public DateTime Date { get; set; }
     }
 
     public class TrainingRecord
     {
         public double TrainingTime { get; set; }
         public double RPEScore { get; set; }
-        public DateTime Date { get; set; } //日期屬性
+        public DateTime Date { get; set; }
     }
 
     public class SessionRPETrainingRecordsModel
@@ -85,14 +85,14 @@ namespace PhysicalFit.Models
         public DateTime TrainingDate { get; set; }
     }
 
-    public class DistanceDetailModel //partialView檢測系統
+    public class DistanceDetailModel
     {
         public string Distance { get; set; }
         public string ExhaustionTime { get; set; }
         public string Speed { get; set; }
     }
 
-    public class ResetPasswordViewModel //重置密碼
+    public class ResetPasswordViewModel
     {
         public string Token { get; set; }
         public string NewPassword { get; set; }
@@ -135,6 +135,7 @@ namespace PhysicalFit.Models
         public List<string> Speeds { get; set; }
         public DateTime CreatedDate {  get; set; }
         public DateTime ModifiedDate { get; set; }
+        public float RollerSkill { get; set; }
         public string DetectionDate {  get; set; }
         public float CoefficientOfDetermination { get; set; }
     }

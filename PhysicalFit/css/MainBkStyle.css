@@ -1,7 +1,6 @@
 ﻿body {
-    /*background-image: url('../img/bg_img.jpg');*/ /* 設置背景圖片路徑 */
-    background-image: url('../img/LOGO.jpg'); /* 設置背景圖片路徑 */
-    background-size: cover; /* 使背景圖片覆蓋整個網頁 */
-    background-repeat: no-repeat; /* 避免背景圖片重複 */
-    background-attachment: fixed; /* 使背景圖片固定在頁面 */
+    background-image: url('../img/LOGO.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }

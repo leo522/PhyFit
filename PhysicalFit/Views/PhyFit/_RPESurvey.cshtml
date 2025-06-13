@@ -1,13 +1,15 @@
 ﻿@{
     var rpeList = ViewBag.RPEScore as IEnumerable<dynamic>;
 }
+
 <div>
     <div>
         <label>請選擇您的自覺分數：</label>
         <table>
             <thead>
                 <tr>
-                    <th>強度區分</th>
+                    <th style="min-width: 100px">強度區分</th>
+                    <th style="min-width: 10px">分數</th>
                     <th>說明</th>
                 </tr>
             </thead>
@@ -19,9 +21,16 @@
                             data-score="@rpe.Score"
                             data-explanation="@rpe.Explanation"
                             data-description="@rpe.Description"
-                            style="background-color: @GetColorForScore(rpe.Score);"
+                            style="background-color: @GetColorForScore(rpe.Score); min-width: 100px;"
                             title="@rpe.Explanation">
                             @rpe.Description
+                        </td>
+                        <td class="rpe-item color-block"
+                            data-score="@rpe.Score"
+                            data-explanation="@rpe.Explanation"
+                            data-description="@rpe.Description"
+                            style="background-color: @GetColorForScore(rpe.Score); min-width: 10px;">
+                            @rpe.Score
                         </td>
                         <td class="rpe-item color-block"
                             data-score="@rpe.Score"

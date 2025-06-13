@@ -1,36 +1,42 @@
-﻿/* 基本樣式設置 */
-.content {
-    display: none; /* 初始隱藏 */
-    width: 100%; /* 設定寬度為100% */
-    margin: 0; /* 取消預設的外邊距 */
-    max-width: 1200px; /* 設定最大寬度 */
-    padding: 20px;
+﻿.content {
+    display: none;
+    width: 100%;
+    margin: 0;
+    max-width: 1200px;
 }
 
-/* 表格樣式 */
+
 table {
     width: 100%;
-    table-layout: auto; /* 允許表格寬度自動調整 */
-    border-collapse: collapse; /* 取消邊框之間的間距 */
+    table-layout: auto;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
 }
 
 th, td {
     padding: 8px;
-    border: 1px solid black;
-    text-align: left;
-    white-space: nowrap; /* 防止文本換行 */
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* 長文本使用省略號顯示 */
+    text-overflow: ellipsis;
 }
 
 th, td {
-    min-width: 80px; /* 設定最小寬度 */
-    max-width: 150px; /* 設定最大寬度 */
+    min-width: 80px;
+    /*max-width: 150px;*/
 }
 
-    /* 特定欄位寬度設置 */
+select,
+input {
+    min-width: 100px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
     th:nth-child(1), td:nth-child(1) {
-        min-width: 210px;
+        min-width: 200px;
     }
 
     th:nth-child(2), td:nth-child(2) {
@@ -42,19 +48,19 @@ th, td {
     }
 
     th:nth-child(4), td:nth-child(4) {
-        min-width: 140px;
+        min-width: 200px;
     }
 
     th:nth-child(5), td:nth-child(5) {
-        min-width: 210px;
+        min-width: 140px;
     }
 
     th:nth-child(6), td:nth-child(6) {
-        min-width: 180px;
+        min-width: 140px;
     }
 
     th:nth-child(7), td:nth-child(7) {
-        min-width: 140px;
+        min-width: 120px;
     }
 
     th:nth-child(8), td:nth-child(8) {
@@ -62,10 +68,9 @@ th, td {
     }
 
     th:nth-child(9), td:nth-child(9) {
-        min-width: 100px;
+        min-width: 140px;
     }
 
-/* Modal 樣式 */
 .modal {
     display: none;
     position: fixed;
@@ -86,7 +91,6 @@ th, td {
     width: 80%;
 }
 
-/* 關閉按鈕樣式 */
 .close {
     color: #aaa;
     float: right;
@@ -101,11 +105,7 @@ th, td {
         cursor: pointer;
     }
 
-/* RWD 設計：針對不同螢幕尺寸的調整 */
 @media (max-width: 1200px) {
-    .content {
-        padding: 15px;
-    }
 
     .modal-content {
         width: 90%;
@@ -113,9 +113,6 @@ th, td {
 }
 
 @media (max-width: 992px) {
-    .content {
-        padding: 10px;
-    }
 
     table {
         font-size: 14px;
@@ -129,9 +126,6 @@ th, td {
 }
 
 @media (max-width: 768px) {
-    .content {
-        padding: 8px;
-    }
 
     table {
         font-size: 12px;
@@ -150,9 +144,6 @@ th, td {
 }
 
 @media (max-width: 576px) {
-    .content {
-        padding: 5px;
-    }
 
     table {
         font-size: 11px;

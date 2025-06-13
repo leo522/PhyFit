@@ -78,9 +78,13 @@ namespace PhysicalFit.Models
         public virtual DbSet<TrainingPurpose> TrainingPurpose { get; set; }
         public virtual DbSet<TrainingTimes> TrainingTimes { get; set; }
         public virtual DbSet<TreadmillRecordDetails> TreadmillRecordDetails { get; set; }
-        public virtual DbSet<UniversitySchoolList> UniversitySchoolList { get; set; }
         public virtual DbSet<UserPermissions> UserPermissions { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<SystemLogs> SystemLogs { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<UniversitySchoolList> UniversitySchoolList { get; set; }
+        public virtual DbSet<Organization> Organization { get; set; }
+        public virtual DbSet<AthleteCoachRelations> AthleteCoachRelations { get; set; }
     }
 }

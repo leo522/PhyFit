@@ -1,7 +1,5 @@
 ﻿var TrainingRecordFilter = (function () {
-
     function init(options) {
-        // 取得訓練項目類型
         var trainingType = options.trainingType || '';
 
         if (!trainingType || trainingType === "請選擇訓練項目") {
@@ -9,7 +7,6 @@
             return;
         }
 
-        // 綁定日期選擇變更事件
         document.getElementById(options.dateInputId).addEventListener("change", function () {
             var selectedDate = this.value;
             if (selectedDate) {
@@ -25,7 +22,6 @@
             }
         });
 
-        // 綁定顯示所有紀錄按鈕點擊事件
         document.getElementById(options.showAllButtonId).addEventListener("click", function () {
             fetchRecords({
                 trainingType: trainingType,

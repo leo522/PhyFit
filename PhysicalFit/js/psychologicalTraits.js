@@ -1,19 +1,14 @@
-﻿// psychologicalTraits.js
-
-function collectPsychologicalTraits(dateValue, userId) {
-    var athleteId = document.getElementById("athleteId").value; //好像沒使用到
+﻿function collectPsychologicalTraits(dateValue, userId) {
+    var athleteId = document.getElementById("athleteId").value;
     var traitsData = [];
 
-    // 獲取所有心理特質的感受
     $('#psychologicalRows tr').each(function () {
-        var traitName = $(this).find('td:first-child label').text().trim(); // 確保只抓取第一列中的label內容
-        var selectedFeeling = $(this).find('input[type="radio"]:checked').val(); // 獲取選中的感受
+        var traitName = $(this).find('td:first-child label').text().trim();
+        var selectedFeeling = $(this).find('input[type="radio"]:checked').val();
 
-        // 檢查是否選擇了感受，避免未選擇感受的情況
         if (selectedFeeling) {
             var traitType = '';
 
-            // 根據心理特質名稱來確定特質類型
             if (traitName.includes('睡眠品質')) {
                 traitType = '睡眠品質';
             } else if (traitName.includes('疲憊程度')) {
@@ -26,13 +21,12 @@ function collectPsychologicalTraits(dateValue, userId) {
                 traitType = '比賽意願';
             }
 
-            // 收集選中的感受並推入 traitsData 數組
             traitsData.push({
-                Trait: traitName, // 心理特質名稱
-                Feeling: selectedFeeling, // 已選感受
-                UserID: userId, // 用戶ID
-                PsychologicalDate: dateValue, // 日期
-                Score: calculateScore(selectedFeeling, traitType) // 根據感受計算分數
+                Trait: traitName,
+                Feeling: selectedFeeling,
+                UserID: userId,
+                PsychologicalDate: dateValue,
+                Score: calculateScore(selectedFeeling, traitType)
             });
         }
     });
@@ -74,7 +68,6 @@ function sendTraitsToServer(traitsData) {
     });
 }
 
-// 根據感受計算分數的函數
 function calculateScore(feeling, traitType) {
     const scores = {
         '睡眠品質': {
@@ -112,5 +105,5 @@ function calculateScore(feeling, traitType) {
         }
     };
 
-    return scores[traitType][feeling] || 0; // 默認為0
+    return scores[traitType][feeling] || 0;
 }

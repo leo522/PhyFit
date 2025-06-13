@@ -7,9 +7,11 @@ namespace PhysicalFit.Models
 {
     public class GeneralTrainingRecordViewModel
     {
+        public int ID { get; set; }
         public string TrainingName { get; set; }
         public string Coach { get; set; }
         public string Athlete { get; set; }
+        public Nullable<int> AthleteID { get; set; }
         public DateTime TrainingDate { get; set; }
         public string TrainingClassName { get; set; }
         public string AthleteName { get; set; }
@@ -21,28 +23,35 @@ namespace PhysicalFit.Models
         public string TrainingTime { get; set; }
         public int RPEscore { get; set; }
         public decimal EachTrainingLoad { get; set; }
+        public string Source { get; set; }
     }
 
     public class ArcheryTrainingRecordViewModel
     {
+        public int ID { get; set; }
         public DateTime TrainingDate { get; set; }
         public string Coach { get; set; }
         public string Athlete { get; set; }
+        public Nullable<int> AthleteID { get; set; }
         public int Poundage { get; set; }
         public int ArrowCount { get; set; }
         public int RPEscore { get; set; }
         public decimal EachTrainingLoad { get; set; }
+        public string Source { get; set; }
     }
 
     public class ShootingTrainingRecordViewModel
     {
+        public int ID { get; set; }
         public DateTime TrainingDate { get; set; }
         public string Coach { get; set; }
         public string Athlete { get; set; }
+        public Nullable<int> AthleteID { get; set; }
         public string ShootingTool { get; set; }
         public int BulletCount { get; set; }
         public int RPEscore { get; set; }
         public decimal EachTrainingLoad { get; set; }
+        public string Source { get; set; }
     }
 
     public class TrainingRecordViewModel
@@ -53,10 +62,13 @@ namespace PhysicalFit.Models
         public IEnumerable<ShootingTrainingRecordViewModel> ShootingRecords { get; set; }
         public IEnumerable<DetectionTrainingRecordViewModel> DetectionRecords { get; set; }
         public IEnumerable<PsychologicalViewModel> Psychological { get; set; }
+        public string CoachName { get; set; }
+        public string AthleteName { get; set; }
     }
 
     public class DetectionTrainingRecordViewModel
     {
+        public int ID { get; set; }
         public DateTime TrainingDate { get; set; }
         public string Coach { get; set; }
         public string Athlete { get; set; }
@@ -67,17 +79,18 @@ namespace PhysicalFit.Models
         public double TrainingVolume { get; set; }
         public double TrainingPrescription { get; set; }
         public double CoefficientOfDetermination { get; set; }
+        public double RollerSkill { get; set; }
     }
 
     public class PsychologicalViewModel
     {
-        public List<string> Dates { get; set; } // 日期
-        public List<int> UserID { get; set; } //運動員ID
-        public List<string> TraitsStatuses { get; set; } // 心理特質狀態名稱
-        public List<int> SleepQualityScores { get; set; } // 睡眠品質分數
-        public List<int> FatigueScores { get; set; } // 疲憊程度分數
-        public List<int> TrainingWillingnessScores { get; set; } // 訓練意願分數
-        public List<int> AppetiteScores { get; set; } // 胃口分數
-        public List<int> CompetitionWillingnessScores { get; set; } // 比賽意願分數
+        public List<string> Dates { get; set; }
+        public List<int> UserID { get; set; }
+        public List<string> TraitsStatuses { get; set; }
+        public List<int> SleepQualityScores { get; set; }
+        public List<int> FatigueScores { get; set; }
+        public List<int> TrainingWillingnessScores { get; set; }
+        public List<int> AppetiteScores { get; set; }
+        public List<int> CompetitionWillingnessScores { get; set; }
     }
 }

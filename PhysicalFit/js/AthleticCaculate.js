@@ -1,6 +1,5 @@
-﻿/*田徑計算公式.js*/
-var TrackLimitSpeed = 0; //臨界速度
-var TrackMaxWork = 0; //最大無氧做功
+﻿var TrackLimitSpeed = 0;
+var TrackMaxWork = 0;
 var FailureTime200 = 0;
 var FailureTime400 = 0;
 var FailureTime800 = 0;
@@ -9,13 +8,20 @@ var TrackTotT = 0;
 var TrackMaxR = 0;
 var TrackMaxR_a;
 var TrackMaxR_b;
-var TreadmillTotT = 0; //訓練量
-var TreadmillCurrentSets = 1; //設定組數
+var TreadmillTotT = 0;
+var TreadmillCurrentSets = 1;
 
 function calculateSpeed(inputElement) {
     var row = $(inputElement).closest('tr');
     var distance = parseFloat(row.find('td').eq(0).text());
     var exhaustionTime = parseFloat($(inputElement).val());
+
+    if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
+        var speed = (distance / exhaustionTime) * 3.6;
+        row.find('.speed-result').text(speed.toFixed(1));
+    } else {
+        row.find('.speed-result').text('');
+    }
 
     trackCalculateLinearRegression();
 }
@@ -117,13 +123,18 @@ function trackCalculateLinearRegression() {
     TrackMaxR_a = maxRA;
     TrackMaxR_b = maxRB;
 
-    TrackLimitSpeed = ((TrackMaxR_b * 3600) / 1000).toFixed(1); //臨界速度
-    document.getElementById("CriticalSpeed").value = TrackLimitSpeed; //臨界速度
+    TrackLimitSpeed = ((TrackMaxR_b * 3600) / 1000).toFixed(1);
+    document.getElementById("CriticalSpeed").value = TrackLimitSpeed;
 
-    TrackMaxWork = TrackMaxR_a.toFixed(2); //最大無氧做功
-    document.getElementById("AnaerobicPower").value = TrackMaxWork; //最大無氧做功
+    TrackMaxWork = formatFiveDigits(TrackMaxR_a);
+    document.getElementById("AnaerobicPower").value = TrackMaxWork;
 
-    $('#calculationResult').val(Math.floor(maxR * 100) / 100);
+    maxR = Math.round(maxR * 10000) / 10000;
+    $('#calculationResult').val(maxR);
+}
+
+function formatFiveDigits(value) {
+    return Number.parseFloat(value).toPrecision(5);
 }
 
 //訓練量
@@ -132,7 +143,6 @@ function TreadmillTotalT() {
 
     for (var i = 1; i <= TreadmillCurrentSets; i++)
     {
-        /*TotalTraining = TotalTraining + 1 ;*/
         TotalTraining = TotalTraining + 1 * (+ i).value;
     }
     document.getElementById("TrainingVol").value = TotT.toFixed(2);

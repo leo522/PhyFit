@@ -18,7 +18,6 @@
             <img src="~/img/logo.svg" alt="Logo" style="height: 45px; width: 100%;">
         </div>
         <form action="/Account/RegisterAthlete" method="post">
-            <!-- 運動員專用欄位 -->
             <div>
                 <div class="form-group">
                     <label for="AthleteName">姓名</label>
@@ -30,24 +29,38 @@
                            min="1900-01-01" max="@DateTime.Now.ToString("yyyy-MM-dd")">
                 </div>
                 <div class="form-group">
-                    <label for="AthleteID">身分證字號</label>
+                    <label for="AthleteID">身分證字號 (帳號)</label>
                     <input type="text" class="form-control" id="AthleteID" name="AthleteID" placeholder="請輸入身分證字號" required>
                 </div>
                 <div class="form-group">
                     <label for="Athletepwd">密碼</label>
                     <input type="password" class="form-control" id="Athletepwd" name="Athletepwd" placeholder="請輸入密碼" required>
                 </div>
-                <div class="form-group">
+                <div id="schoolNameBlock" class="form-group" @(Model.AthleteOrganize != null ? "style=\"display:none;\"" : "")>
                     <label for="AthleteSchool">學校名稱</label>
-                    <input type="text" class="form-control" id="AthleteSchool" name="AthleteSchool" placeholder="請輸入學校名稱" required>
+                    <input type="text" class="form-control" id="AthleteSchool" name="AthleteSchool" value="@Model.AthleteSchool" readonly />
+                </div>
+                <div id="orgNameBlock" class="form-group" @(Model.AthleteOrganize == null ? "style=\"display:none;\"" : "")>
+                    <label for="AthleteOrganize">單位名稱</label>
+                    <input type="text" class="form-control" id="AthleteOrganize" name="AthleteOrganize" value="@Model.AthleteOrganize" readonly />
                 </div>
                 <div class="form-group">
                     <label for="AthleteTeam">隊伍名稱</label>
                     <input type="text" class="form-control" id="AthleteTeam" name="AthleteTeam" placeholder="請輸入隊伍名稱" required>
                 </div>
-                <div class="form-group">
-                    <label for="AthleteCoach">所屬教練</label>
-                    <input type="text" class="form-control" id="AthleteCoach" name="AthleteCoach" placeholder="請輸入所屬教練" required>
+                <label for="coach">選擇已註冊的教練（可複選）</label>
+                <div id="coach-list" style="max-height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 8px; border-radius: 4px;">
+                    @foreach (SelectListItem coach in ViewBag.Coaches)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input coach-checkbox" type="checkbox" name="CoachIDs" value="@coach.Value" id="coach_@coach.Value" />
+                            <label class="form-check-label" for="coach_@coach.Value">@coach.Text</label>
+                        </div>
+                    }
+                </div>
+                <div class="form-check mt-2">
+                    <input type="checkbox" class="form-check-input" id="noCoach" name="NoCoach" value="true">
+                    <label class="form-check-label" for="noCoach">目前沒有對應教練</label>
                 </div>
             </div>
 
@@ -55,7 +68,17 @@
         </form>
 <script>
     $(document).ready(function () {
-        // 檢查 TempData 中是否有錯誤訊息
+        var urlParams = new URLSearchParams(window.location.search);
+        var orgID = urlParams.get('orgID');
+
+        if (orgID) {
+            $('#schoolNameBlock').hide();
+            $('#orgNameBlock').show();
+        } else {
+            $('#schoolNameBlock').show();
+            $('#orgNameBlock').hide();
+        }
+
         var errorMessage = '@TempData["ErrorMessage"]';
         if (errorMessage) {
             Swal.fire({
@@ -66,8 +89,23 @@
             });
         }
     });
-</script>
 
-    </div>
+    const noCoachCheckbox = document.getElementById("noCoach");
+    const coachCheckboxes = document.querySelectorAll(".coach-checkbox");
+
+    noCoachCheckbox.addEventListener("change", function () {
+        if (this.checked) {
+            coachCheckboxes.forEach(cb => {
+                cb.checked = false;
+                cb.disabled = true;
+            });
+        } else {
+            coachCheckboxes.forEach(cb => {
+                cb.disabled = false;
+            });
+        }
+    });
+</script>
+</div>
 </body>
 </html>

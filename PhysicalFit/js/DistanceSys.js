@@ -1,9 +1,8 @@
-﻿/*檢測系統*/
-$(document).ready(function () {
+﻿$(document).ready(function () {
     initializeModal("RPEModalTraining", "openRPEModal");
     initializeModal("RPEModalArchery", "openRPEModalArchery");
     initializeModal("RPEModalShooting", "openRPEModalShooting");
-    // 監控項目選擇
+
     $('#Item').change(function () {
         var selectedItem = $(this).val();
         $('.content').hide();
@@ -25,16 +24,16 @@ $(document).ready(function () {
     });
 
     $('#Item').on('change', function () {
-        $('.modal').hide(); // 隱藏所有模態窗口
-        $('.modal').removeData('currentRow'); // 清理舊的數據
+        $('.modal').hide();
+        $('.modal').removeData('currentRow');
     });
 
     $('#DeteItem').change(function () {
 
         var selectedItem = $(this).val();
 
-        $('#selectedSportItem').text(selectedItem); //更新選擇的運動項目名稱
-        $('#btn_result_container').hide(); // 初始隱藏按鈕容器
+        $('#selectedSportItem').text(selectedItem);
+        $('#btn_result_container').hide();
 
         if (selectedItem !== "請選擇運動項目") {
             $.ajax({
@@ -42,7 +41,7 @@ $(document).ready(function () {
                 data: { itemName: selectedItem },
                 success: function (data) {
                     $('#distanceDetails').html(data);
-                    $('#distanceDetails').find('#selectedSportItem').text(selectedItem); // 更新 partial view 中的選項
+                    $('#distanceDetails').find('#selectedSportItem').text(selectedItem);
                 },
                 error: function () {
                     alert("資料錯誤.");
@@ -53,7 +52,7 @@ $(document).ready(function () {
             $('#CriticalSpeed').val('');
             $('#AnaerobicPower').val('');
         }
-        // 根據選擇項目顯示按鈕
+
         $('#btn_result_container').show();
 
         if (selectedItem === "跑步機") {
@@ -81,7 +80,7 @@ $(document).ready(function () {
             $('#AnaerobicPower').val('');
         }
     });
-    //當 #Item 下拉選單改變時觸發
+
     $('#Item').change(function () {
         var selectedValue = $(this).val();
         if (selectedValue === '檢測系統') {

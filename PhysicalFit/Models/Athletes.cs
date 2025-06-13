@@ -26,6 +26,7 @@ namespace PhysicalFit.Models
             this.PsychologicalTraitsResults = new HashSet<PsychologicalTraitsResults>();
             this.ShootingRecord = new HashSet<ShootingRecord>();
             this.Users = new HashSet<Users>();
+            this.AthleteCoachRelations = new HashSet<AthleteCoachRelations>();
         }
     
         public int ID { get; set; }
@@ -40,6 +41,7 @@ namespace PhysicalFit.Models
         public string IdentityNumber { get; set; }
         public System.DateTime RegistrationDate { get; set; }
         public Nullable<System.DateTime> LastUpdated { get; set; }
+        public string AthleteOrganize { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArcheryRecord> ArcheryRecord { get; set; }
@@ -60,5 +62,7 @@ namespace PhysicalFit.Models
         public virtual ICollection<ShootingRecord> ShootingRecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AthleteCoachRelations> AthleteCoachRelations { get; set; }
     }
 }

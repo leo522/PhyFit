@@ -1,94 +1,92 @@
 ﻿#trainingMonitoringTable {
-    width: 100%; /* 表格寬度填滿容器 */
-    border-collapse: collapse; /* 合併邊框 */
-    margin-top: 20px; /* 與上方內容保持距離 */
-    border: 1px solid #ddd; /* 表格外框線 */
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #ddd;
 }
 
     #trainingMonitoringTable th,
     #trainingMonitoringTable td {
-        padding: 10px; /* 單元格內距 */
-        border: 1px solid #ddd; /* 單元格邊框 */
-        text-align: center; /* 文字置中 */
-        vertical-align: middle; /* 垂直置中 */
-        word-wrap: break-word; /* 遇到長文字時換行 */
-        overflow: hidden; /* 超出部分隱藏 */
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+        vertical-align: middle;
+        word-wrap: break-word;
+        overflow: hidden;
     }
 
     #trainingMonitoringTable th {
-        background-color: #f4f4f4; /* 表頭背景色 */
-        font-weight: bold; /* 表頭加粗 */
-    }
-    /* 調整內部框的樣式 */
-    #trainingMonitoringTable select,
-    #trainingMonitoringTable input {
-        width: auto; /* 自動寬度 */
-        max-width: 180px; /* 設定最大寬度 */
-        min-width: 100px; /* 設定最小寬度 */
-        box-sizing: border-box; /* 包含內邊距和邊框 */
-    }
-    /* 自適應欄位寬度與最小寬度 */
-    #trainingMonitoringTable th:nth-child(1), /* 課程名稱 */
-    #trainingMonitoringTable td:nth-child(1) {
-        min-width: 220px; /* 最小寬度 */
+        background-color: #f4f4f4;
+        font-weight: bold;
     }
 
-    #trainingMonitoringTable th:nth-child(2), /* 日期 */
+    #trainingMonitoringTable select,
+    #trainingMonitoringTable input {
+        min-width: 100px;
+        text-align: center;
+        vertical-align: middle;
+        box-sizing: border-box;
+    }
+
+    #trainingMonitoringTable th:nth-child(1),
+    #trainingMonitoringTable td:nth-child(1) {
+        min-width: 180px;
+    }
+
+    #trainingMonitoringTable th:nth-child(2),
     #trainingMonitoringTable td:nth-child(2) {
         min-width: 200px;
     }
 
-    #trainingMonitoringTable th:nth-child(3), /* 項目 */
+    #trainingMonitoringTable th:nth-child(3),
     #trainingMonitoringTable td:nth-child(3) {
         min-width: 150px;
     }
 
-    #trainingMonitoringTable th:nth-child(4), /* 動作名稱 */
+    #trainingMonitoringTable th:nth-child(4),
     #trainingMonitoringTable td:nth-child(4) {
-        min-width: 200px;
+        min-width: 260px;
     }
 
-    #trainingMonitoringTable th:nth-child(5), /* 訓練部位 */
+    #trainingMonitoringTable th:nth-child(5),
     #trainingMonitoringTable td:nth-child(5) {
         min-width: 180px;
     }
 
-    #trainingMonitoringTable th:nth-child(6), /* 訓練類型 */
+    #trainingMonitoringTable th:nth-child(6),
     #trainingMonitoringTable td:nth-child(6) {
-        min-width: 250px;
+        min-width: 260px;
     }
 
-    #trainingMonitoringTable th:nth-child(7), /* 其他 */
+    #trainingMonitoringTable th:nth-child(7),
     #trainingMonitoringTable td:nth-child(7) {
         min-width: 200px;
     }
 
-    #trainingMonitoringTable th:nth-child(8), /* 時間 */
+    #trainingMonitoringTable th:nth-child(8),
     #trainingMonitoringTable td:nth-child(8) {
-        min-width: 250px;
+        min-width: 180px;
     }
 
-    #trainingMonitoringTable th:nth-child(9), /* 自覺費力程度 */
+    #trainingMonitoringTable th:nth-child(9),
     #trainingMonitoringTable td:nth-child(9) {
         min-width: 150px;
     }
 
-    #trainingMonitoringTable th:nth-child(10), /* 單次運動負荷 */
+    #trainingMonitoringTable th:nth-child(10),
     #trainingMonitoringTable td:nth-child(10) {
         min-width: 200px;
     }
 
-    #trainingMonitoringTable th:nth-child(11), /* 欄位增減 */
+    #trainingMonitoringTable th:nth-child(11),
     #trainingMonitoringTable td:nth-child(11) {
         min-width: 120px;
     }
 
-/* 表格的文字換行與溢出控制 */
 td, th {
-    white-space: nowrap; /* 禁止自動換行 */
+    white-space: nowrap; 
 }
 
-/* 按鈕樣式 */
 .btn {
     padding: 5px 10px;
     font-size: 14px;
@@ -96,5 +94,5 @@ td, th {
 }
 
 .add-row, .remove-row {
-    width: 35px; /* 固定按鈕寬度 */
+    width: 35px;
 }

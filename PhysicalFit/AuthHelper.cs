@@ -10,7 +10,6 @@ namespace PhysicalFit
     public static class AuthHelper
     {
         #region 獲取資料表的教練ID
-
         public static int? GetCurrentCoachId()
         {
             var identity = HttpContext.Current.User.Identity as FormsIdentity;
@@ -30,7 +29,6 @@ namespace PhysicalFit
 
             return null;
         }
-
         #endregion
 
         #region 獲取資料表的運動員ID
@@ -42,9 +40,8 @@ namespace PhysicalFit
                 return null;
             }
 
-            using (var db = new PhFitnessEntities()) // 根據你的實際資料庫上下文進行替換
+            using (var db = new PhFitnessEntities())
             {
-                // 假設你有一個方法可以根據教練ID查詢運動員ID
                 var athlete = db.Athletes.FirstOrDefault(a => a.CoachID == coachId);
 
                 return athlete?.ID;

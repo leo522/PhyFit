@@ -1,11 +1,45 @@
-﻿///*SaveShootingRecord.js 射擊*/
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $('#btn-shootingMonitoring').click(function (event) {
-        event.preventDefault(); // 防止表單的默認提交行為
+        event.preventDefault();
 
-        var athleteID = $('#AthletesID').val() || $('input[name="AthleteID"]').val(); // 獲取運動員 ID
+        const dateInputs = document.querySelectorAll('input[name="shootingDate"]');
+        const dateMap = new Map();
+        let hasDuplicate = false;
+        let duplicateValue = "";
+
+        // 清除所有紅框
+        dateInputs.forEach(input => input.classList.remove('border', 'border-danger'));
+
+        for (let input of dateInputs) {
+            const rawValue = input.value.trim();
+            if (!rawValue) continue;
+
+            const timestamp = new Date(rawValue).getTime();
+
+            if (dateMap.has(timestamp)) {
+                hasDuplicate = true;
+                duplicateValue = rawValue;
+
+                // 加紅框給重複的兩筆欄位
+                input.classList.add('border', 'border-danger');
+                dateMap.get(timestamp).classList.add('border', 'border-danger');
+            } else {
+                dateMap.set(timestamp, input);
+            }
+        }
+
+        if (hasDuplicate) {
+            Swal.fire({
+                icon: 'warning',
+                title: '日期重複',
+                text: `有重複的日期時間：${duplicateValue}，請檢查再送出。`,
+            });
+            return;
+        }
+
+        var athleteID = $('#AthletesID').val() || $('input[name="AthleteID"]').val();
         var userRole = $('#userRole').val();
-        var isAthlete = userRole === 'Athlete'; // 判斷是否為運動員
+        var isAthlete = userRole === 'Athlete';
         var coachName = $('#identityCoach #CoachName').text().trim();
         var coachID = $('#identityCoach #CoachID').val().trim();
 
@@ -24,26 +58,23 @@ $(document).ready(function () {
             return;
         }
 
-        // 構建多筆資料
         var records = [];
 
-        // 遍歷所有的表格行，使用 class .Shootingtraining-group
         $('#ShootingtrainingRows .Shootingtraining-group').each(function () {
             var formData = {
-                TrainingDate: $(this).find('input[name="shootingDate"]').val(), // 訓練日期
-                Coach: coachName, // 教練名字
-                CoachID: coachID, // 教練ID
-                Athlete: athleteName, // 運動員名字
-                AthleteID: athleteID, // 運動員ID
-                ShootingTool: $(this).find('select[name="GunsItem"]').val(), // 訓練用具
-                BulletCount: $(this).find('input[name="Bullet"]').val(), // 子彈數量
-                RPEscore: $(this).find('input[name="RPEshooting"]').val(), // 自覺量表
-                EachTrainingLoad: $(this).find('input[name="ShootingDailyTL"]').val() // 單次運動負荷量
+                TrainingDate: $(this).find('input[name="shootingDate"]').val(),
+                Coach: coachName,
+                CoachID: coachID,
+                Athlete: athleteName,
+                AthleteID: athleteID,
+                ShootingTool: $(this).find('select[name="GunsItem"]').val(),
+                BulletCount: $(this).find('input[name="Bullet"]').val(),
+                RPEscore: $(this).find('input[name="RPEshooting"]').val(),
+                EachTrainingLoad: $(this).find('input[name="SessionShootingTL"]').val()
             };
-            records.push(formData); // 將每筆資料加入陣列中
+            records.push(formData);
         });
 
-        // 檢查是否有資料
         if (records.length === 0) {
             Swal.fire({
                 icon: 'warning',
@@ -54,39 +85,101 @@ $(document).ready(function () {
             return;
         }
 
-        // 根據身份選擇不同的 URL
-        var url = isAthlete ? '/Record/SaveAthleteShootingRecord' : '/PhyFit/SaveShootingRecord';
+        const checkUrl = isAthlete
+            ? '/Record/CheckDuplicateShootingRecord'
+            : '/PhyFit/CheckDuplicateCoachShootingRecord';
 
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: JSON.stringify(records), // 發送多筆資料
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '存檔成功',
-                        text: '射擊訓練記錄已成功存檔。',
-                        confirmButtonText: '確定'
+        const checkPromises = records.map(r => {
+            const dt = new Date(r.TrainingDate);
+            const formatted = `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}T${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+            return $.post(checkUrl, {
+                athleteId: r.AthleteID,
+                trainingDate: formatted
+            });
+        });
+
+        Promise.all(checkPromises).then(results => {
+            const duplicatedTimes = [];
+
+            document.querySelectorAll('input[name="shootingDate"]').forEach(input =>
+                input.classList.remove('border', 'border-danger')
+            );
+
+            results.forEach((res, idx) => {
+                if (res.exists) {
+                    const dt = new Date(records[idx].TrainingDate);
+                    const formatted = `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')} ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+
+                    duplicatedTimes.push(formatted);
+
+                    $('#ShootingtrainingRows input[name="shootingDate"]').each(function () {
+                        if (this.value && new Date(this.value).getTime() === dt.getTime()) {
+                            this.classList.add('border', 'border-danger');
+                        }
                     });
-                } else {
+                }
+            });
+
+            if (duplicatedTimes.length > 0) {
+                Swal.fire({
+                    title: '重複時間確認',
+                    html: `以下時間已有紀錄：<br><br><strong>${duplicatedTimes.join('<br>')}</strong><br><br>是否要覆蓋？`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '確定覆蓋',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.querySelectorAll('input[name="shootingDate"]').forEach(input =>
+                            input.classList.remove('border', 'border-danger')
+                        );
+                        sendShootingRecords();
+                    }
+                });
+            } else {
+                document.querySelectorAll('input[name="shootingDate"]').forEach(input =>
+                    input.classList.remove('border', 'border-danger')
+                );
+                sendShootingRecords();
+            }
+        });
+
+        function sendShootingRecords() {
+            var url = isAthlete
+                ? '/Record/SaveAthleteShootingRecord'
+                : '/PhyFit/SaveShootingRecord';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(records),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '存檔成功',
+                            text: '射擊訓練紀錄已成功存檔。',
+                            confirmButtonText: '確定'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '存檔失敗',
+                            text: '存檔失敗: ' + response.message,
+                            confirmButtonText: '確定'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
                     Swal.fire({
                         icon: 'error',
                         title: '存檔失敗',
-                        text: '存檔失敗: ' + response.message,
+                        text: '存檔失敗，請聯絡管理員。錯誤資訊：' + error,
                         confirmButtonText: '確定'
                     });
                 }
-            },
-            error: function (xhr, status, error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '存檔失敗',
-                    text: '存檔失敗，請聯絡管理員。錯誤資訊：' + error,
-                    confirmButtonText: '確定'
-                });
-            }
-        });
+            });
+        }
     });
 });

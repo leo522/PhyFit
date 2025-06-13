@@ -1,0 +1,96 @@
+@{
+    var sport = ViewBag.SportItem as string;
+    Layout = null; // 因為是 Modal 載入，所以不需要主版頁
+}
+
+@if (sport == "跑步機")
+{
+    var data = Model as List<PhysicalFit.Models.TreadmillRecordDetails>;
+    <table class="table">
+        <thead><tr><th>強度%</th><th>最大跑速</th><th>時間(s)</th><th>速度(km/h)</th></tr></thead>
+        <tbody>
+            @foreach (var item in data)
+            {
+                <tr>
+                    <td>@item.IntenPercen</td>
+                    <td>@item.MaxRunningSpeed</td>
+                    <td>@item.ForceDuration</td>
+                    <td>@item.Speed</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (sport == "田徑場")
+{
+    var data = Model as List<PhysicalFit.Models.TrackFieldRecordDetails>;
+    <table class="table">
+        <thead><tr><th>距離(m)</th><th>時間(s)</th><th>速度(m/s)</th></tr></thead>
+        <tbody>
+            @foreach (var item in data)
+            {
+                <tr>
+                    <td>@item.Distance</td>
+                    <td>@item.ForceDuration</td>
+                    <td>@item.Speed</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (sport == "游泳")
+{
+    var data = Model as List<PhysicalFit.Models.SwimmingRecordDetails>;
+    <table class="table">
+        <thead><tr><th>距離(m)</th><th>時間(s)</th><th>速度(m/s)</th></tr></thead>
+        <tbody>
+            @foreach (var item in data)
+            {
+                <tr>
+                    <td>@item.Distance</td>
+                    <td>@item.ForceDuration</td>
+                    <td>@item.Speed</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (sport == "自由車")
+{
+    var data = Model as List<PhysicalFit.Models.BikeRecordDetails>;
+    <table class="table">
+        <thead><tr><th>強度%</th><th>最大功率</th><th>時間(s)</th><th>速度(km/h)</th></tr></thead>
+        <tbody>
+            @foreach (var item in data)
+            {
+                <tr>
+                    <td>@item.IntenPercen</td>
+                    <td>@item.MaxPower</td>
+                    <td>@item.ForceDuration</td>
+                    <td>@item.Speed</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (sport == "滑輪溜冰")
+{
+    var data = Model as List<PhysicalFit.Models.RollerSkatingRecordDetails>;
+    <table class="table">
+        <thead><tr><th>距離(m)</th><th>時間(s)</th><th>速度(m/s)</th></tr></thead>
+        <tbody>
+            @foreach (var item in data)
+            {
+                <tr>
+                    <td>@item.Distance</td>
+                    <td>@item.ForceDuration</td>
+                    <td>@item.Speed</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="text-danger">尚未支援此運動項目的詳細顯示</div>
+}

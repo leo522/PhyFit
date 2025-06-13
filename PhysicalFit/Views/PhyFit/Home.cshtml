@@ -14,7 +14,6 @@
     <link href="~/css/HomeStyle.css" rel="stylesheet" />
 </head>
 <body>
-    @*標題*@
     <div class="main-container">
         <div class=" left-section">
             <div style="margin-bottom:20px;">
@@ -28,8 +27,6 @@
                 </select>
             </div>
         </div>
-
-        @*日期*@
         <div class="right-section">
             <div class="dateSelect">
                 <form>
@@ -46,10 +43,7 @@
             </div>
         </div>
     </div>
-
-    @*表單內容*@
     <div class="content">
-        @*訓練衝量監控*@
         <div class="training-section" id="session_RPE">
             <div class="col-md-3">
                 <div class="card">
@@ -118,8 +112,6 @@
                 </div>
             </div>
         </div>
-
-        @*射箭訓練衝量監控*@
         <div class="training-section" id="arrow_Training">
             <div class="col-md-3">
                 <div class="card">
@@ -151,8 +143,6 @@
                 </div>
             </div>
         </div>
-
-        @*射擊訓練衝量監控*@
         <div class="training-section" id="shotting_Training">
             <div class="col-md-3">
                 <div class="card">
@@ -190,8 +180,6 @@
                 </div>
             </div>
         </div>
-
-        @*檢測系統*@
         <div class="training-section" id="Detection_Sys">
             <div class="col-md-3">
                 <div class="card">
@@ -204,10 +192,6 @@
                                 <label>項目</label>
                                 <select class="form-control" id="Dete">
                                     <option>請選擇代謝能力項目</option>
-                                    @*@foreach (var DI in ViewBag.DetectionItem)
-                                    {
-                                        <option>@DI</option>
-                                    }*@
                                 </select>
                             </div>
                             <div class="form-group">
@@ -224,10 +208,6 @@
                                 <label>距離</label>
                                 <select class="form-control" id="Distance">
                                     <option>請選擇距離</option>
-                                    @*@foreach (var Dis in ViewBag.SpoetsDistance)
-                                    {
-                                        <option>@Dis</option>
-                                    }*@
                                 </select>
                             </div>
                             <div class="form-group">
@@ -248,8 +228,6 @@
             </div>
         </div>
     </div>
-
-    @*session RPE指標計算結果*@
     <div class="resultTable" id="sessionRPEresult">
         <div class="col-md-4">
             <div class="card">
@@ -306,12 +284,10 @@
         </div>
     </div>
 
-    @*RPE分數說明按鈕*@
     <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block;">
         <button id="btnModal" class="btn btn-warning">查看RPE說明</button>
     </div>
 
-    @*RPE分數彈跳視窗*@
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
@@ -339,12 +315,10 @@
         </div>
     </div>
 
-    @*查看訓練量紀錄按鈕*@
     <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block;">
         <button id="btnRecord" class="btn btn-primary">查看訓練量紀錄</button>
     </div>
 
-    @*訓練量紀錄彈跳視窗*@
     <div id="RecordModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -353,30 +327,19 @@
             </div>
         </div>
     </div>
-
-    @*計算檢測結果按鈕*@
     <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
         <button id="btn_result" class="btn btn-info">計算檢測</button>
     </div>
-
-    @*儲存運動訓練量按鈕*@
     <div style="width: auto; padding: 5px 10px; font-size: 16px; display: inline-block; margin-left: 10px;">
         <button id="btn_save" class="btn btn-success">儲存運動訓練量結果</button>
     </div>
-
     <script>
         $(document).ready(function () {
-            // 初始化時隱藏所有監控項目
             $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord, #sessionRPEresult').hide();
-
-            // 當選擇監控項目時
             $('#Item').change(function () {
                 const selectItem = $(this).val();
 
-                // 隱藏所有項目
                 $('#session_RPE, #arrow_Training, #shotting_Training, #Detection_Sys, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord').hide();
-
-                // 根據選擇的項目顯示對應的內容
                 if (selectItem === '訓練衝量監控 (session-RPE)') {
                     $('#session_RPE, #RPEtable, #btnModal, #btn_result, #btn_save, #btnRecord, #sessionRPEresult').show();
                 } else if (selectItem === '射箭訓練衝量') {

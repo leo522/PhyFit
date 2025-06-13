@@ -9,7 +9,7 @@ namespace PhysicalFit.Controllers
 {
     public class EWMAweightingController : Controller
     {
-        private PhFitnessEntities _db = new PhFitnessEntities(); //資料庫
+        private PhFitnessEntities _db = new PhFitnessEntities();
 
         #region 指標主頁
         public ActionResult IndicatorsMain()
@@ -19,10 +19,9 @@ namespace PhysicalFit.Controllers
         [HttpPost]
         public ActionResult Calculate(EWMAViewModel model)
         {
-            // 計算 EWMA 權重
             model.Calculate();
 
-            return View("IndicatorsMain", model); // 返回同一視圖並顯示結果
+            return View("IndicatorsMain", model);
         }
         #endregion
 
@@ -31,7 +30,6 @@ namespace PhysicalFit.Controllers
         {
             return View();
         }
-        
         #endregion
 
         #region 睡眠品質

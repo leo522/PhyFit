@@ -1,30 +1,27 @@
 ﻿$(document).ready(function () {
-    // 初始化 flatpickr 日期選擇器
     function initializeFlatpickr() {
-        // 射箭日期選擇器初始化
-        flatpickr(".archery-date", {
+        flatpickr(".archeryDate", {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
-            time_24hr: true
+            time_24hr: true,
+            "locale": "zh_tw",
         });
 
-        // 射擊日期選擇器初始化
-        flatpickr(".shooting-date", {
+        flatpickr(".shootingDate", {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
-            time_24hr: true
+            time_24hr: true,
+            "locale": "zh_tw",
         });
     }
 
-    // 初始加載時初始化日期選擇器
     initializeFlatpickr();
 
-    // 計算每日運動負荷的通用函數
     function calculateDailyTLForDate(dateSelector, tlInputSelector, calculationFn) {
-        var dateToTL = {};  // 用來存儲每個日期的TL總和
+        var dateToTL = {};
 
         $(dateSelector).each(function () {
-            var date = $(this).val();  // 取得日期
+            var date = $(this).val();
             var tl = calculationFn($(this).closest('tr'));
 
             if (date && tl !== null) {
@@ -35,18 +32,16 @@
             }
         });
 
-        // 將每個日期的TL結果顯示在對應的輸入框中
         $(tlInputSelector).each(function () {
             var date = $(this).closest('tr').find(dateSelector).val();
             if (date && dateToTL[date] !== undefined) {
                 $(this).val(dateToTL[date]);
             } else {
-                $(this).val('');  // 若沒有值則清空
+                $(this).val('');
             }
         });
     }
 
-    // 一般訓練TL計算
     function calculateDailyTL($row) {
         var rpeValue = $row.find('input[name="RPE"]').val();
         var trainingTimeValue = $row.find('select[name="TrainingTime"]').val();
@@ -63,7 +58,6 @@
         }
     }
 
-    // 射箭訓練TL計算
     function calculateArcheryTL($row) {
         var rpeValue = $row.find('input[name="RPEArchery"]').val();
         var poundsValue = $row.find('input[name="Pounds"]').val();
@@ -82,7 +76,6 @@
         }
     }
 
-    // 射擊訓練TL計算
     function calculateShootingTL($row) {
         var rpeValue = $row.find('input[name="RPEshooting"]').val();
         var bulletValue = $row.find('input[name="Bullet"]').val();
@@ -99,7 +92,6 @@
         }
     }
 
-    // 綁定計算按鈕
     $('#btn_calculate').click(function (event) {
         event.preventDefault();
         calculateDailyTLForDate('input[name="TrainingDate"]', 'input[name="DailyTL"]', calculateDailyTL);
@@ -115,20 +107,18 @@
         calculateDailyTLForDate('input[name="shootingDate"]', 'input[name="ShootingDailyTL"]', calculateShootingTL);
     });
 
-    // 新增行處理
     function addRow(selector, maxRows) {
         var rowCount = $(selector).find('tr').length;
         if (rowCount < maxRows) {
             var newRow = $(selector).find('tr:last').clone();
             newRow.find('input, select').val('');
-            $(selector).prepend(newRow);  // 新增行到最上方
-            initializeFlatpickr(); // 新增行後重新初始化 flatpickr
+            $(selector).append(newRow);
+            initializeFlatpickr();
         } else {
             alert("已達到最大行數，無法新增更多。");
         }
     }
 
-    // 刪除行處理
     function removeRow($row, dateSelector, tlInputSelector, calculationFn) {
         var date = $row.find(dateSelector).val();
         var tl = calculationFn($row);
@@ -139,12 +129,10 @@
         }
     }
 
-    // 新增一般訓練行
     $(document).on('click', '.add-row', function () {
         addRow('#trainingMonitoringRows', 7);
     });
 
-    // 刪除一般訓練行
     $(document).on('click', '.remove-row', function () {
         var $row = $(this).closest('tr');
         var rowCount = $('#trainingMonitoringRows').find('tr').length;
@@ -155,12 +143,10 @@
         }
     });
 
-    // 新增射箭訓練行
     $(document).on('click', '.add-row-archery', function () {
         addRow('#ArcherytrainingRows', 7);
     });
 
-    // 刪除射箭訓練行
     $(document).on('click', '.remove-row-archery', function () {
         var $row = $(this).closest('.Archerytraining-group');
         var rowCount = $('#ArcherytrainingRows').find('.Archerytraining-group').length;
@@ -171,12 +157,10 @@
         }
     });
 
-    // 新增射擊訓練行
     $(document).on('click', '.add-row-shooting', function () {
         addRow('#ShootingtrainingRows', 7);
     });
 
-    // 刪除射擊訓練行
     $(document).on('click', '.remove-row-shooting', function () {
         var $row = $(this).closest('.Shootingtraining-group');
         var rowCount = $('#ShootingtrainingRows').find('.Shootingtraining-group').length;
@@ -187,7 +171,6 @@
         }
     });
 
-    // 切換項目就清空每日TL
     $('#Item').change(function () {
         $('input[name="DailyTL"], input[name="ArcheryDailyTL"], input[name="ShootingDailyTL"]').val('');
     });

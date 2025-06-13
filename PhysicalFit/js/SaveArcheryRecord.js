@@ -1,11 +1,45 @@
-﻿//SaveArcheryRecord.js
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $('#btn-archeryMonitoring').click(function (event) {
-        event.preventDefault(); // 防止表單的默認提交行為
+        event.preventDefault();
 
-        var athleteID = $('#AthletesID').val() || $('input[name="AthleteID"]').val(); // 獲取運動員 ID
+        const dateInputs = document.querySelectorAll('input[name="archeryDate"]');
+        const dateMap = new Map();
+        let hasDuplicate = false;
+        let duplicateValue = "";
+
+        // 清除所有紅框
+        dateInputs.forEach(input => input.classList.remove('border', 'border-danger'));
+
+        for (let input of dateInputs) {
+            const rawValue = input.value.trim();
+            if (!rawValue) continue;
+
+            const timestamp = new Date(rawValue).getTime();
+
+            if (dateMap.has(timestamp)) {
+                hasDuplicate = true;
+                duplicateValue = rawValue;
+
+                // 加紅框給重複的兩筆欄位
+                input.classList.add('border', 'border-danger');
+                dateMap.get(timestamp).classList.add('border', 'border-danger');
+            } else {
+                dateMap.set(timestamp, input);
+            }
+        }
+
+        if (hasDuplicate) {
+            Swal.fire({
+                icon: 'warning',
+                title: '日期重複',
+                text: `有重複的日期時間：${duplicateValue}，請檢查再送出。`,
+            });
+            return;
+        }
+
+        var athleteID = $('#AthletesID').val() || $('input[name="AthleteID"]').val();
         var userRole = $('#userRole').val();
-        var isAthlete = userRole === 'Athlete'; // 判斷是否為運動員
+        var isAthlete = userRole === 'Athlete';
         var coachName = $('#identityCoach #CoachName').text().trim();
         var coachID = $('#identityCoach #CoachID').val().trim();
 
@@ -24,27 +58,23 @@ $(document).ready(function () {
             return;
         }
 
-        // 構建多筆資料
         var records = [];
 
-        // 遍歷表格中的每一行資料，使用 .Archerytraining-group 來選擇
         $('#ArcherytrainingRows .Archerytraining-group').each(function () {
             var formData = {
-                TrainingDate: $(this).find('input[name="archeryDate"]').val(), // 訓練日
-                Coach: coachName, // 教練名字
-                CoachID: coachID, // 教練ID
-                Athlete: athleteName, // 運動員名字
-                AthleteID: athleteID, // 運動員ID
-                Poundage: $(this).find('input[name="Pounds"]').val(), // 磅數
-                ArrowCount: $(this).find('input[name="Arrows"]').val(), // 箭數
-                RPEscore: $(this).find('input[name="RPEArchery"]').val(), // 自覺程度
-                EachTrainingLoad: $(this).find('input[name="SessionArcheryTL"]').val(), // 單次運動負荷
-                DailyTrainingLoad: $(this).find('input[name="ArcheryDailyTL"]').val() // 每日運動負荷
+                TrainingDate: $(this).find('input[name="archeryDate"]').val(),
+                Coach: coachName,
+                CoachID: coachID,
+                Athlete: athleteName,
+                AthleteID: athleteID,
+                Poundage: $(this).find('input[name="Pounds"]').val(),
+                ArrowCount: $(this).find('input[name="Arrows"]').val(),
+                RPEscore: $(this).find('input[name="RPEArchery"]').val(),
+                EachTrainingLoad: $(this).find('input[name="SessionArcheryTL"]').val()
             };
-            records.push(formData); // 將每筆資料加入陣列中
+            records.push(formData);
         });
 
-        // 檢查是否有資料
         if (records.length === 0) {
             Swal.fire({
                 icon: 'warning',
@@ -55,39 +85,102 @@ $(document).ready(function () {
             return;
         }
 
-        // 根據身份選擇不同的 URL
-        var url = isAthlete ? '/Record/SaveAthleteArcheryRecord' : '/PhyFit/SaveArcheryRecord';
+        const checkUrl = isAthlete
+            ? '/Record/CheckDuplicateArcheryRecord'
+            : '/PhyFit/CheckDuplicateCoachArcheryRecord';
 
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: JSON.stringify(records), // 發送多筆資料
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '存檔成功',
-                        text: '訓練記錄已成功存檔。',
-                        confirmButtonText: '確定'
+        const checkPromises = records.map(r => {
+            const dt = new Date(r.TrainingDate);
+            const formatted = `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')}T${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+            return $.post(checkUrl, {
+                athleteId: r.AthleteID,
+                trainingDate: formatted
+            });
+        });
+
+        Promise.all(checkPromises).then(results => {
+            const duplicatedTimes = [];
+
+            document.querySelectorAll('input[name="archeryDate"]').forEach(input =>
+                input.classList.remove('border', 'border-danger')
+            );
+
+            results.forEach((res, idx) => {
+                if (res.exists) {
+                    const dt = new Date(records[idx].TrainingDate);
+                    const formatted = `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().padStart(2, '0')}-${dt.getDate().toString().padStart(2, '0')} ${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}`;
+
+                    duplicatedTimes.push(formatted);
+
+                    // 加紅框
+                    $('#ArcherytrainingRows input[name="archeryDate"]').each(function () {
+                        if (this.value && new Date(this.value).getTime() === dt.getTime()) {
+                            this.classList.add('border', 'border-danger');
+                        }
                     });
-                } else {
+                }
+            });
+
+            if (duplicatedTimes.length > 0) {
+                Swal.fire({
+                    title: '重複時間確認',
+                    html: `以下時間已有紀錄：<br><br><strong>${duplicatedTimes.join('<br>')}</strong><br><br>是否要覆蓋？`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '確定覆蓋',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.querySelectorAll('input[name="archeryDate"]').forEach(input =>
+                            input.classList.remove('border', 'border-danger')
+                        );
+                        sendArcheryRecords();
+                    }
+                });
+            } else {
+                document.querySelectorAll('input[name="archeryDate"]').forEach(input =>
+                    input.classList.remove('border', 'border-danger')
+                );
+                sendArcheryRecords();
+            }
+        });
+
+        function sendArcheryRecords() {
+            var url = isAthlete
+                ? '/Record/SaveAthleteArcheryRecord'
+                : '/PhyFit/SaveArcheryRecord';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(records),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '存檔成功',
+                            text: '射箭訓練紀錄已成功存檔。',
+                            confirmButtonText: '確定'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '存檔失敗',
+                            text: '存檔失敗: ' + response.message,
+                            confirmButtonText: '確定'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
                     Swal.fire({
                         icon: 'error',
                         title: '存檔失敗',
-                        text: '存檔失敗，請重試。',
+                        text: '存檔失敗，請聯絡管理員。錯誤資訊：' + error,
                         confirmButtonText: '確定'
                     });
                 }
-            },
-            error: function (xhr, status, error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '存檔失敗',
-                    text: '存檔失敗，請聯絡管理員。錯誤資訊：' + error,
-                    confirmButtonText: '確定'
-                });
-            }
-        });
+            });
+        }
     });
 });

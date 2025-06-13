@@ -16,5 +16,6 @@ namespace PhysicalFit.Models
         public string CoachPhone { get; set; }
         public string CoachTeam { get; set; }
         public string CoachSpecialty { get; set; }
+        public string Organize { get; set; }
     }
 }

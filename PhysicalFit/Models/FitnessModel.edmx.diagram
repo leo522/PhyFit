@@ -58,7 +58,6 @@
         <EntityTypeShape EntityType="PhFitnessModel.TrainingPurpose" Width="1.5" PointX="18.75" PointY="0.75" />
         <EntityTypeShape EntityType="PhFitnessModel.TrainingTimes" Width="1.5" PointX="2.75" PointY="18.75" />
         <EntityTypeShape EntityType="PhFitnessModel.TreadmillRecordDetails" Width="1.5" PointX="11" PointY="8.5" />
-        <EntityTypeShape EntityType="PhFitnessModel.UniversitySchoolList" Width="1.5" PointX="19.75" PointY="3.75" />
         <EntityTypeShape EntityType="PhFitnessModel.UserPermissions" Width="1.5" PointX="13.5" PointY="33.625" />
         <EntityTypeShape EntityType="PhFitnessModel.UserRoles" Width="1.5" PointX="11.25" PointY="40" />
         <EntityTypeShape EntityType="PhFitnessModel.Users" Width="1.5" PointX="8.25" PointY="32.75" />
@@ -98,6 +97,13 @@
         <AssociationConnector Association="PhFitnessModel.FK__SpecialTe__Speci__57A801BA" />
         <AssociationConnector Association="PhFitnessModel.FK__UserPermi__RoleI__2D27B809" />
         <AssociationConnector Association="PhFitnessModel.FK__UserPermi__UserI__2C3393D0" />
+        <EntityTypeShape EntityType="PhFitnessModel.SystemLogs" Width="1.5" PointX="10.375" PointY="19.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.sysdiagrams" Width="1.5" PointX="12.375" PointY="19.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.UniversitySchoolList" Width="1.5" PointX="20.375" PointY="3.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.Organization" Width="1.5" PointX="20.375" PointY="7.75" />
+        <EntityTypeShape EntityType="PhFitnessModel.AthleteCoachRelations" Width="1.5" PointX="11.25" PointY="23.875" />
+        <AssociationConnector Association="PhFitnessModel.FK__AthleteCo__Athle__5D4BCC77" />
+        <AssociationConnector Association="PhFitnessModel.FK__AthleteCo__Coach__5E3FF0B0" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

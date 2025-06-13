@@ -1,0 +1,98 @@
+@model PhysicalFit.Models.ArcheryTrainingRecordViewModel
+<head>
+    <link href="~/FlatPickr/flatpickr.min.css" rel="stylesheet" />
+    <script src="~/FlatPickr/flatpickr.js"></script>
+    <script src="~/FlatPickr/zh-tw.js"></script>
+    <link href="~/css/TrainingMonitorStyle.css" rel="stylesheet" />
+</head>
+<form id="editTrainingForm" action="/Record/EditArchery">
+    @Html.HiddenFor(m => m.ID)
+    @Html.HiddenFor(m => m.Source)
+    @Html.HiddenFor(m => m.AthleteID)
+
+
+    <div class="form-group mb-3">
+        <label>訓練日期：</label>
+        @Html.TextBoxFor(m => m.TrainingDate, "{0:yyyy-MM-dd HH:mm}", new
+        {
+            @class = "form-control TrainingDate",
+            @type = "text",
+            @autocomplete = "off"
+        })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>磅數：</label>
+        @Html.TextBoxFor(m => m.Poundage, new { @class = "form-control", type = "number", min = "0", step = "5" })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>箭數：</label>
+        @Html.TextBoxFor(m => m.ArrowCount, new { @class = "form-control", type = "number", min = "0" })
+    </div>
+
+    <div class="form-group mb-3">
+        <label>自覺費力程度</label>
+        <input type="text" id="rpeDescription" name="RpeDescription" class="form-control" readonly />
+        <button type="button" class="btn btn-info" id="showRpeModal" style="white-space: nowrap; margin-left: 10px">運動自覺量表</button>
+        <input type="hidden" id="RPE" name="RPEscore" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>單次運動負荷量 (TL)</label>
+        <input type="text" class="form-control" name="EachTrainingLoad" id="SessionTL" readonly />
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        function initializeFlatpickr() {
+            flatpickr(".TrainingDate", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                "locale": "zh_tw",
+            });
+        }
+
+        initializeFlatpickr();
+        function calculateSessionTL() {
+            var rpe = parseFloat($('#RPE').val());
+            var poundage = parseFloat($('#Poundage').val());
+            var arrowCount = parseFloat($('#ArrowCount').val());
+            if (!isNaN(rpe) && !isNaN(poundage) && !isNaN(arrowCount)) {
+                const sessionTL = rpe * poundage * arrowCount;
+                $('#SessionTL').val(sessionTL.toFixed(2));
+            } else {
+                $('#SessionTL').val('');
+            }
+        }
+        calculateSessionTL();
+
+        // 綁定變化事件
+        $('#Poundage').on('change', calculateSessionTL);
+        $('#ArrowCount').on('change', calculateSessionTL);
+
+        $('#showRpeModal').click(function () {
+            $('#RPEModalTraining').fadeIn();
+            $('#RPEsurveyContent').html("載入中...").load('/Record/LoadRPESurvey');
+        });
+
+        // 關閉 modal
+        $('.close').click(function () {
+            $('#RPEModalTraining').fadeOut();
+        });
+
+        $(document).on('click', '.rpe-item', function () {
+            const score = $(this).data('score');
+            const description = $(this).data('description');
+            const explanation = $(this).data('explanation');
+
+            // 顯示在欄位上
+            $('#rpeDescription').val(`${description}`);
+            $('#RPE').val(score);
+            $('#RPEModalTraining').fadeOut(); // 關閉 modal
+            calculateSessionTL();
+        });
+    });
+</script>

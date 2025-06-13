@@ -5,14 +5,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="~/js/AthleticCaculate.js"></script> @*田徑場計算公式*@
     <script src="~/Scripts/jquery-3.7.0.min.js"></script>
+    <script src="~/js/AthleticCaculate.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-end">
             <div class="col-md-7">
-                <div class="card mb-4">
+                <div class="card">
                     <div class="card-header">
                         <h4>有/無氧代謝能力測定：<span id="selectedSportItem"></span></h4>
                         <p>測3-4種距離的力竭時間。</p>
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div class="row justify-content-end">
+        <div class="row justify-content-end" style="margin-top:20px;">
             <div class="col-md-7">
                 <div class="card">
                     <div class="card-body">
@@ -42,70 +42,20 @@
                                             <input type="text" class="form-control exhaustion-time" data-distance="@distance" oninput="calculateSpeed(this)" />
                                         </td>
                                         <td class="speed-result"></td>
-                                        @*<td>
-                                            <input type="text" class="speed-result" readonly style="width: 100%;"/>
-                                        </td>*@
                                     </tr>
                                 }
                             </tbody>
-                            @*<tfoot>*@
                                 <tr>
                                     <td><i>r</i><sup>2</sup></td>
                                     <td colspan="2">
                                     <input type="text" id="calculationResult" class="form-control" readonly />
                                     </td>
                                 </tr>
-                            @*</tfoot>*@
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        $('form').submit(function () {
-            let distances = [];
-            let times = [];
-            let speeds = [];
-
-            $('#dataTable tr').each(function () {
-                distances.push($(this).find('td').eq(0).text());
-                times.push($(this).find('input.exhaustion-time').val());
-                speeds.push($(this).find('td').eq(2).text());
-            });
-
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'DistanceData',
-                value: JSON.stringify(distances)
-            }).appendTo('form');
-
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'TimeData',
-                value: JSON.stringify(times)
-            }).appendTo('form');
-
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'SpeedData',
-                value: JSON.stringify(speeds)
-            }).appendTo('form');
-        });
-        function calculateSpeed(inputElement) {
-            var row = $(inputElement).closest('tr');
-            var distance = parseFloat(row.find('td').eq(0).text());
-            var exhaustionTime = parseFloat($(inputElement).val());
-
-            if (!isNaN(distance) && !isNaN(exhaustionTime) && exhaustionTime > 0) {
-                var speed = (distance / exhaustionTime) * 3.6; // 計算速度
-                row.find('.speed-result').text(speed.toFixed(2)); // 更新速度結果到 <td>
-            } else {
-                row.find('.speed-result').text(''); // 清空速度結果
-            }
-
-            trackCalculateLinearRegression();
-        }
-    </script>
 </body>
 </html>

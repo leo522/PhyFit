@@ -1,5 +1,4 @@
-﻿// trainingSelection.js
-class TrainingSelection {
+﻿class TrainingSelection {
     constructor(selectElementId) {
         this.selectElement = document.getElementById(selectElementId);
         this.selectedSportItem = document.getElementById('selectedSportItem');
@@ -33,7 +32,6 @@ class TrainingSelection {
     }
 }
 
-// 使用時
 document.addEventListener('DOMContentLoaded', () => {
     new TrainingSelection('DeteItem');
 });

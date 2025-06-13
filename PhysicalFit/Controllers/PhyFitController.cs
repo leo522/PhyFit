@@ -11,12 +11,13 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.IO;
+using System.Data.Entity;
 
 namespace PhysicalFit.Controllers
 {
     public class PhyFitController : Controller
     {
-        private PhFitnessEntities _db = new PhFitnessEntities(); //資料庫
+        private PhFitnessEntities _db = new PhFitnessEntities();
 
         #region 訓練監控主視圖
         public ActionResult dashboard()
@@ -25,21 +26,21 @@ namespace PhysicalFit.Controllers
             {
                 if (!User.Identity.IsAuthenticated || Session["UserID"] == null)
                 {
-                    return RedirectToAction("Login", "Account"); // 如果未登入，重定向到登入頁
+                    LogHelper.LogToDb("Dashboard", "尚未登入，導向登入頁", "WARN");
+
+                    return RedirectToAction("Login", "Account");
                 }
 
                 if (User.Identity.IsAuthenticated)
                 {
-                    // 檢查用戶角色
                     var userRole = Session["UserRole"]?.ToString();
-                    ViewBag.UserRole = userRole; // 儲存用戶角色以便在視圖中使用
+                    ViewBag.UserRole = userRole;
 
-                    string userName = User.Identity.Name; // 獲取當前登入用戶的名稱或其他唯一識別信息
+                    string userName = User.Identity.Name;
                     var user = _db.Users.FirstOrDefault(u => u.Name == userName);
 
                     if (user != null)
                     {
-                        // 根據用戶角色查詢運動員或教練資料
                         if (userRole == "Athlete" && user.AthleteID.HasValue)
                         {
                             var athlete = _db.Athletes.FirstOrDefault(a => a.ID == user.AthleteID.Value);
@@ -47,9 +48,16 @@ namespace PhysicalFit.Controllers
                             {
                                 ViewBag.AthleteName = athlete.AthleteName;
                                 ViewBag.AthleteID = athlete.ID.ToString();
-                                var coach = _db.Coaches.FirstOrDefault(c => c.ID == athlete.CoachID);
-                                ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
-                                ViewBag.CoachID = coach?.ID.ToString() ?? string.Empty;
+                                var coachNames = _db.AthleteCoachRelations
+                                    .Where(r => r.AthleteID == athlete.ID)
+                                    .Select(r => r.Coaches.CoachName)
+                                    .ToList();
+
+                                ViewBag.CoachName = coachNames.Any()
+                                    ? string.Join("、", coachNames)
+                                    : "未設定教練";
+
+                                LogHelper.LogToDb("Dashboard", $"學生 {athlete.AthleteName} 開啟訓練監控主頁");
                             }
                         }
                         else if (userRole == "Coach" && user.CoachID.HasValue)
@@ -57,36 +65,43 @@ namespace PhysicalFit.Controllers
                             var coach = _db.Coaches.FirstOrDefault(c => c.ID == user.CoachID.Value);
                             ViewBag.CoachName = coach?.CoachName ?? "未設定教練";
                             ViewBag.CoachID = coach?.ID.ToString() ?? string.Empty;
-                            ViewBag.Athletes = _db.Athletes.Where(a => a.CoachID == user.CoachID.Value).ToList();
+                            ViewBag.Athletes = _db.AthleteCoachRelations
+                                .Where(r => r.CoachID == user.CoachID.Value)
+                                .Select(r => r.Athletes)
+                                .Distinct()
+                                .ToList();
+
+
+                            LogHelper.LogToDb("Dashboard", $"教練 {coach?.CoachName} 開啟訓練監控主頁");
                         }
 
-                        ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
-                        ViewBag.Description = GetTrainingItem(); //訓練衝量監控
-                        ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
-                        ViewBag.TrainingTimes = GetTrainingTimes(); //訓練時間
-                        ViewBag.RPEScore = GetRPE(); //RPE量表
-                        ViewBag.GunItem = GetGunsItems(); //射擊用具項目
-                        ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-                        ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
-                        ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
-                        ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
-                        ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
-                        ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
-                        ViewBag.Psychological = PsychologicalTraits(); //心理特質與食慾圖-項目
+                        ViewBag.MonitoringItems = GetTrainingMonitoringItems();
+                        ViewBag.Description = GetTrainingItem();
+                        ViewBag.TrainingPurposes = GetIntensityClassification();
+                        ViewBag.TrainingTimes = GetTrainingTimes();
+                        ViewBag.RPEScore = GetRPE();
+                        ViewBag.GunItem = GetGunsItems();
+                        ViewBag.DetectionSport = GetSpoetsItem();
+                        ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList();
+                        ViewBag.SpecialTechnical = GetSpecialTechnical();
+                        ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction();
+                        ViewBag.MuscleStrength = GetMuscleStrength();
+                        ViewBag.PhysicalFitness = GetPhysicalFitness();
+                        ViewBag.Psychological = PsychologicalTraits();
                         ViewBag.PsychologicalFeelings = GetPsyFeelings();
 
                         var records = _db.SessionRPETrainingRecords.ToList();
 
                         var model = records.Select(r => new SessionRPETrainingRecordsModel
                         {
-                            TrainingItem = r.TrainingItem, //訓練名稱
-                            RPEscore = r.RPEscore.GetValueOrDefault(), //RPE分數
-                            TrainingLoad = r.TrainingLoad ?? 0, //運動訓練量
-                            DailyTrainingLoad = r.DailyTrainingLoad ?? 0, //每日運動訓練量
-                            WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0, //每週運動訓練量
-                            TrainingHomogeneity = r.TrainingHomogeneity ?? 0, //同質性
-                            TrainingTension = r.TrainingTension ?? 0, //張力值
-                            ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0, //短長期
+                            TrainingItem = r.TrainingItem,
+                            RPEscore = r.RPEscore.GetValueOrDefault(),
+                            TrainingLoad = r.TrainingLoad ?? 0,
+                            DailyTrainingLoad = r.DailyTrainingLoad ?? 0,
+                            WeeklyTrainingChange = r.WeeklyTrainingChange ?? 0,
+                            TrainingHomogeneity = r.TrainingHomogeneity ?? 0,
+                            TrainingTension = r.TrainingTension ?? 0,
+                            ShortToLongTermTrainingLoadRatio = r.ShortToLongTermTrainingLoadRatio ?? 0,
                         }).ToList();
 
                         ViewBag.SessionTrainingRecords = model;
@@ -95,16 +110,22 @@ namespace PhysicalFit.Controllers
                     }
                     else
                     {
+                        LogHelper.LogToDb("Dashboard", $"找不到使用者：{userName}", "WARN");
+
                         return RedirectToAction("Login", "Account");
                     }
                 }
                 else
                 {
+                    LogHelper.LogToDb("Dashboard", "使用者未通過身份驗證", "WARN");
+
                     return RedirectToAction("Login", "Account");
                 }
             }
             catch (Exception ex)
             {
+                LogHelper.LogToDb("Dashboard", "主視圖載入發生例外", "ERROR", ex);
+
                 throw ex;
             }
         }
@@ -116,25 +137,27 @@ namespace PhysicalFit.Controllers
         {
             try
             {
-                ViewBag.MonitoringItems = GetTrainingMonitoringItems(); //訓練監控項目選擇
-                ViewBag.Description = GetTrainingItem(); //訓練衝量監控(session-RPE)
-                ViewBag.TrainingPurposes = GetIntensityClassification(); //訓練強度
-                ViewBag.TrainingTimes = GetTrainingTimes();//訓練時間
-                ViewBag.RPEScore = GetRPE();//RPE量表
-                ViewBag.GunItem = GetGunsItems(); //射擊用具項目
-                ViewBag.DetectionSport = GetSpoetsItem(); //檢測系統_運動項目
-                //ViewBag.SpoetsDistance = GetSpoetsDistance(); //檢測系統_距離
-                ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList(); //教練資訊
-                ViewBag.SpecialTechnical = GetSpecialTechnical(); //專項技術類-項目
-                ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction(); //專項技術類-動作
-                ViewBag.MuscleStrength = GetMuscleStrength(); //肌力訓練部位
-                ViewBag.PhysicalFitness = GetPhysicalFitness(); //體能類訓練類型
+                ViewBag.MonitoringItems = GetTrainingMonitoringItems();
+                ViewBag.Description = GetTrainingItem();
+                ViewBag.TrainingPurposes = GetIntensityClassification();
+                ViewBag.TrainingTimes = GetTrainingTimes();
+                ViewBag.RPEScore = GetRPE();
+                ViewBag.GunItem = GetGunsItems();
+                ViewBag.DetectionSport = GetSpoetsItem();
+                ViewBag.Coaches = _db.Coaches.Where(c => c.IsActive).ToList();
+                ViewBag.SpecialTechnical = GetSpecialTechnical();
+                ViewBag.SpecialTechnicalAction = GetSpecialTechnicalAction();
+                ViewBag.MuscleStrength = GetMuscleStrength();
+                ViewBag.PhysicalFitness = GetPhysicalFitness();
+
+                LogHelper.LogToDb("UpdateTableHeaders", $"載入訓練項目表單成功：{trainingItem}");
 
                 return PartialView("_SpecialTechnical", trainingItem);
-
             }
             catch (Exception ex)
             {
+                LogHelper.LogToDb("UpdateTableHeaders", $"載入訓練項目表單失敗：{trainingItem}", "ERROR", ex);
+
                 return new HttpStatusCodeResult(500, ex.Message);
             }
         }
@@ -173,14 +196,11 @@ namespace PhysicalFit.Controllers
         #region 訓練監控項目選擇
         public List<string> GetTrainingMonitoringItems()
         {
-            // 讀取 TrainingPurpose 資料
             var dto = (from ti in _db.TrainingMonitoringItems
                        select ti.TrainingItem).ToList();
 
-            // 檢查 Session 以獲取用戶角色
             var userRole = Session["UserRole"]?.ToString();
 
-            // 如果是運動員，則移除 "檢測系統" 項目
             if (userRole == "Athlete")
             {
                 dto.Remove("檢測系統");
@@ -192,18 +212,15 @@ namespace PhysicalFit.Controllers
 
             return dto;
         }
-
         #endregion
 
         #region 訓練用途
         public List<string> GetTrainingPurposes()
         {
-            // 讀取 TrainingPurpose 資料
             var dto = (from tp in _db.TrainingPurpose
                        select tp.TrainingObject).ToList();
             return dto;
         }
-
         #endregion
 
         #region 能力測定
@@ -260,8 +277,8 @@ namespace PhysicalFit.Controllers
 
         public ActionResult RPEsurvey()
         {
-            var rpeList = GetRPE(); // 調用 GetRPE 方法來獲取 RPE 資料
-            ViewBag.RPEScores = rpeList; // 將資料傳遞到 ViewBag
+            var rpeList = GetRPE();
+            ViewBag.RPEScores = rpeList;
 
             return PartialView("_RPESurvey");
         }
@@ -319,7 +336,8 @@ namespace PhysicalFit.Controllers
         public List<string> GetSpoetsItem()
         {
             var dto = (from Si in _db.DetectionTraining
-                       select Si.ItemName).ToList();
+                       where Si.ItemName != "跑步機" && Si.ItemName != "自由車"   // 暫不顯示跑步機和自由車
+                       select Si.ItemName).Distinct().ToList();
             return dto;
         }
         #endregion
@@ -390,7 +408,7 @@ namespace PhysicalFit.Controllers
         public JsonResult CalculateRPE(double trainingTime, double rpeScore)
         {
             double calculationResult = trainingTime * rpeScore;
-            double dailyResult = calculationResult; // 根據需要添加其他邏輯計算每日運動量
+            double dailyResult = calculationResult;
 
             return Json(new { calculationResult = calculationResult, dailyResult = dailyResult });
         }
@@ -399,7 +417,6 @@ namespace PhysicalFit.Controllers
         #region sessionRPE指標計算每日訓練量結果
         public static class InMemoryData
         {
-            // 存儲運動數據的靜態列表
             public static List<TrainingData> TrainingDataList = new List<TrainingData>();
         }
 
@@ -408,18 +425,15 @@ namespace PhysicalFit.Controllers
         {
             DateTime today = DateTime.Today;
 
-            // 確保接收的日期是當天日期
             if (date.Date != today.Date)
             {
                 return Json(new { dailyResult = "錯誤: 日期不符" });
             }
 
-            // 獲取當天所有的單次運動時間和RPE分數
             var dailyTrainingData = GetDailyTrainingData(today);
 
             double totalDailyResult = 0;
 
-            // 計算當天的總運動量
             foreach (var item in dailyTrainingData)
             {
                 double time = item.TrainingTime;
@@ -427,10 +441,8 @@ namespace PhysicalFit.Controllers
                 totalDailyResult += time * score;
             }
 
-            // 計算當前的單次運動時間與RPE分數
             double currentResult = trainingTime * rpeScore;
 
-            // 更新每日運動訓練量
             totalDailyResult += currentResult;
 
             return Json(new { dailyResult = totalDailyResult });
@@ -438,10 +450,53 @@ namespace PhysicalFit.Controllers
 
         private List<TrainingData> GetDailyTrainingData(DateTime date)
         {
-            // 根據日期過濾內存中的數據
             return InMemoryData.TrainingDataList
-                      .Where(td => td.Date.Date == date.Date)
-                      .ToList();
+                      .Where(td => td.Date.Date == date.Date).ToList();
+        }
+        #endregion
+
+        #region 檢查一般訓練紀錄是否有相同資料
+        [HttpPost]
+        public JsonResult CheckDuplicateGeneralTrainingRecord(int athleteId, DateTime trainingDate)
+        {
+            var duplicate = _db.GeneralTrainingRecord.FirstOrDefault(r =>
+                r.AthleteID == athleteId &&
+                r.TrainingDate.HasValue &&
+                DbFunctions.TruncateTime(r.TrainingDate) == trainingDate.Date &&
+                r.TrainingDate.Value.Hour == trainingDate.Hour &&
+                r.TrainingDate.Value.Minute == trainingDate.Minute);
+
+            return Json(new { exists = duplicate != null });
+        }
+        #endregion
+
+        #region 檢查射箭紀錄是否有相同資料
+        [HttpPost]
+        public JsonResult CheckDuplicateCoachArcheryRecord(int athleteId, DateTime trainingDate)
+        {
+            var duplicate = _db.ArcheryRecord.FirstOrDefault(r =>
+                r.AthleteID == athleteId &&
+                r.TrainingDate.HasValue &&
+                DbFunctions.TruncateTime(r.TrainingDate) == trainingDate.Date &&
+                r.TrainingDate.Value.Hour == trainingDate.Hour &&
+                r.TrainingDate.Value.Minute == trainingDate.Minute);
+
+            return Json(new { exists = duplicate != null });
+        }
+        #endregion
+
+        #region 檢查射擊紀錄是否有相同資料
+        [HttpPost]
+        public JsonResult CheckDuplicateCoachShootingRecord(int athleteId, DateTime trainingDate)
+        {
+            var duplicate = _db.ShootingRecord.FirstOrDefault(r =>
+                r.AthleteID == athleteId &&
+                r.TrainingDate.HasValue &&
+                DbFunctions.TruncateTime(r.TrainingDate) == trainingDate.Date &&
+                r.TrainingDate.Value.Hour == trainingDate.Hour &&
+                r.TrainingDate.Value.Minute == trainingDate.Minute);
+
+            return Json(new { exists = duplicate != null });
         }
         #endregion
 
@@ -450,20 +505,36 @@ namespace PhysicalFit.Controllers
         {
             try
             {
-                // 確認用戶是教練
                 if (Session["UserRole"]?.ToString() != "Coach")
                 {
                     return Json(new { success = false, message = "請確認是否為教練身份。" });
                 }
 
-                // 逐筆處理每一筆 GeneralTrainingRecord
                 foreach (var record in records)
                 {
-                    // 根據不同的課程名稱來清理不相關的項目
+                    if (string.IsNullOrEmpty(record.TrainingClassName))
+                    {
+                        return Json(new { success = false, message = "訓練項目資料不完整，無法儲存。" });
+                    }
+
+                    // 根據 AthleteID 與 TrainingDate 判斷是否有重複紀錄
+                    var date = record.TrainingDate.Value;
+
+                    var duplicate = _db.GeneralTrainingRecord.FirstOrDefault(r =>
+                        r.AthleteID == record.AthleteID &&
+                        r.TrainingDate.HasValue &&
+                        DbFunctions.TruncateTime(r.TrainingDate) == DbFunctions.TruncateTime(date) &&
+                        r.TrainingDate.Value.Hour == date.Hour &&
+                        r.TrainingDate.Value.Minute == date.Minute);
+
+                    if (duplicate != null)
+                    {
+                        _db.GeneralTrainingRecord.Remove(duplicate);
+                    }
+
                     switch (record.TrainingClassName)
                     {
                         case "專項技術類":
-                            // 清理與專項技術類無關的項目
                             record.TrainingParts = null;
                             record.TrainingType = null;
                             break;
@@ -488,17 +559,14 @@ namespace PhysicalFit.Controllers
                             break;
                     }
 
-                    // 確認 record 是否有正確的資料要存入
                     if (string.IsNullOrEmpty(record.TrainingClassName))
                     {
                         return Json(new { success = false, message = "訓練項目資料不完整，無法儲存。" });
                     }
 
-                    // 將每筆清理過的資料新增到資料庫
                     _db.GeneralTrainingRecord.Add(record);
                 }
 
-                // 儲存所有變更
                 _db.SaveChanges();
 
                 return Json(new { success = true });
@@ -512,45 +580,46 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 儲存射箭訓練紀錄-教練
-
-        public ActionResult SaveArcheryRecord(List<ArcheryRecord> records, List<ArcherySessionRPERecord> sessionRecords)
+        public ActionResult SaveArcheryRecord(List<ArcheryRecord> records)
         {
             try
             {
-                // 確認用戶是教練
                 if (Session["UserRole"]?.ToString() != "Coach")
                 {
                     return Json(new { success = false, message = "請確認是否為教練身份。" });
                 }
 
-                // 檢查 sessionRecords 和 records 的數量是否一致
-                if (records.Count != sessionRecords.Count)
+                for (int i = 0; i < records.Count; i++)
                 {
-                    return Json(new { success = false, message = "記錄數量不匹配，請檢查輸入資料。" });
-                }
-
-                // 逐一儲存每一筆 RPE 記錄及其對應的訓練記錄
-                for (int i = 0; i < sessionRecords.Count; i++)
-                {
-                    var sessionRecord = sessionRecords[i];
-                    sessionRecord.CreatedDate = DateTime.Now; // 設定 CreatedDate
-
-                    _db.ArcherySessionRPERecord.Add(sessionRecord);
-                    _db.SaveChanges(); // 儲存當前的 RPE 記錄
-
-                    // 將對應的射箭訓練記錄與當前的 sessionRecord 綁定
+                    var sessionRecord = records[i];
                     var correspondingRecord = records[i];
-                    correspondingRecord.SessionRPEArcheryRecordID = sessionRecord.ID;
 
-                    // 更新 record 的 CoachID 和 AthleteID
-                    correspondingRecord.CoachID = sessionRecord.CoachID; // 教練ID
-                    correspondingRecord.AthleteID = sessionRecord.AthleteID; // 運動員ID
+                    if (correspondingRecord.AthleteID.HasValue && correspondingRecord.TrainingDate.HasValue)
+                    {
+                        var athleteID = correspondingRecord.AthleteID.Value;
+                        var date = correspondingRecord.TrainingDate.Value;
 
-                    _db.ArcheryRecord.Add(correspondingRecord); // 儲存射箭訓練記錄
+                        // 刪除舊的 Training 記錄
+                        var duplicateTraining = _db.ArcheryRecord.FirstOrDefault(r =>
+                            r.AthleteID == athleteID &&
+                            r.TrainingDate.HasValue &&
+                            DbFunctions.TruncateTime(r.TrainingDate) == DbFunctions.TruncateTime(date) &&
+                            r.TrainingDate.Value.Hour == date.Hour &&
+                            r.TrainingDate.Value.Minute == date.Minute);
+
+                        if (duplicateTraining != null)
+                        {
+                            _db.ArcheryRecord.Remove(duplicateTraining);
+                            _db.SaveChanges();
+                        }
+                    }
+
+                    // 儲存新的 Training 資料
+                    _db.ArcheryRecord.Add(correspondingRecord);
                 }
 
-                _db.SaveChanges(); // 儲存所有變更
-
+                _db.SaveChanges();
+                
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -563,45 +632,46 @@ namespace PhysicalFit.Controllers
         #endregion
 
         #region 儲存射擊訓練紀錄-教練
-
-        public ActionResult SaveShootingRecord(List<ShootingRecord> records, List<ShottingSessionRPERecord> sessionRecords)
+        public ActionResult SaveShootingRecord(List<ShootingRecord> records)
         {
             try
             {
-                // 確認用戶是教練
                 if (Session["UserRole"]?.ToString() != "Coach")
                 {
                     return Json(new { success = false, message = "請確認是否為教練身份。" });
                 }
 
-                // 檢查 sessionRecords 和 records 的數量是否一致
-                if (records.Count != sessionRecords.Count)
+                for (int i = 0; i < records.Count; i++)
                 {
-                    return Json(new { success = false, message = "記錄數量不匹配，請檢查輸入資料。" });
-                }
-
-                // 逐一儲存每一筆 RPE 記錄及其對應的射擊訓練記錄
-                for (int i = 0; i < sessionRecords.Count; i++)
-                {
-                    var sessionRecord = sessionRecords[i];
-                    sessionRecord.CreatedDate = DateTime.Now; // 設定 CreatedDate
-
-                    _db.ShottingSessionRPERecord.Add(sessionRecord);
-                    _db.SaveChanges(); // 儲存當前的 RPE 記錄
-
-                    // 將對應的射擊訓練記錄與當前的 sessionRecord 綁定
+                    var sessionRecord = records[i];
                     var correspondingRecord = records[i];
-                    correspondingRecord.SessionRPEShottingRecordID = sessionRecord.ID;
 
-                    // 更新 record 的 CoachID 和 AthleteID
-                    correspondingRecord.CoachID = sessionRecord.CoachID; // 教練ID
-                    correspondingRecord.AthleteID = sessionRecord.AthleteID; // 運動員ID
+                    if (correspondingRecord.AthleteID.HasValue && correspondingRecord.TrainingDate.HasValue)
+                    {
+                        var athleteID = correspondingRecord.AthleteID.Value;
+                        var date = correspondingRecord.TrainingDate.Value;
 
-                    _db.ShootingRecord.Add(correspondingRecord); // 儲存射擊訓練記錄
+                        // 刪除舊的 Training 記錄
+                        var duplicateTraining = _db.ShootingRecord.FirstOrDefault(r =>
+                            r.AthleteID == athleteID &&
+                            r.TrainingDate.HasValue &&
+                            DbFunctions.TruncateTime(r.TrainingDate) == DbFunctions.TruncateTime(date) &&
+                            r.TrainingDate.Value.Hour == date.Hour &&
+                            r.TrainingDate.Value.Minute == date.Minute);
+
+                        if (duplicateTraining != null)
+                        {
+                            _db.ShootingRecord.Remove(duplicateTraining);
+                            _db.SaveChanges();
+                        }
+                    }
+
+                    // 儲存新的 Training 資料
+                    _db.ShootingRecord.Add(correspondingRecord);
                 }
 
-                _db.SaveChanges(); // 儲存所有變更
-
+                _db.SaveChanges();
+                
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -610,7 +680,6 @@ namespace PhysicalFit.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
         #endregion
 
         #region 運動員資訊
@@ -618,32 +687,24 @@ namespace PhysicalFit.Controllers
         {
             var athletes = _db.Athletes
                               .Where(a => a.CoachID == coachId)
-                              .Select(a => a.AthleteName)
-                              .ToList();
+                              .Select(a => a.AthleteName).ToList();
             return PartialView("_Athletes", athletes);
         }
-
         #endregion
 
         #region 建立運動員資訊
-        //[Authorize(Roles = "Coach")] // 確保用戶是教練角色
         public ActionResult createAthletes()
         {
             return View();
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Coach")] // 確保用戶是教練角色
+
         public ActionResult CreateAthletes(Athletes model)
         {
             if (ModelState.IsValid)
             {
-                // 將運動員資訊存儲到資料庫
-                // 例如：
-                // db.Athletes.Add(model);
-                // db.SaveChanges();
-
-                return RedirectToAction("CreateAthletes"); // 重定向到運動員列表頁面
+                return RedirectToAction("CreateAthletes");
             }
 
             return View(model);
@@ -653,7 +714,6 @@ namespace PhysicalFit.Controllers
         #region 訓練處方計算
         public ActionResult RedirectToPrescription()
         {
-            // 重定向到 TrainingPrescriptionController 的 Prescription 方法
             return RedirectToAction("Prescription", "TrainingPrescription");
         }
 
@@ -683,7 +743,7 @@ namespace PhysicalFit.Controllers
                      DailyTrainingLoad = gr.DailyTrainingLoad ?? 0
                  }).ToList();
 
-                return PartialView("_GeneralRecord", records); // 返回部分視圖
+                return PartialView("_GeneralRecord", records);
             }
             catch (Exception ex)
             {
@@ -700,16 +760,16 @@ namespace PhysicalFit.Controllers
             try
             {
                 
-                int? coachId = AuthHelper.GetCurrentCoachId(); //獲取當前登入的教練ID
-                int? athleteId = AuthHelper.GetCurrentAthleteId(); //獲取當前登入的運動員ID
+                int? coachId = AuthHelper.GetCurrentCoachId();
+                int? athleteId = AuthHelper.GetCurrentAthleteId();
 
                 if (!coachId.HasValue || !athleteId.HasValue)
                 {
                     return Json(new { success = false, message = "使用者未登入或ID錯誤" });
                 }
                 
-                var coach = _db.Coaches.SingleOrDefault(c => c.ID == coachId.Value); //查詢教練資料
-                var athlete = _db.Athletes.SingleOrDefault(a => a.ID == athleteId.Value); //查詢運動員資料
+                var coach = _db.Coaches.SingleOrDefault(c => c.ID == coachId.Value);
+                var athlete = _db.Athletes.SingleOrDefault(a => a.ID == athleteId.Value);
 
                 if (coach == null)
                 {
@@ -721,40 +781,38 @@ namespace PhysicalFit.Controllers
                     return Json(new { success = false, message = "無效的運動員ID" });
                 }
 
-                // 儲存各項檢測系統訓練紀錄
                 var detectionRecord = new DetectionTrainingRecord
                 {
-                    Coach = model.coach, //教練名字
-                    CoachID = coach.ID, //教練ID
-                    Athlete = model.athlete, //運動員
-                    AthleteID = athlete.ID, //運動員ID
+                    Coach = model.coach,
+                    CoachID = coach.ID,
+                    Athlete = model.athlete,
+                    AthleteID = athlete.ID,
                     DetectionItem = "有/無氧代謝能力測定",
-                    SportItem = model.SportItem, //運動項目
-                    TrainingDate = DateTime.Parse(model.DetectionDate), //訓練日期
-                    CriticalSpeed = model.CriticalSpeed, //臨界速度
-                    MaxAnaerobicWork = model.AnaerobicPower, //最大無氧做功
-                    CreatedDate = DateTime.Now, //建立時間
-                    ModifiedDate = DateTime.Now, //修改時間
+                    SportItem = model.SportItem,
+                    TrainingDate = DateTime.Parse(model.DetectionDate),
+                    CriticalSpeed = model.CriticalSpeed,
+                    MaxAnaerobicWork = model.AnaerobicPower,
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
                 };
                 _db.DetectionTrainingRecord.Add(detectionRecord);
                 _db.SaveChanges();
 
                 int detectionRecordId = detectionRecord.ID;
 
-                // 儲存田徑場檢測詳細記錄
                 if (model.SportItem == "跑步機")
                 {
                     for (int i = 0; i < model.IntenPercen.Count; i++)
                     {
                         var dtos = new TreadmillRecordDetails
                         {
-                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
-                            IntenPercen = (model.IntenPercen[i]), //強度百分比 
-                            MaxRunningSpeed = model.MaxRunningSpeed, //最大跑速
-                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
-                            Speed = float.Parse(model.Speeds[i]), //速度
-                            CreatedDate = DateTime.Now, //建立時間
-                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                            DetectionTrainingRecordId = detectionRecordId,
+                            IntenPercen = (model.IntenPercen[i]),
+                            MaxRunningSpeed = model.MaxRunningSpeed,
+                            ForceDuration = int.Parse(model.ForceDurations[i]),
+                            Speed = float.Parse(model.Speeds[i]),
+                            CreatedDate = DateTime.Now,
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate),
                         };
                         _db.TreadmillRecordDetails.Add(dtos);
                     }
@@ -765,12 +823,12 @@ namespace PhysicalFit.Controllers
                     {
                         var dtos = new TrackFieldRecordDetails
                         {
-                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
-                            Distance = (model.Distances[i]), //訓練距離
-                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
-                            Speed = float.Parse(model.Speeds[i]), //速度
-                            CreatedDate = DateTime.Now, //建立時間
-                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                            DetectionTrainingRecordId = detectionRecordId,
+                            Distance = (model.Distances[i]),
+                            ForceDuration = int.Parse(model.ForceDurations[i]),
+                            Speed = float.Parse(model.Speeds[i]),
+                            CreatedDate = DateTime.Now,
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate),
                         };
                         _db.TrackFieldRecordDetails.Add(dtos);
                     }
@@ -781,12 +839,12 @@ namespace PhysicalFit.Controllers
                     {
                         var dtos = new SwimmingRecordDetails
                         {
-                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
-                            Distance = (model.Distances[i]), //訓練距離
-                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
-                            Speed = float.Parse(model.Speeds[i]), //速度
-                            CreatedDate = DateTime.Now, //建立時間
-                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                            DetectionTrainingRecordId = detectionRecordId,
+                            Distance = (model.Distances[i]),
+                            ForceDuration = int.Parse(model.ForceDurations[i]),
+                            Speed = float.Parse(model.Speeds[i]),
+                            CreatedDate = DateTime.Now,
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate),
                         };
                         _db.SwimmingRecordDetails.Add(dtos);
                     }
@@ -797,13 +855,13 @@ namespace PhysicalFit.Controllers
                     {
                         var dtos = new BikeRecordDetails
                         {
-                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
-                            IntenPercen = (model.IntenPercen[i]), //強度百分比 
-                            MaxPower = model.MaxPower, //最大功率
-                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
-                            Speed = float.Parse(model.Speeds[i]), //速度
-                            CreatedDate = DateTime.Now, //建立時間
-                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                            DetectionTrainingRecordId = detectionRecordId,
+                            IntenPercen = (model.IntenPercen[i]),
+                            MaxPower = model.MaxPower,
+                            ForceDuration = int.Parse(model.ForceDurations[i]),
+                            Speed = float.Parse(model.Speeds[i]),
+                            CreatedDate = DateTime.Now,
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate),
                         };
                         _db.BikeRecordDetails.Add(dtos);
                     }
@@ -814,12 +872,12 @@ namespace PhysicalFit.Controllers
                     {
                         var dtos = new RollerSkatingRecordDetails
                         {
-                            DetectionTrainingRecordId = detectionRecordId, //主資料表ID
-                            Distance = (model.Distances[i]), //訓練距離
-                            ForceDuration = int.Parse(model.ForceDurations[i]), //力竭時間
-                            Speed = float.Parse(model.Speeds[i]), //速度
-                            CreatedDate = DateTime.Now, //建立時間
-                            TrainingDateTime = DateTime.Parse(model.DetectionDate), //訓練日期
+                            DetectionTrainingRecordId = detectionRecordId,
+                            Distance = (model.Distances[i]),
+                            ForceDuration = int.Parse(model.ForceDurations[i]),
+                            Speed = float.Parse(model.Speeds[i]),
+                            CreatedDate = DateTime.Now,
+                            TrainingDateTime = DateTime.Parse(model.DetectionDate),
                         };
                         _db.RollerSkatingRecordDetails.Add(dtos);
                     }
@@ -913,7 +971,6 @@ namespace PhysicalFit.Controllers
                 return new Dictionary<string, List<string>>();
             }
         }
-
         #endregion
 
         #region 心理特質感受-存檔
@@ -930,19 +987,12 @@ namespace PhysicalFit.Controllers
                 foreach (var trait in traits)
                 {
 
-                    var user = _db.Users.FirstOrDefault(u => u.UID == trait.UserID); //檢查UserID 是否存在於Users表中的 UID 欄位
+                    var user = _db.Users.FirstOrDefault(u => u.UID == trait.UserID); 
 
                     if (user == null)
                     {
                         return Json(new { success = false, message = $"UserID {trait.UserID} 用戶不存在，請確認用戶資料。" });
                     }
-
-                    //// 檢查 AthleteID 是否存在於 Athletes 表中的 ID 欄位
-                    //var athlete = _db.Athletes.FirstOrDefault(a => a.ID == trait.UserID);
-                    //if (athlete == null)
-                    //{
-                    //    return Json(new { success = false, message = $"AthleteID {trait.UserID} 運動員不存在，請確認運動員資料。" });
-                    //}
 
                     var psychologicalResult = new PsychologicalTraitsResults
                     {

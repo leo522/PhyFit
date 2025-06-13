@@ -15,15 +15,15 @@
     <script src="~/FlatPickr/zh-tw.js"></script>
     <script src="~/Scripts/jquery-3.7.0.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
-    <script src="~/js/AthleticCaculate.js"></script> @*田徑計算*@
-    <script src="~/js/BikeCalculate.js"></script> @*自由車計算*@
-    <script src="~/js/TreadmillCaculate.js"></script> @*跑步機計算*@
-    <script src="~/js/SwimmingPoolCaculate.js"></script> @*泳池計算*@
-    <script src="~/js/RollerSkatingCaculate.js"></script> @*滑輪溜冰計算*@
+    <script src="~/js/AthleticCaculate.js"></script>
+    <script src="~/js/BikeCalculate.js"></script>
+    <script src="~/js/TreadmillCaculate.js"></script>
+    <script src="~/js/SwimmingPoolCaculate.js"></script>
+    <script src="~/js/RollerSkatingCaculate.js"></script>
     <script src="~/SweetAlert2/sweetalert.min.js"></script>
     <script src="~/SweetAlert2/sweetalert2.all.min.js"></script>
     <script src="~/SweetAlert2/sweetalert2@11.js"></script>
-    <title>體能與肌力訓練處方系統</title>
+    <title>運動RPE訓練衝量監控系統</title>
     <style>
         .swal2-container {
             z-index: 10000 !important;
@@ -35,8 +35,8 @@
         }
 
         .button-container {
-            text-align: right; /* 將按鈕靠右對齊 */
-            padding: 10px 0; /* 增加上下內邊距 */
+            text-align: right;
+            padding: 10px 0;
         }
     </style>
 </head>
@@ -44,12 +44,11 @@
     <div>
         <div style="text-align: right; padding: 10px;">
             <form action="/Account/Logout" method="post" style="display: inline;">
-                <label style="font-size:20px; margin-right: 10px;">目前登入者: @User.Identity.Name</label>
+                <label class="login-user" style="font-size:20px; margin-right: 10px;">目前登入者: @User.Identity.Name</label>
                 <button type="submit" class="btn btn-warning">登出</button>
             </form>
         </div>
 
-        <!-- 運動員或教練登入後顯示編輯個人資料按鈕 -->
         <div class="button-container">
             @if (User.Identity.IsAuthenticated)
             {
@@ -67,10 +66,20 @@
                 }
             }
         </div>
-
-        @*<div class="countdown-timer" id="countdownTimer"></div>*@ @*倒數計時功能-未開放*@
-
         @RenderBody()
     </div>
 </body>
 </html>
+
+<script>
+    // 每 58 分鐘向伺服器發送 KeepAlive 請求
+    setInterval(function () {
+        fetch('/Account/KeepAlive')
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('KeepAlive 失敗');
+                }
+            })
+            .catch(err => console.error('KeepAlive 錯誤:', err));
+    }, 58 * 60 * 1000); // 58分鐘
+</script>
