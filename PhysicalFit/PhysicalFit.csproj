@@ -162,16 +162,22 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="AuthHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EWMAweightingController.cs" />
     <Compile Include="Controllers\PhyFitController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\RecordController.cs" />
+    <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\TrainingPrescriptionController.cs" />
-    <Compile Include="Controllers\UserAccountController.cs" />
+    <Compile Include="Utility\EmailHelper.cs" />
     <Compile Include="Utility\EncryptionHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Utility\LogHelper.cs" />
+    <Compile Include="ViewModels\AthleteRegisterViewModel.cs" />
+    <Compile Include="ViewModels\RegisterCoachViewModel.cs" />
     <Content Include=".gitignore" />
     <Content Include="css\LoginCss\LoginLayoutStyle.css" />
     <Content Include="fontawesome\css\all.css" />
@@ -2272,7 +2278,6 @@
     <Content Include="fontawesome\svgs\solid\z.svg" />
     <Content Include="img\LogniBackGround\LoginPic.jpg" />
     <Content Include="js\DailyTLChart.js" />
-    <Compile Include="Utility\LogHelper.cs" />
     <Compile Include="Models\AbilityDetermination.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
     </Compile>
@@ -2394,7 +2399,6 @@
     </Compile>
     <Compile Include="Models\PsychologicalTraitsViewModel.cs" />
     <Compile Include="Models\PsychologicalTraitViewModel.cs" />
-    <Compile Include="Models\RegisterCoachViewModel.cs" />
     <Compile Include="Models\ResetPwdViewModel.cs" />
     <Compile Include="Models\RollerSkatingRecordDetails.cs">
       <DependentUpon>FitnessModel.tt</DependentUpon>
@@ -2482,6 +2486,8 @@
     <Compile Include="Utility\OriginalTrainingRecordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrainingLoadResult.cs" />
+    <Compile Include="Utility\SchoolService.cs" />
+    <Compile Include="Utility\SecurityHelper.cs" />
     <Compile Include="Utility\TrainingRecordHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2705,11 +2711,14 @@
     <Content Include="Views\Record\_RPESurvey.cshtml" />
     <Content Include="Views\Record\Edit_Archery.cshtml" />
     <Content Include="Views\Record\Edit_Shooting.cshtml" />
-    <Content Include="Views\UserAccount\Login.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
+    <Content Include="Views\Register\CreateCoachAccount.cshtml" />
+    <Content Include="Views\Register\SelectRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Profile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

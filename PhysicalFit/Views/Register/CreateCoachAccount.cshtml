@@ -1,0 +1,85 @@
+﻿@model PhysicalFit.ViewModels.RegisterCoachViewModel
+@{
+    ViewBag.Title = "註冊教練帳號";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card p-4 shadow-sm bg-light">
+                <h3 class="text-center text-primary mb-4">
+                    <i class="fas fa-user-plus me-2"></i>註冊教練帳號
+                </h3>
+
+                @using (Html.BeginForm("RegisterCoach", "Register", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.CoachName)
+                        @Html.TextBoxFor(m => m.CoachName, new { @class = "form-control", placeholder = "請輸入姓名", required = "required" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.CoachAccount)
+                        @Html.TextBoxFor(m => m.CoachAccount, new { @class = "form-control", placeholder = "請輸入帳號", required = "required" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Coachpwd)
+                        @Html.PasswordFor(m => m.Coachpwd, new { @class = "form-control", placeholder = "密碼至少6碼，需包含大小寫與數字", required = "required" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.CoachEmail)
+                        @Html.TextBoxFor(m => m.CoachEmail, new { @class = "form-control", type = "email", placeholder = "請輸入信箱", required = "required" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.CoachPhone)
+                        @Html.TextBoxFor(m => m.CoachPhone, new { @class = "form-control", placeholder = "手機或聯絡電話" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.CoachSchool)
+                        @Html.TextBoxFor(m => m.CoachSchool, new { @class = "form-control", placeholder = "學校名稱或代碼" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Organize)
+                        @Html.TextBoxFor(m => m.Organize, new { @class = "form-control", placeholder = "服務單位或機關" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.CoachTeam)
+                        @Html.TextBoxFor(m => m.CoachTeam, new { @class = "form-control", placeholder = "所屬運動隊伍" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.CoachSpecialty)
+                        @Html.TextBoxFor(m => m.CoachSpecialty, new { @class = "form-control", placeholder = "專項領域（選填）" })
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fas fa-check me-1"></i>完成註冊
+                        </button>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger mt-3">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+                else if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success mt-3">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

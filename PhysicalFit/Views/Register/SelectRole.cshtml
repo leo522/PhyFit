@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "註冊帳號";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="register-container">
+    <div class="text-center mb-3">
+        <img src="~/img/logo.svg" alt="Logo" style="height: 45px; width: 100%;">
+    </div>
+
+    @using (Html.BeginForm("ProceedToRegister", "Register", FormMethod.Post, new { id = "roleForm" }))
+    {
+        <div class="form-group">
+            <label for="Role">身分角色</label>
+            <select class="form-control" id="Role" name="role" required>
+                <option value="" disabled selected>請選擇角色</option>
+                <option value="Coach">教練</option>
+                <option value="Athlete">運動員</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="OrgType">單位類型</label>
+            <select class="form-control" id="OrgType" name="orgType" required>
+                <option value="" disabled selected>請選擇單位類型</option>
+                <option value="School">學校</option>
+                <option value="OtherType">其他單位</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="schoolCode" style="display: none;">
+            <label for="schoolID">學校代碼</label>
+            <input type="text" class="form-control" id="schoolID" name="schoolID" placeholder="請輸入學校代碼" />
+        </div>
+
+        <div class="form-group" id="otherOrgSelect" style="display: none;">
+            <label for="orgID">單位名稱</label>
+            <select class="form-control" id="orgID" name="orgID">
+                <option value="" disabled selected>請選擇單位</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block mt-3">下一步</button>
+    }
+
+    @* 錯誤訊息顯示區域（已移出 form 區塊） *@
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger mt-3" role="alert">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#OrgType').on('change', function () {
+                if ($(this).val() === 'School') {
+                    $('#schoolCode').show();
+                    $('#otherOrgSelect').hide();
+                    $('#orgID').empty();
+                } else {
+                    $('#schoolCode').hide();
+                    $('#schoolID').val('');
+                    $('#otherOrgSelect').show();
+                    loadOrganizations();
+                }
+            });
+
+            function loadOrganizations() {
+                $.getJSON('@Url.Action("GetOrganizations", "School")', function (data) {
+                    const select = $('#orgID').empty().append('<option disabled selected>請選擇單位</option>');
+                    data.forEach(org => {
+                        select.append(`<option value="${org.ID}">${org.OrgName}</option>`);
+                    });
+                });
+            }
+        });
+    </script>
+}
